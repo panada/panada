@@ -3,7 +3,7 @@ Panada
 Light and simple PHP 5 base Framework.
 Version 0.1
 Juni 2010
-Copyright (C) 2010  Iskandar Soesman (iskandarsoesman@gmail.com)
+Copyright (C) 2010  Iskandar Soesman (iskandarsoesman at gmaildotcom)
 License: http://www.opensource.org/licenses/bsd-license.php
 
 PANDUAN INSTALLASI DAN PENGGUNAAN
@@ -268,7 +268,7 @@ Anda bisa melakukan banyak hal untuk berkontribusi, diantaranya:
 
 *   Tester Contributor
     Install dan test Panada pada komputer Anda dan informasikan bug ataupun apa saja yang Anda alami
-    ketika menggunakan applikasi ini. Kirimkan info Anda ke k4ndar@yahoo.com (akan lebih bagus jika dilengkapi screenshoot).
+    ketika menggunakan applikasi ini. Kirimkan info Anda ke k4ndar at yahoodotcom (akan lebih bagus jika dilengkapi screenshoot).
     
 *   Petch Contributor
     Ingin memperbaiki bug yang Anda temukan? atau memperbaiki algoritma sehingga membuat Panada
