@@ -292,7 +292,7 @@ if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->fetch_class() . '.ph
 
 
 /**
- * EN: Oke the file exits, new create class's instance.
+ * EN: Oke the file exits, now create class's instance.
  */
 $Panada = new $class;
 
