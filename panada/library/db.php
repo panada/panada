@@ -8,7 +8,7 @@
  * @since	Version 0.1
  */
 
-class library_mysql {
+class library_db {
     
     var $link;
     var $insert_id;
@@ -69,10 +69,10 @@ class library_mysql {
      * @param $query The SQL querey statement
      * @return string|objet Return the resource id of query
      */
-    function query($query){
+    function query($sql){
         
-        $query = mysql_query($query, $this->link);
-        $this->last_query = $query;
+        $query = mysql_query($sql, $this->link);
+        $this->last_query = $sql;
         
         if ( $this->last_error = mysql_error($this->link) ) {
             $this->print_error();
