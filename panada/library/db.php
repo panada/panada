@@ -176,7 +176,6 @@ class library_db {
             $where = '';
         }
         
-        die("SELECT $field FROM `$table` " . $where);
         return "SELECT $field FROM `$table` " . $where;
     }
     
