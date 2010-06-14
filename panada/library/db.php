@@ -31,16 +31,6 @@ class library_db {
     }
     
     /**
-     * EN: Close databse connection
-     *
-     * @return void
-     */
-    function __destruct(){
-        
-        @mysql_close($this->link);
-    }
-    
-    /**
      * EN: Select the databse
      *
      * @return void
@@ -79,14 +69,14 @@ class library_db {
             return false;
         }
         
-        if( $insert_id = mysql_insert_id() )
+        if( $insert_id = mysql_insert_id($this->link) )
             $this->insert_id = $insert_id;
         
         return $query;
     }
     
     /**
-     * EN: Get mutiple records
+     * EN: Get multiple records
      *
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
@@ -140,7 +130,7 @@ class library_db {
     }
     
     /**
-     * EN: Active record for get records
+     * EN: Abstraction for get records
      *
      * @param string $table Table name
      * @param array $where 'WHERE' sql statement eg: id = '1' ... The default value is NULL or no "WHERE"
@@ -180,7 +170,7 @@ class library_db {
     }
     
     /**
-     * EN: Active record to get single record
+     * EN: Abstraction to get single record
      *
      * @param string
      * @param array Default si null
@@ -195,7 +185,7 @@ class library_db {
     }
     
     /**
-     * EN: Active record to get multyple records
+     * EN: Abstraction to get multyple records
      *
      * @param string
      * @param array Default si null
@@ -209,7 +199,7 @@ class library_db {
     }
     
     /**
-     * EN: Active record for insert
+     * EN: Abstraction for insert
      *
      * @param string $table
      * @param array $data
@@ -226,7 +216,7 @@ class library_db {
     }
     
     /**
-     * EN: Active record for update
+     * EN: Abstraction for update
      *
      * @param string $table
      * @param array $dat
@@ -252,7 +242,7 @@ class library_db {
     }
     
     /**
-     * EN: Active record for delete
+     * EN: Abstraction for delete
      *
      * @param string
      * @param array
@@ -270,7 +260,7 @@ class library_db {
     }
     
     /**
-     * EN: Get what function just call the query. This in for debugging purepose
+     * EN: Get what function just call the query. This in for debugging purepose.
      *
      * @return string
      */
@@ -293,6 +283,11 @@ class library_db {
         return $caller;
     }
     
+    /**
+     * EN: Print the error at least to PHP error log file
+     *
+     * @return string
+     */
     function print_error() {
     
         if ( $caller = $this->get_caller() )

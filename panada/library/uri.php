@@ -54,7 +54,7 @@ class Library_uri {
     }
     
     /**
-     * Fath class name from the url.
+     * Fatch class name from the url.
      *
      * @return  string
      */
@@ -78,7 +78,7 @@ class Library_uri {
     }
     
     /**
-     * Fath method name from the url.
+     * Fatch method name from the url.
      *
      * @return  string
      */
@@ -104,17 +104,18 @@ class Library_uri {
     }
     
     /**
-     * Fath GET request from the url.
+     * Fatch GET request from the url.
      *
+     * @param	int
      * @return  array
      */
-    function fetch_request(){
+    function fetch_request($segment = 3){
 	
-	$uri_string = $this->break_uri_string(3);
+	$uri_string = $this->break_uri_string($segment);
 	
 	if( isset($uri_string) && ! empty($uri_string) ){
 	    
-	    return array_slice($this->break_uri_string(), 3);
+	    return array_slice($this->break_uri_string(), $segment);
 	}
 	else {
 	    
@@ -125,6 +126,7 @@ class Library_uri {
     /**
      * Cleaner for class and method name
      *
+     * @param string
      * @return boolean
      */
     function strip_uri_string($uri){

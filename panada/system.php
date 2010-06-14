@@ -5,6 +5,7 @@
  * Light and simple PHP 5 base Framework.
  *
  * @package	Panada
+ * @category    Panada core system
  * @author	Kandar
  * @copyright	Copyright (c) 2010, Iskandar Soesman.
  * @license	http://www.opensource.org/licenses/bsd-license.php
@@ -13,7 +14,7 @@
  * @filesource
  */
 
-// ---------------------------------------------------------------------
+// -------------------------------------------------------------------
 
 
 
@@ -287,8 +288,34 @@ class Panada {
  * EN: Load the default controller called 'welcome'. Make sure the file exist. If not, stop the execution.
  * ID: Controller default bernama 'welcome'. Pastikan file controller tersedia. Jika tidak, stop eksekusi.
 */
-if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->fetch_class() . '.php') )
-    library_error::_404();
+if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->fetch_class() . '.php') ){
+    
+    /**
+     * EN: Meybe it short url page?? (eg: www.website.com/username) if yes lets redefine controller, method and request.
+     * ID: Apakah short url aktif? jika ya defenisikan ulang controller, method dan request.
+     */
+    if( ! empty($CONFIG['short_url']) ){
+        
+        $request = array(Panada::var_name($class));
+        
+        if( $_request = $pan_uri->fetch_request(2) )
+            $request = array_merge($request, $_request);
+        
+        $_class = array_keys($CONFIG['short_url']);
+        $method = $CONFIG['short_url'][$_class[0]];
+        $class  = 'controller_' . $_class[0];
+        
+        /**
+         * EN: Check once again does the file's controller exist?
+         * ID: Memastikan kembali apakah file untuk contorller short_url tersedia.
+         */
+        if ( ! file_exists( APPLICATION . 'controller/' . $_class[0] . '.php') )
+            library_error::_404();
+    }
+    else {
+        library_error::_404();
+    }
+}
 
 
 /**
@@ -318,7 +345,7 @@ if( ! method_exists($Panada,$method) )
 
 
 /**
- * EN: All required component are ready, its time to show the page.
+ * EN: All required component has ready, its time to show the page.
  * ID: Semua komponen telah siap, saatnya menampilkan halaman.
  */
 if($request)
@@ -332,10 +359,21 @@ else
  */
 //print_r($Panada);
 
-//EN: Uncomment below to count time execution.
+/**
+ * EN: Uncomment below to count time execution.
+ * ID: Silahkan uncomment fungsi di bawah untuk menghitung waktu eksekusi.
+ */
 //timer_stop(1);
 
 /**
+ * EN: Close db connection if present
+ * ID: Tutup koneksi databse jika ada.
+ */
+if( isset($Panada->db) )
+    mysql_close($Panada->db->link);
+
+/**
  * EN: End of the cicle, lets clear the memory. Do we need this??
+ * ID: Jika diperlukan untuk membersihkan memory.
  * unset($Panada);
  */

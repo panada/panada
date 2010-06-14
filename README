@@ -6,6 +6,47 @@ Juni 2010
 Copyright (C) 2010  Iskandar Soesman (iskandarsoesman at gmaildotcom)
 License: http://www.opensource.org/licenses/bsd-license.php
 
+TENTANG PANADA
+==============
+
+Panada adalah framework sederhana dan simpel untuk pembuatan website berbasiskan
+PHP 5. Panada dikembangkan dengan tujuan membantu para pengembang website untuk
+bekerja lebih cepat, lebih mudah dan lebih alamiah dalam penulisan kode. Setiap
+komponen akan bisa saling memanfaatkan sumberdaya (resource) dari komponen-komponen
+lainnya secara otomatis. Hal ini memudahkan Anda dalam memanfaatkan sumberdaya
+secara cepat dan efisien.
+
+FEATURES
+========
+
+*   Sederhana dan Simpel
+    Sistem utama (core system) Panada hanya terdiri dari sebuah file, yaitu sistem.php
+    yang terletak pada direktori panada/system.php. Hal ini bertujuan memudahkan
+    pengguna dalam memahami alur kerja Panada.
+
+*   Mudah
+    Dengan hanya sedikit mengisikan beberapa parameter pada file application/config.php
+    Panada sudah bisa langsung digunakan.
+
+*   Single Load
+    Cukup sekali melakukan pengambilan komponen (component load) dan sumberdayanya
+    bisa langsung digunakan di semua komponen lainnya. Pengambilan bisa dilakukan
+    pada bagian autoloader, di dalam controller, di dalam model atau di dalam library.
+
+*   Alamiah
+    Dalam pengambilan sebuah komponen baik itu model ataupun library, Anda hanya
+    cukup melakukan sekali pendeklarasian sebagaimana umumnya dalam mendeklarasikan
+    sebuah class, yaitu $this->nama_instance = new library_nama(); atau $this->nama_instance = new model_nama();.
+    Baik dalam pengambilan library ataupun model cara yang dilakukan adalah sama.
+    Perbedaaanya hanya terletak pada prefix ('library_' atau 'model_') nama class
+    yang menunjukan tugas dan lokasi folder.
+    
+*   Multisite
+    Beberapa website bisa dibuat dengan menggunakan satu sistem utama yang sama, baik itu
+    dengan domain utama yang sama ataupun berbeda.
+
+
+
 PANDUAN INSTALLASI DAN PENGGUNAAN
 =================================
 
@@ -14,6 +55,7 @@ http://github.com/k4ndar/Panada
 
 Exctract file dan copy-kan ke dalam webserver.
 
+-----------
 Konfigurasi
 -----------
 
@@ -23,17 +65,20 @@ application/config.php
 Isikan lokasi url applikasi pada parameter base_url,
 Misalnya http://localhost/panada/index.php/ atau http://www.mysite.com/index.php/
 
-Jika tidak ingin menampilkan 'index.php', tambahkan file .htaccess di root applikasi yang isinya:
+Jika tidak ingin menampilkan 'index.php', untuk webserver apache tambahkan file
+.htaccess di root applikasi yang isinya:
 
+<IfModule mod_rewrite.c>
 RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
 
+Kemudian jika applikasi Anda menggunakan database lengkapi parameter username,
+host, password, dan nama database.
 
-Lengkapi semua parameter untuk database. Username, host, password, dan nama database.
-
-
+----------
 Controller
 ----------
 
@@ -83,7 +128,7 @@ class controller_home extends Panada {
     }
 }
 
-
+-----
 Model
 -----
 
@@ -162,7 +207,7 @@ Apabila sebuah class suda dideklarasikan, baik itu pada auto_loader
 atau di dalam model ataupun di dalam controller, maka tidak perlu lagi dideklarasikan pada class lainnya.
 instance dari class tersebut secara otomatis sudah bisa langsung digunakan pada class lain.
 
-
+--------
 Database
 --------
 
