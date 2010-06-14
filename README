@@ -65,8 +65,10 @@ application/config.php
 Isikan lokasi url applikasi pada parameter base_url,
 Misalnya http://localhost/panada/index.php/ atau http://www.mysite.com/index.php/
 
-Jika tidak ingin menampilkan 'index.php', untuk webserver apache tambahkan file
-.htaccess di root applikasi yang isinya:
+Jika tidak ingin menampilkan 'index.php', isikan string kosong('')
+pada parameter index_file di dalam file config.php.
+Konfigurasi juga harus dilakukan pada sisi webserver. Untuk webserver
+Apache tambahkan file .htaccess di root applikasi yang isinya:
 
 <IfModule mod_rewrite.c>
 RewriteEngine on
@@ -74,6 +76,28 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]
 </IfModule>
+
+Untuk webserver Nginx, gunakan konfigurasi berikut:
+
+location / {
+
+    root /www/var/your_site;
+    index  index.php index.html index.htm;
+
+    if ($request_filename !~ (guide|js|css|images|robots\.txt.*) ) {
+        rewrite ^/(.*)$ /index.php/$1 last;
+    }
+}
+
+location ~ /index.php/ {
+    fastcgi_pass   127.0.0.1:9000;
+    fastcgi_index  index.php;
+    fastcgi_param  SCRIPT_FILENAME  /www/var/your_site/index.php;
+    include fastcgi_params;
+}
+
+Catatan: Jika Anda menggunakan Nginx, konfigurasi di atas harus dilakukan.
+Jika tidak, applikasi tidak akan ter-routing dengan benar.
 
 Kemudian jika applikasi Anda menggunakan database lengkapi parameter username,
 host, password, dan nama database.

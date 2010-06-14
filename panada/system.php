@@ -201,6 +201,10 @@ class Panada {
         return self::$instance;
     }
     
+    function location($location = ''){
+	return $this->base_url . $GLOBALS['CONFIG']['index_file'] . '/' . $location;
+    }
+    
     /**
      * Object assigner
      *
@@ -272,10 +276,11 @@ class Panada {
         if( ! file_exists( $path = APPLICATION . 'view/' . $view . '.php') )
             library_error::costume(500, '<h2>Error: No ' . $view . ' file in view folder.</h2>');
         
-	if( ! empty($data) ){
+	if( ! empty($data) )
             $this->view = $data;
-	    extract( $this->view, EXTR_SKIP );
-	}
+        
+        if( ! empty($this->view ) )
+             extract( $this->view, EXTR_SKIP );
         
         include_once $path;
     }

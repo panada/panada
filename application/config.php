@@ -3,7 +3,8 @@
 /**
  * EN: Website base url.
  */
-$CONFIG['base_url']                         = 'http://localhost/panada/index.php/';
+$CONFIG['base_url']                         = 'http://localhost/panada/';
+$CONFIG['index_file']                       = 'index.php';
 
 /**
  * EN: Database configuration.
@@ -43,4 +44,11 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
  */
 
+/**
+ * EN: Short url configuration (eg: yoursite.com/username). Make sure the controller and the method are available.
+ * ID: Konfigurasi short url (contoh: yoursite.com/username). Pastikan controller sudah tersedia, jika tidak akan menghasilkan error.
+ *
+ * array key => controller name
+ * array value => controller's method
+ */
 $CONFIG['short_url'] = array();
