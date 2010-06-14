@@ -269,13 +269,14 @@ class Panada {
     */
     function view($view, $data = array()){
         
-        if( ! empty($data) )
-            $this->view = $data;
-        
         if( ! file_exists( $path = APPLICATION . 'view/' . $view . '.php') )
             library_error::costume(500, '<h2>Error: No ' . $view . ' file in view folder.</h2>');
         
-        extract( $this->view, EXTR_SKIP );
+	if( ! empty($data) ){
+            $this->view = $data;
+	    extract( $this->view, EXTR_SKIP );
+	}
+        
         include_once $path;
     }
 }
