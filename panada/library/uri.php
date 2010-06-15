@@ -22,8 +22,20 @@ class Library_uri {
         if (trim($path, '/') != '' && $path != '/index.php')
             return $path;
 	
+    
+	// ID: coba dengan $_SERVER['QUERY_STRING'].
+	$path =  (isset($_SERVER['QUERY_STRING'])) ? $_SERVER['QUERY_STRING'] : @getenv('QUERY_STRING');
+        if (trim($path, '/') != '')
+            return $path;
 	
-	// ID: Jika tidak berhasil, deklarasikan array berisikan komponen2 yang tidak digunakan. Array ini akan digunakan untuk di dalam fungis str_replace di bawah.
+	
+	// ID: Masih belum berhasil juga?? coba lagi dengan $_SERVER['ORIG_PATH_INFO']
+        $path = str_replace($_SERVER['SCRIPT_NAME'], '', (isset($_SERVER['ORIG_PATH_INFO'])) ? $_SERVER['ORIG_PATH_INFO'] : @getenv('ORIG_PATH_INFO'));
+        if (trim($path, '/') != '' && $path != '/index.php')
+            return $path;
+        
+	
+	// ID: Jika tidak berhasil, deklarasikan array berisikan komponen2 yang tidak digunakan. Array ini akan digunakan di dalam fungis str_replace di bawah.
 	$script_remove_string = explode('/', $_SERVER['SCRIPT_NAME']);
 	
 	// ID: Jika cara pertama tidak berhasil, coba lagi menggunakan varibel global $_SERVER["PHP_SELF"]
@@ -31,29 +43,19 @@ class Library_uri {
 	if( $path != '' )
 	    return '/'.$path;
 	
+	
 	// ID: Belum berhasil juga? coba dengan $_SERVER["REQUEST_URI"]
 	$path = trim(str_replace($script_remove_string, '', $_SERVER["REQUEST_URI"]), '/');
 	$path = $this->remove_query($path);
 	if (trim($path, '/') != '')
 	    return '/'.$path;
 	
-	// ID: Coba gunakan parameter base_url dari file config.php. Ini untuk menangani masalah yang biasa muncul di Nginx. 
+	
+	// ID: Terakhir, coba gunakan parameter base_url dari file config.php. Ini untuk menangani masalah yang biasa muncul di Nginx. 
 	$path = str_replace($GLOBALS['CONFIG']['base_url'], '', ($this->is_https())?'https://':'http://' . $_SERVER['SERVER_NAME']. $_SERVER['REQUEST_URI']);
 	$path = $this->remove_query($path);
-	if (trim($path, '/') != '')
+	if (trim($path, '/') != '' && trim($path, '/') != 'index.php')
 	    return '/'.$path;
-	
-        
-	// ID: Masih belum berhasil juga?? coba lagi dengan $_SERVER['ORIG_PATH_INFO']
-        $path = str_replace($_SERVER['SCRIPT_NAME'], '', (isset($_SERVER['ORIG_PATH_INFO'])) ? $_SERVER['ORIG_PATH_INFO'] : @getenv('ORIG_PATH_INFO'));
-        if (trim($path, '/') != '' && $path != '/index.php')
-            return $path;
-        
-	
-	// ID: Terakhir, coba dengan $_SERVER['QUERY_STRING'].
-	$path =  (isset($_SERVER['QUERY_STRING'])) ? $_SERVER['QUERY_STRING'] : @getenv('QUERY_STRING');
-        if (trim($path, '/') != '')
-            return $path;
 	
         return false;
     }
