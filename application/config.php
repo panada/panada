@@ -3,7 +3,7 @@
 /**
  * EN: Website base url.
  */
-$CONFIG['base_url']                         = 'http://localhost/panada/';
+$CONFIG['base_url']                         = 'http://' .$_SERVER['SERVER_NAME'].'/'; /* Change this with your application domain and/or path. */
 $CONFIG['index_file']                       = 'index.php';
 
 /**
