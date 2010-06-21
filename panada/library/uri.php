@@ -4,7 +4,7 @@
  * 
  * @package	Panada
  * @subpackage	Library
- * @author	Kandar.
+ * @author	Iskandar Soesman.
  * @since	Version 0.1
  */
 

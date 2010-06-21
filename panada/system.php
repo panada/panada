@@ -6,48 +6,28 @@
  *
  * @package	Panada
  * @category    Panada core system
- * @author	Kandar
+ * @author	Iskandar Soesman
  * @copyright	Copyright (c) 2010, Iskandar Soesman.
  * @license	http://www.opensource.org/licenses/bsd-license.php
  * @link	http://www.kandar.info/panada/
  * @since	Version 0.1
- * @filesource
  */
 
-// -------------------------------------------------------------------
 
 
 
 /**
- * EN: Count the time execution.
- *
-function timer_start() {
-    global $timestart;
-    $mtime = explode(' ', microtime() );
-    $mtime = $mtime[1] + $mtime[0];
-    $timestart = $mtime;
-    return true;
-}
-function timer_stop($display = 0, $precision = 3) { //if called like timer_stop(1), will echo $timetotal
-    global $timestart, $timeend;
-    $mtime = microtime();
-    $mtime = explode(' ',$mtime);
-    $mtime = $mtime[1] + $mtime[0];
-    $timeend = $mtime;
-    $timetotal = $timeend-$timestart;
-    $r = ( function_exists('number_format_i18n') ) ? number_format_i18n($timetotal, $precision) : number_format($timetotal, $precision);
-    if ( $display )
-	    echo $r;
-    return $r;
-}
+ * EN: Start count time execution.
+ * ID: Mulai menghitung waktu eksekusi. Silahkan uncomment method 'Library_time_execution::start()' untuk menghitung waktu eksekusi.
+ */
+//Library_time_execution::start();
 
-timer_start();
-*/
 
 
 
 /**
- * Load configuration file
+ * EN: Load configuration file.
+ * ID: Menyertakan file konfigurasi.
 */
 require_once APPLICATION . 'config.php';
 
@@ -61,7 +41,7 @@ require_once APPLICATION . 'config.php';
  * 
  * @package	Panada
  * @category	Main System
- * @author	Kandar
+ * @author	Iskandar Soesman
  * @since	Version 0.1
  */
 class Panada_cacher {
@@ -98,8 +78,8 @@ $panada_cacher = new Panada_cacher();
  * EN: Load url class to get info: class name, method, request etc.. base on url path.
  * ID: Load class uri untuk mendapatkan informasi nama class, method, requst dll berdasarkan path url.
 */
-$pan_uri    = new library_uri();
-$class      = 'controller_'.$pan_uri->fetch_class();
+$pan_uri    = new Library_uri();
+$class      = 'Controller_'.$pan_uri->fetch_class();
 $method     = $pan_uri->fetch_method();
 $request    = $pan_uri->fetch_request();
 
@@ -120,14 +100,19 @@ function __autoload($class_name) {
     
     //EN: Strip class name from folder prefix.
     $var_name	= Panada::var_name($class_name);
-    //EN: Convert undersore into slash.
-    $file	= str_replace('_', '/', $class_name);
+    
     //EN: Explode the class name base on '_' to get folder name.
     $prefix	= explode('_', $class_name);
     
+    //EN: Folder where file located.
+    $folder     = strtolower($prefix[0]);
+    
+    //EN: Reconstruct file name and folder location.
+    $file	= $folder .'/'. $var_name;
+    
     
     //EN: Are we trying to load a library file?
-    if( $prefix[0] == 'library' ){
+    if( $folder == 'library' ){
 	
         //EN: Does the file exist in main library folder?
 	if( file_exists( $libsys_file = THISPATH . GEAR . $file . '.php' ) ) {
@@ -142,7 +127,7 @@ function __autoload($class_name) {
         //EN: Oops! Panada Can't find anywhere, so stop the execution!
 	else{
 	    
-	    library_error::costume(500, '<h2>Error: No '.$var_name.' file in library folder.</h2>');
+	    Library_error::costume(500, '<h2>Error: No '.$var_name.' file in library folder.</h2>');
 	}
         
     }
@@ -157,7 +142,7 @@ function __autoload($class_name) {
      * EN: Exclude some class from caching.
      * ID: Abaikan beberap class yang tidak perlu di-cache.
      */
-    if( $class_name == 'library_uri' || $class_name == 'library_error' || $class_name == 'controller_'.$var_name )
+    if( strtolower($class_name) == 'library_uri' || strtolower($class_name) == 'library_error' || strtolower($class_name) == 'library_time_execution' || strtolower($class_name) == 'controller_'.$var_name )
         return;
     
     $panada_cacher  = $GLOBALS['panada_cacher'];
@@ -183,7 +168,7 @@ function __autoload($class_name) {
  *
  * @package	Panda
  * @category	Main System
- * @author	kandar
+ * @author	Iskandar Soesman
  * @since	Version 0.1
  */
 class Panada {
@@ -203,6 +188,11 @@ class Panada {
     
     function location($location = ''){
 	return $this->base_url . $GLOBALS['CONFIG']['index_file'] . '/' . $location;
+    }
+    
+    function redirect($location = ''){
+        header('Location:' . $location);
+        exit;
     }
     
     /**
@@ -239,7 +229,7 @@ class Panada {
      * @return string
      */
     public static function var_name($class_name){
-	return str_replace(array('library_', 'model_', 'controller_'),'',$class_name);
+	return str_ireplace(array('library_', 'model_', 'controller_'), '', $class_name);
     }
     
     /**
@@ -274,7 +264,7 @@ class Panada {
     function view($view, $data = array()){
         
         if( ! file_exists( $path = APPLICATION . 'view/' . $view . '.php') )
-            library_error::costume(500, '<h2>Error: No ' . $view . ' file in view folder.</h2>');
+            Library_error::costume(500, '<h2>Error: No ' . $view . ' file in view folder.</h2>');
         
 	if( ! empty($data) )
             $this->view = $data;
@@ -309,17 +299,17 @@ if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->fetch_class() . '.ph
         
         $_class = array_keys($CONFIG['short_url']);
         $method = $CONFIG['short_url'][$_class[0]];
-        $class  = 'controller_' . $_class[0];
+        $class  = 'Controller_' . $_class[0];
         
         /**
          * EN: Check once again does the file's controller exist?
          * ID: Memastikan kembali apakah file untuk contorller short_url tersedia.
          */
         if ( ! file_exists( APPLICATION . 'controller/' . $_class[0] . '.php') )
-            library_error::_404();
+            Library_error::_404();
     }
     else {
-        library_error::_404();
+        Library_error::_404();
     }
 }
 
@@ -347,7 +337,7 @@ Panada::assigner();
  *	Pastikan method tersedia/atau bisa dipanggil. Jika tidak stop eksekusi.
 */
 if( ! method_exists($Panada,$method) )
-    library_error::_404();
+    Library_error::_404();
 
 
 /**
@@ -367,9 +357,9 @@ else
 
 /**
  * EN: Uncomment below to count time execution.
- * ID: Silahkan uncomment fungsi di bawah untuk menghitung waktu eksekusi.
+ * ID: Silahkan uncomment method di bawah untuk menghitung waktu eksekusi.
  */
-//timer_stop(1);
+//Library_time_execution::stop();
 
 /**
  * EN: Close db connection if present

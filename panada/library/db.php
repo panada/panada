@@ -4,11 +4,11 @@
  *
  * @package	Panada
  * @subpackage	Library
- * @author	Kandar. Inspired by ezSQL {@link http://php.justinvincent.com Justin Vincent (justin@visunet.ie)}
+ * @author	Iskandar Soesman. Inspired by ezSQL {@link http://php.justinvincent.com Justin Vincent (justin@visunet.ie)}
  * @since	Version 0.1
  */
 
-class library_db {
+class Library_db {
     
     var $link;
     var $insert_id;

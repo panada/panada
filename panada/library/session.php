@@ -4,11 +4,11 @@
  *
  * @package	Panada
  * @subpackage	Library
- * @author	Kandar
+ * @author	Iskandar Soesman
  * @since	Version 0.1
  */
 
-class library_session {
+class Library_session {
     
     /**
     * EN: This variable set the maximum life in seconds of a session file on the server since last activity.
