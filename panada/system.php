@@ -229,7 +229,7 @@ class Panada {
      * @return string
      */
     public static function var_name($class_name){
-	return str_ireplace(array('library_', 'model_', 'controller_'), '', $class_name);
+	return strtolower(str_ireplace(array('library_', 'model_', 'controller_'), '', $class_name));
     }
     
     /**

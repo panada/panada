@@ -10,10 +10,21 @@
 
 class Library_error {
     
+    /**
+     * ID: Membuat instance dari class Library_error
+     *
+     * @return object
+     */
     public static function instance(){
 	return new Library_error();
     }
     
+    /**
+     * ID Template header untuk pesan error.
+     *
+     * @param integer
+     * @return string
+     */
     private function header($code){
         
         $return = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd" >
@@ -23,12 +34,21 @@ class Library_error {
         printf($return);
     }
     
+    /**
+     * ID Template footer untuk pesan error.
+     *
+     * @return string
+     */
     private function footer(){
         
         printf('</body></html>');
     }
     
-    
+    /**
+     * ID: Error 404 tempalate.
+     *
+     * @return string
+     */
     function _404(){
         
         self::set_status_header(404);
@@ -38,6 +58,11 @@ class Library_error {
         exit;
     }
     
+     /**
+     * ID: Error 400 tempalate.
+     *
+     * @return string
+     */
     function _400(){
         
         self::set_status_header(400);
@@ -47,6 +72,13 @@ class Library_error {
         exit;
     }
     
+     /**
+     * ID: Error 500 tempalate.
+     *
+     * @param integer
+     * @param string
+     * @return string
+     */
     function _500($title = '500', $message = '<h1>Error: Bad Request!</h1>'){
 	
 	self::set_status_header(500);
@@ -56,6 +88,12 @@ class Library_error {
         exit;
     }
     
+     /**
+     * ID: Template untuk error database.
+     *
+     * @param string
+     * @return string
+     */
     function database($message = ''){
 	
 	$title = 'Database';
@@ -65,6 +103,13 @@ class Library_error {
 	self::_500($title, $body);
     }
     
+     /**
+     * ID: Template untuk error costume.
+     *
+     * @param int
+     * @param string
+     * @return string
+     */
     function costume($code = 200, $message = ''){
 	
 	self::set_status_header($code);
@@ -74,6 +119,13 @@ class Library_error {
         
     }
     
+     /**
+     * ID: Menentukan status pada header respons.
+     *
+     * @param int
+     * @param string
+     * @return string
+     */
     function set_status_header($code = 200, $text = ''){
         
 	$status = array(
@@ -114,18 +166,12 @@ class Library_error {
                 504	=> 'Gateway Timeout',
                 505	=> 'HTTP Version Not Supported'
             );
-
-        if ($code == '' OR ! is_numeric($code))
-            die('Status codes must be numeric');
-    
+	
         if (isset($status[$code]) AND $text == '')		
             $text = $status[$code];
-            
-        if ($text == '')
-            die('No status text available. Please check your status code number or supply your own message text.');
-            
+        
         $server_protocol = (isset($_SERVER['SERVER_PROTOCOL'])) ? $_SERVER['SERVER_PROTOCOL'] : FALSE;
-    
+	
         if (substr(php_sapi_name(), 0, 3) == 'cgi')
             header("Status: $code $text", TRUE);
         elseif ($server_protocol == 'HTTP/1.1' OR $server_protocol == 'HTTP/1.0')

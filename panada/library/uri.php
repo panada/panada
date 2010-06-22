@@ -4,14 +4,15 @@
  * 
  * @package	Panada
  * @subpackage	Library
- * @author	Iskandar Soesman.
+ * @author	Iskandar Soesman
  * @since	Version 0.1
  */
 
 class Library_uri {
     
     /**
-     * Extract the url into string query.
+     * EN: Extract the url into string query.
+     * ID: Mendapatkan url dan mengekstraknya menjadi query.
      * 
      * @return  string
      */
@@ -67,6 +68,7 @@ class Library_uri {
     
     /**
      * EN: Does this site use https?
+     * ID: Cek apakah protokolnya https atau http.
      *
      * @return boolean
      */
@@ -88,6 +90,7 @@ class Library_uri {
     }
     
     /**
+     * EN: Clean the 'standard' model query.
      * ID: Jika di url ada query seperti ini ?abc=123&def=345, string-nya akan terbawa, untuk itu harus dibersihkan terlebih dahulu.
      *
      * @param string
@@ -104,6 +107,7 @@ class Library_uri {
     
     /**
      * EN: Break the string given from extract_uri_string() into class, method and request.
+     * ID: Memecah string query menjadi class, method dan request.
      *
      * @param	integer
      * @return  string
@@ -121,6 +125,7 @@ class Library_uri {
     
     /**
      * EN: Fatch class name from the url.
+     * ID: Mendapatkan nama class dari url.
      *
      * @return  string
      */
@@ -141,6 +146,7 @@ class Library_uri {
     
     /**
      * EN: Fatch method name from the url.
+     * ID: Mendapatkan nama method dari url.
      *
      * @return  string
      */
@@ -164,6 +170,7 @@ class Library_uri {
     
     /**
      * EN: Fatch GET request from the url.
+     * ID: Mendapatkan request dari url.
      *
      * @param	int
      * @return  array
@@ -180,6 +187,7 @@ class Library_uri {
     
     /**
      * EN: Cleaner for class and method name
+     * ID: Membersihkan nama clas dan method dari karakter yang tidak perlu.
      *
      * @param string
      * @return boolean
