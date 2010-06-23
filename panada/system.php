@@ -115,7 +115,7 @@ function __autoload($class_name) {
     if( $folder == 'library' ){
 	
         //EN: Does the file exist in main library folder?
-	if( file_exists( $libsys_file = THISPATH . GEAR . $file . '.php' ) ) {
+	if( file_exists( $libsys_file = GEAR . $file . '.php' ) ) {
 	    
 	    $class_file = $libsys_file;
 	}
@@ -187,10 +187,11 @@ class Panada {
     }
     
     function location($location = ''){
-	return $this->base_url . $GLOBALS['CONFIG']['index_file'] . '/' . $location;
+	return $this->base_url . $GLOBALS['CONFIG']['index_file'] . $location;
     }
     
     function redirect($location = ''){
+        $location = ( empty($location) ) ? $this->location() : $location;
         header('Location:' . $location);
         exit;
     }

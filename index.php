@@ -63,4 +63,4 @@ error_reporting(E_ALL);
  * EN: Bootstrap file for Panada main system.
  * ID: Sistem utma Panada.
  */
-require_once THISPATH . GEAR . 'system.php';
+require_once GEAR . 'system.php';
