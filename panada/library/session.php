@@ -182,13 +182,19 @@ class Library_session {
     /**
      * EN: Save new session
      *
-     * @param string
+     * @param string|array
      * @param string|array|object
-     * @return string|array|object
+     * @return void
      */
-    function set($name, $value){
+    function set($name, $value = ''){
         
-	$_SESSION[$name] = $value;
+	if( is_array($name) ) {
+	    foreach($name AS $key => $val)
+		$_SESSION[$key] = $val;
+	}
+	else {
+	    $_SESSION[$name] = $value;
+	}
     }
 
     /**
