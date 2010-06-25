@@ -11,17 +11,20 @@
 class Library_encryption {
     
     /**
-     * @var string EN: Encoding type. none | base_64 | hexa_decimal
+     * @var string  EN: Encoding type. none | base_64 | hexa_decimal
+     *              ID: Tipe encoding. Pilihannya adalah: none | base_64 | hexa_decimal
      */
     public $encode_type = 'base_64';
     
     /**
-     * @var string EN: The encrypt/decrypt key.
+     * @var string  EN: The encrypt/decrypt key.
+     *              ID: Key untuk encrypt/decrypt.
      */
     public $key;
     
     /**
-     * EN: Encryption method without Mcrypt modul.
+     * EN: Produce encryption without Mcrypt modul.
+     * ID: Buat enkripsi tanpa modul Mcrypt.
      *
      * @var string
      * @var string
@@ -34,6 +37,7 @@ class Library_encryption {
     
     /**
      * EN: Decryption method without Mcrypt modul.
+     * ID: Dekripsi tanpa modul Mcrypt.
      *
      * @var string
      * @var string
@@ -48,6 +52,7 @@ class Library_encryption {
     
     /**
      * EN: Create the ciphertext string.
+     * ID: Ubah string menjadi string acak.
      *
      * @param string
      * @return string
@@ -68,6 +73,7 @@ class Library_encryption {
     
     /**
      * EN: Create the plain text string.
+     * ID: Ubah string acak menjadi string terbaca.
      *
      * @param string
      * @return string
@@ -90,6 +96,7 @@ class Library_encryption {
     
     /**
      * EN: Encode the encypted string.
+     * ID: Enocode string yang telah terenkripsi.
      *
      * @param string
      * @return string
@@ -107,6 +114,7 @@ class Library_encryption {
     
     /**
      * EN: Decode the encypted string.
+     * ID: Decode string yang telah terenkripsi.
      *
      * @param string
      * @return string
@@ -124,6 +132,7 @@ class Library_encryption {
     
     /**
      * EN: Encode the binary into hexadecimal.
+     * ID: Encode binary menjadi hexadecimal.
      *
      * @param string
      * @return string
@@ -137,6 +146,7 @@ class Library_encryption {
     
     /**
      * EN: Decode the hexadecimal code into binary.
+     * ID: Decode binary menjadi hexadecimal.
      *
      * @param string
      * @return string
