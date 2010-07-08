@@ -25,7 +25,7 @@ class Library_db {
         $this->link = @mysql_connect($db_config['host'], $db_config['user'], $db_config['password']);
         
         if ( ! $this->link )
-            library_error::database('Unable connet to database.');
+            Library_error::database('Unable connet to database.');
             
         $this->select_db($db_config['database']);
     }
@@ -38,7 +38,7 @@ class Library_db {
     function select_db($dbname){
         
         if ( ! @mysql_select_db($dbname, $this->link) )
-            library_error::database('Unable to select database.');
+            Library_error::database('Unable to select database.');
         
     }
     
@@ -306,7 +306,7 @@ class Library_db {
         $query = htmlspecialchars($this->last_query, ENT_QUOTES);
     
         // If there is an error then take note of it
-        library_error::database($str.'<br />'.$query);
+        Library_error::database($str.'<br />'.$query);
     }
     
 }// End library_mysql

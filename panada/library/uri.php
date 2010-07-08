@@ -140,7 +140,7 @@ class Library_uri {
 	}
 	else {
 	    
-	    return 'welcome';
+	    return 'index';
 	}
     }
     

@@ -187,7 +187,8 @@ class Panada {
     }
     
     function location($location = ''){
-	return $this->base_url . $GLOBALS['CONFIG']['index_file'] . $location;
+        $index_file = (! empty($GLOBALS['CONFIG']['index_file']) ) ? $GLOBALS['CONFIG']['index_file'] . '/' : '';
+	return $this->base_url . $index_file . $location;
     }
     
     function redirect($location = ''){

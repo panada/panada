@@ -1,6 +1,6 @@
 <?php defined('THISPATH') or die('Tidak diperkenankan mengakses file secara langsung.');
 
-class controller_welcome extends Panada {
+class controller_index extends Panada {
     
     function __construct(){
         
@@ -11,6 +11,6 @@ class controller_welcome extends Panada {
         
         $views['page_title']    = 'hello world!';
         $views['body']          = 'This is hello world body!';
-        $this->view('welcome_view', $views);
+        $this->view('index', $views);
     }
 }
