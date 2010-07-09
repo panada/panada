@@ -79,9 +79,9 @@ $panada_cacher = new Panada_cacher();
  * ID: Load class uri untuk mendapatkan informasi nama class, method, requst dll berdasarkan path url.
 */
 $pan_uri    = new Library_uri();
-$class      = 'Controller_'.$pan_uri->fetch_class();
-$method     = $pan_uri->fetch_method();
-$request    = $pan_uri->fetch_request();
+$class      = 'Controller_'.$pan_uri->get_class();
+$method     = $pan_uri->get_method();
+$request    = $pan_uri->get_requests();
 
 
 
@@ -187,8 +187,7 @@ class Panada {
     }
     
     function location($location = ''){
-        $index_file = (! empty($GLOBALS['CONFIG']['index_file']) ) ? $GLOBALS['CONFIG']['index_file'] . '/' : '';
-	return $this->base_url . $index_file . $location;
+	return $this->base_url . $GLOBALS['CONFIG']['index_file'] . $location;
     }
     
     function redirect($location = ''){
@@ -286,7 +285,7 @@ class Panada {
  * EN: Load the default controller called 'welcome'. Make sure the file exist. If not, stop the execution.
  * ID: Controller default bernama 'welcome'. Pastikan file controller tersedia. Jika tidak, stop eksekusi.
 */
-if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->fetch_class() . '.php') ){
+if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->get_class() . '.php') ){
     
     /**
      * EN: Meybe it short url page?? (eg: www.website.com/username) if yes lets redefine controller, method and request.
@@ -296,7 +295,7 @@ if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->fetch_class() . '.ph
         
         $request = array(Panada::var_name($class));
         
-        if( $_request = $pan_uri->fetch_request(2) )
+        if( $_request = $pan_uri->get_requests(2) )
             $request = array_merge($request, $_request);
         
         $_class = array_keys($CONFIG['short_url']);

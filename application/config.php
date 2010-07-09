@@ -4,7 +4,7 @@
  * EN: Website base url.
  */
 $CONFIG['base_url']                         = 'http://' .$_SERVER['SERVER_NAME'].'/'; /* Change this with your application domain and/or path. */
-$CONFIG['index_file']                       = 'index.php'; /* Remove this index.php if you wish an url without "index.php" */
+$CONFIG['index_file']                       = 'index.php/'; /* Remove this index.php if you wish an url without "index.php" */
 
 /**
  * EN: Database configuration.

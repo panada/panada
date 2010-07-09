@@ -16,7 +16,7 @@ class Library_uri {
      * 
      * @return  string
      */
-    function extract_uri_string(){
+    public function extract_uri_string(){
 	
 	// ID: Pertama, coba dapatkan url menggunakan variable golbal $_SERVER['PATH_INFO'].
         $path = (isset($_SERVER['PATH_INFO'])) ? $_SERVER['PATH_INFO'] : @getenv('PATH_INFO');
@@ -72,7 +72,7 @@ class Library_uri {
      *
      * @return boolean
      */
-    function is_https() {
+    public function is_https() {
 	
 	if ( isset($_SERVER['HTTPS']) ) {
 		
@@ -96,7 +96,7 @@ class Library_uri {
      * @param string
      * @return string
      */
-    function remove_query($path){
+    public function remove_query($path){
 	
 	$path_ar = explode('?', $path);
 	if(count($path_ar) > 0)
@@ -112,7 +112,7 @@ class Library_uri {
      * @param	integer
      * @return  string
      */
-    function break_uri_string($segment = 0){
+    public function break_uri_string($segment = 0){
     
 	$uri_string = $this->extract_uri_string();
 	$uri_string = explode('/', $uri_string);
@@ -124,12 +124,12 @@ class Library_uri {
     }
     
     /**
-     * EN: Fatch class name from the url.
+     * EN: Get class name from the url.
      * ID: Mendapatkan nama class dari url.
      *
      * @return  string
      */
-    function fetch_class(){
+    public function get_class(){
 	
 	if( $uri_string = $this->break_uri_string(1) ){
 	    
@@ -140,17 +140,17 @@ class Library_uri {
 	}
 	else {
 	    
-	    return 'index';
+	    return 'home';
 	}
     }
     
     /**
-     * EN: Fatch method name from the url.
+     * EN: Get method name from the url.
      * ID: Mendapatkan nama method dari url.
      *
      * @return  string
      */
-    function fetch_method(){
+    public function get_method(){
 	
 	$uri_string = $this->break_uri_string(2);
 	
@@ -169,13 +169,13 @@ class Library_uri {
     }
     
     /**
-     * EN: Fatch GET request from the url.
+     * EN: Get "GET" request from the url.
      * ID: Mendapatkan request dari url.
      *
      * @param	int
      * @return  array
      */
-    function fetch_request($segment = 3){
+    public function get_requests($segment = 3){
 	
 	$uri_string = $this->break_uri_string($segment);
 	
@@ -192,7 +192,7 @@ class Library_uri {
      * @param string
      * @return boolean
      */
-    function strip_uri_string($uri){
+    public function strip_uri_string($uri){
 	
 	$uri = ( !preg_match('/[^a-zA-Z0-9_.-]/', $uri) ) ? true : false;
 	return $uri;
