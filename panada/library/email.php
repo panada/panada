@@ -1,4 +1,4 @@
-<?php defined('THISPATH') or die('Tidak diperkenankan mengakses file secara langsung.');
+<?php defined('THISPATH') or die('Can\'t access directly!');
 /**
  * Panada email API.
  *

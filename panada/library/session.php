@@ -1,4 +1,4 @@
-<?php defined('THISPATH') or die('Tidak diperkenankan mengakses file secara langsung.');
+<?php defined('THISPATH') or die('Can\'t access directly!');
 /**
  * Panada session hendler.
  *
@@ -11,73 +11,55 @@
 class Library_session {
     
     /**
-    * EN: This variable set the maximum life in seconds of a session file on the server since last activity.
-    * ID: Parameter ini menentukan berapa lama file session disimpan di server sejak aktivitas terakhir.
-    *
-    * @var integer
+    * @var integer	EN: This variable set the maximum life in seconds of a session file on the server since last activity.
+    *			ID: Parameter ini menentukan berapa lama file session disimpan di server sejak aktivitas terakhir.
     */
     public $sesion_expire = 7200; //2 hour
     
     /**
-     * EN: Change the default PHP session name (PHPSESSIONID) to Panada session name (PAN_SID).
-     * ID: Merubah nama cookie session PHP dari PHPSESSIONID menjadi PAN_SID.
-     *
-     * @var string
+     * @var string	EN: Change the default PHP session name (PHPSESSIONID) to Panada session name (PAN_SID).
+     * 			ID: Merubah nama cookie session PHP dari PHPSESSIONID menjadi PAN_SID.
      */
     public $session_name = 'PAN_SID';
     
     /**
-     * EN: Sets the session cookies to N seconds.
-     * ID: Menentukan berapa lama cookie session disimpan di browser.
-     *
-     * @var integer
+     * @var integer	EN: Sets the session cookies to N seconds.
+     *			ID: Menentukan berapa lama cookie session disimpan di browser.
      */
     public $session_cookie_expire = 0;
     
     /**
-     * EN: This session id
-     *
-     * @var string
+     * @var string	EN: This session id.
      */
     public $session_id;
     
     /**
-     * EN: Session cookie path
-     * ID: Lokasi path di mana cookie berlaku.
-     *
-     * @var string
+     * @var string	EN: Session cookie path.
+     * 			ID: Lokasi path di mana cookie berlaku.
      */
     public $session_cookie_path = '/';
     
     /**
-     * EN: Define the cookie only working on https or not.
-     * ID: Menentukan apakah cookie hanya berlaku pada https atau tidak.
-     *
-     * @var boolean
+     * @var boolean	EN: Define the cookie only working on https or not.
+     *			ID: Menentukan apakah cookie hanya berlaku pada https atau tidak.
      */
     public $session_cookie_secure = false;
     
     /**
-     * EN: Define the cookie domain.
-     * ID: Menentukan domain cookie.
-     *
-     * @var string
+     * @var string	EN: Define the cookie domain.
+     *			ID: Menentukan domain cookie.
      */
     public $session_cookie_domain = '';
     
     /**
-     * EN: Where we store the session? file (PHP native) or db.
-     * ID: Di mana kita akan simpan session? file (PHP native) atau db.
-     *
-     * @var string
+     * @var string	EN: Where we store the session? file (PHP native) or db.
+     *			ID: Di mana kita akan simpan session? file (PHP native) atau db.
      */
     public $session_store = 'native';
     
     /**
-     * EN: Session table name
-     * ID: Nama table session
-     *
-     * @var string
+     * @var string	EN: Session table name.
+     *			ID: Nama table session.
      */
     public $session_db_name = 'sessions';
     

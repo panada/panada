@@ -1,4 +1,4 @@
-<?php defined('THISPATH') or die('Tidak diperkenankan mengakses file secara langsung.');
+<?php defined('THISPATH') or die('Can\'t access directly!');
 /**
  * EN: Panada Time Execution tools.
  * ID: Tools untuk menghitung waktu eksekusi script.

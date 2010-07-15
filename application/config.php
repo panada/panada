@@ -1,4 +1,4 @@
-<?php defined('THISPATH') or die('Tidak diperkenankan mengakses file secara langsung.');
+<?php defined('THISPATH') or die('Can\'t access directly!');
 
 /**
  * EN: Website base url.
@@ -52,3 +52,9 @@ CREATE TABLE IF NOT EXISTS `sessions` (
  * array value => controller's method
  */
 $CONFIG['short_url'] = array();
+
+/**
+ * EN:  GET Query filter type. See the option at http://www.php.net/manual/en/filter.filters.sanitize.php
+ *      You can set the value to false, if you don't wanna filtering the query.
+ */
+$CONFIG['request_filter_type'] = FILTER_SANITIZE_STRING;
