@@ -29,7 +29,7 @@ class Library_encryption {
      * @var string
      * @var string
     */
-    function encrypt($string, $key = ''){
+    public function encrypt($string, $key = ''){
         
         $this->key = $key;
         return $this->simple_encrypt($string);
@@ -44,7 +44,7 @@ class Library_encryption {
      * @return string
      * @access public
     */
-    function decrypt($string, $key = ''){
+    public function decrypt($string, $key = ''){
         
         $this->key = $key;
         return $this->simple_decrypt($string);

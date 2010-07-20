@@ -98,7 +98,7 @@ class Library_pagination {
     /**
      * EN: Class contructor
      */
-    function __construct(){
+    public function __construct(){
         
         /**
          * EN: Make sure the argument type only integer.
@@ -117,7 +117,7 @@ class Library_pagination {
      *
      * @return array
      */
-    function get_url(){
+    public function get_url(){
 	
         $total    = ceil($this->total / $this->limit);
         if ( $total < 2 )
@@ -130,12 +130,12 @@ class Library_pagination {
         $paging_url = array();
         $n          = 0;
         $dots       = false;
-
+        
         if ( $this->prev_next && $this->current && 1 < $this->current ) {
            
             $link         = str_replace('%#%', $this->current - 1, $this->base);
             $paging_url[] = ( $this->no_href )? array('link' => $link, 'value' => $this->prev_text) : '<a href="'.$link.'">'.$this->prev_text.'</a>';
-        
+            
         }
         
         for ( $n = 1; $n <= $total; $n++ ) {
@@ -181,4 +181,4 @@ class Library_pagination {
         return $paging_url;
     }
     
-} // End Pagination class.
+} // End Pagination Class.

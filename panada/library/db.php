@@ -35,7 +35,7 @@ class Library_db {
      *
      * @return void
      */
-    function select_db($dbname){
+    private function select_db($dbname){
         
         if ( ! @mysql_select_db($dbname, $this->link) )
             Library_error::database('Unable to select database.');
@@ -48,7 +48,7 @@ class Library_db {
      * @param string $string
      * @return void
      */
-    function escape($string){
+    public function escape($string){
         
         return mysql_real_escape_string($string, $this->link);
     }
@@ -59,7 +59,7 @@ class Library_db {
      * @param $query The SQL querey statement
      * @return string|objet Return the resource id of query
      */
-    function query($sql){
+    public function query($sql){
         
         $query = mysql_query($sql, $this->link);
         $this->last_query = $sql;
@@ -81,7 +81,7 @@ class Library_db {
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
      */
-    function results($query, $type = 'object'){
+    public function results($query, $type = 'object'){
         
         $result = $this->query($query);
         
@@ -104,7 +104,7 @@ class Library_db {
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
      */
-    function row($query, $type = 'object'){
+    public function row($query, $type = 'object'){
         
         $result = $this->query($query);
         $return = mysql_fetch_object($result);
@@ -121,7 +121,7 @@ class Library_db {
      * @param string @query
      * @return string|int Depen on it record value.
      */
-    function get_var($query) {
+    public function get_var($query) {
         
         $result = $this->row($query);
         $key = array_keys(get_object_vars($result));
@@ -137,7 +137,7 @@ class Library_db {
      * @param array $fields table fileds name. If this parameter empty so it will SELECT * (select all fields)
      * @return string The SQL statement
      */
-    function get($table, $where = array(), $fields = array()){
+    public function get($table, $where = array(), $fields = array()){
         
         //EN: If field table undefined, then select all.
         if ( empty($fields) ) {
@@ -177,7 +177,7 @@ class Library_db {
      * @param array Default is all
      * @return object
      */
-    function get_row($table, $where = array(), $fields = array()){
+    public function get_row($table, $where = array(), $fields = array()){
         
         $query = $this->get($table, $where, $fields);
         return $this->row($query);
@@ -192,7 +192,7 @@ class Library_db {
      * @param array Default is all
      * @return object
      */
-    function get_results($table, $where = array(), $fields = array()){
+    public function get_results($table, $where = array(), $fields = array()){
         
         $query = $this->get($table, $where, $fields);
         return $this->results($query);
@@ -205,7 +205,7 @@ class Library_db {
      * @param array $data
      * @return boolean
      */
-    function insert($table, $data = array()) {
+    public function insert($table, $data = array()) {
         
         $fields = array_keys($data);
         
@@ -223,7 +223,7 @@ class Library_db {
      * @param array $where
      * @return boolean
      */
-    function update($table, $dat, $where){
+    public function update($table, $dat, $where){
         
         foreach($dat as $key => $val)
             $data[$key] = $this->escape($val);
@@ -248,7 +248,7 @@ class Library_db {
      * @param array
      * @return boolean
      */
-    function delete($table, $where){
+    public function delete($table, $where){
         
         if ( is_array( $where ) )
             foreach ( $where as $c => $v )
@@ -264,7 +264,7 @@ class Library_db {
      *
      * @return string
      */
-    function get_caller() {
+    private function get_caller() {
         
         $bt = debug_backtrace();
         $caller = array();
@@ -288,7 +288,7 @@ class Library_db {
      *
      * @return string
      */
-    function print_error() {
+    private function print_error() {
     
         if ( $caller = $this->get_caller() )
             $error_str = sprintf('Database error %1$s for query %2$s made by %3$s', $this->last_error, $this->last_query, $caller);

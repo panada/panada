@@ -72,7 +72,7 @@ class Library_session {
      * @return void
      */
     
-    function __construct(){
+    public function __construct(){
 	
 	$this->sesion_expire		= $GLOBALS['CONFIG']['session']['session_expire'];
 	$this->session_name		= $GLOBALS['CONFIG']['session']['session_name'];
@@ -117,7 +117,7 @@ class Library_session {
      *
      * @return void
      */
-    function init(){
+    private function init(){
 	
 	if (session_id() == ''){
 	    
@@ -139,7 +139,7 @@ class Library_session {
      *
      * @return int
      */
-    function upcomming_time($s = 300){
+    private function upcomming_time($s = 300){
 	
 	return mktime(date('H'), date('i'), date('s') + $s, date('m'), date('d'), date('Y'));
     }
@@ -155,7 +155,7 @@ class Library_session {
      *
      * @return void
      */
-    function regenerate(){
+    public function regenerate(){
 	
 	session_regenerate_id(true);
 	$this->session_id = session_id();
@@ -168,7 +168,7 @@ class Library_session {
      * @param string|array|object
      * @return void
      */
-    function set($name, $value = ''){
+    public function set($name, $value = ''){
         
 	if( is_array($name) ) {
 	    foreach($name AS $key => $val)
@@ -185,7 +185,7 @@ class Library_session {
      * @param string
      * @return string|array|object
      */
-    function get($name){
+    public function get($name){
         
 	if(isset($_SESSION[$name]))
 	    return $_SESSION[$name];
@@ -199,7 +199,7 @@ class Library_session {
      * @param string
      * @return void
      */
-    function remove($name){
+    public function remove($name){
         
 	unset($_SESSION[$name]);
     }
@@ -209,7 +209,7 @@ class Library_session {
      *
      * @return void
      */
-    function destroy(){
+    public function destroy(){
 	
 	$params = session_get_cookie_params();
 	
@@ -227,7 +227,7 @@ class Library_session {
      *
      * @return void
      */
-    function session_clear_all(){
+    public function session_clear_all(){
 	
 	header('Expires: Mon, 1 Jul 1998 01:00:00 GMT');
         header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -239,32 +239,32 @@ class Library_session {
     }
     
     /**
-     * Required function for session_set_save_handler act like constructor in a class
+     * EN: Required function for session_set_save_handler act like constructor in a class
      *
      * @param string
      * @param string
      * @return void
      */
-    function session_start($save_path, $session_name){
+    public function session_start($save_path, $session_name){
 	//EN: We don't need anythings at this time.
     }
     
     /**
-     * Required function for session_set_save_handler act like destructor in a class
+     * EN: Required function for session_set_save_handler act like destructor in a class
      *
      * @return void
      */
-    function session_end(){
+    public function session_end(){
 	//EN: we also don't have do anythings too!
     }
     
     /**
-     * Read session from db or file
+     * EN: Read session from db or file
      *
      * @param string $id The session id
      * @return string|array|object|boolean
      */
-    function session_read($id){
+    public function session_read($id){
 	
 	$sql = "SELECT session_data FROM $this->session_db_name
 		WHERE session_id ='$id' AND session_expiration > UNIX_TIMESTAMP(NOW())";
@@ -276,25 +276,25 @@ class Library_session {
     }
     
     /**
-     * Get session data by session id
+     * EN: Get session data by session id
      *
      * @param string
      * @return int
      */
-    function session_exist($id){
+    private function session_exist($id){
 	
 	$session = $this->db->get_var("SELECT COUNT(session_id) FROM $this->session_db_name WHERE session_id = '$id'");
 	return $session;
     }
     
     /**
-     * Write the session data
+     * EN: Write the session data
      *
      * @param string
      * @param string
      * @return boolean
      */
-    function session_write($id, $sess_data){
+    public function session_write($id, $sess_data){
 	
 	$sess_data	= $this->db->escape($sess_data);
 	$curent_session = $this->session_exist($id);
@@ -313,33 +313,33 @@ class Library_session {
     }
     
     /**
-     * Remove session data
+     * EN: Remove session data
      *
      * @param string
      * @return boolean
      */
-    function session_destroy($id){
+    public function session_destroy($id){
 	
 	return $this->db->delete($this->session_db_name, array('session_id' => $id));
     }
     
     /**
-     * Clean all expired record in db trigered by PHP Session Garbage Collection
+     * EN: Clean all expired record in db trigered by PHP Session Garbage Collection
      *
      * @param date I don't think we still need this parameter since the expired date was store in db.
      * @return boolean
      */
-    function session_gc($maxlifetime = ''){
+    public function session_gc($maxlifetime = ''){
 	
 	return $this->db->query( "DELETE FROM $this->session_db_name WHERE session_expiration < UNIX_TIMESTAMP(NOW())" );
     }
     
     /**
-     * Initiate session save handler
+     * EN: Initiate session save handler
      * 
      * @return void
      */
-    function initial_save_session(){
+    private function initial_save_session(){
 	
 	session_set_save_handler (
 	    array(&$this, 'session_start'),

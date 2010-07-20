@@ -1,6 +1,6 @@
 <?php defined('THISPATH') or die('Can\'t access directly!');
 /**
- * Panada email API.
+ * Panada Upload API.
  *
  * @package	Panada
  * @subpackage	Library
@@ -26,7 +26,7 @@ class Library_upload {
      * @var array   EN: Initiate the error mesages.
      *              ID: Set pesan-pesan error.
      */
-    public $error_mesasages = array();
+    public $error_messages = array();
     
     /**
      * @var string  EN: Folder location.
@@ -72,9 +72,19 @@ class Library_upload {
     
     /**
      * @var string  EN: Any files that are allowed.
-     *              ID: File-file apa saja yang diinginkan.
+     *              ID: File-file apa saja yang diinginkan. contoh jpg|png|gif
      */
     public $permitted_file_type = '';
+    
+    /**
+     * @var object  EN: Instance for Image modifier class (Library_image).
+     */
+    public $image;
+    
+    /**
+     * @var string  EN: Option to edit image base on Library_image class. The option is resize | crop | resize_crop
+     */
+    public $edit_image = '';
     
     
     /**
@@ -106,6 +116,23 @@ class Library_upload {
         if( ! $this->upload() )
             return false;
         
+        if( ! empty($this->edit_image) ) {
+            
+            // EN: Initiate Library_image class
+            $this->image            = new Library_image();
+            // EN: See Library_image class line 65
+            $this->image->folder    = $this->folder_location;
+            
+            // EN: Assign each config for Library_image class
+            foreach($this->edit_image as $key => $val)
+                $this->image->$key = $val;
+            
+            if( ! $this->image->edit($this->get_file_info['name']) ) {
+               $this->set_error_mesage(14);
+                return false;
+            }
+        }
+        
         return true;
     }
     
@@ -117,7 +144,7 @@ class Library_upload {
      */
     private function init_error_messages(){
         
-        $this->error_mesasages = array (
+        $this->error_messages = array (
             1 => 'File upload failed due to unknown error.',
             2 => 'No folder located. Please define the folder location.',
             3 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini.',
@@ -130,7 +157,9 @@ class Library_upload {
             10 => 'Folder you\'ve defined does not exist.',
             11 => 'Can\t create new folder in your defined folder.',
             12 => 'Uploaded file not permitted.',
-            13 => 'The uploaded file exceeds the maximum size.'
+            13 => 'The uploaded file exceeds the maximum size.',
+            14 => 'File uploaded, but editing image has failed with the following error(s): ',
+            15 => 'Folder you specified not writalbe.',
         ); 
     }
     
@@ -142,9 +171,10 @@ class Library_upload {
      */
     private function set_error_mesage($code){
         
+        $image_error        = ($code == 14 && isset($this->image->error_messages)) ? implode(', ', $this->image->error_messages) : null;
         $handler            = new stdClass;
         $handler->code      = $code;
-        $handler->message   = $this->error_mesasages[$code];
+        $handler->message   = $this->error_messages[$code] . $image_error;
         $this->error        = $handler;
     }
     
@@ -171,6 +201,15 @@ class Library_upload {
          */
         if( ! is_dir($this->folder_location) ) {
             $this->set_error_mesage(10);
+            return false;
+        }
+        
+        /**
+         * EN: Does it folder writable?
+         * ID: Apakah folder tersebut bisa untuk tulis/hapus?
+         */
+        if( ! is_writable($this->folder_location) ) {
+            $this->set_error_mesage(15);
             return false;
         }
         
@@ -241,7 +280,7 @@ class Library_upload {
                 
                 case UPLOAD_ERR_INI_SIZE:
                     $this->set_error_mesage(3);
-                   return false;
+                    return false;
                 case UPLOAD_ERR_FORM_SIZE:
                     $this->set_error_mesage(4);
                     return false;
@@ -267,6 +306,11 @@ class Library_upload {
         
     }
     
+    static function get_file_extension($file){
+        
+        return strtolower(end(explode('.', $file)));
+    }
+    
     /**
      * EN: Do uploading.
      * ID: Lakukan ungguh.
@@ -275,7 +319,7 @@ class Library_upload {
      */
     private function upload(){
         
-        $file_extension = strtolower(end(explode('.', $this->file['name'])));
+        $file_extension = $this->get_file_extension($this->file['name']);
         
         if($this->auto_rename)
             $name = time() . rand() . '.' . $file_extension;
