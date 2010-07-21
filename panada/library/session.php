@@ -141,7 +141,7 @@ class Library_session {
      */
     private function upcomming_time($s = 300){
 	
-	return mktime(date('H'), date('i'), date('s') + $s, date('m'), date('d'), date('Y'));
+	return mktime(date('H'), date('i'), date('s') + $s, date('n'), date('j'), date('Y'));
     }
     
     /**
