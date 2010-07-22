@@ -191,7 +191,12 @@ class Panada {
     }
     
     function redirect($location = ''){
+        
         $location = ( empty($location) ) ? $this->location() : $location;
+        
+        if ( substr($location,0,4) != 'http' )
+            $location = $this->location() . $location;
+        
         header('Location:' . $location);
         exit;
     }
