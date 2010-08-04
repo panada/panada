@@ -155,11 +155,11 @@ class Library_upload {
             8 => 'Failed to write file to disk.',
             9 => 'File upload stopped by extension.',
             10 => 'Folder you\'ve defined does not exist.',
-            11 => 'Can\t create new folder in your defined folder.',
+            11 => 'Can\'t create new folder in your defined folder.',
             12 => 'Uploaded file not permitted.',
             13 => 'The uploaded file exceeds the maximum size.',
             14 => 'File uploaded, but editing image has failed with the following error(s): ',
-            15 => 'Folder you specified not writalbe.',
+            15 => 'Folder you specified not writeable.',
         ); 
     }
     
@@ -211,17 +211,6 @@ class Library_upload {
         if( ! is_writable($this->folder_location) ) {
             $this->set_error_mesage(15);
             return false;
-        }
-        
-        /**
-         * EN: Make sure this file are permitted.
-         * ID: Memastikan bahwa file ini diijinkan.
-         */
-        if( ! empty($this->permitted_file_type) ) {
-            if ( ! preg_match( '!\.(' . $this->permitted_file_type . ')$!i', $this->file['name'] ) ) {
-                $this->set_error_mesage(12);
-                return false;
-            }
         }
         
         /**
@@ -304,6 +293,16 @@ class Library_upload {
             }
         }
         
+        /**
+         * EN: Make sure this file are permitted.
+         * ID: Memastikan bahwa file ini diijinkan.
+         */
+        if( ! empty($this->permitted_file_type) ) {
+            if ( ! preg_match( '!\.(' . $this->permitted_file_type . ')$!i', $this->file['name'] ) ) {
+                $this->set_error_mesage(12);
+                return false;
+            }
+        }
     }
     
     static function get_file_extension($file){

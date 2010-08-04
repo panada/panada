@@ -59,7 +59,7 @@ class Library_request {
          * ID:  Jika string < diikuti dengan tanda non-alpha selain tanda ?, maka ubah menjadi &lt; (htmlentities)
          *      Ini berguna jika string yang diinput berupa emotion code seperpti <*_*> atau tanda panah <=
          */
-        $str = preg_replace("/<([^a-zA-Z?])/", '&lt;\\1', $str);
+        $str = preg_replace(array('/<\*/', '/<=/', '/_/'), '&lt;\\1', $str);
         
         /**
          * ID:  Hapus semua tag html dan php yang tidak didefinisikan dari input string.

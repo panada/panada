@@ -227,6 +227,7 @@ class Library_image {
         //EN: Cropping process
         if($this->edit_type == 'crop' || $this->edit_type == 'resize_crop') {
             
+            $image_edited = ( isset($image_edited) ) ? $image_edited : $image;
             $cropped = imagecreatetruecolor($this->crop_width, $this->crop_height);
             imagecopyresampled($cropped, $image_edited, 0, 0, ( ($image_new_width/2) - ($this->crop_width/2) ), ( ($image_new_height/2) - ($this->crop_height/2) ), $this->crop_width, $this->crop_height, $this->crop_width, $this->crop_height);
             $image_edited = $cropped;

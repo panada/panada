@@ -2,12 +2,12 @@
 
 class controller_home extends Panada {
     
-    function __construct(){
+    public function __construct(){
         
         parent::__construct();
     }
     
-    function index(){
+    public function index(){
         
         $views['page_title']    = 'hello world!';
         $views['body']          = 'This is hello world body!';

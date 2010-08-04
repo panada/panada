@@ -11,6 +11,7 @@
 class Library_tools {
     
     /**
+     * EN: Set the header response status.
      * ID: Menentukan status pada header respons.
      *
      * @param int
@@ -71,6 +72,12 @@ class Library_tools {
             header("HTTP/1.1 $code $text", true, $code);
     }
     
+    /**
+     * EN: Create random string
+     *
+     * @param integer
+     * @param boolean
+     */
     public static function get_random_string($length = 12, $special_chars = true) {
         
 	$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -88,6 +95,10 @@ class Library_tools {
     /**
      * EN: Thanks to djdykes {@link: http://snipplr.com/view.php?codeview&id=3491} for great array to xml class.
      * Encode an array into xml.
+     *
+     * @param array
+     * @param string
+     * @param string
      */
     public static function xml_encode($data, $root_node_name = 'data', $xml = null){
 	
@@ -128,7 +139,13 @@ class Library_tools {
 	return $xml->asXML();
     }
     
-    // EN: Decoded xml variable or file or url into object.
+    /**
+     * EN: Decoded xml variable or file or url into object.
+     * ID: Decode data xml menjadi object.
+     *
+     * @param string
+     * @param string $type Flag for data type option: object | array
+     */
     public static function xml_decode($xml, $type = 'object'){
 	
 	// Does it local file?
@@ -146,13 +163,30 @@ class Library_tools {
 	
 	switch ($type) {
 	    case 'array':
-		return (array) $xml;
+		return (array) self::object_to_array($xml);
 		exit;
 	    default:
 		return $xml;
 		exit;
 	}
 	
+    }
+    
+    /**
+     * EN: Convert an object into array
+     * ID: Konversi dari object ke array
+     * 
+     * @param object
+     */
+    public static function object_to_array($object){
+	
+        if( ! is_object($object) && ! is_array($object) )
+            return $object;
+        
+        if( is_object($object) )
+            $object = get_object_vars($object);
+        
+        return array_map(array('Library_tools', 'object_to_array'), $object);
     }
     
 } // End tools class
