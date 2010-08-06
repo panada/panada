@@ -46,8 +46,8 @@ require_once APPLICATION . 'config.php';
  */
 class Panada_cacher {
     
-    var $class_object = array();
-    var $defined_objet = null;
+    public $class_object = array();
+    public $defined_objet = null;
     
     /**
      * cache debugger
