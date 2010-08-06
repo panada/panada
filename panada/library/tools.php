@@ -126,7 +126,7 @@ class Library_tools {
 	    if (is_array($value)){
 		$node = $xml->addChild($key);
 		// EN: Recrusive call.
-		self::array_to_xml($value, $root_node_name, $node);
+		self::xml_encode($value, $root_node_name, $node);
 	    }
 	    else{
 		// EN: Add single node.
