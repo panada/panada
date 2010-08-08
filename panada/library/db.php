@@ -10,10 +10,10 @@
 
 class Library_db {
     
-    var $link;
-    var $insert_id;
-    var $last_query;
-    var $last_error;
+    public $link;
+    public $insert_id;
+    public $last_query;
+    public $last_error;
     
     /**
      * EN: Define all properties needed.
@@ -21,13 +21,18 @@ class Library_db {
      */
     function __construct($connection = 'default'){
         
-        $db_config = $GLOBALS['CONFIG']['db'][$connection];
-        $this->link = @mysql_connect($db_config['host'], $db_config['user'], $db_config['password']);
+        $this->config   = new Library_config();
+        
+        $this->link = @mysql_connect(
+            $this->config->db->$connection->host,
+            $this->config->db->$connection->user,
+            $this->config->db->$connection->password
+        );
         
         if ( ! $this->link )
             Library_error::database('Unable connet to database.');
             
-        $this->select_db($db_config['database']);
+        $this->select_db($this->config->db->$connection->database);
     }
     
     /**

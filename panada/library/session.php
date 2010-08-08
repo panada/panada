@@ -74,14 +74,15 @@ class Library_session {
     
     public function __construct(){
 	
-	$this->sesion_expire		= $GLOBALS['CONFIG']['session']['session_expire'];
-	$this->session_name		= $GLOBALS['CONFIG']['session']['session_name'];
-	$this->session_cookie_expire	= $GLOBALS['CONFIG']['session']['session_cookie_expire'];
-	$this->session_cookie_path	= $GLOBALS['CONFIG']['session']['session_cookie_path'];
-	$this->session_cookie_secure	= $GLOBALS['CONFIG']['session']['session_cookie_secure'];
-	$this->session_cookie_domain	= $GLOBALS['CONFIG']['session']['session_cookie_domain'];
-	$this->session_store		= $GLOBALS['CONFIG']['session']['session_store'];
-	$this->session_db_name		= $GLOBALS['CONFIG']['session']['session_db_name'];
+	$this->config			= new Library_config();
+	$this->sesion_expire		= $this->config->session->session_expire;
+	$this->session_name		= $this->config->session->session_name;
+	$this->session_cookie_expire	= $this->config->session->session_cookie_expire;
+	$this->session_cookie_path	= $this->config->session->session_cookie_path;
+	$this->session_cookie_secure	= $this->config->session->session_cookie_secure;
+	$this->session_cookie_domain	= $this->config->session->session_cookie_domain;
+	$this->session_store		= $this->config->session->session_store;
+	$this->session_db_name		= $this->config->session->session_db_name;
 	
 	ini_set('session.gc_maxlifetime', $this->sesion_expire);
 	

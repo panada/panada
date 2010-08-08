@@ -177,14 +177,16 @@ class Library_uri {
      */
     public function get_requests($segment = 3){
 	
+	$this->config   = new Library_config();
+	
 	$uri_string = $this->break_uri_string($segment);
 	
 	if( isset($uri_string) && ! empty($uri_string) ) {
 	    
 	    $requests = array_slice($this->break_uri_string(), $segment);
 	    
-	    if( $GLOBALS['CONFIG']['request_filter_type'] != false )
-		$requests = filter_var_array($requests, $GLOBALS['CONFIG']['request_filter_type']);
+	    if( $this->config->request_filter_type != false )
+		$requests = filter_var_array($requests, $this->config->request_filter_type);
 	    
 	    return $requests;
 	}

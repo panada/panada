@@ -24,15 +24,6 @@
 
 
 
-
-/**
- * EN: Load configuration file.
- * ID: Menyertakan file konfigurasi.
-*/
-require_once APPLICATION . 'config.php';
-
-
-
 /**
  * Panada cache class and object.
  *
@@ -46,31 +37,22 @@ require_once APPLICATION . 'config.php';
  */
 class Panada_cacher {
     
+    static private $instance;
     public $class_object = array();
     public $defined_objet = null;
     
-    /**
-     * cache debugger
-     *
-     * EN: For debugging purepose, get all cached data.
-     * ID: Mendapatkan data apa saja yang disimpan dalam cache untuk tujuan debug.
-     *
-     * @access public
-     * @return array
-     */
-    function show_cache(){
+    public static function instance(){
         
-        return array('class_object' =>$this->class_object, 'defined_objet' => $this->defined_objet);
+        if( ! self::$instance ) {
+            $cache = new Panada_cacher();
+            self::$instance = $cache;
+            return $cache;
+        }
+        else {
+            return self::$instance;
+        }
     }
 }
-
-
-
-/**
- * EN:	Initiate Panada class and object.
- * ID:	Memualai class Panada_cacher.
-*/
-$panada_cacher = new Panada_cacher();
 
 
 
@@ -145,7 +127,7 @@ function __autoload($class_name) {
     if( strtolower($class_name) == 'library_uri' || strtolower($class_name) == 'library_error' || strtolower($class_name) == 'library_time_execution' || strtolower($class_name) == 'controller_'.$var_name )
         return;
     
-    $panada_cacher  = $GLOBALS['panada_cacher'];
+    $panada_cacher  = Panada_cacher::instance();
     $Panada         = Panada::instance();
     
     if( ! isset($Panada->$var_name) ) {
@@ -175,10 +157,11 @@ class Panada {
     
     private static $instance;
     
-    function __construct(){	
-        self::$instance = $this;
+    public function __construct(){
         
-        $this->base_url	= $GLOBALS['CONFIG']['base_url'];
+        self::$instance = $this;
+        $this->config   = new Library_config();
+        $this->base_url	= $this->config->base_url;
 	$this->auto_loader();
     }
     
@@ -186,11 +169,11 @@ class Panada {
         return self::$instance;
     }
     
-    function location($location = ''){
-	return $this->base_url . $GLOBALS['CONFIG']['index_file'] . $location;
+    public function location($location = ''){
+	return $this->base_url . $this->config->index_file . $location;
     }
     
-    function redirect($location = ''){
+    public function redirect($location = ''){
         
         $location = ( empty($location) ) ? $this->location() : $location;
         
@@ -213,7 +196,7 @@ class Panada {
     public static function assigner(){
         
         $Panada         = Panada::instance();
-        $panada_cacher  = $GLOBALS['panada_cacher'];
+        $panada_cacher  = Panada_cacher::instance();
         
 	if( isset($panada_cacher->defined_objet) )
 	    foreach ($panada_cacher->defined_objet as $key) {
@@ -247,13 +230,17 @@ class Panada {
      * @access public
      * @return void
      */
-    function auto_loader(){
+    public function auto_loader(){
         
-        if( ! empty($GLOBALS['CONFIG']['auto_loader']) )
-            foreach( $GLOBALS['CONFIG']['auto_loader'] as $class_name){
+        if( ! empty($this->config->auto_loader) ) {
+            
+            $auto_loader = (array) $this->config->auto_loader;
+            
+            foreach( $auto_loader as $class_name){
 		$var = self::var_name($class_name);
                 $this->$var = new $class_name();
             }
+        }
     }
     
     /**
@@ -267,7 +254,7 @@ class Panada {
     * @param	array
     * @return	void
     */
-    function view($view, $data = array()){
+    public function view($view, $data = array()){
         
         if( ! file_exists( $path = APPLICATION . 'view/' . $view . '.php') )
             Library_error::costume(500, '<h2>Error: No ' . $view . ' file in view folder.</h2>');
@@ -296,15 +283,18 @@ if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->get_class() . '.php'
      * EN: Meybe it short url page?? (eg: www.website.com/username) if yes lets redefine controller, method and request.
      * ID: Apakah short url aktif? jika ya defenisikan ulang controller, method dan request.
      */
-    if( ! empty($CONFIG['short_url']) ){
+    
+    $config   = new Library_config();
+    
+    if( ! empty($config->short_url) ){
         
         $request = array(Panada::var_name($class));
         
         if( $_request = $pan_uri->get_requests(2) )
             $request = array_merge($request, $_request);
         
-        $_class = array_keys($CONFIG['short_url']);
-        $method = $CONFIG['short_url'][$_class[0]];
+        $_class = array_keys(get_object_vars($config->short_url));
+        $method = $config->short_url->$_class[0];
         $class  = 'Controller_' . $_class[0];
         
         /**
