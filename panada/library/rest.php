@@ -100,7 +100,7 @@ class Library_rest {
     
     public function wrap_response_output($data, $format = 'json'){
         
-        header('Content-type: application/' . $format);
+        header('Content-type: text/' . $format);
 	
 	if($format == 'xml')
 	    return Library_tools::xml_encode($data);
