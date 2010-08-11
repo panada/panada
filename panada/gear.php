@@ -286,7 +286,7 @@ if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->get_class() . '.php'
     
     $config   = new Library_config();
     
-    if( ! empty($config->short_url) ){
+    if( count(get_object_vars($config->short_url)) > 0 ){
         
         $request = array(Panada::var_name($class));
         
