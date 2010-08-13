@@ -288,10 +288,17 @@ if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->get_class() . '.php'
     
     if( count(get_object_vars($config->short_url)) > 0 ){
         
-        $request = array(Panada::var_name($class));
+        $request = array($pan_uri->break_uri_string(1));
         
         if( $_request = $pan_uri->get_requests(2) )
             $request = array_merge($request, $_request);
+        
+        /**
+         * EN: Filtering/validating request before send to controller.
+         * ID: Lakukan fiter/validasi pada request parameter sebelum dikirimkan ke controller.
+         */
+        if( $config->request_filter_type != false )
+	    $request = filter_var_array($request, $config->request_filter_type);
         
         $_class = array_keys(get_object_vars($config->short_url));
         $method = $config->short_url->$_class[0];
