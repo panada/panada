@@ -20,7 +20,7 @@
  * EN: Start count time execution.
  * ID: Mulai menghitung waktu eksekusi. Silahkan uncomment method 'Library_time_execution::start()' untuk menghitung waktu eksekusi.
  */
-//Library_time_execution::start();
+Library_time_execution::start();
 
 
 
@@ -160,7 +160,7 @@ class Panada {
     public function __construct(){
         
         self::$instance = $this;
-        $this->config   = new Library_config();
+        $this->config   = Library_config::instance();
         $this->base_url	= $this->config->base_url;
 	$this->auto_loader();
     }
@@ -274,19 +274,19 @@ class Panada {
 /**
  * Load controller
  *
- * EN: Load the default controller called 'welcome'. Make sure the file exist. If not, stop the execution.
- * ID: Controller default bernama 'welcome'. Pastikan file controller tersedia. Jika tidak, stop eksekusi.
+ * EN: Load the default controller called 'home'. Make sure the file exist. If not, stop the execution.
+ * ID: Controller default bernama 'home'. Pastikan file controller tersedia. Jika tidak, stop eksekusi.
 */
 if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->get_class() . '.php') ){
     
     /**
-     * EN: Meybe it short url page?? (eg: www.website.com/username) if yes lets redefine controller, method and request.
-     * ID: Apakah short url aktif? jika ya defenisikan ulang controller, method dan request.
+     * EN: Meybe it alias url page?? (eg: www.website.com/username) if yes lets redefine controller, method and request.
+     * ID: Apakah alias url aktif? jika ya defenisikan ulang controller, method dan request.
      */
     
-    $config   = new Library_config();
+    $config = Library_config::instance();
     
-    if( count(get_object_vars($config->short_url)) > 0 ){
+    if( count(get_object_vars($config->alias_controller)) > 0 ){
         
         $request = array($pan_uri->break_uri_string(1));
         
@@ -300,13 +300,13 @@ if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->get_class() . '.php'
         if( $config->request_filter_type != false )
 	    $request = filter_var_array($request, $config->request_filter_type);
         
-        $_class = array_keys(get_object_vars($config->short_url));
-        $method = $config->short_url->$_class[0];
+        $_class = array_keys(get_object_vars($config->alias_controller));
+        $method = $config->alias_controller->$_class[0];
         $class  = 'Controller_' . $_class[0];
         
         /**
          * EN: Check once again does the file's controller exist?
-         * ID: Memastikan kembali apakah file untuk contorller short_url tersedia.
+         * ID: Memastikan kembali apakah file untuk Alias Contorller tersedia.
          */
         if ( ! file_exists( APPLICATION . 'controller/' . $_class[0] . '.php') )
             Library_error::_404();
@@ -334,13 +334,22 @@ Panada::assigner();
 
 
 /**
- * Load method
- * 
  * ID:	Method default bernama 'index'
- *	Pastikan method tersedia/atau bisa dipanggil. Jika tidak stop eksekusi.
+ *	Pastikan method tersedia/atau bisa dipanggil.
+ *	Jika tidak ada, apakah method alias tersedia?
+ *	Jika tidak stop eksekusi.
 */
-if( ! method_exists($Panada,$method) )
-    Library_error::_404();
+if( ! method_exists($Panada, $method) ){
+    
+    /**
+     * ID: Atur ulang struktur variable method dan request.
+     */
+    $request = array($method);
+    $method = $Panada->config->alias_method;
+    
+    if( ! method_exists($Panada, $method) )
+        Library_error::_404();
+}
 
 
 /**

@@ -1,6 +1,6 @@
 <?php defined('THISPATH') or die('Can\'t access directly!');
 
-class controller_home extends Panada {
+class Controller_home extends Panada {
     
     public function __construct(){
         

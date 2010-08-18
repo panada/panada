@@ -10,12 +10,26 @@
 
 class Library_config {
     
+    static private $instance;
+    
     public function __construct(){
         
         require APPLICATION . 'config.php';
         
         foreach($CONFIG as $key => $val)
             $this->$key = $this->assign_object($val);
+    }
+    
+    public static function instance(){
+        
+        if( ! self::$instance ) {
+            $cache = new Library_config();
+            self::$instance = $cache;
+            return $cache;
+        }
+        else {
+            return self::$instance;
+        }
     }
     
     private function assign_object($var) {

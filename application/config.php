@@ -45,13 +45,19 @@ CREATE TABLE IF NOT EXISTS `sessions` (
  */
 
 /**
- * EN: Short url configuration (eg: yoursite.com/username). Make sure the controller and the method are available.
- * ID: Konfigurasi short url (contoh: yoursite.com/username). Pastikan controller sudah tersedia, jika tidak akan menghasilkan error.
+ * EN: Alias Controller configuration (eg: yoursite.com/username). Make sure the controller and the method are available.
+ * ID: Konfigurasi Alias Controller (contoh: yoursite.com/username). Pastikan controller sudah tersedia, jika tidak akan menghasilkan error.
  *
  * array key => controller name
  * array value => controller's method
  */
-$CONFIG['short_url'] = array();
+$CONFIG['alias_controller'] = array();
+
+/**
+ * EN: Method name for 'hidden' method. Default is 'alias'. (eg: yoursite.com/CONTROLLER/username)
+ * ID: Nama method untuk method 'tersembunyi'. Defaultnya adalah 'alias'. (contoh: yoursite.com/CONTROLLER/username)
+ */
+$CONFIG['alias_method'] = 'alias';
 
 /**
  * EN:  GET Query filter type. See the option at http://www.php.net/manual/en/filter.filters.sanitize.php
