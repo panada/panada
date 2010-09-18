@@ -21,7 +21,7 @@ class Library_db {
      */
     function __construct($connection = 'default'){
         
-        $this->config   = new Library_config();
+        $this->config = new Library_config();
         
         $this->link = @mysql_connect(
             $this->config->db->$connection->host,
@@ -31,7 +31,18 @@ class Library_db {
         
         if ( ! $this->link )
             Library_error::database('Unable connet to database.');
-            
+        
+        $collation_query = '';
+        
+        if ( ! empty($this->config->db->$connection->charset) ) {
+            $collation_query = "SET NAMES '".$this->config->db->$connection->charset."'";
+	    if ( ! empty($this->config->db->$connection->collate) )
+                $collation_query .= " COLLATE '".$this->config->db->$connection->collate."'";
+	}
+	
+        if ( ! empty($collation_query) )
+            $this->query($collation_query);
+        
         $this->select_db($this->config->db->$connection->database);
     }
     

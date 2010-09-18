@@ -20,7 +20,7 @@
  * EN: Start count time execution.
  * ID: Mulai menghitung waktu eksekusi. Silahkan uncomment method 'Library_time_execution::start()' untuk menghitung waktu eksekusi.
  */
-Library_time_execution::start();
+//Library_time_execution::start();
 
 
 
@@ -189,6 +189,8 @@ class Panada {
      *
      * EN: Adding sub-object to each existing object.
      * ID: Menambahakan sub-object ke masing-masing object yang ada.
+     * Hal ini berlaku pada semua class yang dipanggil kecuali class config (karena class ini hanya memberikan data dan tidak melakukan proses)
+     * dan class yang sudah dinyatakan tidak perlu dicache. Lihat line 127.
      *
      * @access public
      * @return void
@@ -200,10 +202,12 @@ class Panada {
         
 	if( isset($panada_cacher->defined_objet) )
 	    foreach ($panada_cacher->defined_objet as $key) {
-		foreach ($panada_cacher->class_object as $class => $object)
-		    if( $class !== $key)
-			if( is_object($Panada->$key) )
-			    $Panada->$key->$class = $object;
+		if($key != 'config'){
+		    foreach ($panada_cacher->class_object as $class => $object)
+			if( $class !== $key)
+			    if( is_object($Panada->$key) )
+				$Panada->$key->$class = $object;
+		}
 	    }
     }
     
