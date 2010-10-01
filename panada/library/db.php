@@ -26,7 +26,8 @@ class Library_db {
         $this->link = @mysql_connect(
             $this->config->db->$connection->host,
             $this->config->db->$connection->user,
-            $this->config->db->$connection->password
+            $this->config->db->$connection->password,
+	    true
         );
         
         if ( ! $this->link )
