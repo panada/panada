@@ -347,8 +347,9 @@ if( ! method_exists($Panada, $method) ){
     
     /**
      * ID: Atur ulang struktur variable method dan request.
+     * EN: Re-arange method and request structure.
      */
-    $request = array($method);
+    $request = ( ! empty($request) ) ? array_merge(array($method), $request) : array($method);
     $method = $Panada->config->alias_method;
     
     if( ! method_exists($Panada, $method) )
