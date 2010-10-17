@@ -170,7 +170,7 @@ class Library_image {
         if( ! $this->pre_error_checker() )
             return false;
         
-        chmod($this->file_path, 0666);
+        @chmod($this->file_path, 0666);
 	
         $this->file_info    = @getimagesize($this->file_path);
         $this->image_type   = $this->file_info[2];
