@@ -140,9 +140,9 @@ class Library_session {
      *
      * @return int
      */
-    private function upcomming_time($s = 300){
+    private function upcomming_time($m = 5){
 	
-	return mktime(date('H'), date('i'), date('s') + $s, date('n'), date('j'), date('Y'));
+	return strtotime('+'.$m.' min');
     }
     
     /**
