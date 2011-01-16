@@ -63,7 +63,8 @@ class Panada_cacher {
 $pan_uri    = new Library_uri();
 $class      = 'Controller_'.$pan_uri->get_class();
 $method     = $pan_uri->get_method();
-$request    = $pan_uri->get_requests();
+if( ! $request = $pan_uri->get_requests() )
+    $request = array();
 
 
 
@@ -205,7 +206,7 @@ class Panada {
 		if($key != 'config'){
 		    foreach ($panada_cacher->class_object as $class => $object)
 			if( $class !== $key)
-			    if( is_object($Panada->$key) )
+			    if( isset($Panada->$key) && is_object($Panada->$key) )
 				$Panada->$key->$class = $object;
 		}
 	    }
@@ -343,7 +344,7 @@ Panada::assigner();
  *	Jika tidak ada, apakah method alias tersedia?
  *	Jika tidak stop eksekusi.
 */
-if( ! method_exists($Panada, $method) ){
+if( ! is_callable(array($Panada, $method)) ){
     
     /**
      * ID: Atur ulang struktur variable method dan request.
@@ -352,7 +353,7 @@ if( ! method_exists($Panada, $method) ){
     $request = ( ! empty($request) ) ? array_merge(array($method), $request) : array($method);
     $method = $Panada->config->alias_method;
     
-    if( ! method_exists($Panada, $method) )
+    if( ! is_callable(array($Panada, $method)) )
         Library_error::_404();
 }
 
@@ -361,10 +362,7 @@ if( ! method_exists($Panada, $method) ){
  * EN: All required component has ready, its time to show the page.
  * ID: Semua komponen telah siap, saatnya menampilkan halaman.
  */
-if($request)
-    call_user_func_array(array($Panada, $method), $request);
-else
-    $Panada->$method();
+call_user_func_array(array($Panada, $method), $request);
 
 /**
  * EN:	For debugging purpse.
@@ -382,8 +380,7 @@ else
  * EN: Close db connection if present
  * ID: Tutup koneksi databse jika ada.
  */
-if( isset($Panada->db) )
-    mysql_close($Panada->db->link);
+@mysql_close($Panada->db->link);
 
 /**
  * EN: End of the cicle, lets clear the memory. Do we need this??

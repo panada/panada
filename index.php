@@ -57,7 +57,7 @@ error_reporting(E_ALL);
 /**
  * ID: Nonaktifkan magic quotes jika masih aktif!
 */
-if ( get_magic_quotes_gpc() ) {
+if ( function_exists('get_magic_quotes_gpc') ) {
     
     function stripslashes_gpc(&$value){
         $value = stripslashes($value);

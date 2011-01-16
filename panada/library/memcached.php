@@ -21,5 +21,10 @@ class Library_memcached extends Memcache {
         
         foreach($this->config->memcached_host as $host)
 	    $this->addServer($host, $this->config->memcached_port);
+	
+	/**
+	 * EN: If you need compression Threshold, you can uncomment this
+	 */
+	//$this->setCompressThreshold(20000, 0.2);
     }
 } // End Library_memcached

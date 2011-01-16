@@ -189,4 +189,61 @@ class Library_tools {
         return array_map(array('Library_tools', 'object_to_array'), $object);
     }
     
+    /**
+     * EN: Convert an array into object
+     * ID: Konversi dari array ke object
+     *
+     * @param array
+     */
+    public static function array_to_object($var) {
+        
+        if( is_array($var) ) {
+            
+            $object = new stdClass();
+            foreach($var as $key => $val)
+                $object->$key = self::array_to_object($val);
+            
+            return $object;
+        }
+        
+        return $var;
+    }
+    
+    /**
+     * Initiate contoller within contoller
+     *
+     * @author kandar
+     * @return void
+     * @param string $controller Controller's name
+     * @param array $params The parameters for it controller
+     * @param string $alias_method a method name for alias call
+     */
+    public static function sub_controller( $controller, $params = array(), $alias_method = false ){
+        
+        $requsts = array();
+        
+        if( ! empty($params[1]) )
+            $requsts = array_slice($params, 1);
+        
+        $controller = 'Controller_'.$controller;
+        $controller = new $controller();
+        
+        // Initiate Default Method
+        $method = 'index';
+        
+        if( ! empty($params[0]) )
+            $method = $params[0];
+        
+        if( ! is_callable(array($controller, $method)) ){
+            
+            if( ! $alias_method )
+                Library_notice::_404();
+            
+            $requsts = ( $requsts ) ? array_merge(array($method), $requsts) : array($method);
+             $method = $alias_method;
+        }
+        
+       call_user_func_array(array($controller, $method), $requsts);
+    }
+    
 } // End tools class

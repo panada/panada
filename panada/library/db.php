@@ -14,24 +14,35 @@ class Library_db {
     public $insert_id;
     public $last_query;
     public $last_error;
+    public $client_flags = 0;
+    public $connection;
     
     /**
      * EN: Define all properties needed.
      * @return void
      */
     function __construct($connection = 'default'){
-        
         $this->config = new Library_config();
+	$this->connection = $connection;
+    }
+    
+    private function init(){
+	
+	$connection = $this->connection;
+	
+	if( is_null($this->link) )
+	    $this->link = @mysql_connect(
+		$this->config->db->$connection->host,
+		$this->config->db->$connection->user,
+		$this->config->db->$connection->password,
+		true,
+		$this->client_flags
+	    );
         
-        $this->link = @mysql_connect(
-            $this->config->db->$connection->host,
-            $this->config->db->$connection->user,
-            $this->config->db->$connection->password,
-	    true
-        );
-        
-        if ( ! $this->link )
-            Library_error::database('Unable connet to database.');
+        if ( ! $this->link ){
+	    $this->error = new Library_error();
+            $this->error->database('Ucd.' . $this->config->db->$connection->host);
+        }
         
         $collation_query = '';
         
@@ -53,6 +64,9 @@ class Library_db {
      * @return void
      */
     private function select_db($dbname){
+	
+	if( is_null($this->link) )
+	    $this->init();
         
         if ( ! @mysql_select_db($dbname, $this->link) )
             Library_error::database('Unable to select database.');
@@ -67,6 +81,9 @@ class Library_db {
      */
     public function escape($string){
         
+	if( is_null($this->link) )
+	    $this->init();
+	
         return mysql_real_escape_string($string, $this->link);
     }
     
@@ -77,6 +94,9 @@ class Library_db {
      * @return string|objet Return the resource id of query
      */
     public function query($sql){
+	
+	if( is_null($this->link) )
+	    $this->init();
         
         $query = mysql_query($sql, $this->link);
         $this->last_query = $sql;
@@ -122,6 +142,9 @@ class Library_db {
      * @param string $type return data type option. the default is "object"
      */
     public function row($query, $type = 'object'){
+	
+	if( is_null($this->link) )
+	    $this->init();
         
         $result = $this->query($query);
         $return = mysql_fetch_object($result);
@@ -230,6 +253,23 @@ class Library_db {
             $escaped_date[$key] = $this->escape($val);
         
         return $this->query("INSERT INTO `$table` (`" . implode('`,`',$fields) . "`) VALUES ('".implode("','",$escaped_date)."')");
+    }
+    
+    /**
+     * EN: Abstraction for replace
+     *
+     * @param string $table
+     * @param array $data
+     * @return boolean
+     */
+    public function replace($table, $data = array()) {
+        
+        $fields = array_keys($data);
+        
+        foreach($data as $key => $val)
+            $escaped_date[$key] = $this->escape($val);
+        
+        return $this->query("REPLACE INTO `$table` (`" . implode('`,`',$fields) . "`) VALUES ('".implode("','",$escaped_date)."')");
     }
     
     /**
