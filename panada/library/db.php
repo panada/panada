@@ -317,37 +317,13 @@ class Library_db {
     }
     
     /**
-     * EN: Get what function just call the query. This in for debugging purepose.
-     *
-     * @return string
-     */
-    private function get_caller() {
-        
-        $bt = debug_backtrace();
-        $caller = array();
-
-        $bt = array_reverse( $bt );
-        foreach ( (array) $bt as $call ) {
-            if ( @$call['class'] == __CLASS__ )
-                continue;
-            $function = $call['function'];
-            if ( isset( $call['class'] ) )
-                $function = $call['class'] . "->$function";
-            $caller[] = $function;
-        }
-        $caller = join( ', ', $caller );
-
-        return $caller;
-    }
-    
-    /**
      * EN: Print the error at least to PHP error log file
      *
      * @return string
      */
     private function print_error() {
     
-        if ( $caller = $this->get_caller() )
+        if ( $caller = Library_error::get_caller(2) )
             $error_str = sprintf('Database error %1$s for query %2$s made by %3$s', $this->last_error, $this->last_query, $caller);
         else
             $error_str = sprintf('Database error %1$s for query %2$s', $this->last_error, $this->last_query);
@@ -363,7 +339,7 @@ class Library_db {
         $query = htmlspecialchars($this->last_query, ENT_QUOTES);
     
         // If there is an error then take note of it
-        Library_error::database($str.'<br />'.$query);
+        Library_error::database($str.'<br /><b>Query</b>: '.$query.'<br /><b>Backtrace</b>: '.$caller);
     }
     
 }// End library_mysql

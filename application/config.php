@@ -66,3 +66,11 @@ $CONFIG['alias_method'] = 'alias';
  *      You can set the value to false, if you don't wanna filtering the query.
  */
 $CONFIG['request_filter_type'] = FILTER_SANITIZE_STRING;
+
+/**
+ * EN:  Memcached configuration
+ */
+/*
+$CONFIG['memcached_host'] = array('localhost');
+$CONFIG['memcached_port'] = 11211;
+*/

@@ -14,7 +14,7 @@ class Library_session {
     * @var integer	EN: This variable set the maximum life in seconds of a session file on the server since last activity.
     *			ID: Parameter ini menentukan berapa lama file session disimpan di server sejak aktivitas terakhir.
     */
-    public $sesion_expire = 120; //minute or 2 hour
+    public $sesion_expire = 7200; //2 hour
     
     /**
      * @var string	EN: Change the default PHP session name (PHPSESSIONID) to Panada session name (PAN_SID).
@@ -140,9 +140,9 @@ class Library_session {
      *
      * @return int
      */
-    private function upcomming_time($m = 5){
+    private function upcomming_time($s = 300){
 	
-	return strtotime('+'.$m.' min');
+	return mktime(date('H'), date('i'), date('s') + $s, date('n'), date('j'), date('Y'));
     }
     
     /**

@@ -17,7 +17,7 @@ class Library_config {
         require APPLICATION . 'config.php';
         
         foreach($CONFIG as $key => $val)
-            $this->$key = $this->assign_object($val);
+            $this->$key = Library_tools::array_to_object($val);
     }
     
     public static function instance(){
@@ -31,18 +31,5 @@ class Library_config {
             return self::$instance;
         }
     }
-    
-    private function assign_object($var) {
-        
-        if( is_array($var) ) {
-            
-            $object = new stdClass();
-            foreach($var as $key => $val)
-                $object->$key = $this->assign_object($val);
-            
-            return $object;
-        }
-        
-        return $var;
-    }
+
 } // End Library_config

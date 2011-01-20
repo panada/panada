@@ -24,6 +24,15 @@
 
 
 
+
+/**
+ * EN: Asign error_handler method to handle error report
+ */
+set_error_handler(array('Library_error', 'error_handler'));
+
+
+
+
 /**
  * Panada cache class and object.
  *
@@ -110,7 +119,7 @@ function __autoload($class_name) {
         //EN: Oops! Panada Can't find anywhere, so stop the execution!
 	else{
 	    
-	    Library_error::costume(500, '<h2>Error: No '.$var_name.' file in library folder.</h2>');
+	    Library_error::_500('<b>Error:</b> No <b>'.$var_name.'</b> file in library folder.');
 	}
         
     }
@@ -121,11 +130,15 @@ function __autoload($class_name) {
     
     include_once $class_file;
     
+    //EN: Oke the file is exist, but does the class name exist?
+    if( ! class_exists($class_name) )
+	Library_error::_500('<b>Error:</b> No class <b>'.$class_name.'</b> exists in file '.$class_file.'.');
+    
     /**
      * EN: Exclude some class from caching.
      * ID: Abaikan beberap class yang tidak perlu di-cache.
      */
-    if( strtolower($class_name) == 'library_uri' || strtolower($class_name) == 'library_error' || strtolower($class_name) == 'library_time_execution' || strtolower($class_name) == 'controller_'.$var_name )
+    if( $class_name == 'Library_uri' || $class_name == 'Library_error' || $class_name == 'Library_time_execution' || $class_name == 'Controller_'.$var_name )
         return;
     
     $panada_cacher  = Panada_cacher::instance();
@@ -262,7 +275,7 @@ class Panada {
     public function view($view, $data = array()){
         
         if( ! file_exists( $path = APPLICATION . 'view/' . $view . '.php') )
-            Library_error::costume(500, '<h2>Error: No ' . $view . ' file in view folder.</h2>');
+            Library_error::_500('<b>Error:</b> No <b>' . $view . '</b> file in view folder.');
         
 	if( ! empty($data) )
             $this->view = $data;
