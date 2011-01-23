@@ -237,7 +237,7 @@ class Library_tools {
         if( ! is_callable(array($controller, $method)) ){
             
             if( ! $alias_method )
-                Library_notice::_404();
+                Library_error::_404();
             
             $requsts = ( $requsts ) ? array_merge(array($method), $requsts) : array($method);
              $method = $alias_method;
