@@ -41,7 +41,7 @@ class Library_db {
         
         if ( ! $this->link ){
 	    $this->error = new Library_error();
-            $this->error->database('Unable connet to database.' . $this->config->db->$connection->host);
+            $this->error->database('Unable connet to database in <strong>'.$connection.'</strong> connection.');
         }
         
         $collation_query = '';
@@ -69,7 +69,7 @@ class Library_db {
 	    $this->init();
         
         if ( ! @mysql_select_db($dbname, $this->link) )
-            Library_error::database('Unable to select database.');
+            Library_error::database('Unable to select database in <strong>'.$this->connection.'</strong> connection.');
         
     }
     
