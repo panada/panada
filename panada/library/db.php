@@ -41,7 +41,7 @@ class Library_db {
         
         if ( ! $this->link ){
 	    $this->error = new Library_error();
-            $this->error->database('Ucd.' . $this->config->db->$connection->host);
+            $this->error->database('Unable connet to database.' . $this->config->db->$connection->host);
         }
         
         $collation_query = '';
