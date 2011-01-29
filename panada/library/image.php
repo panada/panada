@@ -49,12 +49,12 @@ class Library_image {
     /**
      * @var string  EN: Source full path location.
      */
-    private $file_path;
+    public $file_path;
     
     /**
      * @var string  EN: Source file info.
      */
-    private $file_info = array();
+    public $file_info = array();
     
     /**
      * @var string  EN: Define new file name.
@@ -75,7 +75,7 @@ class Library_image {
     /**
      * @var string  EN: Source image type: gif, jpg or png.
      */
-    private $image_type;
+    public $image_type;
     
     /**
      * @var integer EN: The value jpg compression. the range is 0 - 100.
@@ -161,6 +161,12 @@ class Library_image {
         return true;
     }
     
+    public function init_file_info(){
+        
+        $this->file_info = @getimagesize($this->file_path);
+        $this->image_type   = $this->file_info[2];
+    }
+    
     public function edit($file_name){
         
 	$this->file_name    = $file_name;
@@ -172,8 +178,7 @@ class Library_image {
         
         @chmod($this->file_path, 0666);
 	
-        $this->file_info    = @getimagesize($this->file_path);
-        $this->image_type   = $this->file_info[2];
+        $this->init_file_info();
         
         if ( ! $this->error_handler() )
             return false;
@@ -183,8 +188,8 @@ class Library_image {
         if( ! empty($this->error_messages) )
             return false;
         
-        if ( function_exists( 'imageantialias' ))
-                imageantialias( $image, true );
+        if ( function_exists('imageantialias') )
+            imageantialias( $image, true );
         
         // EN: Initial heigh and widht variable.
         $image_width        = $this->file_info[0];
@@ -241,7 +246,7 @@ class Library_image {
 	return true;
     }
     
-    private function create_image_from(){
+    public function create_image_from(){
         
         // create the initial copy from the original file
         switch($this->image_type) {
@@ -261,7 +266,7 @@ class Library_image {
         }
     }
     
-    private function create_image($image_edited){
+    public function create_image($image_edited){
         
         $file_extension = Library_upload::get_file_extension($this->file_name);
         $save_to        = ( ! empty($this->save_to) ) ? $this->save_to : $this->folder;
