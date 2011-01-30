@@ -274,8 +274,11 @@ class Panada {
     */
     public function __call($file, $data){
 	
-        if( ! file_exists($file = APPLICATION.str_replace('_', '/', $file).'.php') )
-            Library_error::_500('<b>Error:</b> No <b>' . $file . '</b> file in view folder.');
+        // EN: First, check in view sub-folder, if not exist then check the absolute path file
+	
+        if( ! file_exists($view_file = APPLICATION.str_replace('_', '/', $file).'.php') )
+	    if( ! file_exists($view_file = APPLICATION.str_replace('view_', 'view/', $file).'.php') )
+        	Library_error::_500('<b>Error:</b> No <b>' . $view_file . '</b> file in view folder.');
 	
         if( ! empty($data) )
             $this->view = $data[0];
