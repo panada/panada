@@ -1,4 +1,4 @@
-<?php $this->view('header');?>
+<?php $this->view_header();?>
 <body>
     <?php echo $body;?>
 </body>

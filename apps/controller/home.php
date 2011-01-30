@@ -11,6 +11,6 @@ class Controller_home extends Panada {
         
         $views['page_title']    = 'hello world!';
         $views['body']          = 'This is hello world body!';
-        $this->view('index', $views);
+        $this->view_index($views);
     }
 }
