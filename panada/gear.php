@@ -262,7 +262,7 @@ class Panada {
     }
     
     /**
-    * Load View
+    * View Loader
     *
     * EN: Load the "view" file.
     * ID: Berfungsi untuk me-load file "view".
@@ -272,18 +272,18 @@ class Panada {
     * @param	array
     * @return	void
     */
-    public function view($view, $data = array()){
-        
-        if( ! file_exists( $path = APPLICATION . 'view/' . $view . '.php') )
-            Library_error::_500('<b>Error:</b> No <b>' . $view . '</b> file in view folder.');
-        
-	if( ! empty($data) )
-            $this->view = $data;
-        
+    public function __call($file, $data){
+	
+        if( ! file_exists($file = APPLICATION.str_replace('_', '/', $file).'.php') )
+            Library_error::_500('<b>Error:</b> No <b>' . $file . '</b> file in view folder.');
+	
+        if( ! empty($data) )
+            $this->view = $data[0];
+	
         if( ! empty($this->view ) )
-             extract( $this->view, EXTR_SKIP );
-        
-        include_once $path;
+            extract( $this->view, EXTR_SKIP );
+	
+        include_once $file;
     }
 }
 
