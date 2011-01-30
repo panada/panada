@@ -16,6 +16,8 @@ class Library_db {
     public $last_error;
     public $client_flags = 0;
     public $connection;
+    public $new_link = true;
+    public $persistent_connection = false;
     
     /**
      * EN: Define all properties needed.
@@ -24,20 +26,50 @@ class Library_db {
     function __construct($connection = 'default'){
         $this->config = new Library_config();
 	$this->connection = $connection;
+	$this->persistent_connection = $this->config->db->$connection->persistent;
     }
     
+    /**
+     * EN: Establish a new connection to mysql server
+     *
+     * @return string | boolean MySQL persistent link identifier on success, or FALSE on failure.
+     */
+    private function establish_connection(){
+	
+	$connection = $this->connection;
+	$arguments = array(
+			$this->config->db->$connection->host,
+			$this->config->db->$connection->user,
+			$this->config->db->$connection->password,
+			$this->new_link,
+			$this->client_flags
+		    );
+	$function = 'mysql_connect';
+	
+	if( $this->persistent_connection ){
+	    $arguments = array(
+			$this->config->db->$connection->host,
+			$this->config->db->$connection->user,
+			$this->config->db->$connection->password,
+			$this->client_flags
+		    );
+	    $function = 'mysql_pconnect';
+	}
+	
+	return call_user_func_array($function, $arguments);
+    }
+    
+    /**
+     * EN: Inital for all process
+     *
+     * @return void
+     */
     private function init(){
 	
 	$connection = $this->connection;
 	
 	if( is_null($this->link) )
-	    $this->link = @mysql_connect(
-		$this->config->db->$connection->host,
-		$this->config->db->$connection->user,
-		$this->config->db->$connection->password,
-		true,
-		$this->client_flags
-	    );
+	    $this->link = $this->establish_connection();
         
         if ( ! $this->link ){
 	    $this->error = new Library_error();

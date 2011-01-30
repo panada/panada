@@ -15,6 +15,7 @@ $CONFIG['db']['default']['password']        = '';
 $CONFIG['db']['default']['database']        = '';
 $CONFIG['db']['default']['charset']         = 'utf8';
 $CONFIG['db']['default']['collate']         = 'utf8_general_ci';
+$CONFIG['db']['default']['persistent']      = false;
 
 /**
  * ID: Defenisikan library apa saja yang akan diload secara otomatis.

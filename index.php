@@ -41,7 +41,7 @@ define('GEAR', 'panada' . '/');
  *      ke dalam folder applikasi dan sesuaikan isi parameter untuk konstanta
  *      "THISPATH" dan "APPLICATION".
  */
-define('APPLICATION', THISPATH . 'application' .'/');
+define('APPLICATION', THISPATH . 'apps' .'/');
 
 
 
