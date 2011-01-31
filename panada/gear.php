@@ -286,7 +286,7 @@ class Panada {
         if( ! empty($this->view ) )
             extract( $this->view, EXTR_SKIP );
 	
-        include_once $file;
+        include_once $view_file;
     }
 }
 
