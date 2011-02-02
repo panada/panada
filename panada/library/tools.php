@@ -234,7 +234,7 @@ class Library_tools {
         if( ! empty($params[0]) )
             $method = $params[0];
         
-        if( ! is_callable(array($controller, $method)) ){
+        if( ! method_exists($controller, $method) ){
             
             if( ! $alias_method )
                 Library_error::_404();
