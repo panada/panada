@@ -275,10 +275,15 @@ class Panada {
     */
     public function __call($file, $data){
 	
+	$file = explode('view_', $file);
+	
+	if( count($file) < 2 )
+	    Library_error::_404();
+	
         // EN: First, check in view sub-folder, if not exist then check the absolute path file
 	
-        if( ! file_exists($view_file = APPLICATION.str_replace('_', '/', $file).'.php') )
-	    if( ! file_exists($view_file = APPLICATION.str_replace('view_', 'view/', $file).'.php') )
+        if( ! file_exists($view_file = APPLICATION.'view/'.str_replace('_', '/', $file[1]).'.php') )
+	    if( ! file_exists($view_file = APPLICATION.'view/'.$file[1].'.php') )
         	Library_error::_500('<b>Error:</b> No <b>' . $view_file . '</b> file in view folder.');
 	
         if( ! empty($data) )
@@ -361,7 +366,7 @@ Panada::assigner();
  *	Jika tidak ada, apakah method alias tersedia?
  *	Jika tidak stop eksekusi.
 */
-if( ! is_callable(array($Panada, $method)) ){
+if( ! method_exists($Panada, $method) ){
     
     /**
      * ID: Atur ulang struktur variable method dan request.
@@ -370,7 +375,7 @@ if( ! is_callable(array($Panada, $method)) ){
     $request = ( ! empty($request) ) ? array_merge(array($method), $request) : array($method);
     $method = $Panada->config->alias_method;
     
-    if( ! is_callable(array($Panada, $method)) )
+    if( ! method_exists($Panada, $method) )
         Library_error::_404();
 }
 
