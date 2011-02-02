@@ -271,6 +271,7 @@ class Panada {
     * @param	string
     * @param	array
     * @return	void
+    * @since	Version 0.2.1
     */
     public function __call($file, $data){
 	

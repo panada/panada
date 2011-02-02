@@ -3,6 +3,7 @@
  * Panada
  *
  * Light and simple PHP 5 base Framework.
+ * Version: 0.2.1
  *
  * @package	Panada
  * @author	Iskandar Soesman
