@@ -9,7 +9,7 @@
  * @author	Iskandar Soesman
  * @copyright	Copyright (c) 2010, Iskandar Soesman.
  * @license	http://www.opensource.org/licenses/bsd-license.php
- * @link	http://www.kandar.info/panada/
+ * @link	http://panadaframework.com/
  * @since	Version 0.1
  */
 
