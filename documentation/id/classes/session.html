@@ -1,0 +1,289 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <title>Panada PHP Framework 0.2 Documentation</title>
+    <link rel="stylesheet" href="../../style.css" type="text/css" media="screen" />
+</head>
+<body>
+    <div class="header">
+        <span class="logo"><a href="index.html">Panada</a></span>
+        <div class="menu">
+            <form action="#" method="get">
+            <input class="search-input" type="text" name="q" /><button class="search-button" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="subheader">
+        <h1>Panada Framework 0.2 Documentation</h1>
+    </div>
+    
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="navigation">
+                <ul>
+                    <li>
+                        <a href="../index.html">Umum</a>
+                        <ul>
+                            <li><a href="../index.html#about">Tentang Panada</a></li>
+                            <li><a href="../index.html#feature">Keunggulan (<em>Feature</em>)</a></li>
+                            <li><a href="../index.html#license">Lisensi</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="../config.html">Konfigurasi</a>
+                        <ul>
+                            <li><a href="../config.html#general">Dasar</a></li>
+                            <li><a href="../config.html#additional_config">Tambahan</a></li>
+                            <li><a href="../config.html#webserver">Webserver</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Referensi
+                        <ul>
+                            <li><a href="../references/controller.html">Controller</a></li>
+                            <li><a href="../references/model.html">Model</a></li>
+                            <li><a href="../references/view.html">View</a></li>
+                            <li><a href="../references/library.html">Library</a></li>
+                            <li><a href="../references/autoloader.html">Auto Loader</a></li>
+                            <li><a href="../references/global_method.html">Global Method dan Properties</a></li>
+                        </ul>
+                            
+                    </li>
+                    <li>
+                        <a href="index.html">Paket Library</a>
+                        <ul>
+                            <li><a href="database.html">Database</a></li>
+                            <li>
+				<a href="session.html">Session</a>
+				<ul>
+				<li><a href="#config">Konfigurasi</a></li>
+				<li><a href="#set">Set</a></li>
+				<li><a href="#get">Get</a></li>
+				<li><a href="#remove">Remove</a></li>
+				<li><a href="#destroy">Destroy</a></li>
+				<li><a href="#session_clear_all">Session Clear All</a></li>
+				<li><a href="#regenerate">Regenerate</a></li>
+				</ul>
+			    </li>
+                            <li><a href="pagination.html">Pagination</a></li>
+                            <li><a href="email.html">Email</a></li>
+                            <li><a href="encryption.html">Encryption</a></li>
+                            <li><a href="upload.html">Upload</a></li>
+                            <li><a href="image.html">Image</a></li>
+                            <li><a href="request.html">Request</a></li>
+                            <li><a href="rest.html">RESTfull</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../contribution.html">Kontribusi</a></li>
+                    <li><a href="../credit.html">Credit</a></li>
+                </ul>
+	    </div>
+            
+        </div>
+        
+        <div class="content">
+            <div class="lead">
+                <h2>Session</h2>
+                <p>Panada menggunakan session bawaan dari PHP (<em>native session</em>). Sebelm digunakan, library session terlebih dahulu harus diinisialisasi.</p>
+            
+		<code>
+			$this->session  = new Library_session();
+		</code>
+	    </div>
+            
+            <div class="main">
+                <h3 id="config">Konfigurasi</h3>
+                
+                <p>Bagian konfigurasi Library Session terletak pada file <strong>apps/config.php</strong>.</p>
+		<p>Anda bisa menyesuaikan parameter-parameter di bawah ini sesuai dengan kebutuhan.</p>
+<textarea rows="9" cols="50" class="textarea">
+$CONFIG['session']['session_expire'] = 7200;
+$CONFIG['session']['session_name'] = 'PAN_SID';
+$CONFIG['session']['session_cookie_expire'] = 0;
+$CONFIG['session']['session_cookie_path'] = '/';
+$CONFIG['session']['session_cookie_secure'] = false;
+$CONFIG['session']['session_cookie_domain'] = '';
+$CONFIG['session']['session_store'] = 'native';
+$CONFIG['session']['session_db_name'] = 'sessions';
+</textarea>
+		
+		<p>Berikut adalah penjelasan dari masing-masing parameter:</p>
+		<ul>
+			<li>
+			    <strong>session_expire</strong>
+			    <p>session_expire menentukan berapa lama waktu session bisa digunakan hingga <em>expired</em>. Waktu dihitung dimulai dari <em>request</em> terakhir.
+			    <br />Secara <em>default</em> Panada menetapkan waktu <em>expired</em> selama 2 jam (7200 detik).
+			    <br /><strong>Catatan</strong>: Parameter ini tidak berlaku jika Anda menggunakan Debian dan turunannya dan menggunakan pilihan 'native' pada parameter 'session_store'.</p>
+			</li>
+			
+			<li>
+			    <strong>session_name</strong>
+			    <p>session_name adalah nama cookie yang digunakan sebagai identitas session di browser.</p>
+			</li>
+			<li>
+			    <strong>session_cookie_expire</strong>
+			    <p>session_cookie_expire menentukan berapa lama cookie session disimpan di browser.</p>
+			</li>
+			<li>
+			    <strong>session_cookie_path</strong>
+			    <p>session_cookie_path menentukan path-mana berlakunya cookie session.</p>
+			</li>
+			<li>
+			    <strong>session_cookie_secure</strong>
+			    <p>session_cookie_secure menentukan apakah cookie session hanya berlaku di protokol HTTPS saja atau tidak.</p>
+			</li>
+			<li>
+			    <strong>session_cookie_domain</strong>
+			    <p>session_cookie_domain menentukan di mana session cookie berlaku. Jika Anda ingin session berlaku pada semua sub-domain, maka isikan dengan format '.domainanda.com'</p>
+			</li>
+			<li>
+			    <strong>session_store</strong>
+			    <p>session_store menentukan di mana tempat penyimpanan data session. Pilihannya adalah:</p>
+			    <ul>
+				<li><strong>native</strong> (file), yaitu mengikuti setting default PHP.</li>
+				<li><strong>database</strong>, yaitu menyimpannya ke dalam database.</li>
+			    </ul>	
+			    <p>Jika Anda memilih database, Anda harus mempersiapkan sebuah table dengan struktur seperti berikut:</p>
+<textarea rows="8" cols="50" class="textarea">
+CREATE TABLE IF NOT EXISTS `sessions` (
+  `session_id` varchar(32) NOT NULL,
+  `session_data` text NOT NULL,
+  `session_expiration` int(11) NOT NULL,
+  PRIMARY KEY (`session_id`),
+  KEY `session_expiration` (`session_expiration`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+</textarea>
+			</li>
+			<li>
+			    <strong>session_db_name</strong>
+			    <p>Jika Anda menyimpan data session di dalam database dan ingin menggunakna nama table lain, silahkan tentukan pada parameter ini.</p>
+			</li>
+			
+		</ul>
+                
+            </div>
+	    
+	    <div class="lead">
+                <h2>Session Methods</h2>
+                <p>Berikut adalah method-method yang bisa digunakan dalam menangani session di Panada.</p>
+		
+		<ul>
+		<li><a href="#set">Set</a></li>
+		<li><a href="#get">Get</a></li>
+		<li><a href="#remove">Remove</a></li>
+		<li><a href="#destroy">Destroy</a></li>
+		<li><a href="#session_clear_all">Session Clear All</a></li>
+		<li><a href="#regenerate">Regenerate</a></li>
+		</ul>
+		
+		<p>Contoh penggunaan masing-masing method di dalam controller adalah sebagai berikut:</p>
+<textarea rows="31" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+	
+	$this->session = new Library_session();
+    }
+    
+    public function index(){
+        
+        echo 'Hello world!';
+    }
+    
+    public function set_new_session(){
+	
+	$this->session->set('user_id', '1234');
+    }
+    
+    public function get_session(){
+	
+	echo $this->session->get('user_id');
+    }
+    
+    public function destroy_session(){
+	
+	$this->session->destroy();
+    }
+}
+</textarea>
+
+	    </div>
+	    
+	    <div class="main">
+                <h3 id="set">Set</h3>
+		
+		<p>Berikut adalah contoh mengisikan nilai baru ke dalam session.</p>
+		<code>
+			$this->session->set('user_id', '1234');<br />
+			$this->session->set('user_email', 'jhon@myemail.com');<br />
+			$this->session->set('user_name', 'jhon');
+		</code>
+		
+		<p>Untuk mengisikan beberapa data sekaligus, bisa menggunakan variable array seperti contoh berikut:</p>
+		<code>
+			$data = array('user_id' => '1234', 'user_email' => 'jhon@myemail.com', 'user_name' => 'jhon');<br />
+			$this->session->set($data);
+		</code>
+	    </div>
+	    
+	    <div class="main">
+                <h3 id="get">Get</h3>
+		
+		<p>Untuk mendapatkan data yang sudah disimpan di dalam session berikut adalah contohnya:</p>
+		<code>
+			echo $this->session->get('user_id'); // Output: 1234<br />
+			echo $this->session->get('user_email'); // Output: jhon@myemail.com
+		</code>
+	    </div>
+	    
+	    <div class="main">
+                <h3 id="remove">Remove</h3>
+		
+		<p>Berikut adalah contoh cara menghapus nilai session satu-persatu:</p>
+		<code>
+			$this->session->remove('user_id');<br />
+			$this->session->remove('user_email');
+		</code>
+	    </div>
+	    
+	    <div class="main">
+                <h3 id="destroy">Destroy</h3>
+		
+		<p>Untuk menghapus semua nilai sekaligus gunakan method destroy:</p>
+		<code>
+			$this->session->destroy();
+		</code>
+	    </div>
+	    
+	    <div class="main">
+                <h3 id="session_clear_all">Session Clear All</h3>
+		
+		<p>Untuk menghapus semua nilai session sekaligus mereset cookie gunakan method session_clear_all. Method ini sangat disarankan untuk digunakan pada fungsi logout.</p>
+		<code>
+			$this->session->session_clear_all();
+		</code>
+	    </div>
+	    
+	    <div class="main">
+                <h3 id="regenerate">Regenerate</h3>
+		
+		<p>Untuk me-regenerate session id, method yang digunakan adalah regenerate();</p>
+		<code>
+			$this->session->regenerate();
+		</code>
+	    </div>	
+            
+        
+        </div>
+        
+    </div>
+          
+    <div class="footer">
+        <span class="right">All Rights Reserved.</span>
+    </div>
+</body>
+</html>

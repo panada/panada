@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <title>Panada PHP Framework 0.2 Documentation</title>
+    <link rel="stylesheet" href="../style.css" type="text/css" media="screen" />
+</head>
+<body>
+    <div class="header">
+        <span class="logo"><a href="index.html">Panada</a></span>
+        <div class="menu">
+            <form action="#" method="get">
+            <input class="search-input" type="text" name="q" /><button class="search-button" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    <div class="subheader">
+        <h1>Panada Framework 0.2 Documentation</h1>
+    </div>
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="navigation">
+                <ul>
+                    <li>
+                        <a href="index.html">Umum</a>
+                        <ul>
+                            <li class="active"><a href="index.html#about">Tentang Panada</a></li>
+                            <li><a href="index.html#feature">Keunggulan (<em>Feature</em>)</a></li>
+                            <li><a href="index.html#license">Lisensi</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="config.html">Konfigurasi</a>
+                        <ul>
+                            <li><a href="config.html#general">Dasar</a></li>
+                            <li><a href="config.html#additional_config">Tambahan</a></li>
+                            <li><a href="config.html#webserver">Webserver</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Referensi
+                        <ul>
+                            <li><a href="references/controller.html">Controller</a></li>
+                            <li><a href="references/model.html">Model</a></li>
+                            <li><a href="references/view.html">View</a></li>
+                            <li><a href="references/library.html">Library</a></li>
+                            <li><a href="references/autoloader.html">Auto Loader</a></li>
+                            <li><a href="references/global_method.html">Global Method dan Properties</a></li>
+                            
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="classes/index.html">Paket Library</a>
+                        <ul>
+                            <li><a href="classes/database.html">Database</a></li>
+                            <li><a href="classes/session.html">Session</a></li>
+                            <li><a href="classes/pagination.html">Pagination</a></li>
+                            <li><a href="classes/email.html">Email</a></li>
+                            <li><a href="classes/encryption.html">Encryption</a></li>
+                            <li><a href="classes/upload.html">Upload</a></li>
+                            <li><a href="classes/image.html">Image</a></li>
+                            <li><a href="classes/request.html">Request</a></li>
+                            <li><a href="classes/rest.html">RESTfull</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="contribution.html">Kontribusi</a></li>
+                    <li><a href="credit.html">Credit</a></li>
+                </ul>
+	    </div>
+        </div>
+        <div class="content">
+            <div id="about" class="lead">
+                <h2>Tentang Panada</h2>
+                <p>Panada adalah framework sederhana dan simpel untuk pembuatan website berbasiskan
+                        PHP 5. Panada dikembangkan dengan tujuan membantu para pengembang website untuk
+                        bekerja lebih cepat, lebih mudah dan lebih alamiah dalam penulisan kode.</p>
+                <p>Setiap
+                        komponen akan bisa saling memanfaatkan sumberdaya (<em>resource</em>) dari komponen-komponen
+                        lainnya secara otomatis. Hal ini memudahkan pengembang dalam memanfaatkan sumberdaya
+                        secara cepat dan efisien.
+                </p>
+		
+		<p>Untuk mendapatkan update terbaru, follow twitter Panada di <a href="http://twitter.com/panadaframework" target="_blank">@panadaframework</a>.</p>
+	    </div>
+            <div id="feature" class="main">
+                <h3>Features</h3>
+                <ul>
+                    <li>
+                        <h4>Sederhana dan Simpel</h4>
+                        <p>Sistem utama (<em>core system</em>) Panada hanya terdiri dari sebuah file, yaitu <strong>gear.php</strong>
+                                yang terletak pada direktori <strong>panada</strong>. Hal ini bertujuan memudahkan
+                                pengguna dalam memahami alur kerja Panada.
+                        </p>
+                    </li>
+                    <li>
+                        <h4>Mudah</h4>
+                        <p>Dengan hanya sedikit mengisikan beberapa parameter pada file <strong>application/config.php</strong>
+                                Panada sudah bisa langsung digunakan.
+                        </p>
+                    </li>
+                    <li>
+                        <h4>Single Load</h4>
+                        <p>Cukup sekali melakukan pengambilan komponen (<em>component load</em>) dan sumberdayanya
+    bisa langsung digunakan di semua komponen lainnya. Pengambilan bisa dilakukan
+    pada bagian <a href="references/autoloader.html">autoloader</a>, di dalam <a href="references/controller.html">controller</a>, di dalam <a href="references/model.html">model</a> atau di dalam <a href="references/library.html">library</a>.</p>
+                    </li>
+                    <li>
+                        <h4>Alamiah</h4>
+                        <p>Dalam pengambilan sebuah komponen baik itu model ataupun library, Anda hanya
+    cukup melakukan sekali pendeklarasian sebagaimana umumnya dalam mendeklarasikan
+    sebuah class. Contohnya:</p>
+    <code>
+    $this->nama_instance = new library_nama();
+    </code>
+    <p>Atau:</p>
+    <code>
+    $this->nama_instance = new model_nama();
+    </code>
+    <p>Baik dalam pengambilan library ataupun model cara yang dilakukan adalah sama.
+    Perbedaaanya hanya terletak pada prefix ('library_' atau 'model_') nama class
+    yang menunjukan tugas dan lokasi folder.</p>
+                    </li>
+                    <li>
+                        <h4>Multisite</h4>
+                        <p>Beberapa website bisa dibuat dengan menggunakan satu sistem utama yang sama, baik itu
+    dengan domain utama yang sama ataupun berbeda.</p>
+                    </li>
+            </ul>
+			
+	    </div>
+            <div id="license" class="main">
+                <h3>Lisensi</h3>
+                <p>Lisensi Panada menggunakan BSD-License (<a href="http://www.opensource.org/licenses/bsd-license.php" target="_blank">http://www.opensource.org/licenses/bsd-license.php</a>). Dengan lisensi ini artinya setiap orang bisa dengan bebas menggunakan aplikasi ini baik itu untuk keperluan komersial ataupun non-komersial.</p>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <span class="right">All Rights Reserved.</span>
+    </div>
+</body>
+</html>
