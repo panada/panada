@@ -8,6 +8,13 @@
  * @since	Version 0.1
  */
 
+/**
+ * ID: Pastikan ektensi Memcache telah terinstall
+ * EN: Makesure Memcache extension is enabled
+ */
+if( ! extension_loaded('memcache') )
+    Library_error::_500('Memcache extension that required by Library_memcached is not available.');
+
 class Library_memcached extends Memcache {
     
     /**
