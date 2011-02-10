@@ -8,6 +8,13 @@
  * @since	Version 0.1
  */
 
+/**
+ * ID: Pastikan ektensi Curl telah terinstall
+ * EN: Makesure Curl extension is enabled
+ */
+if( ! function_exists('curl_init') )
+    Library_error::_500('cUrl extension that required by Library_rest is not available.');
+
 class Library_rest {
     
     public $request_method;
@@ -47,9 +54,6 @@ class Library_rest {
     }
     
     public function send_request($uri, $method = 'GET', $data = array()){
-        
-	if( ! function_exists('curl_init') )
-	    Library_error::_500('Error: No PHP cUrl found!', '<h1>Error: REST Library required PHP cUrl modul!</h1>');
 	
 	$this->set_request_headers[]	= 'User-Agent: Panada PHP Framework REST API/0.1';
 	$method				= strtoupper($method);
