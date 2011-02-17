@@ -273,18 +273,51 @@ class Panada {
     * @return	void
     * @since	Version 0.2.1
     */
-    public function __call($file, $data){
+    public function __call($file, $data = null){
 	
-	$file = explode('view_', $file);
+	$file = explode('_', $file);
 	
-	if( count($file) < 2 )
+	if( $file[0] != 'view' )
 	    Library_error::_404();
-	
-        // EN: First, check in view sub-folder, if not exist then check the absolute path file
-	
-        if( ! file_exists($view_file = APPLICATION.'view/'.str_replace('_', '/', $file[1]).'.php') )
-	    if( ! file_exists($view_file = APPLICATION.'view/'.$file[1].'.php') )
-        	Library_error::_500('<b>Error:</b> No <b>' . $view_file . '</b> file in view folder.');
+        
+        $file = array_slice($file, 1);
+        
+        $file_path = APPLICATION.'view/';
+        
+	if( count($file) == 1 ){
+           $this->print_output($file_path.$file[0], $data);
+        }
+        else{
+            
+            // EN: First, construct the folder location
+            foreach($file as $key => $val){
+                $file_path .= $val.'/';
+                if( is_dir($file_path) ){
+                    $next_key = $key + 1;
+                    if( ! is_dir($file_path.$file[$next_key]) ){
+                        $arr_file_key = $next_key;
+                        break;
+                    }
+                }
+            }
+           
+            if( ! isset($arr_file_key) ){
+                $arr_file_key = 0;
+                $file_path = APPLICATION.'view/';
+            }
+            // EN: Second, construct the file name
+            $arr_file_name = array_splice($file, $arr_file_key, count($file) );
+            
+            $file_name = implode('_', $arr_file_name);
+            
+            $this->print_output($file_path.$file_name, $data);
+        }
+    }
+    
+    private function print_output($file_path, $data){
+        
+        if( ! file_exists($view_file = $file_path.'.php') )
+	    Library_error::_500('<b>Error:</b> No <b>' . $view_file . '</b> file in view folder.');
 	
         if( ! empty($data) )
             $this->view = $data[0];

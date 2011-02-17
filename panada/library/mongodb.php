@@ -34,6 +34,13 @@ class Library_mongodb extends Mongo {
         parent::__construct($host, $connection_options);
     }
     
+    public function collection($collection){
+        
+        $database = $this->database;
+        $db = $this->$database;
+        return $db->$collection;
+    }
+    
     /**
      * EN: Wrap results from mongo output into object or array.
      *
