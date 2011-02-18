@@ -63,7 +63,7 @@
 				<a href="upload.html">Upload</a>
 				<ul>
 				<li><a href="#auto_rename">Auto Rename</a></li>
-				<li><a href="#auto_folder">Buat Sub-folder Otomatis</a></li>
+				<li><a href="#auto_folder">Sub-folder Otomatis</a></li>
 				<li><a href="#file_validation">Validasi Tipe File</a></li>
 				<li><a href="#size_validation">Validasi Ukuran File</a></li>
 				<li><a href="#error_message">Error Message</a></li>
@@ -92,7 +92,7 @@
 		<p>Class upload Panada memiliki feature-feature lengkap yang bisa langsung digunakan di dalam aplikasi Anda. Feature ini antara lain:</p>
 		<ul>
 		    <li><a href="#auto_rename">Auto Rename</a></li>
-		    <li><a href="#auto_folder">Buat Sub-folder Otomatis</a></li>
+		    <li><a href="#auto_folder">Sub-folder Otomatis</a></li>
 		    <li><a href="#file_validation">Validasi Tipe File</a></li>
 		    <li><a href="#size_validation">Validasi Ukuran File</a></li>
 		    <li><a href="#error_message">Error Message</a></li>
@@ -105,6 +105,60 @@
                 <p>Sebelum digunakan, class upload harus diinisialisasi terlebih dahulu.</p>
 		<code>
 		    $this->upload = new Library_upload();
+		</code>
+                
+            </div>
+	    
+	    <div class="main">
+                <h3>Method now()</h3>
+                <p>Method untuk melakukan proses upload adalah:</p>
+		<code>
+		    <b>bool</b> $this->upload->now( array $_FILES['my_file'] );
+		</code>
+                
+            </div>
+	    
+	    <div class="main">
+                <h3>Properties get_file_info</h3>
+                <p>Untuk mendapatkan data yang sudah berhasil diupload bisa menggunakan properties:</p>
+		<code>
+		    <b>array</b> $this->upload->get_file_info;
+		</code>
+		<p>Informasi yang diberikan:</p>
+		<table>
+		<thead>
+		<tr>
+		    <th scope="col">Array Key</th>
+		    <th scope="col">Deskripsi</th>
+		    <th scope="col">Contoh</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr class="odd">
+		    <td>extension</td>
+		    <td>Ekstensi dari file yang diupload.</td>
+		    <td>jpg</td>
+		</tr>
+		<tr>
+		    <td>name</td>
+		    <td>Nama file yang diupload.</td>
+		    <td>panada_benchmark.jpg</td>
+		</tr>
+		<tr class="odd">
+		    <td>folder</td>
+		    <td>Lokasi folder file yang diupload.</td>
+		    <td>uploads</td>
+		</tr>
+		<tr>
+		    <td>mime</td>
+		    <td>Tipe Mime file yang diupload.</td>
+		    <td>image/jpeg</td>
+		</tr>
+		</tbody>
+		</table>
+		<p>Contoh output array-nya:</p>
+		<code>
+		    Array ( [extension] => jpg [name] => panada_benchmark.jpg [folder] => uploads [mime] => image/jpeg )
 		</code>
                 
             </div>

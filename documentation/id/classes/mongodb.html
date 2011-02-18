@@ -77,12 +77,12 @@
         
         <div class="content">
             <div class="lead">
-                <h2>Mongodb</h2>
-                <p>MongoDB adalah scalable, high-performance, open source database NoSQL yang berorientasikan dokumen. Dengan MongoDB memungkinkan penyimpanan data dilakukan tanpa perlu diawali dengan pembuatan skema database. Setiap data disimpan berformat herarki, di mana setiap record bisa memiliki herarki yang berbeda dengan record lainnya dalam satu collection/table yang sama.</p>
+                <h2>MongoDB</h2>
+                <p>MongoDB adalah scalable, high-performance, open source database NoSQL yang berorientasikan dokumen. Dengan MongoDB memungkinkan penyimpanan data dilakukan tanpa perlu diawali dengan pembuatan skema database. Setiap data disimpan berformat herarki, di mana setiap record bisa memiliki herarki yang berbeda dengan record lainnya dalam satu collection/tabel yang sama.</p>
                 <p>Lebih lanjut mengenai MongoDB bisa dilihat di <a href="http://www.mongodb.org" target="_blank">http://www.mongodb.org</a>.</p>
                 <p><strong>Untuk menggunakan Library ini, pastikan PHP Anda telah terinstall ekstensi Mongo</strong>.</p>
-                <p>Library Mongodb merupakan inheritance dari class Mongo yang telah tersedia secara natif oleh ekstensi Mongo. Hal ini berarti, semua resources yang ada pada class Mongo, bisa juga langsung digunakan pada Library Mongodb.</p>
-                <p>Di bawah adalah beberapa contoh saja dari method-method yang paling sering digunakan.</p>
+                <p>Library Mongodb Panada merupakan inheritance dari class Mongo yang telah tersedia secara natif oleh ekstensi Mongo. Hal ini berarti, semua resources yang ada pada class Mongo, bisa juga langsung digunakan pada Library Mongodb.</p>
+                <p>Di bawah adalah beberapa contoh dari method-method yang paling sering digunakan.</p>
                 <p>Informasi lebih lanjut mengenai MongoDB API's silahkan lihat <a target="_blank" href="http://www.mongodb.org/display/DOCS/Tutorial">http://www.mongodb.org/display/DOCS/Tutorial</a></p>
             </div>
             
@@ -101,6 +101,23 @@ $CONFIG['mongodb']['default']['database'] = 'database_name';
                 <code>
                     $connection_options = array('replicaSet' => true, 'connect' => false);
                 </code>
+		<p>Berikut adalah contoh penerapan connection option pada constructor dari calss Library_mongodb:</p>
+<textarea rows="15" cols="50" class="textarea">
+    public function __construct( $connection = 'default' ){
+        
+        $this->config = new Library_config();
+        
+        $this->database = $this->config->mongodb->$connection->database;
+        $host = $this->config->mongodb->$connection->host;
+        
+        /**
+         * EN: This is the mongodb connection option. Eg: array('replicaSet' => true, 'connect' => false)
+         */
+        $connection_options = array('replicaSet' => true, 'connect' => false);
+        
+        parent::__construct($host, $connection_options);
+    }
+</textarea>
             </div>
             
             <div class="main">
@@ -132,6 +149,16 @@ $CONFIG['mongodb']['default']['database'] = 'database_name';
                     $this->mongodb->collection('users');
                 </code>
             </div>
+	    
+	    <div class="main">
+                <h3 id="insert">Insert</h3>
+                <p>Untuk menambahkan data baru, gunakan method:</p>
+                <code>
+                    $this->mongodb->collection('collection_name')-><b>insert</b>( array | object $data );
+                </code>
+                <p><b>$data</b> bisa berupa array atau object.</p>
+                <p>Lebih lanjut mengenai insert di MongoDB, lihat di <a target="_blank" href="http://www.php.net/manual/en/mongo.writes.php">http://www.php.net/manual/en/mongo.writes.php</a> dan <a target="_blank" href="http://www.mongodb.org/display/DOCS/Inserting">http://www.mongodb.org/display/DOCS/Inserting</a></p>
+            </div>
             
             <div class="main">
                 <h3 id="find">Find</h3>
@@ -140,12 +167,38 @@ $CONFIG['mongodb']['default']['database'] = 'database_name';
                     $this->mongodb->collection('collection_name')-><b>find</b>( array $criteria = array() );
                 </code>
                 
-                <p><b>$criteria</b> adalah item array untuk melakukan filter terhadap data yang ingin didapatkan. Contoh:</p>
+                <p><b>$criteria</b> adalah item array untuk melakukan filter terhadap data yang ingin didapatkan.</p>
+		<p>Contoh penggunaan untuk "dapatkan user dengan id kurang dari atau sama dengan 20 dari collection/tabel users":</p>
                 <code>
                     $criteria = array('id' => array('$lte' => 20) );<br />
                     $cursor = $this->mongodb->collection('users')->find($criteria);
                 </code>
                 <p>Lebih lanjut mengenai query dan kriteria di MongoDB, lihat di <a target="_blank" href="http://www.mongodb.org/display/DOCS/Querying">http://www.mongodb.org/display/DOCS/Querying</a>
+            </div>
+	    
+	    <div class="main">
+                <h3 id="cursor_results">Cursor_results</h3>
+                <p>Secara default, output data yang diberikan oleh Mongo berformat array. Untuk menampilkan data yang diambil dari method <b>find</b> dengan format object, Panada menyediakan method <b>cursor_results</b>:</p>
+                <code>
+                    $cursor = $this->mongodb->collection('users')->find()->limit(3);<br />
+		    $data = $this->mongodb-><b>cursor_results</b>($cursor);
+                </code>
+                
+            </div>
+	    
+	    <div class="main">
+                <h3 id="findone">FindOne</h3>
+                <p>Sedangkan untuk mendapatkan data dengan jumlah satu, gunakan method:</p>
+                <code>
+                    $this->mongodb->collection('collection_name')-><b>findOne</b>( array $criteria = array() );
+                </code>
+                
+                <p>Contoh penggunaan untuk "dapatkan user dengan id 20 dari collection/tabel users":</p>
+                <code>
+                    $criteria = array('id' => (int) 20 );<br />
+                    $value = $this->mongodb->collection('users')->findOne($criteria);
+                </code>
+                
             </div>
             
             <div class="main">
@@ -168,7 +221,7 @@ $CONFIG['mongodb']['default']['database'] = 'database_name';
 	    
 	    <div class="main">
 		<h3 id="contoh">Contoh</h3>
-		<textarea rows="24" cols="50" class="textarea">
+		<textarea rows="121" cols="50" class="textarea">
 &lt;?php
 
 class Model {
@@ -180,17 +233,108 @@ class Model {
     }
     
     public function insert_user(){
-    
+	
+	// Insert new 4 records
+	$my_data = array(
+	    array(
+		'email' => 'jhon@domain.co.id',
+		'name' => 'Jhon Smith',
+		'city' => 'New York'
+	    ),
+	    array(
+		'email' => 'mark@foo.com',
+		'name' => 'Mark W',
+		'city' => ''
+	    ),
+	    array(
+		'email' => 'rossi@rossi.com',
+		'name' => 'V Rossi',
+		'country' => 'Italy'
+	    ),
+	    array(
+		'email' => 'simon@googlegmail.com',
+		'name' => 'Simon C',
+		'country' => 'Italy'
+	    )
+	);
+	
+	$collection = $this->mongodb->collection('users');
+	foreach($my_data as $data){
+	    $collection->insert($data);
+	}
     }
     
     public function get_users(){
 	
-	$cursor = $this->mongodb->collection('users')->find()->limit(10);
+	$cursor = $this->mongodb->collection('users')->find()->limit(3);
         
 	foreach ($cursor as $value){
 	    
-            print_r(value);
+            print_r($value);
 	}
+	
+	/*
+	Output:
+	Array ( [_id] => MongoId Object ( ) [email] => jhon@domain.co.id [name] => Jhon Smith [city] => New York ) Array ( [_id] => MongoId Object ( ) [email] => mark@foo.com [name] => Mark W [city] => ) Array ( [_id] => MongoId Object ( ) [email] => rossi@rossi.com [name] => V Rossi [country] => Italy )
+	*/
+	
+	// Wrap results from mongo output into object
+	$obj_data = $this->mongodb->cursor_results($cursor);
+	
+	print_r($obj_data);
+	
+	/*
+	Output:
+	Array ( [0] => stdClass Object ( [_id] => MongoId Object ( ) [email] => jhon@domain.co.id [name] => Jhon Smith [city] => New York ) [1] => stdClass Object ( [_id] => MongoId Object ( ) [email] => mark@foo.com [name] => Mark W [city] => ) [2] => stdClass Object ( [_id] => MongoId Object ( ) [email] => rossi@rossi.com [name] => V Rossi [country] => Italy ) ) 
+	*/
+    }
+    
+    public function get_user(){
+	
+	$criteria = array('email' => 'rossi@rossi.com');
+	
+	$user = $this->mongodb->collection('users')->findOne($criteria);
+	print_r($user);
+	
+	/*
+	Output:
+	Array ( [_id] => MongoId Object ( ) [email] => rossi@rossi.com [name] => V Rossi [country] => Italy )
+	*/
+    }
+    
+    public function update_user(){
+	
+	$criteria = array('email' => 'jhon@domain.co.id');
+	$data = array('name' => 'Jhon Doo');
+	
+	$collection = $this->mongodb->collection('users');
+	
+	$collection->update($criteria, array('$set' => $data) );
+	
+	$user = $collection->findOne($criteria);
+	print_r($user);
+	
+	/*
+	Output:
+	Array ( [_id] => MongoId Object ( ) [city] => New York [email] => jhon@domain.co.id [name] => Jhon Doo ) 
+	*/
+    }
+    
+    public function remove_user(){
+	
+	$criteria = array('email' => 'mark@foo.com');
+	
+	$collection = $this->mongodb->collection('users');
+	
+	$collection->remove( $criteria );
+	
+	$user = $collection->findOne($criteria);
+	var_dump($user);
+	
+	/*
+	Output:
+	NULL
+	*/
     }
 
 }
