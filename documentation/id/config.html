@@ -35,6 +35,7 @@
                             <li><a href="config.html#general">Dasar</a></li>
                             <li><a href="config.html#additional_config">Tambahan</a></li>
                             <li><a href="config.html#webserver">Webserver</a></li>
+                            <li><a href="config.html#discussion">Diskusi</a></li>
                         </ul>
                     </li>
                     <li>
@@ -185,7 +186,10 @@ if (trim($path, '/') != '' && trim($path, '/') != 'index.php')
                     http://www.mysite.com/home
                 </code>
 	    </div>
-            
+	    <div id="discussion" class="main">
+		<h3>Diskusi</h3>
+		<div id="disqus_thread"></div>
+	    </div>
         </div>
             
     </div>
@@ -193,5 +197,16 @@ if (trim($path, '/') != '' && trim($path, '/') != 'index.php')
     <div class="footer">
         <span class="right">All Rights Reserved.</span>
     </div>
+    <script type="text/javascript">
+	var disqus_shortname = 'panada';
+	var disqus_url = 'http://panadaframework.com/documentation/id/config.html';
+	var disqus_identifier = disqus_url;
+	(function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </body>
 </html>
