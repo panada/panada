@@ -1,8 +1,10 @@
 
 Panada
 Light and simple PHP 5 base Framework.
-Version 0.1
-Juni 2010
+Version 0.2.1
+Februari 2011
+Website: http://panadaframework.com
+Twitter: http://twitter.com/panadaframework
 Copyright (C) 2010  Iskandar Soesman (iskandarsoesman at gmaildotcom)
 License: http://www.opensource.org/licenses/bsd-license.php
 
@@ -25,7 +27,7 @@ FEATURES
     pengguna dalam memahami alur kerja Panada.
 
 *   Mudah
-    Dengan hanya sedikit mengisikan beberapa parameter pada file application/config.php
+    Dengan hanya sedikit mengisikan beberapa parameter pada file apps/config.php
     Panada sudah bisa langsung digunakan.
 
 *   Single Load
@@ -36,16 +38,19 @@ FEATURES
 *   Alamiah
     Dalam pengambilan sebuah komponen baik itu model ataupun library, Anda hanya
     cukup melakukan sekali pendeklarasian sebagaimana umumnya dalam mendeklarasikan
-    sebuah class, yaitu $this->nama_instance = new library_nama(); atau $this->nama_instance = new model_nama();.
+    sebuah class, yaitu $this->nama_instance = new Library_nama(); atau $this->nama_instance = new Model_nama();.
     Baik dalam pengambilan library ataupun model cara yang dilakukan adalah sama.
-    Perbedaaanya hanya terletak pada prefix ('library_' atau 'model_') nama class
+    Perbedaaanya hanya terletak pada prefix ('Library_' atau 'Model_') nama class
     yang menunjukan tugas dan lokasi folder.
     
 *   Multisite
     Beberapa website bisa dibuat dengan menggunakan satu sistem utama yang sama, baik itu
     dengan domain utama yang sama ataupun berbeda.
 
-
+DOKUMENTASI OFFLINE
+===================
+Dokumentasi dapat Anda lihat secara offline di
+http://localhost/panada/documentation/id/index.html
 
 PANDUAN INSTALLASI DAN PENGGUNAAN
 =================================
@@ -60,7 +65,7 @@ Konfigurasi
 -----------
 
 File konfigurasi terletak di:
-application/config.php
+aps/config.php
 
 Isikan lokasi url applikasi pada parameter base_url,
 Misalnya http://localhost/panada/index.php/ atau http://www.mysite.com/index.php/
@@ -106,13 +111,13 @@ host, password, dan nama database.
 Controller
 ----------
 
-Untuk membuat controller buat sebuah file baru di dalam folder application/controller/
+Untuk membuat controller buat sebuah file baru di dalam folder apps/controller/
 dan beri nama sesuai dengan yang diinginkan, misalnya home.php.
 
 Buat sebuah class baru di dalam file ini di mana class tersebut menjadi child
 dari class Panada, berikut adalah contohnya:
 
-class controller_home extends Panada {
+class Controller_home extends Panada {
     
     function __construct(){
         
@@ -126,24 +131,24 @@ class controller_home extends Panada {
 }
 
 Yang harus diperhatikan adalah prefix nama class menunjukan lokasi folder class
-tersebut. Hal ini juga berlaku pada class untuk library, maka prefix-nya adalah "library_"
-dan class untuk model dengan prefix "model_"
+tersebut. Hal ini juga berlaku pada class untuk library, maka prefix-nya adalah "Library_"
+dan class untuk model dengan prefix "Model_"
 
 Sebuah controller setidak-tidaknya harus memiliki method __construct dan index. Jika controller
 ini dikases tanpa argumen apapun, maka method yang akan diakses adalah index.
 
 Untuk me-load library ataupun model di dalam controller, berikut adalah contohnya:
 
-class controller_home extends Panada {
+class Controller_home extends Panada {
     
     function __construct(){
         
         parent::__construct();
         
         // Load model
-        $this->users = new model_users();
+        $this->users = new Model_users();
         // Load library
-        $this->session = new library_session();
+        $this->session = new Library_session();
     }
     
     function index(){
@@ -156,40 +161,37 @@ class controller_home extends Panada {
 Model
 -----
 
-Buat file baru dan letakan di dalam folder application/model/, misalnya users.php.
-Buat class users di dalam file ini dengan diawali prefix "model_", contohnya:
+Buat file baru dan letakan di dalam folder apps/model/, misalnya users.php.
+Buat class users di dalam file ini dengan diawali prefix "Model_", contohnya:
 
-class model_users {
+class Model_users {
     
     function __construct(){
         
     }
 }
-
-Sebuah class model setidaknya harus memiliki method __construct yang bertugas me-load library
-atau class lainnya yang nantinya akan dibutuhkan.
 
 Load Library di dalam Model
 
 Yang paling sering dilakukan adalah me-load library database di dalam sebuah class model. Untuk
 melakukan ini berikut adalah contohnya:
 
-class model_users {
+class Model_users {
     
     function __construct(){
         
-        $this->db = new library_db();
+        $this->db = new Library_db();
     }
 }
 
 berikutnya, properti "$this->db" bisa digunakan di semua method yang ada di dalam class
 tersebut. Berikut adalah contoh untuk mendapatkan 5 record dari database:
 
-class model_users {
+class Model_users {
     
     function __construct(){
         
-        $this->db = new library_db();
+        $this->db = new Library_db();
     }
     
     function users(){
@@ -204,21 +206,21 @@ ataupun model:
 1.  Defenisikan class yang akan diload secara otomatis pada parameter auto_loader yang ada di dalam file
     config.php, contohnya adalah:
     
-    $CONFIG['auto_loader'] = array('library_db', 'model_users');
+    $CONFIG['auto_loader'] = array('Library_db', 'Model_users');
     
     Library ataupun model bisa sekaligus dideklarasikan secara bersamaan.
     
 2.  Sebuah class juga bisa dideklarasikan pada method constructor dari class controller. Misalnya
     me-load library db di dalam controller home:
     
-    class controller_home extends Panada {
+    class Controller_home extends Panada {
     
         function __construct(){
             
             parent::__construct();
             
-            $this->db = new library_db();
-            $this->users = new model_users();
+            $this->db = new Library_db();
+            $this->users = new Model_users();
         }
         
         function index(){
@@ -227,107 +229,9 @@ ataupun model:
         }
     }
     
-Apabila sebuah class suda dideklarasikan, baik itu pada auto_loader
+Apabila sebuah class sudah dideklarasikan, baik itu pada auto_loader
 atau di dalam model ataupun di dalam controller, maka tidak perlu lagi dideklarasikan pada class lainnya.
 instance dari class tersebut secara otomatis sudah bisa langsung digunakan pada class lain.
-
---------
-Database
---------
-
-== Simple query ==
-
-
-- Single Record -
------------------
-
-Untuk mendapatkan sebuah record, berikut contoh query-nya:
-
-$data = $this->db->row("SELECT * FROM table_name WHERE id = 1");
-
-Output dari fungsi ini adalah object, sehingga untk memanggil value record dengan cara:
-
-echo $data->field_1;
-
-Untuk mendapatkan tipe data array tambahkan parameter 'array' setelah argumen query:
-
-$data = $this->db->row("SELECT * FROM table_name WHERE id = 1", 'array');
-
-dan untuk mendapatkan isi record-nya:
-
-echo $data['field_1'];
-
-
-- Multiple Records -
---------------------
-
-Untuk mendapatkan multiple record cara query-nya adalah:
-
-$data = $this->db->results("SELECT * FROM table_name");
-
-foreach ($data as $data) {
-    
-    echo $data->field_1;
-    echo $data->field_2;
-}
-
-Atau dengan tipe data array:
-
-$data = $this->db->results("SELECT * FROM table_name", 'array');
-
-foreach ($data as $data) {
-    
-    echo $data['field_1'];
-    echo $data['field_2'];
-}
-
-
-- Insert Data -
----------------
-
-Berikut adalah contoh untuk melakukan insert:
-
-$this->db->query("INSERT INTO table_name (field_1, field_2) VALUES ('budi', 'budi@budi.com')");
-
-
-- Single Variable -
-
-Untuk mendapatkan single variable/field, bisa dilakukan dengan cara berikut:
-
-$data = $this->db->get_var("SELECT COUNT(*) FROM table_name");
-echo $data;
-
-
-== Faster Query ==
-
-Selain cara di atas, modifikasi database juga bisa dilakukan dengan cara yang lebih cepat.
-
-Untuk mendapatkan single record dengan cara:
-
-$data = $this->db->get_row('table_name', array('id' => 1, 'email' => 'kandar'), array('id', 'email') );
-echo $data->email;
-
-Untuk mendapatkan multiple record dengan cara:
-
-$data = $this->db->get_results('table_name', array('id' => 1, 'email' => 'budi@budi.com'), array('field_1', 'field_2'));
-foreach ($data as $data) {
-    
-    echo $data->field_1;
-    echo $data->field_2;
-}
-
-Untuk menambahkan data baru dengan cara:
-
-$query = $this->db->insert('table_name', array('name' => 'jhon', 'email' => 'jhon@smith.com'));
-
-Untuk meng-update record dengan cara:
-
-$query = $this->db->update('table_name', array('name' => 'jhon gmail', 'email' => 'jhon@gmail.com'), array('id' => 6));
-
-Untuk menghapus record dengan cara:
-
-$query = $this->db->delete('table_name', array('id' => '6'));
-
 
 
 KONTRIBUSI
@@ -349,3 +253,12 @@ Anda bisa melakukan banyak hal untuk berkontribusi, diantaranya:
 *   Other Contributor
     Apapun bisa Anda melakukan apapun untuk menjadikan Panada lebih baik dengan cara Anda sendiri.
     Selamat menikmati Panada!
+
+
+KONTRIBUTOR
+===========
+
+Berikut adalah teman-teman yang sudah berkontribusi pada project ini:
+* b_dtri (http://twitter.com/mboi_coy)
+* Enggal Mandiri (http://enggalmandiri.info/)
+* cakyus (http://cakyus.wordpress.com/)
