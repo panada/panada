@@ -1,14 +1,14 @@
 <?php defined('THISPATH') or die('Can\'t access directly!');
 /**
- * Panada MySQL Database Driver.
+ * Panada PostgreSQL Database Driver.
  *
  * @package	Panada
  * @subpackage	Driver
  * @author	Iskandar Soesman.
- * @since	Version 0.1
+ * @since	Version 0.3
  */
 
-class Driver_mysql {
+class Driver_postgresql {
     
     private $link;
     private $connection;
@@ -32,33 +32,27 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Establish a new connection to mysql server
+     * EN: Establish a new connection to postgreSQL server
      *
-     * @return string | boolean MySQL persistent link identifier on success, or FALSE on failure.
+     * @return string | boolean postgreSQL persistent link identifier on success, or FALSE on failure.
      */
     private function establish_connection(){
-	
+        
+        $arguments = 'host='.$this->db_config->host.'
+                    port=5432
+                    dbname='.$this->db_config->database.'
+                    user='.$this->db_config->user.'
+                    password='.$this->db_config->password.'
+                    options=\'--client_encoding='.$this->db_config->charset.'\'';
+        
 	$arguments = array(
-			$this->db_config->host,
-			$this->db_config->user,
-			$this->db_config->password,
-			$this->new_link,
-			$this->client_flags
+			$arguments,
+			false
 		    );
+	$function = 'pg_connect';
 	
-	$function = 'mysql_connect';
-	
-	if( $this->db_config->persistent ){
-	    
-	    $arguments = array(
-			$this->db_config->host,
-			$this->db_config->user,
-			$this->db_config->password,
-			$this->client_flags
-		    );
-	    
-	    $function = 'mysql_pconnect';
-	}
+	if( $this->db_config->persistent )
+	    $function = 'pg_pconnect';
 	
 	return call_user_func_array($function, $arguments);
     }
@@ -77,34 +71,6 @@ class Driver_mysql {
 	    $this->error = new Library_error();
             $this->error->database('Unable connet to database in <strong>'.$this->connection.'</strong> connection.');
         }
-        
-        $collation_query = '';
-        
-        if ( ! empty($this->db_config->charset) ) {
-            $collation_query = "SET NAMES '".$this->db_config->charset."'";
-	    if ( ! empty($this->db_config->collate) )
-                $collation_query .= " COLLATE '".$this->db_config->collate."'";
-	}
-	
-        if ( ! empty($collation_query) )
-            $this->query($collation_query);
-        
-        $this->select_db($this->db_config->database);
-    }
-    
-    /**
-     * EN: Select the databse
-     *
-     * @return void
-     */
-    private function select_db($dbname){
-	
-	if( is_null($this->link) )
-	    $this->init();
-        
-        if ( ! @mysql_select_db($dbname, $this->link) )
-            Library_error::database('Unable to select database in <strong>'.$this->connection.'</strong> connection.');
-        
     }
     
     /**
@@ -118,7 +84,7 @@ class Driver_mysql {
 	if( is_null($this->link) )
 	    $this->init();
 	
-        return mysql_real_escape_string($string, $this->link);
+        return pg_escape_string($this->link, $string);
     }
     
     /**
@@ -132,16 +98,13 @@ class Driver_mysql {
 	if( is_null($this->link) )
 	    $this->init();
         
-        $query = mysql_query($sql, $this->link);
+        $query = pg_query($this->link, $sql);
         $this->last_query = $sql;
         
-        if ( $this->last_error = mysql_error($this->link) ) {
+        if ( $this->last_error = pg_last_error($this->link) ) {
             $this->print_error();
             return false;
         }
-        
-        if( $insert_id = mysql_insert_id($this->link) )
-            $this->insert_id = $insert_id;
         
         return $query;
     }
@@ -156,7 +119,7 @@ class Driver_mysql {
         
         $result = $this->query($query);
         
-        while ($row = @mysql_fetch_object($result)) {
+        while ($row = @pg_fetch_object($result)) {
             
             if($type == 'array')
                 $return[] = (array) $row;
@@ -164,7 +127,7 @@ class Driver_mysql {
                 $return[] = $row;
         }
         
-        @mysql_free_result($result);
+        @pg_free_result($result);
         
         return @$return;
     }
@@ -181,7 +144,7 @@ class Driver_mysql {
 	    $this->init();
         
         $result = $this->query($query);
-        $return = mysql_fetch_object($result);
+        $return = pg_fetch_object($result);
         
         if($type == 'array')
             return (array) $return;
@@ -220,7 +183,7 @@ class Driver_mysql {
         else {
             
             foreach($fields as $fields)
-                $f[] = '`'.$fields.'`';
+                $f[] = $fields;
             
             $field = implode( ', ', $f );
         }
@@ -229,10 +192,10 @@ class Driver_mysql {
             
             $bits = $wheres = array();
             foreach ( (array) array_keys($where) as $k )
-                $bits[] = "`$k` = '$where[$k]'";
+                $bits[] = "$k = '$where[$k]'";
             
             foreach ( $where as $c => $v )
-                $wheres[] = "`$c` = '" . $this->escape( $v ) . "'";
+                $wheres[] = "$c = '" . $this->escape( $v ) . "'";
             
             $where = "WHERE ". implode( ' AND ', $wheres );
         }
@@ -240,7 +203,7 @@ class Driver_mysql {
             $where = '';
         }
         
-        return "SELECT $field FROM `$table` " . $where;
+        return "SELECT $field FROM $table " . $where;
     }
     
     /**
@@ -286,24 +249,11 @@ class Driver_mysql {
         foreach($data as $key => $val)
             $escaped_date[$key] = $this->escape($val);
         
-        return $this->query("INSERT INTO `$table` (`" . implode('`,`',$fields) . "`) VALUES ('".implode("','",$escaped_date)."')");
-    }
-    
-    /**
-     * EN: Abstraction for replace
-     *
-     * @param string $table
-     * @param array $data
-     * @return boolean
-     */
-    public function replace($table, $data = array()) {
+        $insert = $this->query("INSERT INTO $table (" . implode(',',$fields) . ") VALUES ('".implode("','",$escaped_date)."')");
         
-        $fields = array_keys($data);
+        $this->insert_id = $this->get_var("SELECT LASTVAL() as ins_id");
         
-        foreach($data as $key => $val)
-            $escaped_date[$key] = $this->escape($val);
-        
-        return $this->query("REPLACE INTO `$table` (`" . implode('`,`',$fields) . "`) VALUES ('".implode("','",$escaped_date)."')");
+        return $insert;
     }
     
     /**
@@ -329,7 +279,7 @@ class Driver_mysql {
         else
             return false;
         
-        return $this->query( "UPDATE `$table` SET " . implode( ', ', $bits ) . ' WHERE ' . implode( ' AND ', $wheres ) );
+        return $this->query( "UPDATE $table SET " . implode( ', ', $bits ) . ' WHERE ' . implode( ' AND ', $wheres ) );
     }
     
     /**
@@ -347,7 +297,7 @@ class Driver_mysql {
         else
             return false;
         
-        return $this->query( "DELETE FROM `$table` WHERE " . implode( ' AND ', $wheres ) );
+        return $this->query( "DELETE FROM $table WHERE " . implode( ' AND ', $wheres ) );
     }
     
     /**
@@ -393,7 +343,7 @@ class Driver_mysql {
      */
     public function insert_id(){
 	
-	return @mysql_insert_id($this->link);
+	return $this->get_var("SELECT LASTVAL() as ins_id");
     }
     
-}// End Mysql Driver Class
+}// End library_mysql
