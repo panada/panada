@@ -9,6 +9,7 @@ $CONFIG['index_file']                       = 'index.php/'; /* Remove this index
 /**
  * EN: Database configuration.
  */
+$CONFIG['db']['default']['driver']          = 'mysql';
 $CONFIG['db']['default']['host']            = ''; 
 $CONFIG['db']['default']['user']            = ''; 
 $CONFIG['db']['default']['password']        = ''; 
