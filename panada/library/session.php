@@ -299,7 +299,7 @@ class Library_session {
 	
 	$sess_data	= $this->db->escape($sess_data);
 	$curent_session = $this->session_exist($id);
-	$expiration	= $this->upcomming_time($this->sesion_expire);
+	$expiration	= $this->upcoming_time($this->sesion_expire);
 	
 	if( $curent_session == 0 ){
 	    
