@@ -93,6 +93,12 @@ function __autoload($class_name) {
     //EN: Strip class name from folder prefix.
     $var_name	= Panada::var_name($class_name);
     
+    $Panada     = Panada::instance();
+    
+    //EN: No need to execute the rest if properties already exists.
+    if( isset($Panada->$var_name) )
+        return;
+    
     //EN: Explode the class name base on '_' to get folder name.
     $prefix	= explode('_', $class_name);
     
@@ -123,12 +129,24 @@ function __autoload($class_name) {
 	}
         
     }
+    
+    // EN: Or try to call Active Record feature?
+    else if($folder == 'ar') {
+        
+        eval('class '.$class_name.' extends Library_active_record {
+            
+            public function __construct($connection = \'default\'){
+                parent::__construct($this, $connection);
+            }
+        }');
+    }
     else{
 	
 	$class_file = APPLICATION . $file .'.php';
     }
     
-    include_once $class_file;
+    if( $folder != 'ar' )
+        include_once $class_file;
     
     //EN: Oke the file is exist, but does the class name exist?
     if( ! class_exists($class_name) )
@@ -138,11 +156,18 @@ function __autoload($class_name) {
      * EN: Exclude some class from caching.
      * ID: Abaikan beberap class yang tidak perlu di-cache.
      */
-    if( $class_name == 'Library_uri' || $class_name == 'Library_error' || $class_name == 'Library_time_execution' || $class_name == 'Controller_'.$var_name )
+    if(
+        $class_name == 'Library_uri' ||
+        $class_name == 'Library_error' ||
+        $class_name == 'Library_time_execution' ||
+        $class_name == 'Controller_'.$var_name ||
+        $class_name == 'Library_active_record' ||
+        $folder == 'ar'
+    )
+        
         return;
     
     $panada_cacher  = Panada_cacher::instance();
-    $Panada         = Panada::instance();
     
     if( ! isset($Panada->$var_name) ) {
         $Panada->$var_name = new $class_name;
