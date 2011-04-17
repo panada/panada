@@ -135,8 +135,17 @@ function __autoload($class_name) {
         
         eval('class '.$class_name.' extends Library_active_record {
             
-            public function __construct($connection = \'default\'){
-                parent::__construct($this, $connection);
+            public function __construct($conn_or_fields = \'default\', $conn = \'default\'){
+                
+                $data = array();
+                $connection = $conn_or_fields;
+                
+                if( is_array($conn_or_fields) ){
+                    $data = $conn_or_fields;
+                    $connection = $conn;
+                }
+                
+                parent::__construct($this, $connection, $data);
             }
         }');
     }

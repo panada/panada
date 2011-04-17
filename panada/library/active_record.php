@@ -10,22 +10,27 @@
 
 class Library_active_record {
     
-    public $table;
+    protected $table;
+    protected $primary_key = 'id';
     private $class_vars;
     private $connection;
-    private $fields;
+    private $fields = array();
     private $db;
     
-    public function __construct( $instance = false, $connection = 'default' ){
+    public function __construct( $instance = false, $connection = 'default', $data = array() ){
         
         if( ! $instance )
             return false;
         
-        $this->connection = $connection;
-        $this->class_vars = $instance;
-        $this->table = str_replace('AR_', '', get_class($this));
+        $this->connection   = $connection;
+        $this->class_vars   = $instance;
+        $this->table        = str_replace('AR_', '', get_class($this));
+        $this->db           = new Library_db($connection);
         
-        $this->db = new Library_db($connection);
+        if( ! empty($data) ){
+            $this->fields = $data;
+            return $this->save();
+        }
     }
     
     /**
@@ -36,14 +41,19 @@ class Library_active_record {
      */
     private function get_fields(){
         
-        $this->fields = get_object_vars($this->class_vars);
-        unset(
-            $this->fields['table'],
-            $this->fields['class_vars'],
-            $this->fields['connection'],
-            $this->fields['fields'],
-            $this->fields['db']
-        );
+        if( empty($this->fields) ){
+            
+            $this->fields = get_object_vars($this->class_vars);
+            
+            unset(
+                $this->fields['table'],
+                $this->fields['class_vars'],
+                $this->fields['connection'],
+                $this->fields['fields'],
+                $this->fields['db'],
+                $this->fields['primary_key']
+            );
+        }
         
         return ! empty($this->fields) ? $this->fields : array();
     }
@@ -65,7 +75,11 @@ class Library_active_record {
      * @param int $limit
      * @return object if true else false
      */
-    public function find( $where = array(), $limit = 0 ){
+    public function find( $args = 1 ){
+        
+        // Retrieving a Single Object by Primary Key
+        if( is_numeric($args) )
+            return $this->db->get_row( $this->table, array($this->primary_key => $args) );
         
         return $this->db->get_results( $this->table, $where );
     }
@@ -79,6 +93,13 @@ class Library_active_record {
     public function find_one( $where = array(), $fields = array() ){
         
         return $this->db->get_row( $this->table, $where, $fields );
+    }
+    
+    public function __call($name, $arguments){
+        
+        if($name == 'first')
+            return $this->db->get_row( $this->table, array(), array(), 1 );
+            
     }
 
 }
