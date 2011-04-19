@@ -219,12 +219,10 @@ class Driver_postgresql {
 	
 	if( ! is_null($this->limit_) ){
 	    
-	    $query .= ' LIMIT';
+	    $query .= ' LIMIT '.$this->limit_;
 	    
 	    if( ! is_null($this->offset_) )
-		$query .= ' '.$this->offset_.' ,';
-	    
-	    $query .= ' '.$this->limit_;
+		$query .= ' OFFSET '.$this->offset_;
 	}
         
         return $query;
