@@ -1,11 +1,11 @@
 
 Panada
 Light and simple PHP 5 base Framework.
-Version 0.2.1
-Februari 2011
+Version 0.3.RC1
+April 2011
 Website: http://panadaframework.com
 Twitter: http://twitter.com/panadaframework
-Copyright (C) 2010  Iskandar Soesman (iskandarsoesman at gmaildotcom)
+Copyright (C) 2011  Iskandar Soesman (iskandarsoesman at gmaildotcom)
 License: http://www.opensource.org/licenses/bsd-license.php
 
 TENTANG PANADA
@@ -22,8 +22,8 @@ FEATURES
 ========
 
 *   Sederhana dan Simpel
-    Sistem utama (core system) Panada hanya terdiri dari sebuah file, yaitu sistem.php
-    yang terletak pada direktori panada/system.php. Hal ini bertujuan memudahkan
+    Sistem utama (core system) Panada hanya terdiri dari sebuah file, yaitu gear.php
+    yang terletak pada direktori panada/gear.php. Hal ini bertujuan memudahkan
     pengguna dalam memahami alur kerja Panada.
 
 *   Mudah
