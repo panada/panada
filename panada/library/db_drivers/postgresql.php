@@ -10,6 +10,16 @@
 
 class Driver_postgresql {
     
+    protected $port = 5432;
+    protected $column = '*';
+    protected $distinct_ = false;
+    protected $tables = null;
+    protected $criteria = array();
+    protected $group_by_ = null;
+    protected $limit_ = null;
+    protected $offset_ = null;
+    protected $order_by_ = null;
+    protected $order_ = null;
     private $link;
     private $connection;
     private $db_config;
@@ -39,7 +49,7 @@ class Driver_postgresql {
     private function establish_connection(){
         
         $arguments = 'host='.$this->db_config->host.'
-                    port=5432
+                    port='.$this->port.'
                     dbname='.$this->db_config->database.'
                     user='.$this->db_config->user.'
                     password='.$this->db_config->password.'
@@ -71,6 +81,153 @@ class Driver_postgresql {
 	    $this->error = new Library_error();
             $this->error->database('Unable connet to database in <strong>'.$this->connection.'</strong> connection.');
         }
+    }
+    
+    /**
+     * API for "SELECT ... " statement.
+     *
+     * @param string $column1, $column2 etc ...
+     * @return object
+     */
+    public function select(){
+        
+	$column = func_get_args();
+	
+        if( ! empty($column) )
+	    $this->column = $column;
+        
+        return $this;
+    }
+    
+    /**
+     * API for "... DISTINCT " statement.
+     *
+     * @return object
+     */
+    public function distinct(){
+	
+	$this->distinct_ = true;
+	return $this;
+    }
+    
+    /**
+     * API for "...FROM ... " statement.
+     *
+     * @param string $table1, $table2 etc ...
+     * @return object
+     */
+    public function from(){
+	
+	$this->tables = implode(', ', func_get_args());
+	return $this;
+    }
+    
+    /**
+     * API for "... WHERE ... " statement.
+     *
+     * @param string $column Column name
+     * @param string $operator SQL operator string: =,<,>,<= dll
+     * @param string $value Where value
+     * @param string $next_operator Such as: AND, OR
+     * @return object
+     */
+    public function where($column, $operator, $value, $next_operator = false){
+        
+	if( is_array($value) )
+	    $value = "('".implode("', '", $value)."')";
+	
+	$this->criteria[] = $column.' '.$operator.' '.$value;
+	
+	if($next_operator)
+	    $this->criteria[] .= ' '.$next_operator;
+	
+        return $this;
+    }
+    
+    /**
+     * API for "... GROUP BY ... " statement.
+     *
+     * @param string $column1, $column2 etc ...
+     * @return object
+     */
+    public function group_by(){
+	
+	$this->group_by_ = implode(', ', func_get_args());
+	return $this;
+    }
+    
+    /**
+     * API for "... ORDER BY..." statement.
+     *
+     * @param string $column1, $column2 etc ...
+     * @return object
+     */
+    public function order_by($column, $order = null){
+	
+	$this->order_by_ = $column;
+	$this->order_ = $order;
+	
+	return $this;
+    }
+    
+    /**
+     * API for "... LIMIT ..." statement.
+     *
+     * @param int
+     * @param int Optional offset value
+     * @return object
+     */
+    public function limit($limit, $offset = null){
+	
+	$this->limit_ = $limit;
+	$this->offset_ = $offset;
+	
+	return $this;
+    }
+    
+    /**
+     * Build the SQL statement.
+     *
+     * @return string The complited SQL statement
+     */
+    public function _command(){
+        
+        $query = 'SELECT ';
+	
+	if($this->distinct_)
+	    $query .= 'DISTINCT ';
+        
+        $column = '*';
+        
+        if( is_array($this->column) )
+            $column = implode(', ', $this->column);
+        
+        $query .= $column;
+        
+        if( ! is_null($this->tables) )
+            $query .= ' FROM '.$this->tables;
+	
+	if( ! empty($this->criteria) )
+	    $query .= ' WHERE '.implode(' ', $this->criteria);
+	
+	if( ! is_null($this->group_by_) )
+	    $query .= ' GROUP BY '.$this->group_by_;
+	
+	if( ! is_null($this->order_by_) )
+	    $query .= ' ORDER BY '.$this->order_by_.' '.$this->order_;
+	
+	
+	if( ! is_null($this->limit_) ){
+	    
+	    $query .= ' LIMIT';
+	    
+	    if( ! is_null($this->offset_) )
+		$query .= ' '.$this->offset_.' ,';
+	    
+	    $query .= ' '.$this->limit_;
+	}
+        
+        return $query;
     }
     
     /**
@@ -115,8 +272,11 @@ class Driver_postgresql {
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
      */
-    public function results($query, $type = 'object'){
+    public function results($query = null, $type = 'object'){
         
+	if( is_null($query) )
+	    $query = $this->_command();
+	
         $result = $this->query($query);
         
         while ($row = @pg_fetch_object($result)) {
@@ -138,7 +298,10 @@ class Driver_postgresql {
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
      */
-    public function row($query, $type = 'object'){
+    public function row($query = null, $type = 'object'){
+	
+	if( is_null($query) )
+	    $query = $this->_command();
 	
 	if( is_null($this->link) )
 	    $this->init();
@@ -158,52 +321,15 @@ class Driver_postgresql {
      * @param string @query
      * @return string|int Depen on it record value.
      */
-    public function get_var($query) {
+    public function get_var($query = null) {
         
+	if( is_null($query) )
+	    $query = $this->_command();
+	
         $result = $this->row($query);
         $key = array_keys(get_object_vars($result));
         
         return $result->$key[0];
-    }
-    
-    /**
-     * EN: Abstraction for get records
-     *
-     * @param string $table Table name
-     * @param array $where 'WHERE' sql statement eg: id = '1' ... The default value is NULL or no "WHERE"
-     * @param array $fields table fileds name. If this parameter empty so it will SELECT * (select all fields)
-     * @return string The SQL statement
-     */
-    public function get($table, $where = array(), $fields = array()){
-        
-        //EN: If field table undefined, then select all.
-        if ( empty($fields) ) {
-            $field = '*';
-        }
-        else {
-            
-            foreach($fields as $fields)
-                $f[] = $fields;
-            
-            $field = implode( ', ', $f );
-        }
-        
-        if ( ! empty( $where ) ) {
-            
-            $bits = $wheres = array();
-            foreach ( (array) array_keys($where) as $k )
-                $bits[] = "$k = '$where[$k]'";
-            
-            foreach ( $where as $c => $v )
-                $wheres[] = "$c = '" . $this->escape( $v ) . "'";
-            
-            $where = "WHERE ". implode( ' AND ', $wheres );
-        }
-        else {
-            $where = '';
-        }
-        
-        return "SELECT $field FROM $table " . $where;
     }
     
     /**
@@ -216,8 +342,24 @@ class Driver_postgresql {
      */
     public function get_row($table, $where = array(), $fields = array()){
         
-        $query = $this->get($table, $where, $fields);
-        return $this->row($query);
+        if( ! empty($fields) )
+	    call_user_func_array(array($this, 'select'), $fields);
+	
+	$this->from($table);
+	
+	if ( ! empty( $where ) ) {
+	    
+	    $seperator = 'AND';
+            foreach($where as $key => $val){
+		
+		if( end($where) == $val)
+		    $seperator = false;
+		
+		$this->where($key, '=', $val, $seperator);
+            }
+        }
+	
+        return $this->row();
         
     }
     
@@ -231,8 +373,24 @@ class Driver_postgresql {
      */
     public function get_results($table, $where = array(), $fields = array()){
         
-        $query = $this->get($table, $where, $fields);
-        return $this->results($query);
+	if( ! empty($fields) )
+	    call_user_func_array(array($this, 'select'), $fields);
+	
+	$this->from($table);
+	
+	if ( ! empty( $where ) ) {
+	    
+	    $seperator = 'AND';
+            foreach($where as $key => $val){
+		
+		if( end($where) == $val)
+		    $seperator = false;
+		
+		$this->where($key, '=', $val, $seperator);
+            }
+        }
+	
+        return $this->results();
     }
     
     /**
@@ -249,11 +407,17 @@ class Driver_postgresql {
         foreach($data as $key => $val)
             $escaped_date[$key] = $this->escape($val);
         
-        $insert = $this->query("INSERT INTO $table (" . implode(',',$fields) . ") VALUES ('".implode("','",$escaped_date)."')");
-        
-        $this->insert_id = $this->get_var("SELECT LASTVAL() as ins_id");
-        
-        return $insert;
+        return $this->query("INSERT INTO $table (" . implode(',',$fields) . ") VALUES ('".implode("','",$escaped_date)."')");
+    }
+    
+    /**
+     * Get the id form last insert
+     *
+     * @return int
+     */
+    public function insert_id(){
+	
+	return $this->get_var("SELECT LASTVAL() as ins_id");
     }
     
     /**
@@ -336,14 +500,4 @@ class Driver_postgresql {
 	return $this->get_var("SELECT version() AS version");
     }
     
-    /**
-     * Get the id form last insert
-     *
-     * @return int
-     */
-    public function insert_id(){
-	
-	return $this->get_var("SELECT LASTVAL() as ins_id");
-    }
-    
-}// End library_mysql
+}// End Driver_postgresql Class

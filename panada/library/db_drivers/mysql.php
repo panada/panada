@@ -10,6 +10,7 @@
 
 class Driver_mysql {
     
+    protected $port = 3306;
     protected $column = '*';
     protected $distinct_ = false;
     protected $tables = null;
@@ -30,7 +31,7 @@ class Driver_mysql {
     public $persistent_connection = false;
     
     /**
-     * EN: Define all properties needed.
+     * Define all properties needed.
      * @return void
      */
     function __construct( $config_instance, $connection_name ){
@@ -41,14 +42,14 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Establish a new connection to mysql server
+     * Establish a new connection to mysql server
      *
      * @return string | boolean MySQL persistent link identifier on success, or FALSE on failure.
      */
     private function establish_connection(){
 	
 	$arguments = array(
-			$this->db_config->host,
+			$this->db_config->host.':'.$this->port,
 			$this->db_config->user,
 			$this->db_config->password,
 			$this->new_link,
@@ -73,7 +74,7 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Inital for all process
+     * Inital for all process
      *
      * @return void
      */
@@ -102,7 +103,7 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Select the databse
+     * Select the databse
      *
      * @return void
      */
@@ -116,6 +117,12 @@ class Driver_mysql {
         
     }
     
+    /**
+     * API for "SELECT ... " statement.
+     *
+     * @param string $column1, $column2 etc ...
+     * @return object
+     */
     public function select(){
         
 	$column = func_get_args();
@@ -126,18 +133,38 @@ class Driver_mysql {
         return $this;
     }
     
+    /**
+     * API for "... DISTINCT " statement.
+     *
+     * @return object
+     */
     public function distinct(){
 	
 	$this->distinct_ = true;
 	return $this;
     }
     
+    /**
+     * API for "...FROM ... " statement.
+     *
+     * @param string $table1, $table2 etc ...
+     * @return object
+     */
     public function from(){
 	
 	$this->tables = implode(', ', func_get_args());
 	return $this;
     }
     
+    /**
+     * API for "... WHERE ... " statement.
+     *
+     * @param string $column Column name
+     * @param string $operator SQL operator string: =,<,>,<= dll
+     * @param string $value Where value
+     * @param string $next_operator Such as: AND, OR
+     * @return object
+     */
     public function where($column, $operator, $value, $next_operator = false){
         
 	if( is_array($value) )
@@ -151,12 +178,24 @@ class Driver_mysql {
         return $this;
     }
     
+    /**
+     * API for "... GROUP BY ... " statement.
+     *
+     * @param string $column1, $column2 etc ...
+     * @return object
+     */
     public function group_by(){
 	
 	$this->group_by_ = implode(', ', func_get_args());
 	return $this;
     }
     
+    /**
+     * API for "... ORDER BY..." statement.
+     *
+     * @param string $column1, $column2 etc ...
+     * @return object
+     */
     public function order_by($column, $order = null){
 	
 	$this->order_by_ = $column;
@@ -165,6 +204,13 @@ class Driver_mysql {
 	return $this;
     }
     
+    /**
+     * API for "... LIMIT ..." statement.
+     *
+     * @param int
+     * @param int Optional offset value
+     * @return object
+     */
     public function limit($limit, $offset = null){
 	
 	$this->limit_ = $limit;
@@ -173,6 +219,11 @@ class Driver_mysql {
 	return $this;
     }
     
+    /**
+     * Build the SQL statement.
+     *
+     * @return string The complited SQL statement
+     */
     public function _command(){
         
         $query = 'SELECT ';
@@ -214,7 +265,7 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Escape all unescaped string
+     * Escape all unescaped string
      *
      * @param string $string
      * @return void
@@ -228,7 +279,7 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Main function for querying to database
+     * Main function for querying to database
      *
      * @param $query The SQL querey statement
      * @return string|objet Return the resource id of query
@@ -253,7 +304,7 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Get multiple records
+     * Get multiple records
      *
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
@@ -279,7 +330,7 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Get single record
+     * Get single record
      *
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
@@ -302,13 +353,16 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Get value directly from single field
+     * Get value directly from single field
      *
      * @param string @query
      * @return string|int Depen on it record value.
      */
-    public function get_var($query) {
+    public function get_var($query = null) {
         
+	if( is_null($query) )
+	    $query = $this->_command();
+	
         $result = $this->row($query);
         $key = array_keys(get_object_vars($result));
         
@@ -316,7 +370,7 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Abstraction to get single record
+     * Abstraction to get single record
      *
      * @param string
      * @param array Default si null
@@ -347,7 +401,7 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Abstraction to get multple records
+     * Abstraction to get multple records
      *
      * @param string
      * @param array Default si null
@@ -377,7 +431,7 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Abstraction for insert
+     * Abstraction for insert
      *
      * @param string $table
      * @param array $data
@@ -404,7 +458,7 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Abstraction for replace
+     * Abstraction for replace
      *
      * @param string $table
      * @param array $data
@@ -421,7 +475,7 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Abstraction for update
+     * Abstraction for update
      *
      * @param string $table
      * @param array $dat
@@ -447,7 +501,7 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Abstraction for delete
+     * Abstraction for delete
      *
      * @param string
      * @param array
@@ -465,7 +519,7 @@ class Driver_mysql {
     }
     
     /**
-     * EN: Print the error at least to PHP error log file
+     * Print the error at least to PHP error log file
      *
      * @return string
      */
