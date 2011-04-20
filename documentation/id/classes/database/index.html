@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <title>Panada PHP Framework 0.3.1 Documentation - Database Configuration</title>
+    <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen" />
+</head>
+<body>
+    <div class="header">
+    <span class="logo"><a target="_blank" href="http://panadaframework.com">Panada</a></span>
+        <div class="menu">
+            <form action="http://www.google.com/search" method="get">
+	    <input type="hidden" value="panadaframework.com/documentation/" id="as_sitesearch" name="as_sitesearch">
+            <input class="search-input" type="text" name="q" /><button class="search-button" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="subheader">
+        <h1>Panada Framework 0.3.1 Documentation</h1>
+    </div>
+    
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="navigation">
+                <ul>
+                    <li>
+                        <a href="../index.html">Umum</a>
+                        <ul>
+                            <li><a href="../../index.html#about">Tentang Panada</a></li>
+                            <li><a href="../../index.html#feature">Keunggulan (<em>Feature</em>)</a></li>
+                            <li><a href="../../index.html#license">Lisensi</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="../../config.html">Konfigurasi</a>
+                        <ul>
+                            <li><a href="../../config.html#general">Dasar</a></li>
+                            <li><a href="../../config.html#additional_config">Tambahan</a></li>
+                            <li><a href="../../config.html#webserver">Webserver</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Referensi
+                        <ul>
+                            <li><a href="../../references/controller.html">Controller</a></li>
+                            <li><a href="../../references/model.html">Model</a></li>
+                            <li><a href="../../references/view.html">View</a></li>
+                            <li><a href="../../references/library.html">Library</a></li>
+                            <li><a href="../../references/autoloader.html">Auto Loader</a></li>
+                            <li><a href="../../references/global_method.html">Global Method dan Properties</a></li>
+                        </ul>
+                            
+                    </li>
+                    <li>
+                        <a href="../index.html">Paket Library</a>
+                        <ul>
+                            <li>
+				<a href="index.html">Database</a>
+				<ul>
+				    <li><a href="#config">Configuration</a></li>
+				    <li><a href="abstraction.html">Abstraction</a></li>
+				    <li><a href="activerecord.html">Active Record</a></li>
+				    <li><a href="manual_query.html">Manual Query</a></li>
+				</ul>
+			    </li>
+                            <li><a href="../session.html">Session</a></li>
+                            <li><a href="../pagination.html">Pagination</a></li>
+                            <li><a href="../email.html">Email</a></li>
+                            <li><a href="../encryption.html">Encryption</a></li>
+                            <li><a href="../upload.html">Upload</a></li>
+                            <li><a href="../image.html">Image</a></li>
+                            <li><a href="../request.html">Request</a></li>
+                            <li><a href="../rest.html">RESTfull</a></li>
+			    <li><a href="../memcached.html">Memcached</a></li>
+                            <li><a href="../mongodb.html">Mongodb</a></li>
+                            <li><a href="../apc.html">APC</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../contribution.html">Kontribusi</a></li>
+                    <li><a href="../../credit.html">Credit</a></li>
+                </ul>
+	    </div>
+            
+        </div>
+        
+        <div class="content">
+            <div class="lead">
+                <h2>Database</h2>
+                <p>Sebelum menggunakan library database, terlebih dahulu harus dilakukan konfigurasi. Bagian konfigurasi database terletak pada file <strong>apps/config.php</strong>.</p>
+            </div>
+            
+            <div class="main">
+                <h3 id="config">Konfigurasi</h3>
+                
+		<p>Bagian-bagian yang harus dilengkapi adalah host, user, password dan nama database.</p>
+<textarea rows="6" cols="50" class="textarea">
+$CONFIG['db']['default']['driver'] = '';
+$CONFIG['db']['default']['host'] = ''; 
+$CONFIG['db']['default']['user'] = ''; 
+$CONFIG['db']['default']['password'] = ''; 
+$CONFIG['db']['default']['database'] = '';
+</textarea>
+		
+		<h4>Keterangan</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$CONFIG['db']['default']['driver']</td>
+			<td>string</td>
+			<td>Pilihan driver database yang akan digunakan. Pilihannya adalah mysql, postgres</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$CONFIG['db']['default']['host']</td>
+			<td>string</td>
+			<td>Host database server.</td>
+		    </tr>
+                    <tr>
+			<td>$CONFIG['db']['default']['user']</td>
+			<td>string</td>
+			<td>Username yang digunakan untuk koneksi ke database server.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$CONFIG['db']['default']['password']</td>
+			<td>string</td>
+			<td>Password yang digunakan untuk konesi ke database server.</td>
+		    </tr>
+		    <tr>
+			<td>$CONFIG['db']['default']['database']</td>
+			<td>string</td>
+			<td>Nama database yang akan digunakan.</td>
+		    </tr>
+                    
+		</tbody>
+		</table>
+		
+		<p>Untuk berinteraksi dengan database, Anda bisa melakukan dengan cara-cara di bawah ini:</p>
+		<ul>
+		    <li><a href="abstraction.html">Abstraction</a></li>
+		    <li><a href="activerecord.html">Active Record</a></li>
+		    <li><a href="manual_query.html">Manual Query</a></li>
+            </div>
+	    
+	    <div id="discussion" class="main">
+		<h3>Diskusi</h3>
+		<div id="disqus_thread"></div>
+	    </div>
+        
+        </div>
+        
+    </div>
+          
+    <div class="footer">
+        <span class="right">All Rights Reserved.</span>
+    </div>
+    <script type="text/javascript">
+	var disqus_shortname = 'panada';
+	var disqus_url = 'http://panadaframework.com/documentation/id/classes/database/index.html';
+	var disqus_identifier = disqus_url;
+	(function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>
