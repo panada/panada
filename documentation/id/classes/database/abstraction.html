@@ -61,15 +61,18 @@
                                     <li><a href="abstraction.html">Abstraction</a></li>
                                         <ul>
                                             <li><a href="#select">Select</a></li>
+					    <li><a href="#distinct">Distinct</a></li>
                                             <li><a href="#from">From</a></li>
+					    <li><a href="#join">Join</a></li>
                                             <li><a href="#where">Where</a></li>
+					    <li><a href="#group_by">Group By</a></li>
+					    <li><a href="#having">Having</a></li>
                                             <li><a href="#order_by">Order By</a></li>
                                             <li><a href="#limit">Limit</a></li>
-                                            <li><a href="#distinct">Distinct</a></li>
-                                            <li><a href="#group_by">Group By</a></li>
+					    <li><a href="#command">Command</a></li>
                                             <li><a href="#Insert_id">Insert Id</a></li>
-                                            <li><a href="#get_row">Get_row</a></li>
-                                            <li><a href="#get_results">Get_results</a></li>
+                                            <li><a href="#get_row">Get Row</a></li>
+                                            <li><a href="#get_results">Get Results</a></li>
                                             <li><a href="#insert">Insert</a></li>
                                             <li><a href="#update">Update</a></li>
                                             <li><a href="#delete">Delete</a></li>
@@ -118,7 +121,9 @@
 		</code>
 		<p>Untuk mendapatkan beberapa kolom dari tabel:</p>
 		<code>
-		    $data = $this->db-><strong>select('id', 'name')</strong>->from('users')->results();
+		    $data = $this->db-><strong>select('id', 'name')</strong>->from('users')->results();<br />
+		    // atau bisa juga<br />
+		    $data = $this->db-><strong>select( array('id', 'name') )</strong>->from('users')->results();
 		</code>
 		<p>Method ini menghasilkan output data SQL:</p>
 		<code>
@@ -134,6 +139,18 @@
 		</code>
 		
 	    </div>
+	    
+	    <div class="main">
+		<h3 id="distinct">Distinct</h3>
+                <p>Berikut adalah contoh penggunaan statetment <strong>distinct</strong>:</p>
+                <code>
+		    $data = $this->db->select('name')-><strong>distinct()</strong>->from('users')->limit(10)->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT <strong>DISTINCT</strong> name FROM users LIMIT 10
+		</code>
+            </div>
             
             <div class="main">
 		<h3 id="from">From</h3>
@@ -145,11 +162,41 @@
 		<code>
 		    SELECT * FROM <strong>users</strong>
 		</code>
+		<p>Nilai argument bisa berupa <strong>string</strong> ataupun <strong>array</strong>.</p>
+		<code>
+		    $data = $this->db->select()-><strong>from('users', 'posts')</strong>->where('users.id', '=', 'posts.post_author')->results();<br />
+		    // atau<br />
+		    $data = $this->db->select()-><strong>from( array('users', 'posts') )</strong>->where('users.id', '=', 'posts.post_author')->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT * <strong>FROM users, posts</strong> WHERE users.id = posts.post_author
+		</code>
             </div>
+	    
+	    <div class="main">
+		<h3 id="join">Join</h3>
+		<p>Untuk melakukan query dari beberapa tabel, method <strong>join()</strong> bisa digunakan. Penggunaan method ini diikuti penggunaan method <strong>on()</strong>.
+		<code>
+		    $data = $this->db->select('users.name', 'posts.post')->from('users')-><strong>join('posts')->on('users.id', '=', 'posts.post_author')</strong>;
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT users.name, posts.post FROM users <strong>JOIN posts ON (users.id = posts.post_author)</strong>
+		</code>
+		<p>Anda juga bisa menambahkan tipe join seperti <strong>LEFT</strong>, <strong>RIGHT</strong> dan <strong>INNER</strong> pada argument ke dua di dalam method <strong>join()</strong>.
+		<code>
+		    $data = $this->db->select('users.name', 'posts.post')->from('users')-><strong>join('posts', 'RIGHT')->on('users.id', '=', 'posts.post_author')</strong>;
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT users.name, posts.post FROM users <strong>RIGHT JOIN posts ON (users.id = posts.post_author)</strong>
+		</code>
+	    </div>
             
 	    <div class="main">
 		<h3 id="where">Where</h3>
-		<p>Untuk membatasi hasil pencarian, method <strong>where()</strong> bisa ditambahkan setelah method <strong>from()</strong>.
+		<p>Untuk membatasi hasil pencarian Anda bisa menggunakan method <strong>where()</strong>.
 		
                 <code>
                     <b>object</b> where( string $column, string $operator, string $value, mix $seperator = false);
@@ -219,6 +266,30 @@
 		</code>
 		
 	    </div>
+	    
+	    <div class="main">
+		<h3 id="group_by">Group By</h3>
+                <p>Penggunaan method <strong>group_by()</strong>:</p>
+                <code>
+		    $data = $this->db->select('id', 'name')->from('users')-><strong>group_by('name', 'id')</strong>->limit(10)->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT id, name FROM users <strong>GROUP BY</strong> name, id LIMIT 10
+		</code>
+            </div>
+	    
+	    <div class="main">
+		<h3 id="having">Having</h3>
+		<p>Berikut adalah contoh cara menggunakan method <strong>having()</strong>:</p>
+		<code>
+		    $data = $this->db->select('id', 'post_title')->from('posts')->group_by('post_author','id', 'post_title')-><strong>having('COUNT(id)', '>=', 2)</strong>->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT * FROM posts GROUP BY post_author <strong>HAVING COUNT(id) >= 2</strong>
+		</code>
+	    </div>
             
             <div class="main">
 		<h3 id="order_by">Order By</h3>
@@ -267,30 +338,15 @@
 		    SELECT * FROM users WHERE id > 1 ORDER BY id DESC <strong>LIMIT 6 OFFSET 2</strong>
 		</code>
             </div>
-            
-            <div class="main">
-		<h3 id="distinct">Distinct</h3>
-                <p>Berikut adalah contoh penggunaan statetment <strong>distinct</strong>:</p>
-                <code>
-		    $data = $this->db->select('name')-><strong>distinct()</strong>->from('users')->limit(10)->results();
-		</code>
-		<p>Method ini menghasilkan output data SQL:</p>
+	    
+	    <div class="main">
+		<h3 id="command">Command</h3>
+		<p>Jika Anda ingin melihat output SQL dari <em>method chain</em> yang sudah dibuat, silahkan gunakan method <strong>_command()</strong>.</p>
 		<code>
-		    SELECT <strong>DISTINCT</strong> name FROM users LIMIT 10
+		    $sql = $this->db->select()->from('users')->group_by('name')->limit(10)->_command();<br />
+		    die($sql);
 		</code>
-            </div>
-            
-            <div class="main">
-		<h3 id="group_by">Group By</h3>
-                <p>Penggunaan method <strong>group_by()</strong>:</p>
-                <code>
-		    $data = $this->db->select()->from('users')-><strong>group_by('name')</strong>->limit(10)->results();
-		</code>
-		<p>Method ini menghasilkan output data SQL:</p>
-		<code>
-		    SELECT * FROM users <strong>GROUP BY</strong> name LIMIT 10
-		</code>
-            </div>
+	    </div>
 	    
 	    <div class="main">
                 <h3 id="Insert_id">Insert Id</h3>
@@ -304,7 +360,7 @@
 	    
 	    
 	    <div class="main">
-                <h3 id="get_row">Get_row</h3>
+                <h3 id="get_row">Get Row</h3>
 		
 		<p>Untuk mendapatkan single record menggunakan method:</p>
 		<code>
@@ -334,7 +390,7 @@ echo $data->email;
 	    </div>
 	    
 	    <div class="main">
-                <h3 id="get_results">Get_results</h3>
+                <h3 id="get_results">Get Results</h3>
 		
 		<p>Untuk query seperti:</p>
 		<code>
@@ -390,6 +446,7 @@ foreach ($data as $data) {
 			DELETE FROM table_name WHERE id = 6
 		</code>
 	    </div>
+	    
             <div id="discussion" class="main">
 		<h3>Diskusi</h3>
 		<div id="disqus_thread"></div>
