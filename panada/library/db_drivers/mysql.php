@@ -14,8 +14,12 @@ class Driver_mysql {
     protected $column = '*';
     protected $distinct_ = false;
     protected $tables = null;
+    protected $joins = null;
+    protected $joins_type = null;
+    protected $joins_on = array();
     protected $criteria = array();
     protected $group_by_ = null;
+    protected $is_having = array();
     protected $limit_ = null;
     protected $offset_ = null;
     protected $order_by_ = null;
@@ -127,8 +131,12 @@ class Driver_mysql {
         
 	$column = func_get_args();
 	
-        if( ! empty($column) )
+        if( ! empty($column) ){
 	    $this->column = $column;
+	    
+	    if( is_array($column[0]) )
+		$this->column = $column[0];
+        }
         
         return $this;
     }
@@ -152,8 +160,68 @@ class Driver_mysql {
      */
     public function from(){
 	
-	$this->tables = implode(', ', func_get_args());
+	$tables = func_get_args();
+	
+	if( is_array($tables[0]) )
+	    $tables = $tables[0];
+	
+	$this->tables = implode(', ', $tables);
+	
 	return $this;
+    }
+    
+    /**
+     * API for "... JOIN ..." statement.
+     *
+     * @param string $table Table to join
+     * @param string $type Type of join: LEFT, RIGHT, INNER
+     */
+    public function join($table, $type = null){
+	
+	$this->joins = $table;
+	$this->joins_type = $type;
+	
+	return $this;
+    }
+    
+    /**
+     * Create criteria condition. It use in on, where and having method
+     *
+     * @param string $column
+     * @param string $operator
+     * @param string $value
+     * @param mix $separator
+     */
+    protected function create_criteria($column, $operator, $value, $separator){
+	
+	if( $operator == 'IN' )
+	    if( is_array($value) )
+		$value = "('".implode("', '", $value)."')";
+	
+	if( $operator == 'BETWEEN' )
+	    $value = $value[0].' AND '.$value[1];
+	
+	$return = $column.' '.$operator.' '.$value;
+	
+	if($separator)
+	    $return .= ' '.$separator;
+	
+	return $return;
+    }
+    
+    /**
+     * API for "... JOIN ON..." statement.
+     *
+     * @param string $column
+     * @param string $operator
+     * @param string $value
+     * @param mix $separator
+     */
+    public function on($column, $operator, $value, $separator = false){
+	
+	$this->joins_on[] = $this->create_criteria($column, $operator, $value, $separator);
+	
+        return $this;
     }
     
     /**
@@ -162,18 +230,12 @@ class Driver_mysql {
      * @param string $column Column name
      * @param string $operator SQL operator string: =,<,>,<= dll
      * @param string $value Where value
-     * @param string $next_operator Such as: AND, OR
+     * @param string $separator Such as: AND, OR
      * @return object
      */
-    public function where($column, $operator, $value, $next_operator = false){
-        
-	if( is_array($value) )
-	    $value = "('".implode("', '", $value)."')";
+    public function where($column, $operator, $value, $separator = false){
 	
-	$this->criteria[] = $column.' '.$operator.' '.$value;
-	
-	if($next_operator)
-	    $this->criteria[] .= ' '.$next_operator;
+	$this->criteria[] = $this->create_criteria($column, $operator, $value, $separator);
 	
         return $this;
     }
@@ -188,6 +250,21 @@ class Driver_mysql {
 	
 	$this->group_by_ = implode(', ', func_get_args());
 	return $this;
+    }
+    
+    /**
+     * API for "... HAVING..." statement.
+     *
+     * @param string $column
+     * @param string $operator
+     * @param string $value
+     * @param mix $separator
+     */
+    public function having($column, $operator, $value, $separator = false){
+	
+	$this->is_having[] = $this->create_criteria($column, $operator, $value, $separator);
+	
+        return $this;
     }
     
     /**
@@ -241,11 +318,25 @@ class Driver_mysql {
         if( ! is_null($this->tables) )
             $query .= ' FROM '.$this->tables;
 	
+	if( ! is_null($this->joins) ) {
+	    
+	    if( ! is_null($this->joins_type) )
+		$query .= ' '.strtoupper($this->joins_type);
+	    
+	    $query .= ' JOIN '.$this->joins;
+	    
+	    if( ! empty($this->joins_on) )
+		$query .= ' ON ('.implode(' ', $this->joins_on).')';
+	}
+	
 	if( ! empty($this->criteria) )
 	    $query .= ' WHERE '.implode(' ', $this->criteria);
 	
 	if( ! is_null($this->group_by_) )
 	    $query .= ' GROUP BY '.$this->group_by_;
+	
+	if( ! empty($this->is_having) )
+	    $query .= ' HAVING '.implode(' ', $this->is_having);
 	
 	if( ! is_null($this->order_by_) )
 	    $query .= ' ORDER BY '.$this->order_by_.' '.$this->order_;
@@ -260,7 +351,7 @@ class Driver_mysql {
 	    
 	    $query .= ' '.$this->limit_;
 	}
-        
+        die($query);
         return $query;
     }
     
@@ -386,13 +477,13 @@ class Driver_mysql {
 	
 	if ( ! empty( $where ) ) {
 	    
-	    $seperator = 'AND';
+	    $separator = 'AND';
             foreach($where as $key => $val){
 		
 		if( end($where) == $val)
-		    $seperator = false;
+		    $separator = false;
 		
-		$this->where($key, '=', $val, $seperator);
+		$this->where($key, '=', $val, $separator);
             }
         }
 	
@@ -417,13 +508,13 @@ class Driver_mysql {
 	
 	if ( ! empty( $where ) ) {
 	    
-	    $seperator = 'AND';
+	    $separator = 'AND';
             foreach($where as $key => $val){
 		
 		if( end($where) == $val)
-		    $seperator = false;
+		    $separator = false;
 		
-		$this->where($key, '=', $val, $seperator);
+		$this->where($key, '=', $val, $separator);
             }
         }
 	

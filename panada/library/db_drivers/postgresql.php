@@ -14,8 +14,12 @@ class Driver_postgresql {
     protected $column = '*';
     protected $distinct_ = false;
     protected $tables = null;
+    protected $joins = null;
+    protected $joins_type = null;
+    protected $joins_on = array();
     protected $criteria = array();
     protected $group_by_ = null;
+    protected $is_having = array();
     protected $limit_ = null;
     protected $offset_ = null;
     protected $order_by_ = null;
@@ -31,7 +35,7 @@ class Driver_postgresql {
     public $persistent_connection = false;
     
     /**
-     * EN: Define all properties needed.
+     * Define all properties needed.
      * @return void
      */
     function __construct( $config_instance, $connection_name ){
@@ -42,7 +46,7 @@ class Driver_postgresql {
     }
     
     /**
-     * EN: Establish a new connection to postgreSQL server
+     * Establish a new connection to postgreSQL server
      *
      * @return string | boolean postgreSQL persistent link identifier on success, or FALSE on failure.
      */
@@ -68,7 +72,7 @@ class Driver_postgresql {
     }
     
     /**
-     * EN: Inital for all process
+     * Inital for all process
      *
      * @return void
      */
@@ -93,8 +97,12 @@ class Driver_postgresql {
         
 	$column = func_get_args();
 	
-        if( ! empty($column) )
+        if( ! empty($column) ){
 	    $this->column = $column;
+	    
+	    if( is_array($column[0]) )
+		$this->column = $column[0];
+        }
         
         return $this;
     }
@@ -118,8 +126,68 @@ class Driver_postgresql {
      */
     public function from(){
 	
-	$this->tables = implode(', ', func_get_args());
+	$tables = func_get_args();
+	
+	if( is_array($tables[0]) )
+	    $tables = $tables[0];
+	
+	$this->tables = implode(', ', $tables);
+	
 	return $this;
+    }
+    
+    /**
+     * API for "... JOIN ..." statement.
+     *
+     * @param string $table Table to join
+     * @param string $type Type of join: LEFT, RIGHT, INNER
+     */
+    public function join($table, $type = null){
+	
+	$this->joins = $table;
+	$this->joins_type = $type;
+	
+	return $this;
+    }
+    
+    /**
+     * Create criteria condition. It use in on, where and having method
+     *
+     * @param string $column
+     * @param string $operator
+     * @param string $value
+     * @param mix $separator
+     */
+    protected function create_criteria($column, $operator, $value, $separator){
+	
+	if( $operator == 'IN' )
+	    if( is_array($value) )
+		$value = "('".implode("', '", $value)."')";
+	
+	if( $operator == 'BETWEEN' )
+	    $value = $value[0].' AND '.$value[1];
+	
+	$return = $column.' '.$operator.' '.$value;
+	
+	if($separator)
+	    $return .= ' '.$separator;
+	
+	return $return;
+    }
+    
+    /**
+     * API for "... JOIN ON..." statement.
+     *
+     * @param string $column
+     * @param string $operator
+     * @param string $value
+     * @param mix $separator
+     */
+    public function on($column, $operator, $value, $separator = false){
+	
+	$this->joins_on[] = $this->create_criteria($column, $operator, $value, $separator);
+	
+        return $this;
     }
     
     /**
@@ -128,18 +196,12 @@ class Driver_postgresql {
      * @param string $column Column name
      * @param string $operator SQL operator string: =,<,>,<= dll
      * @param string $value Where value
-     * @param string $next_operator Such as: AND, OR
+     * @param string $separator Such as: AND, OR
      * @return object
      */
-    public function where($column, $operator, $value, $next_operator = false){
+    public function where($column, $operator, $value, $separator = false){
         
-	if( is_array($value) )
-	    $value = "('".implode("', '", $value)."')";
-	
-	$this->criteria[] = $column.' '.$operator.' '.$value;
-	
-	if($next_operator)
-	    $this->criteria[] .= ' '.$next_operator;
+	$this->criteria[] = $this->create_criteria($column, $operator, $value, $separator);
 	
         return $this;
     }
@@ -154,6 +216,21 @@ class Driver_postgresql {
 	
 	$this->group_by_ = implode(', ', func_get_args());
 	return $this;
+    }
+    
+    /**
+     * API for "... HAVING..." statement.
+     *
+     * @param string $column
+     * @param string $operator
+     * @param string $value
+     * @param mix $separator
+     */
+    public function having($column, $operator, $value, $separator = false){
+	
+	$this->is_having[] = $this->create_criteria($column, $operator, $value, $separator);
+	
+        return $this;
     }
     
     /**
@@ -207,11 +284,25 @@ class Driver_postgresql {
         if( ! is_null($this->tables) )
             $query .= ' FROM '.$this->tables;
 	
+	if( ! is_null($this->joins) ) {
+	    
+	    if( ! is_null($this->joins_type) )
+		$query .= ' '.strtoupper($this->joins_type);
+	    
+	    $query .= ' JOIN '.$this->joins;
+	    
+	    if( ! empty($this->joins_on) )
+		$query .= ' ON ('.implode(' ', $this->joins_on).')';
+	}
+	
 	if( ! empty($this->criteria) )
 	    $query .= ' WHERE '.implode(' ', $this->criteria);
 	
 	if( ! is_null($this->group_by_) )
 	    $query .= ' GROUP BY '.$this->group_by_;
+	    
+	if( ! empty($this->is_having) )
+	    $query .= ' HAVING '.implode(' ', $this->is_having);
 	
 	if( ! is_null($this->order_by_) )
 	    $query .= ' ORDER BY '.$this->order_by_.' '.$this->order_;
@@ -229,7 +320,7 @@ class Driver_postgresql {
     }
     
     /**
-     * EN: Escape all unescaped string
+     * Escape all unescaped string
      *
      * @param string $string
      * @return void
@@ -243,7 +334,7 @@ class Driver_postgresql {
     }
     
     /**
-     * EN: Main function for querying to database
+     * Main function for querying to database
      *
      * @param $query The SQL querey statement
      * @return string|objet Return the resource id of query
@@ -265,7 +356,7 @@ class Driver_postgresql {
     }
     
     /**
-     * EN: Get multiple records
+     * Get multiple records
      *
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
@@ -291,7 +382,7 @@ class Driver_postgresql {
     }
     
     /**
-     * EN: Get single record
+     * Get single record
      *
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
@@ -314,7 +405,7 @@ class Driver_postgresql {
     }
     
     /**
-     * EN: Get value directly from single field
+     * Get value directly from single field
      *
      * @param string @query
      * @return string|int Depen on it record value.
@@ -331,7 +422,7 @@ class Driver_postgresql {
     }
     
     /**
-     * EN: Abstraction to get single record
+     * Abstraction to get single record
      *
      * @param string
      * @param array Default si null
@@ -347,13 +438,13 @@ class Driver_postgresql {
 	
 	if ( ! empty( $where ) ) {
 	    
-	    $seperator = 'AND';
+	    $separator = 'AND';
             foreach($where as $key => $val){
 		
 		if( end($where) == $val)
-		    $seperator = false;
+		    $separator = false;
 		
-		$this->where($key, '=', $val, $seperator);
+		$this->where($key, '=', $val, $separator);
             }
         }
 	
@@ -362,7 +453,7 @@ class Driver_postgresql {
     }
     
     /**
-     * EN: Abstraction to get multyple records
+     * Abstraction to get multyple records
      *
      * @param string
      * @param array Default si null
@@ -378,13 +469,13 @@ class Driver_postgresql {
 	
 	if ( ! empty( $where ) ) {
 	    
-	    $seperator = 'AND';
+	    $separator = 'AND';
             foreach($where as $key => $val){
 		
 		if( end($where) == $val)
-		    $seperator = false;
+		    $separator = false;
 		
-		$this->where($key, '=', $val, $seperator);
+		$this->where($key, '=', $val, $separator);
             }
         }
 	
@@ -392,7 +483,7 @@ class Driver_postgresql {
     }
     
     /**
-     * EN: Abstraction for insert
+     * Abstraction for insert
      *
      * @param string $table
      * @param array $data
@@ -419,7 +510,7 @@ class Driver_postgresql {
     }
     
     /**
-     * EN: Abstraction for update
+     * Abstraction for update
      *
      * @param string $table
      * @param array $dat
@@ -445,7 +536,7 @@ class Driver_postgresql {
     }
     
     /**
-     * EN: Abstraction for delete
+     * Abstraction for delete
      *
      * @param string
      * @param array
@@ -463,7 +554,7 @@ class Driver_postgresql {
     }
     
     /**
-     * EN: Print the error at least to PHP error log file
+     * Print the error at least to PHP error log file
      *
      * @return string
      */
