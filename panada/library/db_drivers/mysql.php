@@ -351,7 +351,7 @@ class Driver_mysql {
 	    
 	    $query .= ' '.$this->limit_;
 	}
-        die($query);
+        
         return $query;
     }
     
