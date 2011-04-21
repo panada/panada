@@ -65,6 +65,11 @@ class Library_active_record {
      */
     public function save(){
         
+        $primary_key = $this->primary_key;
+        
+        if( $this->$primary_key )
+            return $this->db->update($this->table, $this->get_fields(), array($this->primary_key => $this->$primary_key)); 
+        
         return $this->db->insert( $this->table, $this->get_fields() );
     }
     
@@ -75,30 +80,74 @@ class Library_active_record {
      * @param int $limit
      * @return object if true else false
      */
-    public function find( $args = 1 ){
+    public function find(){
         
-        // Retrieving a Single Object by Primary Key
-        if( is_numeric($args) )
-            return $this->db->get_row( $this->table, array($this->primary_key => $args) );
+        $args = func_get_args();
+        $total = count($args);
         
-        return $this->db->get_results( $this->table, $where );
+        $this->db->select()->from($this->table);
+        
+        if( $total == 1 ){
+            
+            if( ! $return = $this->db->where($this->primary_key, '=', $args[0])->row() )
+                return false;
+            
+            foreach( get_object_vars($return) as $key => $val )
+                $this->$key = $val;
+            
+            return $return;
+        }
+        
+        if( $total > 1 )
+            return $this->db->where($this->primary_key, 'IN', $args)->results();
+        
+        
+        return $this->db->results();
     }
     
-    /**
-     * Get one record from db
-     *
-     * @param array $where
-     * @return object if true else false
-     */
-    public function find_one( $where = array(), $fields = array() ){
+    public function delete(){
         
-        return $this->db->get_row( $this->table, $where, $fields );
+        if( ! call_user_func_array(array($this, 'find'), func_get_args()) )
+            return false;
+        
+        $primary_key = $this->primary_key;
+        
+        return $this->db->delete($this->table, array($this->primary_key => $this->$primary_key)); 
+    }
+    
+    public function where($sql_condition = null){
+        
+    }
+    
+    public function order(){
+        
+    }
+    
+    public function select(){
+        
+    }
+    
+    public function limit(){
+        
+    }
+    
+    public function offset(){
+        
+    }
+    
+    public function group(){
+        
     }
     
     public function __call($name, $arguments){
         
+        $this->db->select()->from($this->table);
+        
         if($name == 'first')
-            return $this->db->get_row( $this->table, array(), array(), 1 );
+            return $this->db->order_by($this->primary_key, 'ASC')->limit(1)->row();
+        
+        if($name == 'last')
+            return $this->db->order_by($this->primary_key, 'DESC')->limit(1)->row();
             
     }
 

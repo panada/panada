@@ -59,11 +59,11 @@
 				<ul>
 				    <li><a href="index.html">Configuration</a></li>
                                     <li><a href="abstraction.html">Abstraction</a></li>
-                                        <ul>
-                                            <li><a href="#select">Select</a></li>
-                                            <li><a href="#where">Where</a></li>
-                                        </ul>
 				    <li><a href="activerecord.html">Active Record</a></li>
+					<ul>
+					    <li><a href="#init">Inisialisasi</a></li>
+					    <li><a href="#crud">Basic CRUD</a></li>
+					</ul>
                                     <li><a href="manual_query.html">Manual Query</a></li>
 				</ul>
 			    </li>
@@ -90,27 +90,86 @@
         <div class="content">
             <div class="lead">
                 <h2>Active Record</h2>
-                <p>Panada mengikuti patern Active Record sebagaimana yang ada di halaman <a href="http://en.wikipedia.org/wiki/Active_record_pattern">http://en.wikipedia.org/wiki/Active_record_pattern</a>, di mana setiap nama tabel diwakili oleh sebuah class.</p>
+                <p>Panada mengikuti patern Active Record sebagaimana yang terdapat di <a href="http://en.wikipedia.org/wiki/Active_record_pattern">http://en.wikipedia.org/wiki/Active_record_pattern</a>. Setiap nama tabel diwakili oleh sebuah class dan setiap properties mewakili nama kolom.</p>
             </div>
 	    
 	    <div class="main">
-		<h3 id="single_record">Single Record</h3>
+		<h3 id="init">Inisialisasi</h3>
 		
-		<p>Untuk mendapatkan sebuah record, berikut contoh query-nya:</p>
+		<p>Sebelum proses manipulasi database dilakukan, Anda harus mendeklarasikan <em>instance</em> class yang namanya sesuai dengan nama tabel dengan diawali prefix <strong>AR_</strong>. Untuk class ini, Anda tidak perlu lagi membuat class apapun.</p>
+		
+<textarea rows="15" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+    }
+    
+    public function index(){
+        
+	// Tabel users
+        $users = new AR_users();
+    }
+}
+</textarea>
+	    </div>
+	    
+	    <div class="main">
+		<h3 id="crud">Basic CRUD</h3>
+		<p>Berikut adalah contoh penggunaan dasar create, read, update dan delete (CRUD):</p>
+		
+		<h4>Create</h4>
+		<p>Untuk menyimpan data baru ada dua cara yang bisa dilakukan. Cara pertama:</p>
+<textarea rows="6" cols="50" class="textarea">
+$users = new AR_users();
+$users->name = 'Budi';
+$users->email = 'budi@budi.com';
+$users->password = 'mypassword';
+$users->save();
+</textarea>
+		<p>Atau dengan cara:</p>
 		<code>
-			$data = $this->db->row("SELECT * FROM table_name WHERE id = '1'");
+		    $users = new AR_users( array('name' => 'Budi', 'email' => 'budi@budi.com', 'password' => 'mypassword') );
 		</code>
-		<p>Output dari method ini adalah object, sehingga untk memanggil value record dengan cara:</p>
+		<p>Kedua cara di atas merepresentasikan SQL:</p>
 		<code>
-			echo $data->field_1;
+		    INSERT INTO users (name, email, password) VALUES ('Budi', 'budi@budi.com', 'mypassword') 
 		</code>
-		<p>Untuk mendapatkan tipe data array tambahkan parameter 'array' setelah argumen query:</p>
+		
+		<h4>Read</h4>
+		<p>Untuk mendapatkan data dengan <strong>id 28</strong>, bisa dilakukan dengan cara:</p>
 		<code>
-			$data = $this->db->row("SELECT * FROM table_name WHERE id = '1'", 'array');
+		    $users = new AR_users();<br />
+		    print_r( $users->find(28) );
 		</code>
-		<p>Dan untuk mendapatkan isi record-nya:</p>
+		<p>Method ini merepresentasikan output SQL:</p>
 		<code>
-			echo $data['field_1'];
+		    SELECT * FROM users WHERE id = 28
+		</code>
+		<h4>Update</h4>
+		<p>Untuk memperbaharui data dengan <strong>id 28</strong> caranya adalah:</p>
+<textarea rows="6" cols="50" class="textarea">
+$users = new AR_users();
+$users->find(28);
+$users->name = 'Jhon Budi';
+$users->password = 'mynewpassword';
+$users->save();
+</textarea>
+		<p>Method ini merepresentasikan output SQL:</p>
+		<code>
+		    UPDATE users SET name = 'Jhon Budi', password = 'mynewpassword' WHERE id =28
+		</code>
+		<h4>Delete</h4>
+		<p>Berikut adalah cara untuk menghapus data dengan <strong>id 28</strong>:</p>
+		<code>
+		    $users = new AR_users();<br />
+		    $users->delete(28);
+		</code>
+		<p>Method ini merepresentasikan output SQL:</p>
+		<code>
+		    DELETE FROM table_name WHERE id = 28
 		</code>
 	    </div>
 	    
