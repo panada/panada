@@ -11,7 +11,7 @@
 class Library_active_record {
     
     protected $table;
-    protected $primary_key = 'id';
+    public $primary_key = 'id';
     private $class_vars;
     private $connection;
     private $fields = array();
