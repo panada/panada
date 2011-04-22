@@ -1,0 +1,321 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <title>Panada PHP Framework 0.3.1 Documentation  - APC Library</title>
+    <link rel="stylesheet" href="../../style.css" type="text/css" media="screen" />
+</head>
+<body>
+    <div class="header">
+        <span class="logo"><a target="_blank" href="http://panadaframework.com">Panada</a></span>
+        <div class="menu">
+            <form action="http://www.google.com/search" method="get">
+	    <input type="hidden" value="panadaframework.com/documentation/" id="as_sitesearch" name="as_sitesearch">
+            <input class="search-input" type="text" name="q" /><button class="search-button" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="subheader">
+        <h1>Panada Framework 0.3.1 Documentation</h1>
+    </div>
+    
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="navigation">
+                <ul>
+                    <li>
+                        <a href="../index.html">Umum</a>
+                        <ul>
+                            <li><a href="../index.html#about">Tentang Panada</a></li>
+                            <li><a href="../index.html#feature">Keunggulan (<em>Feature</em>)</a></li>
+                            <li><a href="../index.html#license">Lisensi</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="../config.html">Konfigurasi</a>
+                        <ul>
+                            <li><a href="../config.html#general">Dasar</a></li>
+                            <li><a href="../config.html#additional_config">Tambahan</a></li>
+                            <li><a href="../config.html#webserver">Webserver</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Referensi
+                        <ul>
+                            <li><a href="../references/controller.html">Controller</a></li>
+                            <li><a href="../references/model.html">Model</a></li>
+                            <li><a href="../references/view.html">View</a></li>
+                            <li><a href="../references/library.html">Library</a></li>
+                            <li><a href="../references/autoloader.html">Auto Loader</a></li>
+                            <li><a href="../references/global_method.html">Global Method dan Properties</a></li>
+                        </ul>
+                            
+                    </li>
+                    <li>
+                        <a href="index.html">Paket Library</a>
+                        <ul>
+                            <li><a href="database/index.html">Database</a></li>
+                            <li><a href="session.html">Session</a></li>
+                            <li><a href="pagination.html">Pagination</a></li>
+                            <li><a href="email.html">Email</a></li>
+                            <li><a href="encryption.html">Encryption</a></li>
+                            <li><a href="upload.html">Upload</a></li>
+                            <li><a href="image.html">Image</a></li>
+                            <li><a href="request.html">Request</a></li>
+                            <li><a href="rest.html">RESTfull</a></li>
+                            <li><a href="memcached.html">Memcached</a></li>
+			    <li><a href="mongodb.html">Mongodb</a></li>
+			    <li><a href="apc.html">APC</a></li>
+                            <li>
+                                <a href="tools.html">Tools</a>
+                                <ul>
+                                    <li><a href="#set_status_header">Set Status Header</a></li>
+                                    <li><a href="#get_random_string">Get Random String</a></li>
+                                    <li><a href="#xml_encode">Xml Encode</a></li>
+                                    <li><a href="#xml_decode">Xml Decode</a></li>
+                                    <li><a href="#object_to_array">Object to Array</a></li>
+                                    <li><a href="#array_to_object">Array to Object</a></li>
+                                    <li><a href="#sub_controller">Sub Controller</a></li>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="../contribution.html">Kontribusi</a></li>
+                    <li><a href="../credit.html">Credit</a></li>
+                </ul>
+	    </div>
+            
+        </div>
+        
+        <div class="content">
+            <div class="lead">
+                <h2>Tools</h2>
+                <p>Panada memiliki beberapa method umum yang sering kali digunakan dan mengumpulkannya ke dalam class tools. Karena setiap method tidak memiliki keterkaitan secara langsung dengan method lain di dalam class yang sama, maka method-method ini dibuat dan digunakan secara statik. Cara statik juga akan mempercepat proses pemanggilan masing-masing method ini karena tidak perlu lagi mendeklarasikan <em>instance</em> calss-nya.</p>
+            </div>
+            
+            <div class="main">
+                <h3 id="set_status_header">Set Status Header</h3>
+                <p>Memberikan status header sebelum output ditampilkan.</p>
+                <code>
+                    <b>void</b> Library_tools::set_status_header( <strong>int</strong> $code = 200, <strong>string</strong> $text = '');
+                </code>
+                
+                <h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$code</td>
+			<td>int</td>
+			<td>Nilai header yang ingin ditampilkan. Daftar kode HTTP header silahkan lihat <a target="_blank" href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes">http://en.wikipedia.org/wiki/List_of_HTTP_status_codes</a></td>
+		    </tr>
+		    <tr class="odd">
+			<td>$text</td>
+			<td> string</td>
+			<td>String yang ingin ditampilkan terkait kode header. Misalnya "Not Found" untuk kode 404.</td>
+		    </tr>
+                    
+		</tbody>
+		</table>
+                
+            </div>
+	    
+	    <div class="main">
+                <h3 id="get_random_string">Get Random String</h3>
+                <p>Method ini bisa digunakan untuk mendapatkan random string.</p>
+                <code>
+                    <b>string</b> Library_tools::get_random_string( <strong>int</strong> $length = 12, <strong>boolean</strong> $special_chars = true);
+                </code>
+                
+                <h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$length</td>
+			<td>int</td>
+			<td>Jumlah karakter random yang diinginkan. Nilai default-nya adalah 12.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$special_chars</td>
+			<td>boolan</td>
+			<td>Menentukan apakah random stringnya menggunakan karakter sepsial atau tidak. Karakter tersebut adalah: '!@#$%^&amp;*()'</td>
+		    </tr>
+		</tbody>
+		</table>
+                
+            </div>
+            
+            <div class="main">
+                <h3 id="xml_encode">Xml Encode</h3>
+                <p>Meng-encode array menjadi xml.</p>
+                
+                <code>
+                    <b>string</b> Library_tools::xml_encode( <strong>array</strong> $data, <strong>string</strong> $root_node_name = 'data', <strong>string</strong> $xml = null);
+                </code>
+                
+                <h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$data</td>
+			<td>array</td>
+			<td>Sebuah data array yang akan di-encode menjadi data xml.</td>
+		    </tr>
+                    <tr class="odd">
+			<td>$root_node_name</td>
+			<td>string</td>
+			<td>Nama tag induk xml.</td>
+		    </tr>
+                    <tr>
+			<td>$data</td>
+			<td>string</td>
+			<td>Tag xml yang sudah ada dan akan diikutsertakan ke dalam satu dokumen xml.</td>
+		    </tr>
+		    
+		</tbody>
+		</table>
+                
+                
+            </div>
+	    
+	    <div class="main">
+                <h3 id="xml_decode">Xml Decode</h3>
+                <p>Men-decode data xml menjadi object ataupun array.</p>
+                
+                <code>
+                    <b>array | object</b> Library_tools::xml_decode( <strong>string</strong> $xml, <strong>string</strong> $type = 'object');
+                </code>
+                
+                <h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$xml</td>
+			<td>string</td>
+			<td>Data xml yang akan di-decode.</td>
+		    </tr>
+                    <tr class="odd">
+			<td>$type</td>
+			<td>string</td>
+			<td>Tipe output data. Pilihannya adalah array ataupun object.</td>
+		    </tr>
+		    
+		</tbody>
+		</table>
+                
+            </div>
+	    
+	    <div class="main">
+                <h3 id="object_to_array">Object to Array</h3>
+                <p>Merubah sebuah data object menjadi array.</p>
+                
+                <code>
+                    <b>array</b> Library_tools::object_to_array($object);
+                </code>
+		
+		<h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$object</td>
+			<td>object</td>
+			<td>Data object yang akan dirubah menjadi array.</td>
+		    </tr>
+		    
+		</tbody>
+		</table>
+                
+            </div>
+	    
+	    <div class="main">
+                <h3 id="array_to_object">Array to Object</h3>
+                <p>Merubah sebuah data array menjadi object.</p>
+                
+                <code>
+                    <b>array</b> Library_tools::array_to_object($array);
+                </code>
+		
+		<h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$array</td>
+			<td>array</td>
+			<td>Data array yang akan dirubah menjadi object.</td>
+		    </tr>
+		    
+		</tbody>
+		</table>
+                
+            </div>
+	    
+	    <div class="main">
+                <h3 id="sub_controller">Sub Controller</h3>
+                <p>Keterangan lengkap mengenai method sub_controller bisa dilihat di bagian <a href="../references/controller.html#sub_controller">Controller</a></p>
+            </div>
+	    
+	    <div id="discussion" class="main">
+		<h3>Diskusi</h3>
+		<div id="disqus_thread"></div>
+	    </div>
+        
+        </div>
+        
+    </div>
+          
+    <div class="footer">
+        <span class="right">All Rights Reserved.</span>
+    </div>
+    <script type="text/javascript">
+	var disqus_shortname = 'panada';
+	var disqus_url = 'http://panadaframework.com/documentation/id/classes/tools.html';
+	var disqus_identifier = disqus_url;
+	(function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>
