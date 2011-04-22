@@ -90,7 +90,7 @@
         <div class="content">
             <div class="lead">
                 <h2>Active Record</h2>
-                <p>Panada mengikuti patern Active Record sebagaimana yang terdapat di <a href="http://en.wikipedia.org/wiki/Active_record_pattern">http://en.wikipedia.org/wiki/Active_record_pattern</a>. Setiap nama tabel diwakili oleh sebuah class dan setiap properties mewakili nama kolom.</p>
+                <p>Panada mengikuti <em>pattern</em> Active Record sebagaimana yang terdapat di <a target="_blank" href="http://en.wikipedia.org/wiki/Active_record_pattern">http://en.wikipedia.org/wiki/Active_record_pattern</a>. Setiap nama tabel diwakili oleh sebuah class dan setiap properties class mewakili nama kolom.</p>
             </div>
 	    
 	    <div class="main">
@@ -114,6 +114,10 @@ class Controller_home extends Panada {
     }
 }
 </textarea>
+		<p>Jika memiliki koneksi database yang lain, argument pertama dengan tipe data <strong>string</strong> bisa diisikan dengan nama koneksinya.</p>
+		<code>
+		    $users = new AR_users( '<strong>dbconnection2</strong>' );
+		</code>
 	    </div>
 	    
 	    <div class="main">
@@ -129,13 +133,17 @@ $users->email = 'budi@budi.com';
 $users->password = 'mypassword';
 $users->save();
 </textarea>
-		<p>Atau dengan cara:</p>
+		<p>Atau dengan cara yang lebih cepat:</p>
 		<code>
 		    $users = new AR_users( array('name' => 'Budi', 'email' => 'budi@budi.com', 'password' => 'mypassword') );
 		</code>
 		<p>Kedua cara di atas merepresentasikan SQL:</p>
 		<code>
 		    INSERT INTO users (name, email, password) VALUES ('Budi', 'budi@budi.com', 'mypassword') 
+		</code>
+		<p>Jika argument pertama berupa <strong>array</strong>, maka jika diinginkan argument ke dua bisa diisikan nama koneksi database yang digunakan.</p>
+		<code>
+		    $users = new AR_users( array('name' => 'Budi', 'email' => 'budi@budi.com', 'password' => 'mypassword'), <strong>'dbconnection2'</strong> );
 		</code>
 		
 		<h4>Read</h4>
@@ -148,6 +156,34 @@ $users->save();
 		<code>
 		    SELECT * FROM users WHERE id = 28
 		</code>
+		<p>Atau jika ingin mendapatkan beberapa data sekaligus:</p>
+		<code>
+		    $users = new AR_users();<br />
+		    print_r( $users->find(1,2,3) );
+		</code>
+		<p>Method ini merepresentasikan output SQL:</p>
+		<code>
+		    SELECT * FROM users WHERE id IN (1, 2, 3)
+		</code>
+		<p>Mendapatkan record pertama dari tabel:</p>
+		<code>
+		    $users = new AR_users();<br />
+		    print_r( $users-><strong>first()</strong> );
+		</code>
+		<p>Method ini merepresentasikan output SQL:</p>
+		<code>
+		    SELECT * FROM users ORDER BY id ASC LIMIT 1
+		</code>
+		<p>Mendapatkan record terakhir dari tabel:</p>
+		<code>
+		    $users = new AR_users();<br />
+		    print_r( $users-><strong>last()</strong> );
+		</code>
+		<p>Method ini merepresentasikan output SQL:</p>
+		<code>
+		    SELECT * FROM users ORDER BY id DESC LIMIT 1
+		</code>
+		
 		<h4>Update</h4>
 		<p>Untuk memperbaharui data dengan <strong>id 28</strong> caranya adalah:</p>
 <textarea rows="6" cols="50" class="textarea">
@@ -170,6 +206,16 @@ $users->save();
 		<p>Method ini merepresentasikan output SQL:</p>
 		<code>
 		    DELETE FROM table_name WHERE id = 28
+		</code>
+	    </div>
+	    
+	    <div class="main">
+		<h3 id="primary_key">Primary Key</h3>
+		<p>Panada mengasumsikan <strong>Primary Key</strong> dari tabel yang akan digunakan bernama <strong>id</strong>. Namun, jika tabel Anda menggunakan nama yang lain bisa ditambahkan dengan cara:</p>
+		<code>
+		    $users = new AR_users();<br />
+		    $users->primary_key = 'user_id';<br />
+		    print_r( $users->find(28) );
 		</code>
 	    </div>
 	    

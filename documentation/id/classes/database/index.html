@@ -140,7 +140,51 @@ $CONFIG['db']['default']['database'] = '';
 		</tbody>
 		</table>
 		
-		<p>Untuk berinteraksi dengan database, Anda bisa melakukan dengan cara-cara di bawah ini:</p>
+		<p>Nilai <strong>default</strong> pada konfigurasi di atas menunjukan koneksi database default. Jika Anda menginginkan koneksi database yang lain silahkan tambahkan nama baru pada bagian ini. Sebagai contoh:</p>
+
+<textarea rows="21" cols="50" class="textarea">
+// Koneksi default
+$CONFIG['db']['default']['driver'] = 'mysql';
+$CONFIG['db']['default']['host'] = '192.168.1.1'; 
+$CONFIG['db']['default']['user'] = 'dbuser'; 
+$CONFIG['db']['default']['password'] = 'dbpassword'; 
+$CONFIG['db']['default']['database'] = 'myblog';
+
+// Koneksi db 2
+$CONFIG['db']['db2']['driver'] = 'mysql';
+$CONFIG['db']['db2']['host'] = '192.168.1.2'; 
+$CONFIG['db']['db2']['user'] = 'dbuser'; 
+$CONFIG['db']['db2']['password'] = 'dbpassword'; 
+$CONFIG['db']['db2']['database'] = 'myforum';
+
+// Koneksi db 3
+$CONFIG['db']['db3']['driver'] = 'postgres';
+$CONFIG['db']['db3']['host'] = '192.168.1.3'; 
+$CONFIG['db']['db3']['user'] = 'dbuser'; 
+$CONFIG['db']['db3']['password'] = 'dbpassword'; 
+$CONFIG['db']['db3']['database'] = 'myagregrator';
+</textarea>
+		<h4>Inisialisasi</h4>
+		<p>Berikut adalah contoh membuat <em>instance</em> untuk DB baik itu di dalam model ataupun controller:</p>
+<textarea rows="14" cols="50" class="textarea">
+&lt;?php
+class Model_comments {
+    
+    public function __construct(){
+        
+	// DB koneksi default
+	$this->db = new Library_db();
+	// DB koneksi 2
+	$this->db2 = new Library_db('db2');
+	// DB koneksi 3
+	$this->db3 = new Library_db('db3');
+    }
+}
+</textarea>
+		
+		<h4>Database APIs</h4>
+		
+		<p>Untuk berinteraksi dengan database, setidaknya bisa dilakukan dengan tiga cara yaitu:</p>
 		<ul>
 		    <li><a href="abstraction.html">Abstraction</a></li>
 		    <li><a href="activerecord.html">Active Record</a></li>
