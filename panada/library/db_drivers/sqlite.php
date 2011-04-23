@@ -1,16 +1,15 @@
 <?php defined('THISPATH') or die('Can\'t access directly!');
 /**
- * Panada MySQL Database Driver.
+ * Panada SQLite Database Driver.
  *
  * @package	Panada
  * @subpackage	Driver
  * @author	Iskandar Soesman.
- * @since	Version 0.1
+ * @since	Version 0.3
  */
 
-class Driver_mysql {
+class Driver_sqlite {
     
-    protected $port = 3306;
     protected $column = '*';
     protected $distinct_ = false;
     protected $tables = null;
@@ -35,7 +34,7 @@ class Driver_mysql {
     public $persistent_connection = false;
     
     /**
-     * Define all properties needed.
+     * EN: Define all properties needed.
      * @return void
      */
     function __construct( $config_instance, $connection_name ){
@@ -52,29 +51,11 @@ class Driver_mysql {
      */
     private function establish_connection(){
 	
-	$arguments = array(
-			$this->db_config->host.':'.$this->port,
-			$this->db_config->user,
-			$this->db_config->password,
-			$this->new_link,
-			$this->client_flags
-		    );
-	
-	$function = 'mysql_connect';
-	
-	if( $this->db_config->persistent ){
+	if( ! $this->link = new SQLite3( $this->db_config->database, SQLITE3_OPEN_READWRITE ) ){
 	    
-	    $arguments = array(
-			$this->db_config->host,
-			$this->db_config->user,
-			$this->db_config->password,
-			$this->client_flags
-		    );
-	    
-	    $function = 'mysql_pconnect';
+	    $this->error = new Library_error();
+            $this->error->database('Unable connet to database in <strong>'.$this->connection.'</strong> connection.');
 	}
-	
-	return call_user_func_array($function, $arguments);
     }
     
     /**
@@ -85,40 +66,7 @@ class Driver_mysql {
     private function init(){
 	
 	if( is_null($this->link) )
-	    $this->link = $this->establish_connection();
-        
-        if ( ! $this->link ){
-	    $this->error = new Library_error();
-            $this->error->database('Unable connet to database in <strong>'.$this->connection.'</strong> connection.');
-        }
-        
-        $collation_query = '';
-        
-        if ( ! empty($this->db_config->charset) ) {
-            $collation_query = "SET NAMES '".$this->db_config->charset."'";
-	    if ( ! empty($this->db_config->collate) )
-                $collation_query .= " COLLATE '".$this->db_config->collate."'";
-	}
-	
-        if ( ! empty($collation_query) )
-            $this->query($collation_query);
-        
-        $this->select_db($this->db_config->database);
-    }
-    
-    /**
-     * Select the databse
-     *
-     * @return void
-     */
-    private function select_db($dbname){
-	
-	if( is_null($this->link) )
-	    $this->init();
-        
-        if ( ! @mysql_select_db($dbname, $this->link) )
-            Library_error::database('Unable to select database in <strong>'.$this->connection.'</strong> connection.');
-        
+	    $this->establish_connection();
     }
     
     /**
@@ -234,7 +182,7 @@ class Driver_mysql {
      * @return object
      */
     public function where($column, $operator, $value, $separator = false){
-	
+        
 	$this->criteria[] = $this->create_criteria($column, $operator, $value, $separator);
 	
         return $this;
@@ -334,7 +282,7 @@ class Driver_mysql {
 	
 	if( ! is_null($this->group_by_) )
 	    $query .= ' GROUP BY '.$this->group_by_;
-	
+	    
 	if( ! empty($this->is_having) )
 	    $query .= ' HAVING '.implode(' ', $this->is_having);
 	
@@ -344,12 +292,10 @@ class Driver_mysql {
 	
 	if( ! is_null($this->limit_) ){
 	    
-	    $query .= ' LIMIT';
+	    $query .= ' LIMIT '.$this->limit_;
 	    
 	    if( ! is_null($this->offset_) )
-		$query .= ' '.$this->offset_.' ,';
-	    
-	    $query .= ' '.$this->limit_;
+		$query .= ' OFFSET '.$this->offset_;
 	}
         
         return $query;
@@ -366,7 +312,7 @@ class Driver_mysql {
 	if( is_null($this->link) )
 	    $this->init();
 	
-        return mysql_real_escape_string($string, $this->link);
+        return $this->link->escapeString($string);
     }
     
     /**
@@ -379,17 +325,19 @@ class Driver_mysql {
 	
 	if( is_null($this->link) )
 	    $this->init();
-        
-        $query = mysql_query($sql, $this->link);
+	
+	if ( preg_match("/^(select)\s+/i", $sql) )
+	    $query = $this->link->query($sql);
+	else
+	    $query = $this->link->exec($sql);
+	
         $this->last_query = $sql;
         
-        if ( $this->last_error = mysql_error($this->link) ) {
+	if($this->link->lastErrorMsg() != 'not an error' ){
+	    $this->last_error = $this->link->lastErrorMsg();
             $this->print_error();
             return false;
         }
-        
-        if( $insert_id = mysql_insert_id($this->link) )
-            $this->insert_id = $insert_id;
         
         return $query;
     }
@@ -407,15 +355,13 @@ class Driver_mysql {
 	
         $result = $this->query($query);
         
-        while ($row = @mysql_fetch_object($result)) {
+        while ( $row = $result->fetchArray(SQLITE3_ASSOC) ) {
             
-            if($type == 'array')
-                $return[] = (array) $row;
+            if($type == 'object')
+                $return[] = (object) $row;
             else
                 $return[] = $row;
         }
-        
-        @mysql_free_result($result);
         
         return @$return;
     }
@@ -435,10 +381,10 @@ class Driver_mysql {
 	    $this->init();
         
         $result = $this->query($query);
-        $return = mysql_fetch_object($result);
+        $return = $result->fetchArray(SQLITE3_ASSOC);
         
-        if($type == 'array')
-            return (array) $return;
+        if($type == 'object')
+            return (object) $return;
         else
             return $return;
     }
@@ -468,9 +414,9 @@ class Driver_mysql {
      * @param array Default is all
      * @return object
      */
-    public function get_row( $table, $where = array(), $fields = array() ){
+    public function get_row($table, $where = array(), $fields = array()){
         
-	if( ! empty($fields) )
+        if( ! empty($fields) )
 	    call_user_func_array(array($this, 'select'), $fields);
 	
 	$this->from($table);
@@ -492,7 +438,7 @@ class Driver_mysql {
     }
     
     /**
-     * Abstraction to get multple records
+     * Abstraction to get multyple records
      *
      * @param string
      * @param array Default si null
@@ -500,7 +446,7 @@ class Driver_mysql {
      * @return object
      */
     public function get_results($table, $where = array(), $fields = array()){
-	
+        
 	if( ! empty($fields) )
 	    call_user_func_array(array($this, 'select'), $fields);
 	
@@ -535,7 +481,7 @@ class Driver_mysql {
         foreach($data as $key => $val)
             $escaped_date[$key] = $this->escape($val);
         
-        return $this->query("INSERT INTO `$table` (`" . implode('`,`',$fields) . "`) VALUES ('".implode("','",$escaped_date)."')");
+        return $this->query("INSERT INTO $table (" . implode(',',$fields) . ") VALUES ('".implode("','",$escaped_date)."')");
     }
     
     /**
@@ -545,24 +491,10 @@ class Driver_mysql {
      */
     public function insert_id(){
 	
-	return @mysql_insert_id($this->link);
-    }
-    
-    /**
-     * Abstraction for replace
-     *
-     * @param string $table
-     * @param array $data
-     * @return boolean
-     */
-    public function replace($table, $data = array()) {
-        
-        $fields = array_keys($data);
-        
-        foreach($data as $key => $val)
-            $escaped_date[$key] = $this->escape($val);
-        
-        return $this->query("REPLACE INTO `$table` (`" . implode('`,`',$fields) . "`) VALUES ('".implode("','",$escaped_date)."')");
+	if( is_null($this->link) )
+	    $this->init();
+	
+        return $this->link->lastInsertRowID();
     }
     
     /**
@@ -588,7 +520,7 @@ class Driver_mysql {
         else
             return false;
         
-        return $this->query( "UPDATE `$table` SET " . implode( ', ', $bits ) . ' WHERE ' . implode( ' AND ', $wheres ) );
+        return $this->query( "UPDATE $table SET " . implode( ', ', $bits ) . ' WHERE ' . implode( ' AND ', $wheres ) );
     }
     
     /**
@@ -606,7 +538,7 @@ class Driver_mysql {
         else
             return false;
         
-        return $this->query( "DELETE FROM `$table` WHERE " . implode( ' AND ', $wheres ) );
+        return $this->query( "DELETE FROM $table WHERE " . implode( ' AND ', $wheres ) );
     }
     
     /**
@@ -642,7 +574,8 @@ class Driver_mysql {
      */
     public function version(){
 	
-	return $this->get_var("SELECT version() AS version");
+	$version = $this->link->version();
+	return $version['versionString'];
     }
     
     /**
@@ -652,7 +585,7 @@ class Driver_mysql {
      */
     public function close(){
 	
-	mysql_close($this->link);
+	unset($this->link);
     }
     
-} // End Driver_mysql Class
+} // End Driver_sqlite Class

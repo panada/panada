@@ -589,4 +589,14 @@ class Driver_postgresql {
 	return $this->get_var("SELECT version() AS version");
     }
     
+    /**
+     * Close db connection
+     *
+     * @return void
+     */
+    public function close(){
+	
+	pg_close($this->link);
+    }
+    
 }// End Driver_postgresql Class
