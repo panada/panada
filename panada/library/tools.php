@@ -16,7 +16,7 @@ class Library_tools {
      *
      * @param int
      * @param string
-     * @return string
+     * @return void
      */
     public static function set_status_header($code = 200, $text = ''){
         
@@ -212,19 +212,25 @@ class Library_tools {
     /**
      * Initiate contoller within contoller
      *
-     * @author kandar
      * @return void
      * @param string $controller Controller's name
      * @param array $params The parameters for it controller
      * @param string $alias_method a method name for alias call
      */
-    public static function sub_controller( $controller, $params = array(), $alias_method = false ){
+    public static function sub_controller( $file, $params = array(), $alias_method = false ){
         
         $requsts = array();
         
         if( ! empty($params[1]) )
             $requsts = array_slice($params, 1);
-        
+	
+	if( ! $class_file = self::find_file('controller_'.$file) )
+	    Library_error::_404();
+	
+	include_once $class_file;
+	
+	$controller = str_replace('.php', '', end(explode('/', $class_file)));
+	
         $controller = 'Controller_'.$controller;
         $controller = new $controller();
         
@@ -244,6 +250,53 @@ class Library_tools {
         }
         
        call_user_func_array(array($controller, $method), $requsts);
+    }
+    
+    /**
+     * Find a file within a folder.
+     * Panada use '_' to difine the folder separator instead '/'
+     *
+     * @return mix Full path file location if true, else false.
+     * @param string $file File name that need to find.
+     * @param string $base_folder root location folder.
+     */
+    public static function find_file($file, $base_folder = APPLICATION){
+	
+	$file = explode('_', $file);
+        
+        $file_path = $base_folder;
+	
+	foreach($file as $key => $val){
+	    
+	    $file_path .= $val.'/';
+	    
+	    if( is_dir($file_path) ){
+		
+		$next_key = $key + 1;
+		
+		if( ! is_dir($file_path.$file[$next_key]) ){
+		    
+		    $arr_file_key = $next_key;
+		    break;
+		}
+	    }
+	}
+	
+	if( ! isset($arr_file_key) ){
+	    $arr_file_key = 0;
+	    $file_path = $base_folder;
+	}
+	
+	$arr_file_name = array_splice($file, $arr_file_key, count($file) );
+	
+	$file_name = implode('_', $arr_file_name);
+	
+	$file = $file_path.$file_name.'.php';
+	
+	if( file_exists($file) )
+	    return $file;
+	
+	return false;
     }
     
 } // End tools class
