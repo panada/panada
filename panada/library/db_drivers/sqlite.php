@@ -45,9 +45,8 @@ class Driver_sqlite {
     }
     
     /**
-     * Establish a new connection to mysql server
+     * Establish a new connection to SQLite server
      *
-     * @return string | boolean MySQL persistent link identifier on success, or FALSE on failure.
      */
     private function establish_connection(){
 	
@@ -141,6 +140,11 @@ class Driver_sqlite {
      * @param mix $separator
      */
     protected function create_criteria($column, $operator, $value, $separator){
+	
+	if( is_string($value) ){
+	    $value = $this->escape($value);
+	    $value = " '$value'";
+	}
 	
 	if( $operator == 'IN' )
 	    if( is_array($value) )
@@ -258,8 +262,10 @@ class Driver_sqlite {
         
         $column = '*';
         
-        if( is_array($this->column) )
+        if( is_array($this->column) ){
             $column = implode(', ', $this->column);
+	    unset($this->column);
+        }
         
         $query .= $column;
         
@@ -273,18 +279,24 @@ class Driver_sqlite {
 	    
 	    $query .= ' JOIN '.$this->joins;
 	    
-	    if( ! empty($this->joins_on) )
+	    if( ! empty($this->joins_on) ){
 		$query .= ' ON ('.implode(' ', $this->joins_on).')';
+		unset($this->joins_on);
+	    }
 	}
 	
-	if( ! empty($this->criteria) )
+	if( ! empty($this->criteria) ){
 	    $query .= ' WHERE '.implode(' ', $this->criteria);
+	    unset($this->criteria);
+	}
 	
 	if( ! is_null($this->group_by_) )
 	    $query .= ' GROUP BY '.$this->group_by_;
 	    
-	if( ! empty($this->is_having) )
+	if( ! empty($this->is_having) ){
 	    $query .= ' HAVING '.implode(' ', $this->is_having);
+	    unset($this->is_having);
+	}
 	
 	if( ! is_null($this->order_by_) )
 	    $query .= ' ORDER BY '.$this->order_by_.' '.$this->order_;
