@@ -310,6 +310,9 @@ class Panada {
     public function __call($file, $data = null){
 	
 	$file = explode('_', $file);
+        
+        if( ! isset($data[0]) )
+            $data[0] = array();
 	
 	if( $file[0] != 'view' )
 	    Library_error::_404();
@@ -319,7 +322,7 @@ class Panada {
         $file_path = APPLICATION.'view/';
         
 	if( count($file) == 1 ){
-           $this->print_output($file_path.$file[0], $data);
+           $this->output($file[0], $data[0]);
         }
         else{
             
@@ -344,17 +347,19 @@ class Panada {
             
             $file_name = implode('_', $arr_file_name);
             
-            $this->print_output($file_path.$file_name, $data);
+            $this->output($file_name, $data[0]);
         }
     }
     
-    private function print_output($file_path, $data){
+    public function output( $file_path, $data = array() ){
+        
+        $file_path = APPLICATION.'view/'.$file_path;
         
         if( ! file_exists($view_file = $file_path.'.php') )
 	    Library_error::_500('<b>Error:</b> No <b>' . $view_file . '</b> file in view folder.');
 	
         if( ! empty($data) )
-            $this->view = $data[0];
+            $this->view = $data;
 	
         if( ! empty($this->view ) )
             extract( $this->view, EXTR_SKIP );

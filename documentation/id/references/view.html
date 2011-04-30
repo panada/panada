@@ -121,7 +121,7 @@ class Controller_home extends Panada {
 				</code>
 				<p>Jika Anda membuat folder baru di dalam folder <b>view</b>, dimana file view akan Anda letakkan pada folder ini, maka cara penggunaan method view-nya adalah:</p>
 				<code>
-				    $this->view_<b>nama_folder_</b>nama_file();
+				    $this->view_<b>namafolder_</b>nama_file();
 				</code>
 				<p>Contohnya, jika path file Anda:</p>
 				<code>
@@ -131,6 +131,9 @@ class Controller_home extends Panada {
 				<code>
 				    $this->view_sidebar_menu();
 				</code>
+				<div class="notice">
+				    <p><strong>Catatan</strong>: Penamaan file mengikuti aturan penamaan fungsi php (<a target="_blank" href="http://www.php.net/manual/en/functions.user-defined.php">http://www.php.net/manual/en/functions.user-defined.php</a>), yaitu hanya karakter <strong>[a-zA-Z0-9_]</strong> yang diperbolehkan. Untuk membedakan dengan nama file, nama folder tidak boleh ada karakter <em>underscore</em> (_).</p>
+				</div>
 
 				<p>Untuk menampilkan data <strong>output</strong> dari controller ke view, maka masing-masing data tersebut harus di isikan ke sebuah variable array. Nilai yang diisikan bisa data apapun, array, object, string, integer, boolean dll.</p>
 				<p>Berikut adalah contoh untuk meneruskan data yang diproduksi di controller dan menampilkannya di view:</p>
