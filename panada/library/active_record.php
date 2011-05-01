@@ -139,7 +139,7 @@ class Library_active_record {
         
     }
     
-    public function __call($name, $arguments){
+    public function __call( $name, $arguments = array() ){
         
         $this->db->select()->from($this->table);
         
@@ -148,7 +148,18 @@ class Library_active_record {
         
         if($name == 'last')
             return $this->db->order_by($this->primary_key, 'DESC')->limit(1)->row();
+        
+        $split_name = explode('find_by_', strtolower($name) );
+        
+        if( count($split_name) > 1 ){
             
+            if( empty($arguments) )
+                trigger_error("find_by_<b>column_name</b>() in Active Record method expects 1 parameter and you dont given anything yet.", E_USER_ERROR);
+            
+            return $this->db->where($split_name[1], '=', $arguments[0])->row();
+            
+        }
+        
     }
 
 }
