@@ -352,7 +352,7 @@ class Driver_mysql {
 	}
 	
 	if( ! is_null($this->order_by_) )
-	    $query .= ' ORDER BY '.$this->order_by_.' '.$this->order_;
+	    $query .= ' ORDER BY '.$this->order_by_.' '.strtoupper($this->order_);
 	
 	
 	if( ! is_null($this->limit_) ){
