@@ -209,7 +209,7 @@ class Driver_mysql {
 	$return = $column.' '.$operator.' '.$value;
 	
 	if($separator)
-	    $return .= ' '.$separator;
+	    $return .= ' '.strtoupper($separator);
 	
 	return $return;
     }

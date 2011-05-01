@@ -115,7 +115,7 @@ class Controller_home extends Panada {
     }
 }
 </textarea>
-		<p>Jika memiliki koneksi database yang lain, argument pertama dengan tipe data <strong>string</strong> bisa diisikan dengan nama koneksinya.</p>
+		<p>Jika memiliki koneksi database yang lain, argument pertama dengan tipe data <strong>string</strong> bisa diisikan dengan nama koneksinya. Lihat halaman <a href="index.html">Konfigurasi Database</a> untuk menentukan nama koneksi.</p>
 		<code>
 		    $users = new AR_users( '<strong>dbconnection2</strong>' );
 		</code>
@@ -184,6 +184,23 @@ $users->save();
 		<code>
 		    SELECT * FROM users ORDER BY id DESC LIMIT 1
 		</code>
+		
+		<p>Cara lainnya adalah menggunakan <strong>Dynamic Finder</strong>. Cara ini ditujukan untuk mendapatkan record berdasarkan nama kolom tertentu.</p>
+		<p>Gunakan method <strong>find_by_</strong> dan dikuti dengan <strong>nama_colom</strong> yang akan dijadikan kriteria. Berikut adalah contohnya:</p>
+
+<textarea rows="11" cols="50" class="textarea">
+    $users = new AR_users();
+    
+    print_r( $users->find_by_email( 'foo@fooweb.com' ) );
+    //SELECT * FROM users WEHRE email = 'foo@fooweb.com'
+    
+    print_r( $users->find_by_name( 'Rasmus Lerdorf' ) );
+    //SELECT * FROM users WEHRE title = 'Rasmus Lerdorf'
+    
+    print_r( $users->find_by_category_id( 5 ) );
+    //SELECT * FROM users WEHRE category_id = 5
+</textarea>
+		<p>Jika data yang ditemukan hanya satu, maka nilai returnnya hanya sebuah object tunggal. Dan jika lebih dari satu, maka nilai returnya terdiri dari beberapa array object.</p>
 		
 		<h4>Update</h4>
 		<p>Untuk memperbaharui data dengan <strong>id 28</strong> caranya adalah:</p>

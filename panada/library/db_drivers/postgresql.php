@@ -175,7 +175,7 @@ class Driver_postgresql {
 	$return = $column.' '.$operator.' '.$value;
 	
 	if($separator)
-	    $return .= ' '.$separator;
+	    $return .= ' '.strtoupper($separator);
 	
 	return $return;
     }

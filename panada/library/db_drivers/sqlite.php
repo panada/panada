@@ -156,7 +156,7 @@ class Driver_sqlite {
 	$return = $column.' '.$operator.' '.$value;
 	
 	if($separator)
-	    $return .= ' '.$separator;
+	    $return .= ' '.strtoupper($separator);
 	
 	return $return;
     }

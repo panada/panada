@@ -152,7 +152,7 @@ class Library_error {
 	// Write the error to log file
 	@error_log($error_str, 0);
 	
-	if( $errno == E_USER_ERROR)
+	if( $errno == E_USER_ERROR )
 	    self::_500($error_str, 'Internal Server Error');
 	
 	echo $error_str;
