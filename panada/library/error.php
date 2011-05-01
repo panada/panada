@@ -131,8 +131,7 @@ class Library_error {
 	
 	switch ($errno) {
 	    case E_USER_ERROR:
-		$error_str = "<strong>ERROR</strong> [$errno] $errstr<br />\n";
-		$error_str .= "Fatal error on line $errline in file $errfile<br />\n";
+		$error_str = "<strong>Error</strong>: $errstr<br />\n";
 		break;
 		
 	    case E_USER_WARNING:
@@ -154,7 +153,7 @@ class Library_error {
 	@error_log($error_str, 0);
 	
 	if( $errno == E_USER_ERROR)
-	    self::_500('Internal Server Error', $error_str);
+	    self::_500($error_str, 'Internal Server Error');
 	
 	echo $error_str;
 	

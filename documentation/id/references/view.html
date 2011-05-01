@@ -133,6 +133,7 @@ class Controller_home extends Panada {
 				</code>
 				<div class="notice">
 				    <p><strong>Catatan</strong>: Penamaan file mengikuti aturan penamaan fungsi php (<a target="_blank" href="http://www.php.net/manual/en/functions.user-defined.php">http://www.php.net/manual/en/functions.user-defined.php</a>), yaitu hanya karakter <strong>[a-zA-Z0-9_]</strong> yang diperbolehkan. Untuk membedakan dengan nama file, nama folder tidak boleh ada karakter <em>underscore</em> (_).</p>
+				    <p>Namun demikian, jika menginginkan penggunaan nama file dan nama folder yang lebih fleksibel, Anda bisa menggunakan method <a href="#output">output()</a> untuk mem-<em>passing</em> data ke file view.</p>
 				</div>
 
 				<p>Untuk menampilkan data <strong>output</strong> dari controller ke view, maka masing-masing data tersebut harus di isikan ke sebuah variable array. Nilai yang diisikan bisa data apapun, array, object, string, integer, boolean dll.</p>
@@ -166,6 +167,35 @@ class Controller_home extends Panada {
 	&lt;/body&gt;
 &lt;/html&gt;
 </textarea>
+		<h4 id="output">Method Output</h4>
+		<p>Selain cara di atas, untuk mengirimkan data dari controller ke file view juga bisa menggunakan method <strong>output</strong>.</p>
+		<code>
+		    <strong>void</strong> $this->output( <strong>string</strong> 'nama_file_view', <strong>array</strong> $data = array() );
+		</code>
+		<p>Berikut adalah contoh penggunaanya:</p>
+
+<textarea rows="17" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+    }
+    
+    public function index(){
+        
+	$data['title'] = 'Hello World Page!';
+	$data['content'] = 'Hello World!';
+	
+        $this->output( 'helloworld', $data );
+    }
+}
+</textarea>
+		<p>Dan jika filenya terletak di dalam folder:</p>
+		<code>
+		    $this->output( 'subfolder/helloworld', $data );
+		</code>
             </div>
 	    <div id="discussion" class="main">
 		<h3>Diskusi</h3>
