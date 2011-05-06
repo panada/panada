@@ -12,7 +12,7 @@ class Driver_sqlite {
     
     protected $column = '*';
     protected $distinct_ = false;
-    protected $tables = null;
+    protected $tables = array();
     protected $joins = null;
     protected $joins_type = null;
     protected $joins_on = array();
@@ -23,6 +23,7 @@ class Driver_sqlite {
     protected $offset_ = null;
     protected $order_by_ = null;
     protected $order_ = null;
+    protected $is_quotes = true;
     private $link;
     private $connection;
     private $db_config;
@@ -112,7 +113,7 @@ class Driver_sqlite {
 	if( is_array($tables[0]) )
 	    $tables = $tables[0];
 	
-	$this->tables = implode(', ', $tables);
+	$this->tables = $tables;
 	
 	return $this;
     }
@@ -171,7 +172,9 @@ class Driver_sqlite {
      */
     public function on($column, $operator, $value, $separator = false){
 	
+	$this->is_quotes = false;
 	$this->joins_on[] = $this->create_criteria($column, $operator, $value, $separator);
+	$this->is_quotes = true;
 	
         return $this;
     }
@@ -187,7 +190,16 @@ class Driver_sqlite {
      */
     public function where($column, $operator, $value, $separator = false){
         
+	if( is_string($value) ){
+	    
+	    $value_arr = explode('.', $value);
+	    if( count($value_arr) > 1)
+		if( array_search($value_arr[0], $this->tables) !== false )
+		    $this->is_quotes = false;
+	}
+	
 	$this->criteria[] = $this->create_criteria($column, $operator, $value, $separator);
+	$this->is_quotes = true;
 	
         return $this;
     }
@@ -269,8 +281,8 @@ class Driver_sqlite {
         
         $query .= $column;
         
-        if( ! is_null($this->tables) )
-            $query .= ' FROM '.$this->tables;
+        if( ! empty($this->tables) )
+            $query .= ' FROM '.implode(', ', $this->tables);
 	
 	if( ! is_null($this->joins) ) {
 	    

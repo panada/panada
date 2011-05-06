@@ -166,7 +166,6 @@ class Driver_mysql {
 	if( is_array($tables[0]) )
 	    $tables = $tables[0];
 	
-	//$this->tables = implode(', ', $tables);
 	$this->tables = $tables;
 	
 	return $this;
@@ -377,7 +376,7 @@ class Driver_mysql {
 	    
 	    $query .= ' '.$this->limit_;
 	}
-        die($query);
+        
         return $query;
     }
     
