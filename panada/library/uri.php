@@ -11,26 +11,29 @@
 class Library_uri {
     
     /**
-     * EN: Extract the url into string query.
-     * ID: Mendapatkan url dan mengekstraknya menjadi query.
+     * Load the configuration class
+     *
+     * @return void
+     */
+    public function __construct(){
+	
+	$this->config = new Library_config();
+    }
+    
+    /**
+     * Extract the url into string query.
      * 
      * @return  string
      */
     public function extract_uri_string(){
 	
-	// ID: Pertama, coba dapatkan url menggunakan variable golbal $_SERVER['PATH_INFO'].
+	// First, try with $_SERVER['PATH_INFO'] gobal variable.
         $path = (isset($_SERVER['PATH_INFO'])) ? $_SERVER['PATH_INFO'] : @getenv('PATH_INFO');
         if (trim($path, '/') != '' && $path != '/index.php')
             return $path;
 	
-    
-	// ID: coba dengan $_SERVER['QUERY_STRING'].
-	$path =  (isset($_SERVER['QUERY_STRING'])) ? $_SERVER['QUERY_STRING'] : @getenv('QUERY_STRING');
-        if (trim($path, '/') != '')
-            return $path;
 	
-	
-	// ID: Masih belum berhasil juga?? coba lagi dengan $_SERVER['ORIG_PATH_INFO']
+	// Still don't work? try with $_SERVER['ORIG_PATH_INFO']
         $path = str_replace($_SERVER['SCRIPT_NAME'], '', (isset($_SERVER['ORIG_PATH_INFO'])) ? $_SERVER['ORIG_PATH_INFO'] : @getenv('ORIG_PATH_INFO'));
         if (trim($path, '/') != '' && $path != '/index.php')
             return $path;
@@ -57,7 +60,7 @@ class Library_uri {
 	 * 	Uncomment bagian ini jika menggunakan Nginx webserver.
 	 */
 	/*
-	$path = str_replace($GLOBALS['CONFIG']['base_url'], '', ($this->is_https())?'https://':'http://' . $_SERVER['SERVER_NAME']. $_SERVER['REQUEST_URI']);
+	$path = str_replace($this->config->base_url, '', ($this->is_https())?'https://':'http://' . $_SERVER['SERVER_NAME']. $_SERVER['REQUEST_URI']);
 	$path = $this->remove_query($path);
 	if (trim($path, '/') != '' && trim($path, '/') != 'index.php')
 	    return '/'.$path;
@@ -67,8 +70,7 @@ class Library_uri {
     }
     
     /**
-     * EN: Does this site use https?
-     * ID: Cek apakah protokolnya https atau http.
+     * Does this site use https?
      *
      * @return boolean
      */
@@ -176,8 +178,6 @@ class Library_uri {
      * @return  array
      */
     public function get_requests($segment = 3){
-	
-	$this->config   = new Library_config();
 	
 	$uri_string = $this->break_uri_string($segment);
 	
