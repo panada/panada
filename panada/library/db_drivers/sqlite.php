@@ -142,7 +142,7 @@ class Driver_sqlite {
      */
     protected function create_criteria($column, $operator, $value, $separator){
 	
-	if( is_string($value) ){
+	if( is_string($value) && $this->is_quotes ){
 	    $value = $this->escape($value);
 	    $value = " '$value'";
 	}
