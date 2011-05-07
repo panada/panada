@@ -381,6 +381,34 @@ class Driver_mysql {
     }
     
     /**
+     * Start transaction.
+     *
+     * @return void
+     */
+    public function begin(){
+	$this->query("START TRANSACTION");
+	$this->query("BEGIN");       
+    }
+    
+    /**
+     * Commit transaction.
+     *
+     * @return void
+     */
+    public function commit(){
+	$this->query("COMMIT");
+    }
+    
+    /**
+     * Rollback transaction.
+     *
+     * @return void
+     */
+    public function rollback(){
+	$this->query("ROLLBACK");
+    }
+    
+    /**
      * Escape all unescaped string
      *
      * @param string $string

@@ -345,6 +345,33 @@ class Driver_postgresql {
     }
     
     /**
+     * Start transaction.
+     *
+     * @return void
+     */
+    public function begin(){
+	pg_exec($this->link, "begin");
+    }
+    
+    /**
+     * Commit transaction.
+     *
+     * @return void
+     */
+    public function commit(){
+	pg_exec($this->link, "commit");
+    }
+    
+    /**
+     * Rollback transaction.
+     *
+     * @return void
+     */
+    public function rollback(){
+	pg_exec($this->link, "rollback");
+    }
+    
+    /**
      * Escape all unescaped string
      *
      * @param string $string

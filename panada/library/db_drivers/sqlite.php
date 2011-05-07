@@ -326,6 +326,33 @@ class Driver_sqlite {
     }
     
     /**
+     * Start transaction.
+     *
+     * @return void
+     */
+    public function begin(){
+	$this->query("BEGIN TRANSACTION");
+    }
+    
+    /**
+     * Commit transaction.
+     *
+     * @return void
+     */
+    public function commit(){
+	$this->query("COMMIT");
+    }
+    
+    /**
+     * Rollback transaction.
+     *
+     * @return void
+     */
+    public function rollback(){
+	$this->query("ROLLBACK");
+    }
+    
+    /**
      * Escape all unescaped string
      *
      * @param string $string
