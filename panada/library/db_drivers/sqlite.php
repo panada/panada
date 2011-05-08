@@ -556,7 +556,7 @@ class Driver_sqlite {
      * @param array $where
      * @return boolean
      */
-    public function update($table, $dat, $where){
+    public function update($table, $dat, $where = null){
         
         foreach($dat as $key => $val)
             $data[$key] = $this->escape($val);
@@ -565,13 +565,21 @@ class Driver_sqlite {
         foreach ( (array) array_keys($data) as $k )
             $bits[] = "`$k` = '$data[$k]'";
         
-        if ( is_array( $where ) )
+	if( ! empty($this->criteria) ){
+	    $criteria = implode(' ', $this->criteria);
+	    unset($this->criteria);
+	}
+        else if ( is_array( $where ) ){
             foreach ( $where as $c => $v )
                 $wheres[] = "$c = '" . $this->escape( $v ) . "'";
-        else
+	    
+	    $criteria = implode( ' AND ', $wheres );
+	}
+        else{
             return false;
+        }
         
-        return $this->query( "UPDATE $table SET " . implode( ', ', $bits ) . ' WHERE ' . implode( ' AND ', $wheres ) );
+        return $this->query( "UPDATE $table SET " . implode( ', ', $bits ) . ' WHERE ' . $criteria );
     }
     
     /**
@@ -581,15 +589,25 @@ class Driver_sqlite {
      * @param array
      * @return boolean
      */
-    public function delete($table, $where){
+    public function delete($table, $where = null){
         
-        if ( is_array( $where ) )
+	if( ! empty($this->criteria) ){
+	    $criteria = implode(' ', $this->criteria);
+	    unset($this->criteria);
+	}
+	
+        if ( is_array( $where ) ){
             foreach ( $where as $c => $v )
                 $wheres[] = "$c = '" . $this->escape( $v ) . "'";
-        else
+	    
+	    $criteria = implode( ' AND ', $wheres );
+	}
+	
+        else {
             return false;
+        }
         
-        return $this->query( "DELETE FROM $table WHERE " . implode( ' AND ', $wheres ) );
+        return $this->query( "DELETE FROM $table WHERE " . $criteria );
     }
     
     /**
