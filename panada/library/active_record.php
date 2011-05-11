@@ -10,6 +10,12 @@
 
 class Library_active_record {
     
+    // Define the constants for db relations.
+    const BELONGS_TO = 1;
+    const HAS_ONE = 2;
+    const HAS_MANY = 3;
+    const MANY_MANY = 4;
+    
     protected $table;
     protected $connection = 'default';
     protected $primary_key = 'id';
@@ -312,5 +318,40 @@ class Library_active_record {
             return $results;
             
         }
+    }
+    
+    /**
+     * overrided method for relations scheme
+     */
+    public function relations(){
+        
+        return false;
+    }
+    
+    /**
+     * Magic method for lazy call relations.
+     *
+     * @param string $name Property name
+     * @return mix
+     */
+    public function __get( $name = false ){
+        
+        if( ! $name )
+            return false;
+        
+        if( ! $relations = $this->relations() )
+            return false;
+        
+        foreach($relations as $key => $relations)
+            if( $name == $key ){
+                $class_name = 'Model_'.$relations[1];
+                $name = new $class_name;
+                
+                if( $relations[0] == 1 ){
+                    
+                    $find_by_pk = 'find_by_'.$this->primary_key;
+                    return $name->$find_by_pk( $this->$relations[2] );
+                }
+            }
     }
 }
