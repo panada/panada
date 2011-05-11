@@ -11,11 +11,19 @@
 class Library_active_record {
     
     protected $table;
-    public $primary_key = 'id';
+    protected $condition = array();
+    protected $limit = null;
+    protected $offset = null;
+    protected $select = '*';
+    protected $order_by = null;
+    protected $order = null;
+    protected $group_by = array();
+    
     private $class_vars;
     private $connection;
     private $fields = array();
     private $db;
+    public $primary_key = 'id';
     
     public function __construct( $instance = false, $connection = 'default', $data = array() ){
         
@@ -47,6 +55,13 @@ class Library_active_record {
             
             unset(
                 $this->fields['table'],
+                $this->fields['condition'],
+                $this->fields['limit'],
+                $this->fields['offset'],
+                $this->fields['select'],
+                $this->fields['order_by'],
+                $this->fields['order'],
+                $this->fields['group_by'],
                 $this->fields['class_vars'],
                 $this->fields['connection'],
                 $this->fields['fields'],
@@ -73,6 +88,20 @@ class Library_active_record {
         return $this->db->insert( $this->table, $this->get_fields() );
     }
     
+    protected function db_fields_to_properties( $db_objcet ){
+        
+        if( is_object($db_objcet) ){
+            foreach( get_object_vars($db_objcet) as $key => $val )
+                $this->$key = $val;
+            
+            return;
+        }
+        
+        if( is_array($db_objcet) )
+            foreach($db_objcet as $db_objcet)
+                $this->db_fields_to_properties($db_object);
+    }
+    
     /**
      * Get records from db
      *
@@ -85,7 +114,7 @@ class Library_active_record {
         $args = func_get_args();
         $total = count($args);
         
-        $this->db->select()->from($this->table);
+        $this->db->select( $this->select )->from( $this->table );
         
         if( $total == 1 ){
             
@@ -101,42 +130,112 @@ class Library_active_record {
         if( $total > 1 )
             return $this->db->where($this->primary_key, 'IN', $args)->results();
         
+        // Its time for user defined condition implementation.
+        if( ! empty($this->condition) ){
+            foreach($this->condition as $condition)
+                $this->db->where($condition[0], $condition[1], $condition[2], $condition[3]);
+            
+            unset($this->condition);
+        }
+        
+        if( ! empty($this->group_by) )
+            call_user_func_array(array($this->db, 'group_by'), $this->group_by);
+        
+        // Set order if user defined it
+        if( ! is_null($this->order_by) )
+            $this->db->order_by($this->order_by, $this->order);
+        
+        if( ! is_null($this->limit) )
+            $this->db->limit($this->limit, $this->offset);
         
         return $this->db->results();
     }
     
-    public function delete(){
+    public function delete( $args = null ){
         
-        if( ! call_user_func_array(array($this, 'find'), func_get_args()) )
-            return false;
+        if( ! empty($this->condition) ){
+            
+            foreach($this->condition as $condition)
+                $this->db->where($condition[0], $condition[1], $condition[2], $condition[3]);
+            
+            unset($this->condition);
+            $condition = null;
+        }
         
-        $primary_key = $this->primary_key;
+        else if( is_array($args) )
+            $condition = $args;
         
-        return $this->db->delete($this->table, array($this->primary_key => $this->$primary_key)); 
+        else if( ! is_null($args) )
+            $condition = array( $this->primary_key => $args );
+        
+        return $this->db->delete($this->table, $condition); 
     }
     
-    public function where($sql_condition = null){
+    /**
+     * Update recored tanpa perlu meng-assign
+     * datanya ke dalam class terlebih dahulu.
+     *
+     */
+    public function update( $args = null ){
+        
+        if( ! empty($this->condition) ){
+            
+            foreach($this->condition as $condition)
+                $this->db->where($condition[0], $condition[1], $condition[2], $condition[3]);
+            
+            unset($this->condition);
+            $condition = null;
+        }
+        
+        else if( is_array($args) )
+            $condition = $args;
+        
+        else if( ! is_null($args) )
+            $condition = array( $this->primary_key => $args );
+        
+        return $this->db->update(
+                            $this->table,
+                            $this->get_fields(),
+                            $condition
+                        );
+    }
+    
+    public function find_by_sql(){
         
     }
     
-    public function order(){
+    // Condition = where
+    public function condition( $column, $operator, $value, $separator = false ){
         
+        $args = array($column, $operator, $value, $separator);
+        $this->condition[] = $args;
+        return $this;
     }
     
-    public function select(){
-        
+    public function order($column, $order = null){
+	
+	$this->order_by = $column;
+	$this->order = $order;
+        return $this;
     }
     
-    public function limit(){
+    public function select($select = '*'){
         
+        $this->select = $select;
+        return $this;
     }
     
-    public function offset(){
+    public function limit($limit, $offset = null){
         
+        $this->limit = $limit;
+	$this->offset = $offset;
+        return $this;
     }
     
     public function group(){
         
+        $this->group_by = func_get_args();
+        return $this;
     }
     
     public function __call( $name, $arguments = array() ){
@@ -156,10 +255,13 @@ class Library_active_record {
             if( empty($arguments) )
                 trigger_error("find_by_<b>column_name</b>() in Active Record method expects 1 parameter and you dont given anything yet.", E_USER_ERROR);
             
-            return $this->db->where($split_name[1], '=', $arguments[0])->row();
+            $results = $this->db->where($split_name[1], '=', $arguments[0])->results();
+            
+            if( count($results) == 1 )
+                return $results[0];
+            
+            return $results;
             
         }
-        
     }
-
 }

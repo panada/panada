@@ -170,8 +170,7 @@ function __autoload($class_name) {
         $class_name == 'Library_error' ||
         $class_name == 'Library_time_execution' ||
         $class_name == 'Controller_'.$var_name ||
-        $class_name == 'Library_active_record' ||
-        $folder == 'ar'
+        $class_name == 'Library_active_record'
     )
         
         return;
