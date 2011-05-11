@@ -134,6 +134,8 @@ function __autoload($class_name) {
 	$class_file = APPLICATION . $file .'.php';
     }
     
+    include_once $class_file;
+    
     //EN: Oke the file is exist, but does the class name exist?
     if( ! class_exists($class_name) )
 	Library_error::_500('<b>Error:</b> No class <b>'.$class_name.'</b> exists in file '.$class_file.'.');
