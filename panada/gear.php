@@ -129,33 +129,10 @@ function __autoload($class_name) {
 	}
         
     }
-    
-    // EN: Or try to call Active Record feature?
-    else if($folder == 'ar') {
-        
-        eval('class '.$class_name.' extends Library_active_record {
-            
-            public function __construct($conn_or_fields = \'default\', $conn = \'default\'){
-                
-                $data = array();
-                $connection = $conn_or_fields;
-                
-                if( is_array($conn_or_fields) ){
-                    $data = $conn_or_fields;
-                    $connection = $conn;
-                }
-                
-                parent::__construct($this, $connection, $data);
-            }
-        }');
-    }
     else{
 	
 	$class_file = APPLICATION . $file .'.php';
     }
-    
-    if( $folder != 'ar' )
-        include_once $class_file;
     
     //EN: Oke the file is exist, but does the class name exist?
     if( ! class_exists($class_name) )
