@@ -18,7 +18,6 @@ class Library_active_record {
     
     protected $table;
     protected $connection = 'default';
-    protected $primary_key = 'id';
     
     private $db;
     private $fields = array();
@@ -29,6 +28,8 @@ class Library_active_record {
     private $order_by = null;
     private $order = null;
     private $group_by = array();
+    
+    public $primary_key = 'id';
     
     public function __construct(){
         
@@ -310,7 +311,12 @@ class Library_active_record {
             if( empty($arguments) )
                 trigger_error("find_by_<b>column_name</b>() in Active Record method expects 1 parameter and you dont given anything yet.", E_USER_ERROR);
             
-            $results = $this->db->where($split_name[1], '=', $arguments[0])->results();
+            $this->db->where($split_name[1], '=', $arguments[0]);
+            
+            if( ! is_null($this->limit) )
+                $this->db->limit($this->limit, $this->offset);
+            
+            $results = $this->db->results();
             
             if( count($results) == 1 )
                 return $results[0];
@@ -344,13 +350,27 @@ class Library_active_record {
         
         foreach($relations as $key => $relations)
             if( $name == $key ){
+                
                 $class_name = 'Model_'.$relations[1];
                 $name = new $class_name;
+                $find_by = 'find_by_'.$name->primary_key;
                 
                 if( $relations[0] == 1 ){
+                    $name->limit(1);
+                    return $name->$find_by( $this->$relations[2] );
+                }
+                elseif( $relations[0] == 2 ){
+                    $name->limit(1);
+                    return $name->$find_by( $this->$relations[2] );
+                }
+                elseif( $relations[0] == 3 ){
                     
-                    $find_by_pk = 'find_by_'.$this->primary_key;
-                    return $name->$find_by_pk( $this->$relations[2] );
+                    $name->condition($name->primary_key, '=', 1);
+                    return $name;
+                }
+                elseif( $relations[0] == 4 ){
+                   
+                    return $name->$find_by( $this->$relations[2] );
                 }
             }
     }
