@@ -11,32 +11,50 @@
 class Library_active_record {
     
     protected $table;
-    protected $condition = array();
-    protected $limit = null;
-    protected $offset = null;
-    protected $select = '*';
-    protected $order_by = null;
-    protected $order = null;
-    protected $group_by = array();
+    protected $connection = 'default';
+    protected $primary_key = 'id';
     
-    private $class_vars;
-    private $connection;
-    private $fields = array();
     private $db;
-    public $primary_key = 'id';
+    private $fields = array();
+    private $condition = array();
+    private $limit = null;
+    private $offset = null;
+    private $select = '*';
+    private $order_by = null;
+    private $order = null;
+    private $group_by = array();
     
-    public function __construct( $instance = false, $connection = 'default', $data = array() ){
+    public function __construct(){
         
-        if( ! $instance )
-            return false;
+        // Mendapatkan argument yg diberikan user
+        $args = func_get_args();
         
-        $this->connection   = $connection;
-        $this->class_vars   = $instance;
-        $this->table        = str_replace('AR_', '', get_class($this));
-        $this->db           = new Library_db($connection);
+        // Data baru yg akan disave user.
+        $new_data = array();
         
-        if( ! empty($data) ){
-            $this->fields = $data;
+        // Jika argument pertama diberikan, tipe datanya bisa string ataupun array.
+        if( isset($args[0]) && ! empty($args[0]) ){
+            
+            if( is_array($args[0]) )
+                $new_data = $args[0];
+            else
+                $this->connection = $args[0];
+            
+            // Jika argument ke dua di set, maka itu adalah nama koneksi db-nya.
+            if( isset($args[1]) )
+                $this->connection = $args[1];
+        }
+        
+        // Dapatkan nama tabel dari nama class model
+        $this->table    = str_ireplace( 'Model_', '', get_class($this) );
+        
+        // Inisialisasi koneksi db
+        $this->db       = new Library_db($this->connection);
+        
+        // Jika variable $new_data tidak kosong, berarti ada data yang akan disave.
+        if( ! empty($new_data) ){
+            
+            $this->fields = $new_data;
             return $this->save();
         }
     }
@@ -51,7 +69,7 @@ class Library_active_record {
         
         if( empty($this->fields) ){
             
-            $this->fields = get_object_vars($this->class_vars);
+            $this->fields = get_object_vars($this);
             
             unset(
                 $this->fields['table'],
@@ -82,24 +100,10 @@ class Library_active_record {
         
         $primary_key = $this->primary_key;
         
-        if( $this->$primary_key )
+        if( isset($this->$primary_key) )
             return $this->db->update($this->table, $this->get_fields(), array($this->primary_key => $this->$primary_key)); 
         
         return $this->db->insert( $this->table, $this->get_fields() );
-    }
-    
-    protected function db_fields_to_properties( $db_objcet ){
-        
-        if( is_object($db_objcet) ){
-            foreach( get_object_vars($db_objcet) as $key => $val )
-                $this->$key = $val;
-            
-            return;
-        }
-        
-        if( is_array($db_objcet) )
-            foreach($db_objcet as $db_objcet)
-                $this->db_fields_to_properties($db_object);
     }
     
     /**
@@ -151,6 +155,13 @@ class Library_active_record {
         return $this->db->results();
     }
     
+    /**
+     * Delete record base on $args or $this->condition var
+     * Criteria
+     *
+     * @param mix $args
+     * @return boolean
+     */
     public function delete( $args = null ){
         
         if( ! empty($this->condition) ){
@@ -172,9 +183,11 @@ class Library_active_record {
     }
     
     /**
-     * Update recored tanpa perlu meng-assign
-     * datanya ke dalam class terlebih dahulu.
+     * Update recored without assigning the values
+     * into class properties.
      *
+     * @param mix $args
+     * @return boolean
      */
     public function update( $args = null ){
         
@@ -200,11 +213,15 @@ class Library_active_record {
                         );
     }
     
-    public function find_by_sql(){
-        
-    }
-    
-    // Condition = where
+    /**
+     * Set condition.
+     *
+     * @param string $column
+     * @param string $operator
+     * @param string $value
+     * @param mix $separator
+     * @return object
+     */
     public function condition( $column, $operator, $value, $separator = false ){
         
         $args = array($column, $operator, $value, $separator);
@@ -212,6 +229,13 @@ class Library_active_record {
         return $this;
     }
     
+    /**
+     * Short the results.
+     *
+     * @param string $column
+     * @param string $order ASC | DESC
+     * @return object
+     */
     public function order($column, $order = null){
 	
 	$this->order_by = $column;
@@ -219,12 +243,25 @@ class Library_active_record {
         return $this;
     }
     
+    /**
+     * Select certain column
+     *
+     * @param string | array $select
+     * @return object
+     */
     public function select($select = '*'){
         
         $this->select = $select;
         return $this;
     }
     
+    /**
+     * Limit the results
+     *
+     * @param int $limit
+     * @param int $offset
+     * @return object
+     */
     public function limit($limit, $offset = null){
         
         $this->limit = $limit;
@@ -232,12 +269,24 @@ class Library_active_record {
         return $this;
     }
     
+    /**
+     * Group the results
+     * 
+     * @param string $column1, $column2 etc ...
+     * @return object
+     */
     public function group(){
         
         $this->group_by = func_get_args();
         return $this;
     }
     
+    /**
+     * Dynamic finder method hendler
+     *
+     * @param string $name Method name
+     * @param array $arguments Method arguments
+     */
     public function __call( $name, $arguments = array() ){
         
         $this->db->select()->from($this->table);
