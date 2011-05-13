@@ -18,6 +18,7 @@ class Library_active_record {
     
     protected $table;
     protected $connection = 'default';
+    protected $set_instantiate_class = false;
     
     private $db;
     private $fields = array();
@@ -52,8 +53,10 @@ class Library_active_record {
                 $this->connection = $args[1];
         }
         
+        $child_class_name = get_class($this);
+        
         // Dapatkan nama tabel dari nama class model
-        $this->table    = str_ireplace( 'Model_', '', get_class($this) );
+        $this->table    = str_ireplace( 'Model_', '', $child_class_name );
         
         // Inisialisasi koneksi db
         $this->db       = new Library_db($this->connection);
@@ -64,6 +67,11 @@ class Library_active_record {
             $this->fields = $new_data;
             return $this->save();
         }
+        
+        if( $relations = $this->relations() )
+            foreach( $relations as $relations )
+                if( $relations[0] == 1 )
+                    $this->set_instantiate_class = $child_class_name;
     }
     
     /**
@@ -127,6 +135,7 @@ class Library_active_record {
         
         $this->db->select( $this->select )->from( $this->table );
         
+        // Kondisi dimana kriteria menggunakan primary key. Hasil yg didapat bisa dipastikan hanya 1 row.
         if( $total == 1 ){
             
             if( ! $return = $this->db->where($this->primary_key, '=', $args[0])->row() )
@@ -138,6 +147,7 @@ class Library_active_record {
             return $return;
         }
         
+        // Kondisi dengan jumlah kriteria primary key lebih dari satu. (IN kriteria)
         if( $total > 1 )
             return $this->db->where($this->primary_key, 'IN', $args)->results();
         
@@ -159,7 +169,13 @@ class Library_active_record {
         if( ! is_null($this->limit) )
             $this->db->limit($this->limit, $this->offset);
         
-        return $this->db->results();
+        if($this->set_instantiate_class)
+            $this->db->instantiate_class = $this->set_instantiate_class;
+        
+        $return = $this->db->results();
+        $this->set_instantiate_class = false;
+        
+        return $return;
     }
     
     /**
@@ -347,7 +363,7 @@ class Library_active_record {
         
         if( ! $relations = $this->relations() )
             return false;
-        
+       
         foreach($relations as $key => $relations)
             if( $name == $key ){
                 
@@ -364,8 +380,8 @@ class Library_active_record {
                     return $name->$find_by( $this->$relations[2] );
                 }
                 elseif( $relations[0] == 3 ){
-                    
-                    $name->condition($name->primary_key, '=', 1);
+                    $pk = $name->primary_key;
+                    $name->condition($relations[2], '=', $this->$pk);
                     return $name;
                 }
                 elseif( $relations[0] == 4 ){
