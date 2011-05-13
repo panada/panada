@@ -96,8 +96,69 @@
 	    
 	    <div class="main">
 		<h3 id="init">Inisialisasi</h3>
-		
-		<p>Sebelum proses manipulasi database dilakukan, Anda harus mendeklarasikan <em>instance</em> class yang namanya sesuai dengan nama tabel dengan diawali prefix <strong>AR_</strong>. Untuk class ini, Anda tidak perlu lagi membuat class apapun.</p>
+		<h4>Class Model</h4>
+		<p>Untuk menggunakan Active Record Anda harus membuat sebuah class model yang di extend ke library <strong>Library_active_record</strong>. Setiap class yang dibuat mewakili sebuah tabel yang ada di database. Berikut adalah contoh model dari tabel <strong>posts</strong>:</p>
+<textarea rows="10" cols="50" class="textarea">
+&lt;?php
+class Model_posts extends Library_active_record {
+    
+    public function __construct(){
+        
+        call_user_func_array( 'parent::__construct', func_get_args() );
+        
+    }
+}
+</textarea>
+		<h4>Nama Tabel</h4>
+		<p>Secara default, nama tabel yang akan digunakan mengikuti nama class model tanpa prefix <strong>Model_</strong>. Sebagai contoh jika nama classnya adalah <strong>Model_users</strong>, maka nama tabel yang diwakili adalah <strong>users</strong> dan jika nama modelnya adalah <strong>Model_comments</strong> maka class ini mewakili tabel <strong>comments</strong>.</p>
+		<p>Namun Anda juga bisa menentukan nama lain yang tidak sama dengan nama class. Untuk melakukan hal ini Anda bisa mendeklarasikannya di properti <strong>$this->table</strong>. Berikut adalah contohnya:</p>
+<textarea rows="12" cols="50" class="textarea">
+&lt;?php
+class Model_posts extends Library_active_record {
+    
+    public function __construct(){
+        
+        call_user_func_array( 'parent::__construct', func_get_args() );
+	
+	$this->table = 'dbconnection2';
+        
+    }
+}
+</textarea>		
+		<h4>Primary Key</h4>
+		<p>Setiap class model membutuhkan properti <strong>primary_key</strong>. Secara default Panada menggunakan nama <strong>$this->primary_key</strong>, namun Anda bisa menggunakan nama lain untuk konfigurasi ini. Berikut adalah contoh mendefenisikan nama primary key sesuai dengan nama yang ada di tabel:</p>
+<textarea rows="12" cols="50" class="textarea">
+&lt;?php
+class Model_posts extends Library_active_record {
+    
+    public function __construct(){
+        
+	$this->primary_key = 'table_key';
+	
+        call_user_func_array( 'parent::__construct', func_get_args() );
+        
+    }
+}
+</textarea>		
+		<h4>Koneksi</h4>
+		<p>Jika Anda memiliki <a href="index.html#config">koneksi database</a> lebih dari satu dan ingin menggunakan koneksi tersebut pada class model ini, Anda bisa menggunakannya dengan memberikan nama koneksinya pada properti <strong>$this->connection</strong>. Berikut adalah contohnya:</p>
+<textarea rows="12" cols="50" class="textarea">
+&lt;?php
+class Model_posts extends Library_active_record {
+    
+    public function __construct(){
+        
+	$this->connection = 'db_second_connection';
+	
+        call_user_func_array( 'parent::__construct', func_get_args() );
+        
+    }
+}
+</textarea>		
+	    </div>
+	    <div class="main">
+		<h3 id="use">Penggunaan</h3>
+		<p>Sebelum proses manipulasi database dilakukan, Anda harus mendeklarasikan <em>instance</em> class yang namanya sesuai dengan nama tabel dengan diawali prefix <strong>Model_</strong>.</p>
 		
 <textarea rows="15" cols="50" class="textarea">
 &lt;?php
@@ -111,13 +172,13 @@ class Controller_home extends Panada {
     public function index(){
         
 	// Tabel users
-        $users = new AR_users();
+        $users = new Model_users();
     }
 }
 </textarea>
 		<p>Jika memiliki koneksi database yang lain, argument pertama dengan tipe data <strong>string</strong> bisa diisikan dengan nama koneksinya. Lihat halaman <a href="index.html">Konfigurasi Database</a> untuk menentukan nama koneksi.</p>
 		<code>
-		    $users = new AR_users( '<strong>dbconnection2</strong>' );
+		    $users = new Model_users( '<strong>dbconnection2</strong>' );
 		</code>
 	    </div>
 	    
@@ -228,13 +289,38 @@ $users->save();
 	    </div>
 	    
 	    <div class="main">
-		<h3 id="primary_key">Primary Key</h3>
-		<p>Panada mengasumsikan <strong>Primary Key</strong> dari tabel yang akan digunakan bernama <strong>id</strong>. Namun, jika tabel Anda menggunakan nama yang lain hal ini bisa ditambahkan dengan cara:</p>
+		<h3 id="relational_ar">Relational Active Record</h3>
+		<p>Panada Active Record juga mendukung <strong>Object Relasional</strong>. Tipe relasional yang sudah didukung adalah <a href="#belongs_to">BELONGS_TO</a></a>, <a href="#has_one">HAS_ONE</a>, <a href="#has_many">HAS_MANY</a> dan <a href="has_many">MANY_MANY</a>. Object Relasional digunakan untuk melakukan relasi tabel database antara satu model dengan model lainnya.</p>
+		<p>Untuk melakukan konfigurasi relasi, Anda harus membuat sebuah method bernama <strong>relations()</strong> di dalam class model dengan isi seperti berikut:</p>
+<textarea rows="17" cols="50" class="textarea">
+&lt;?php
+class Model_posts extends Library_active_record {
+    
+    public function __construct(){
+        
+        call_user_func_array( 'parent::__construct', func_get_args() );
+        
+    }
+    
+    public function relations(){
+        
+        return array(
+            'author' => array(self::BELONGS_TO, 'users', 'post_author')
+        );
+    }
+}
+</textarea>
+		<p>Dimana nilai array yang harus diisikan adalah:</p>
 		<code>
-		    $users = new AR_users();<br />
-		    $users->primary_key = 'user_id';<br />
-		    print_r( $users->find(28) );
+		    return array( <strong>string</strong> 'nama_properti' => array( <strong>contant</strong> self::TIPE_RELASI, <strong>string</strong> 'nama_model', <strong>string</strong> 'foreign_key' ) );
 		</code>
+
+		<h4 id="belongs_to">Belongs To</h4>
+		<p>Relasi BELONGS_TO menunjukan relasi sebuah model yang memiliki nilai satu atau lebih terhadap sebuah model lain yang memiliki satu nilai. Contoh relasi ini adalah tabel <strong>posts</strong> yang dimiliki oleh satu orang penulis yang ada di tabel <strong>users</strong>.</p>
+		<h4 id="has_one">Has One</h4>
+		<h4 id="hay_many">Has Many</h4>
+		<h4 id="many_many">Many Many</h4>
+		
 	    </div>
 	    
 	    <div id="discussion" class="main">
