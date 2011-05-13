@@ -34,6 +34,7 @@ class Driver_mysql {
     public $client_flags = 0;
     public $new_link = true;
     public $persistent_connection = false;
+    public $instantiate_class = 'stdClass';
     
     /**
      * Define all properties needed.
@@ -460,7 +461,7 @@ class Driver_mysql {
 	
         $result = $this->query($query);
         
-        while ($row = @mysql_fetch_object($result)) {
+        while ($row = @mysql_fetch_object($result, $this->instantiate_class)) {
             
             if($type == 'array')
                 $return[] = (array) $row;
