@@ -10,7 +10,8 @@
 
 class Library_db {
     
-    protected $driver;
+    private $driver;
+    private $config;
     
     public function __construct( $connection = 'default' ){
         
@@ -33,6 +34,16 @@ class Library_db {
     public function __call($name, $arguments){
         
         return call_user_func_array(array($this->driver, $name), $arguments);
+    }
+    
+    public function __get($name){
+        
+        return $this->driver->$name;
+    }
+    
+    public function __set($name, $value){
+        
+        $this->driver->$name = $value;
     }
     
 } // End Class Library_database
