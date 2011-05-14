@@ -29,6 +29,7 @@ class Library_active_record {
     private $order_by = null;
     private $order = null;
     private $group_by = array();
+    private $results = false;
     
     public $primary_key = 'id';
     
@@ -332,10 +333,17 @@ class Library_active_record {
             if( ! is_null($this->limit) )
                 $this->db->limit($this->limit, $this->offset);
             
-            $results = $this->db->results();
+            if($this->set_instantiate_class)
+                $this->db->instantiate_class = $this->set_instantiate_class;
             
-            if( count($results) == 1 )
+            $results = $this->db->results();
+            $this->set_instantiate_class = false;
+            
+            if( count($results) == 1 ){
+                $pk = $this->primary_key;
+                $this->$pk = $results[0]->$pk;
                 return $results[0];
+            }
             
             return $results;
             
@@ -363,7 +371,7 @@ class Library_active_record {
         
         if( ! $relations = $this->relations() )
             return false;
-       
+        
         foreach($relations as $key => $relations)
             if( $name == $key ){
                 
@@ -372,16 +380,22 @@ class Library_active_record {
                 $find_by = 'find_by_'.$name->primary_key;
                 
                 if( $relations[0] == 1 ){
+                    
                     $name->limit(1);
                     return $name->$find_by( $this->$relations[2] );
                 }
                 elseif( $relations[0] == 2 ){
+                    
+                    $find_by = 'find_by_'.$relations[2];
+                    $pk = $name->primary_key;
+                    
                     $name->limit(1);
-                    return $name->$find_by( $this->$relations[2] );
+                    return $name->$find_by( $this->$pk );
                 }
                 elseif( $relations[0] == 3 ){
+                    
                     $pk = $name->primary_key;
-                    $name->condition($relations[2], '=', $this->$pk);
+                    $name->condition($relations[2], '=', $this->$pk, 'AND');
                     return $name;
                 }
                 elseif( $relations[0] == 4 ){
