@@ -352,7 +352,8 @@ class Driver_mysql {
 	}
 	
 	if( ! empty($this->criteria) ){
-	    $query .= ' WHERE '.implode(' ', $this->criteria);
+	    $cr = implode(' ', $this->criteria);
+	    $query .= ' WHERE ' . rtrim($cr, 'AND, and');
 	    unset($this->criteria);
 	}
 	
