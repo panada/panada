@@ -71,7 +71,7 @@ class Library_active_record {
         
         if( $relations = $this->relations() )
             foreach( $relations as $relations )
-                if( $relations[0] == 1 )
+                if( $relations[0] == 1 || $relations[0] == 4 )
                     $this->set_instantiate_class = $child_class_name;
     }
     
@@ -107,6 +107,20 @@ class Library_active_record {
         return ! empty($this->fields) ? $this->fields : array();
     }
     
+    public function from($tables){
+        
+        if( is_string($tables) ){
+            $this->table = array($this->table, $tables);
+            return;
+        }
+        
+        if( is_array($tables) ){
+            $tables[] = $this->table;
+            $this->table = $tables;
+            return;
+        }
+    }
+    
     /**
      * Saving new record to db
      *
@@ -136,6 +150,10 @@ class Library_active_record {
         
         $this->db->select( $this->select )->from( $this->table );
         
+        if($this->set_instantiate_class){
+            $this->db->instantiate_class = $this->set_instantiate_class;
+        }
+        
         // Kondisi dimana kriteria menggunakan primary key. Hasil yg didapat bisa dipastikan hanya 1 row.
         if( $total == 1 ){
             
@@ -145,12 +163,16 @@ class Library_active_record {
             foreach( get_object_vars($return) as $key => $val )
                 $this->$key = $val;
             
+            $this->set_instantiate_class = false;
             return $return;
         }
         
         // Kondisi dengan jumlah kriteria primary key lebih dari satu. (IN kriteria)
-        if( $total > 1 )
-            return $this->db->where($this->primary_key, 'IN', $args)->results();
+        if( $total > 1 ){
+            $return = $this->db->where($this->primary_key, 'IN', $args)->results();
+            $this->set_instantiate_class = false;
+            return $return;
+        }
         
         // Its time for user defined condition implementation.
         if( ! empty($this->condition) ){
@@ -169,9 +191,6 @@ class Library_active_record {
         
         if( ! is_null($this->limit) )
             $this->db->limit($this->limit, $this->offset);
-        
-        if($this->set_instantiate_class)
-            $this->db->instantiate_class = $this->set_instantiate_class;
         
         $return = $this->db->results();
         $this->set_instantiate_class = false;
@@ -313,7 +332,7 @@ class Library_active_record {
      */
     public function __call( $name, $arguments = array() ){
         
-        $this->db->select()->from($this->table);
+        $this->db->select( $this->select )->from($this->table);
         
         if($name == 'first')
             return $this->db->order_by($this->primary_key, 'ASC')->limit(1)->row();
@@ -376,6 +395,7 @@ class Library_active_record {
             if( $name == $key ){
                 
                 $class_name = 'Model_'.$relations[1];
+                
                 $name = new $class_name;
                 $find_by = 'find_by_'.$name->primary_key;
                 
@@ -387,20 +407,27 @@ class Library_active_record {
                 elseif( $relations[0] == 2 ){
                     
                     $find_by = 'find_by_'.$relations[2];
-                    $pk = $name->primary_key;
+                    $pk = $this->primary_key;
                     
                     $name->limit(1);
                     return $name->$find_by( $this->$pk );
                 }
                 elseif( $relations[0] == 3 ){
                     
-                    $pk = $name->primary_key;
+                    $pk = $this->primary_key;
                     $name->condition($relations[2], '=', $this->$pk, 'AND');
                     return $name;
                 }
                 elseif( $relations[0] == 4 ){
-                   
-                    return $name->$find_by( $this->$relations[2] );
+                    
+                    $pk = $this->primary_key;
+                    
+                    $name->select($relations[1].'.*');
+                    $name->from( $relations[2][0] );
+                    $name->condition($relations[2][0].'.'.$relations[2][2], '=', $this->$pk, 'AND');
+                    $name->condition($relations[2][0].'.'.$relations[2][1], '=', $relations[1].'.'.$name->primary_key, 'AND');
+                    
+                    return $name;
                 }
             }
     }
