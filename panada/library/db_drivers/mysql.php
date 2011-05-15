@@ -353,7 +353,7 @@ class Driver_mysql {
 	
 	if( ! empty($this->criteria) ){
 	    $cr = implode(' ', $this->criteria);
-	    $query .= ' WHERE ' . rtrim($cr, 'AND, and');
+	    $query .= ' WHERE ' . rtrim($cr, 'AND');
 	    unset($this->criteria);
 	}
 	
@@ -490,7 +490,7 @@ class Driver_mysql {
 	    $this->init();
         
         $result = $this->query($query);
-        $return = mysql_fetch_object($result);
+        $return = mysql_fetch_object($result, $this->instantiate_class);
         
         if($type == 'array')
             return (array) $return;
