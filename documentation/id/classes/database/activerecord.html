@@ -122,7 +122,7 @@
 	    <div class="main">
 		<h3 id="init">Inisialisasi</h3>
 		<h4>Class Model</h4>
-		<p>Untuk menggunakan Active Record Anda harus membuat sebuah class model yang di extend ke library <strong>Library_active_record</strong>. Setiap class yang dibuat mewakili sebuah tabel yang ada di database. Berikut adalah contoh model dari tabel <strong>posts</strong>:</p>
+		<p>Untuk menggunakan Active Record Anda harus membuat sebuah class model yang di extend ke class <strong>Library_active_record</strong>. Setiap class yang dibuat mewakili sebuah tabel yang ada di database. Berikut adalah contoh model dari tabel <strong>posts</strong>:</p>
 <textarea rows="10" cols="50" class="textarea">
 &lt;?php
 class Model_posts extends Library_active_record {
@@ -145,7 +145,7 @@ class Model_posts extends Library_active_record {
         
         call_user_func_array( 'parent::__construct', func_get_args() );
 	
-	$this->table = 'dbconnection2';
+	$this->table = 'table_name';
         
     }
 }
@@ -290,7 +290,7 @@ $users->save();
 		<h4 id="condition">Condition</h4>
 		<p>Untuk memfilter data berdasarkan kriteria tertentu, method <strong>condition()</strong> bisa digunakan.</p>
 		<code>
-                    <b>object</b> condition( string $column, string $operator, string $value, mix $seperator = false);
+                    <b>object</b> condition( <strong>string</strong> $column, <strong>string</strong> $operator, <strong>string</strong> $value, <strong>mix</strong> $seperator = false);
                 </code>
                 
                 <h4>Parameter</h4>
@@ -496,7 +496,7 @@ class Model_posts extends Library_active_record {
 		    </tr>
 		    <tr class="odd">
 			<td>foreign_key</td>
-			<td>string</td>
+			<td>string | array</td>
 			<td>Nama kolom dari tabel yang merelasikan dengan sebuah model.</td>
 		    </tr>
 		</tbody>
@@ -505,8 +505,8 @@ class Model_posts extends Library_active_record {
 		<h4 id="belongs_to">Belongs To</h4>
 		<p>Relasi BELONGS_TO menunjukan relasi sebuah model yang memiliki nilai satu atau lebih terhadap sebuah model lain yang memiliki satu nilai. Contoh relasi ini adalah tabel <strong>posts</strong> yang dimiliki oleh satu orang penulis yang ada di tabel <strong>users</strong>.</p>
 		<p>Berikut adalah contoh dari model <strong>posts</strong> yang berelasi BELONGS_TO terhadap model <strong>users</strong>.</p>
-		<p>Model posts:</p>
-<textarea rows="17" cols="50" class="textarea">
+		<p id="model_posts">Model posts:</p>
+<textarea rows="18" cols="50" class="textarea">
 &lt;?php
 class Model_posts extends Library_active_record {
     
@@ -519,7 +519,8 @@ class Model_posts extends Library_active_record {
     public function relations(){
         
         return array(
-            'author' => array(self::BELONGS_TO, 'users', 'post_author')
+            'author' => array(self::BELONGS_TO, 'users', 'post_author'),
+	    'categories' => array(self::MANY_MANY, 'categories', array('post_category', 'category_id', 'post_id') )
         );
     }
 }
@@ -683,8 +684,93 @@ class Controller_home extends Panada {
 </textarea>
 		
 		<h4 id="many_many">Many Many</h4>
-		
-	    </div>
+		<p>Relasi MANY_MANY adalah kombinasi BELONGS_TO dan HAS_MANY. Sebagai contoh, post atau artikel bisa memiliki banyak kategori. Dan begitupula bila dilihat dari sudut pandang yang lain, kategori bisa memiliki lebih dari satu post atau artikel.</p>
+		<p>Untuk melakukan relasi ini, dibutuhkan sebuah tabel bantuan yang menghubungkan antara tabel posts dan categories. Tabel ini sebagai contoh kita beri nama <strong>post_category</strong>, yang kolomnya terdiri dari <strong>post_id</strong> dan <strong>category_id</strong>.</p>
+		<p>Untuk menjalankan relasi ini, dibutuhkan sebuah class model yang bernama <strong>Model_categories</strong>. Berikut contohnya:</p>
+<textarea rows="17" cols="50" class="textarea">
+&lt;?php
+class Model_categories extends Library_active_record {
+    
+    public function __construct(){
+        
+        call_user_func_array( 'parent::__construct', func_get_args() );
+        
+    }
+    
+    public function relations(){
+        
+        return array(
+            'posts' => array(self::MANY_MANY, 'posts', array('post_category', 'post_id', 'category_id') )
+        );
+    }
+}
+</textarea>
+	    <p>Yang perlu diperhatikan adalah array dari nilai return method condition. Parameter <strong>forign_key</strong> diisikan dengan data array seperti contoh berikut:</p>
+	    <code>
+		return array( <br />
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>string</strong> 'nama_properti' => array(<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>int</strong> self::MANY_MANY,<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>string</strong> 'nama_model',<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>array</strong> array( <strong>string</strong> 'tabel_penghubung', <strong>string</strong> 'forign_key1', <strong>string</strong> 'forign_key2' )<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)<br />
+		);
+	    </code>
+	    <p>Dan kalau kita lihat kembali konfigurasi method relations() <a href="#model_posts">Model_posts</a> yang berelasi terhadap cetegories, nilainya adalah kebalikan dari konfigurasi di atas.</p>
+	    <code>
+		'categories' => array(self::MANY_MANY, 'categories', array('post_category', '<strong>category_id</strong>', '<strong>post_id</strong>') )
+	    </code>
+	    <p>Berikut adalah contoh penggunaan relasi MANY_MANY di dalam controller:</p>
+<textarea rows="10" cols="50" class="textarea">
+&lt;?php
+class Model_profiles extends Library_active_record {
+    
+    public function __construct(){
+        
+        call_user_func_array( 'parent::__construct', func_get_args() );
+        
+    }
+}
+</textarea>
+		<p>Berikut adalah contoh penggunaan relasi HAS_ONE model users terhadap model profiles di dalam controller:</p>
+
+<textarea rows="36" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+        
+    }
+    
+    public function index(){
+        
+        $posts = new Model_posts();
+	
+	// Dapatkan artikel dengan id 76
+	$post = $posts->find(76);
+	$categories = $post->categories;
+	
+	// Tampilkan semua kategori dari artikel ber id 76
+	foreach($categories->find() as $category)
+	    echo $category->name.'&lt;br /&gt;';
+    }
+    
+    public function get_posts_by_category(){
+	
+	$categories = new Model_categories();
+	
+	// Dapatkan kategori ber id 3
+	$category = $categories->find(3);
+	$posts = $category->posts;
+	
+	// Tampilkan semua artikel dengan kategori yang ber id 3
+	foreach($posts->find() as $post)
+	    echo $post->title.'&lt;br /&gt;';
+    }
+}
+</textarea>
+    </div>
 	    
 	    <div id="discussion" class="main">
 		<h3>Diskusi</h3>
