@@ -122,6 +122,7 @@
 	    
 	    <div class="main">
 		<h3 id="init">Inisialisasi</h3>
+		<p>Untuk menggunakan Active Record pastikan konfigurasi koneksi ke database sudah benar. Untuk detail panduan koneksi database, silahkan klik di halaman <a href="index.html#config">configuration</a>.</p>
 		<h4>Class Model</h4>
 		<p>Untuk menggunakan Active Record Anda harus membuat sebuah class model yang di extend ke class <strong>Library_active_record</strong>. Setiap class yang dibuat mewakili sebuah tabel yang ada di database. Berikut adalah contoh model dari tabel <strong>posts</strong>:</p>
 <textarea rows="10" cols="50" class="textarea">
@@ -152,7 +153,7 @@ class Model_posts extends Library_active_record {
 }
 </textarea>		
 		<h4>Primary Key</h4>
-		<p>Setiap class model membutuhkan properti <strong>primary_key</strong>. Secara default Panada menggunakan nama <strong>$this->primary_key</strong>, namun Anda bisa menggunakan nama lain untuk konfigurasi ini. Berikut adalah contoh mendefenisikan nama primary key sesuai dengan nama yang ada di tabel:</p>
+		<p>Setiap class model membutuhkan properti <strong>primary_key</strong>. Secara default Panada menggunakan nama <strong>id</strong>, namun Anda bisa menggunakan nama lain untuk konfigurasi ini. Berikut adalah contoh mendefenisikan nama primary key sesuai dengan nama yang ada di tabel:</p>
 <textarea rows="12" cols="50" class="textarea">
 &lt;?php
 class Model_posts extends Library_active_record {
@@ -188,7 +189,7 @@ class Model_posts extends Library_active_record {
 	    <div class="main">
 		<h3 id="use">Penggunaan</h3>
 		<h4 id="sample_tables">Tabel Contoh</h4>
-		<p>Di bawah ini adalah tabel contoh yang digunakan dalam dokumentasi ini.</p>
+		<p>Untuk mempermudah penjelasan setiap feature yang ada, berikut adalah tabel contoh yang digunakan dalam dokumentasi ini.</p>
 <textarea rows="39" cols="60" class="textarea">
 CREATE TABLE `users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
