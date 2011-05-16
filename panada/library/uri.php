@@ -17,7 +17,7 @@ class Library_uri {
      */
     public function __construct(){
 	
-	$this->config = new Library_config();
+	$this->config = Library_config::instance();
     }
     
     /**

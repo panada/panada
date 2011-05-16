@@ -202,8 +202,13 @@ class Library_tools {
         if( is_array($var) ) {
             
             $object = new $class();
-            foreach($var as $key => $val)
-                $object->$key = ($is_recursive) ? self::array_to_object($val, $sub_class) : $val;
+	    
+	    if($is_recursive)
+		foreach($var as $key => $val)
+		    $object->$key = self::array_to_object($val, $sub_class);
+	    else
+		foreach($var as $key => $val)
+		    $object->$key = $val;
             
             return $object;
         }
