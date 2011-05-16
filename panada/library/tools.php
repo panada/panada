@@ -197,13 +197,13 @@ class Library_tools {
      * @param string $class
      * @param boolean $is_recursive
      */
-    public static function array_to_object($var, $class = 'stdClass', $is_recursive = true) {
+    public static function array_to_object($var, $class = 'stdClass', $is_recursive = true, $sub_class = 'stdClass') {
         
         if( is_array($var) ) {
             
             $object = new $class();
             foreach($var as $key => $val)
-                $object->$key = ($is_recursive) ? self::array_to_object($val) : $val;
+                $object->$key = ($is_recursive) ? self::array_to_object($val, $sub_class) : $val;
             
             return $object;
         }
