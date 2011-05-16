@@ -33,6 +33,7 @@ class Driver_sqlite {
     public $client_flags = 0;
     public $new_link = true;
     public $persistent_connection = false;
+    public $instantiate_class = 'stdClass';
     
     /**
      * EN: Define all properties needed.
@@ -298,7 +299,8 @@ class Driver_sqlite {
 	}
 	
 	if( ! empty($this->criteria) ){
-	    $query .= ' WHERE '.implode(' ', $this->criteria);
+	    $cr = implode(' ', $this->criteria);
+	    $query .= ' WHERE ' . rtrim($cr, 'AND');
 	    unset($this->criteria);
 	}
 	
@@ -408,13 +410,19 @@ class Driver_sqlite {
         
         while ( $row = $result->fetchArray(SQLITE3_ASSOC) ) {
             
-            if($type == 'object')
-                $return[] = (object) $row;
-            else
+            if($type == 'object'){
+		
+		if($this->instantiate_class == 'stdClass' )
+		    $return[] = (object) $row;
+		else 
+		    $return[] = Library_tools::array_to_object($row, $this->instantiate_class, false);
+            }
+            else{
                 $return[] = $row;
+            }
         }
         
-        return @$return;
+        return $return;
     }
     
     /**
@@ -435,7 +443,10 @@ class Driver_sqlite {
         $return = $result->fetchArray(SQLITE3_ASSOC);
         
         if($type == 'object')
-            return (object) $return;
+	    if($this->instantiate_class == 'stdClass' )
+		return (object) $return;
+	    else
+		return Library_tools::array_to_object($return, $this->instantiate_class, false);
         else
             return $return;
     }

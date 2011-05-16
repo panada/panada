@@ -34,6 +34,7 @@ class Driver_postgresql {
     public $client_flags = 0;
     public $new_link = true;
     public $persistent_connection = false;
+    public $instantiate_class = 'stdClass';
     
     /**
      * Define all properties needed.
@@ -317,7 +318,8 @@ class Driver_postgresql {
 	}
 	
 	if( ! empty($this->criteria) ){
-	    $query .= ' WHERE '.implode(' ', $this->criteria);
+	    $cr = implode(' ', $this->criteria);
+	    $query .= ' WHERE ' . rtrim($cr, 'AND');
 	    unset($this->create_criteria);
 	}
 	
@@ -420,7 +422,7 @@ class Driver_postgresql {
 	
         $result = $this->query($query);
         
-        while ($row = @pg_fetch_object($result)) {
+        while ($row = @pg_fetch_object($result, null, $this->instantiate_class)) {
             
             if($type == 'array')
                 $return[] = (array) $row;
@@ -448,7 +450,7 @@ class Driver_postgresql {
 	    $this->init();
         
         $result = $this->query($query);
-        $return = pg_fetch_object($result);
+        $return = pg_fetch_object($result, null, $this->instantiate_class);
         
         if($type == 'array')
             return (array) $return;

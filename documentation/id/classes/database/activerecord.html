@@ -65,6 +65,7 @@
 					    <li>
 						<a href="#use">Penggunaan</a>
 						<ul>
+						    <li><a href="#sample_tables">Tabel Contoh</a></li>
 						    <li><a href="#save">Save</a></li>
 						    <li><a href="#find">Find</a></li>
 						    <li><a href="#find_first">Find First</a></li>
@@ -186,6 +187,49 @@ class Model_posts extends Library_active_record {
 	    </div>
 	    <div class="main">
 		<h3 id="use">Penggunaan</h3>
+		<h4 id="sample_tables">Tabel Contoh</h4>
+		<p>Di bawah ini adalah tabel contoh yang digunakan dalam dokumentasi ini.</p>
+<textarea rows="39" cols="60" class="textarea">
+CREATE TABLE `users` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`),
+  KEY `email` (`email`),
+  KEY `password` (`password`)
+) ;
+
+CREATE `profiles` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `description` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+);
+
+CREATE TABLE `posts` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `post_author` int(10) unsigned NOT NULL,
+  `title` varchar(200) NOT NULL,
+  `post` text NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `categories` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+CREATE TABLE `post_category` (
+  `post_id` int(10) unsigned NOT NULL,
+  `category_id` int(10) unsigned NOT NULL,
+  KEY `post_id` (`post_id`,`category_id`)
+);
+</textarea>
+		
 		<p>Sebelum proses manipulasi database dilakukan, Anda harus mendeklarasikan instance class yang namanya sesuai dengan nama tabel dengan diawali prefix <strong>Model_</strong>.</p>
 		
 <textarea rows="15" cols="50" class="textarea">
