@@ -3,7 +3,7 @@
  * Panada
  *
  * Panada is a high performance PHP development framework, yet simple.
- * Not only in contect about how to use it, but it also how the core system run.
+ * Not only in contexts about how to use it, but it also how the core system run.
  * Version: 0.3.1
  *
  * @package	Panada
