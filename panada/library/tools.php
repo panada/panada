@@ -193,15 +193,17 @@ class Library_tools {
      * EN: Convert an array into object
      * ID: Konversi dari array ke object
      *
-     * @param array
+     * @param array $var
+     * @param string $class
+     * @param boolean $is_recursive
      */
-    public static function array_to_object($var) {
+    public static function array_to_object($var, $class = 'stdClass', $is_recursive = true) {
         
         if( is_array($var) ) {
             
-            $object = new stdClass();
+            $object = new $class();
             foreach($var as $key => $val)
-                $object->$key = self::array_to_object($val);
+                $object->$key = ($is_recursive) ? self::array_to_object($val) : $val;
             
             return $object;
         }
