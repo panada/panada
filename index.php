@@ -2,8 +2,9 @@
 /**
  * Panada
  *
- * Light and simple PHP 5 base Framework.
- * Version: 0.2.1
+ * Panada is a high performance PHP development framework, yet simple.
+ * Not only in contect about how to use it, but it also how the core system run.
+ * Version: 0.3.1
  *
  * @package	Panada
  * @author	Iskandar Soesman
