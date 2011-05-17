@@ -324,6 +324,7 @@ class Panada {
             $arr_file_name = array_splice($file, $arr_file_key, count($file) );
             
             $file_name = implode('_', $arr_file_name);
+            $file_name = str_replace(APPLICATION.'view/', '', $file_path.$file_name);
             
             $this->output($file_name, $data[0]);
         }
@@ -452,7 +453,7 @@ call_user_func_array(array($Panada, $method), $request);
  * EN: Close db connection if present
  * ID: Tutup koneksi databse jika ada.
  */
-@mysql_close($Panada->db->link);
+@$Panada->db->close();
 
 /**
  * EN: End of the cicle, lets clear the memory. Do we need this??
