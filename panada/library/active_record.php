@@ -29,6 +29,7 @@ class Library_active_record {
     private $order_by = null;
     private $order = null;
     private $group_by = array();
+    private $holder_memory_cache = array();
     
     public $primary_key = 'id';
     
@@ -100,7 +101,8 @@ class Library_active_record {
                 $this->fields['fields'],
                 $this->fields['db'],
                 $this->fields['primary_key'],
-                $this->fields['set_instantiate_class']
+                $this->fields['set_instantiate_class'],
+                $this->fields['holder_memory_cache']
             );
         }
         
@@ -133,7 +135,12 @@ class Library_active_record {
         if( isset($this->$primary_key) )
             return $this->db->update($this->table, $this->get_fields(), array($this->primary_key => $this->$primary_key)); 
         
-        return $this->db->insert( $this->table, $this->get_fields() );
+        if( $this->db->insert( $this->table, $this->get_fields() ) ){
+            $insert_id = $this->db->insert_id();
+            return $insert_id;
+        }
+        
+        return false;
     }
     
     /**
@@ -147,6 +154,7 @@ class Library_active_record {
         
         $args = func_get_args();
         $total = count($args);
+        $cache_key = 'select' . $this->select.$this->table;
         
         $this->db->select( $this->select )->from( $this->table );
         
@@ -157,42 +165,78 @@ class Library_active_record {
         // Kondisi dimana kriteria menggunakan primary key. Hasil yg didapat bisa dipastikan hanya 1 row.
         if( $total == 1 ){
             
+            $cache_key .= $this->primary_key . '=' . $args[0];
+            $cache_key = md5($cache_key);
+            
+            if( $cached = Library_local_memory_cache::get($cache_key) )
+                return $cached;
+            
             if( ! $return = $this->db->where($this->primary_key, '=', $args[0])->row() )
                 return false;
             
             foreach( get_object_vars($return) as $key => $val )
                 $this->$key = $val;
             
+            Library_local_memory_cache::set($cache_key, $return);
+            
             $this->set_instantiate_class = false;
+            
             return $return;
         }
         
         // Kondisi dengan jumlah kriteria primary key lebih dari satu. (IN kriteria)
         if( $total > 1 ){
+            
+            $cache_key .= $this->primary_key . 'IN' . http_build_query($args);
+            $cache_key = md5($cache_key);
+            
+            if( $cached = Library_local_memory_cache::get($cache_key) )
+                return $cached;
+            
             $return = $this->db->where($this->primary_key, 'IN', $args)->results();
+            
+            Library_local_memory_cache::set($cache_key, $return);
+            
             $this->set_instantiate_class = false;
+            
             return $return;
         }
         
         // Its time for user defined condition implementation.
         if( ! empty($this->condition) ){
-            foreach($this->condition as $condition)
+            foreach($this->condition as $condition){
+                $cache_key .= $condition[0].$condition[1].$condition[2].$condition[3];
                 $this->db->where($condition[0], $condition[1], $condition[2], $condition[3]);
+            }
             
             unset($this->condition);
         }
         
-        if( ! empty($this->group_by) )
+        if( ! empty($this->group_by) ){
+            $cache_key .= http_build_query($this->group_by);
             call_user_func_array(array($this->db, 'group_by'), $this->group_by);
+        }
         
         // Set order if user defined it
-        if( ! is_null($this->order_by) )
+        if( ! is_null($this->order_by) ){
+            $cache_key .= $this->order_by.$this->order;
             $this->db->order_by($this->order_by, $this->order);
+        }
         
-        if( ! is_null($this->limit) )
+        if( ! is_null($this->limit) ){
+            $cache_key .= $this->limit.$this->offset;
             $this->db->limit($this->limit, $this->offset);
+        }
+        
+        $cache_key = md5($cache_key);
+        
+        if( $cached = Library_local_memory_cache::get( $cache_key ) )
+            return $cached;
         
         $return = $this->db->results();
+        
+        Library_local_memory_cache::set($cache_key, $return);
+        
         $this->set_instantiate_class = false;
         
         return $return;
@@ -332,13 +376,18 @@ class Library_active_record {
      */
     public function __call( $name, $arguments = array() ){
         
+        $cache_key = 'select' . $this->select.$this->table;
         $this->db->select( $this->select )->from($this->table);
         
-        if($name == 'first')
+        if($name == 'first'){
+            $cache_key .= $this->primary_key.'ASC';
             return $this->db->order_by($this->primary_key, 'ASC')->limit(1)->row();
+        }
         
-        if($name == 'last')
+        if($name == 'last'){
+            $cache_key .= $this->primary_key.'DESC';
             return $this->db->order_by($this->primary_key, 'DESC')->limit(1)->row();
+        }
         
         $split_name = explode('find_by_', strtolower($name) );
         
@@ -347,23 +396,36 @@ class Library_active_record {
             if( empty($arguments) )
                 trigger_error("find_by_<b>column_name</b>() in Active Record method expects 1 parameter and you dont given anything yet.", E_USER_ERROR);
             
+            $cache_key .= $split_name[1] . '=' . $arguments[0];
             $this->db->where($split_name[1], '=', $arguments[0]);
             
-            if( ! is_null($this->limit) )
+            if( ! is_null($this->limit) ){
+                $cache_key .= $this->limit.$this->offset;
                 $this->db->limit($this->limit, $this->offset);
+            }
             
             if($this->set_instantiate_class)
                 $this->db->instantiate_class = $this->set_instantiate_class;
             
+            $cache_key = md5($cache_key);
+            
+            if( $cached = Library_local_memory_cache::get( $cache_key ) )
+                return $cached;
+        
             $results = $this->db->results();
             $this->set_instantiate_class = false;
             
             if( count($results) == 1 ){
+                
                 $pk = $this->primary_key;
                 $this->$pk = $results[0]->$pk;
+                
+                Library_local_memory_cache::set($cache_key, $results[0]);
+                
                 return $results[0];
             }
             
+            $this->memory_cache_set($cache_key, $results);
             return $results;
             
         }
@@ -431,4 +493,6 @@ class Library_active_record {
                 }
             }
     }
+    
+    
 }
