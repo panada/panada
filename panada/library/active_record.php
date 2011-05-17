@@ -29,7 +29,6 @@ class Library_active_record {
     private $order_by = null;
     private $order = null;
     private $group_by = array();
-    private $holder_memory_cache = array();
     
     public $primary_key = 'id';
     
@@ -101,8 +100,7 @@ class Library_active_record {
                 $this->fields['fields'],
                 $this->fields['db'],
                 $this->fields['primary_key'],
-                $this->fields['set_instantiate_class'],
-                $this->fields['holder_memory_cache']
+                $this->fields['set_instantiate_class']
             );
         }
         
