@@ -578,7 +578,7 @@ class Driver_postgresql {
         
         $bits = $wheres = array();
         foreach ( (array) array_keys($data) as $k )
-            $bits[] = "`$k` = '$data[$k]'";
+            $bits[] = "$k = '$data[$k]'";
         
 	if( ! empty($this->criteria) ){
 	    $criteria = implode(' ', $this->criteria);
