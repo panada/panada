@@ -130,11 +130,15 @@ class Library_active_record {
         
         $primary_key = $this->primary_key;
         
-        if( isset($this->$primary_key) )
-            return $this->db->update($this->table, $this->get_fields(), array($this->primary_key => $this->$primary_key)); 
+        if( isset($this->$primary_key) ){
+            $return = $this->db->update($this->table, $this->get_fields(), array($this->primary_key => $this->$primary_key));
+            $this->fields = array();
+            return $return;
+        }
         
         if( $this->db->insert( $this->table, $this->get_fields() ) ){
             $insert_id = $this->db->insert_id();
+            $this->fields = array();
             return $insert_id;
         }
         
