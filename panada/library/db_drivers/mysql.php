@@ -443,9 +443,6 @@ class Driver_mysql {
             return false;
         }
         
-        if( $insert_id = mysql_insert_id($this->link) )
-            $this->insert_id = $insert_id;
-        
         return $query;
     }
     

@@ -273,6 +273,11 @@ $users->save();
 		</code>
 		
 		<h4 id="find">Find</h4>
+		<p>Secara default method <strong>find()</strong> tanpa argument apapun akan menampilkan semua data yang ada di dalam tabel.</p>
+		<code>
+		    $users = new Model_users();<br />
+		    print_r( $users->find() );
+		</code>
 		<p>Untuk mendapatkan data dengan <strong>id 28</strong>, bisa dilakukan dengan cara:</p>
 		<code>
 		    $users = new Model_users();<br />
@@ -548,7 +553,7 @@ class Model_posts extends Library_active_record {
 		</table>
 
 		<h4 id="belongs_to">Belongs To</h4>
-		<p>Relasi BELONGS_TO menunjukan relasi sebuah model yang memiliki nilai satu atau lebih terhadap sebuah model lain yang memiliki satu nilai. Contoh relasi ini adalah tabel <strong>posts</strong> yang dimiliki oleh satu orang penulis yang ada di tabel <strong>users</strong>.</p>
+		<p>Relasi BELONGS_TO menunjukan relasi sebuah model yang memiliki satu nilai atau lebih terhadap sebuah model lain yang memiliki satu nilai. Contoh relasi ini adalah sejumlah artikel yang ada di dalam tabel <strong>posts</strong> yang dimiliki oleh satu orang penulis yang ada di tabel <strong>users</strong>.</p>
 		<p>Berikut adalah contoh dari model <strong>posts</strong> yang berelasi BELONGS_TO terhadap model <strong>users</strong>.</p>
 		<p id="model_posts">Model posts:</p>
 <textarea rows="18" cols="50" class="textarea">
@@ -607,7 +612,7 @@ class Controller_home extends Panada {
 	$data = $posts->find(10);
 	
 	// Output artikel dengan id 10
-	print_r($data);
+	echo 'id: '.$data->title.' Title: '.$data->title.'&lt;br /&gt;';
 	
 	// Output penulis dari artikel ber id 10
 	print_r($posts->author);
@@ -655,8 +660,8 @@ class Controller_home extends Panada {
     public function posts_selection(){
 	
 	$users = new Model_users();
-	$user = $users->find(20);
-	$posts = $user->posts;
+	$users->find(20);
+	$posts = $users->posts;
 	
 	/**
 	 * Object post yang sudah didapat bisa
@@ -765,18 +770,6 @@ class Model_categories extends Library_active_record {
 		'categories' => array(self::MANY_MANY, 'categories', array('post_category', '<strong>category_id</strong>', '<strong>post_id</strong>') )
 	    </code>
 	    <p>Berikut adalah contoh penggunaan relasi MANY_MANY di dalam controller:</p>
-<textarea rows="10" cols="50" class="textarea">
-&lt;?php
-class Model_profiles extends Library_active_record {
-    
-    public function __construct(){
-        
-        call_user_func_array( 'parent::__construct', func_get_args() );
-        
-    }
-}
-</textarea>
-		<p>Berikut adalah contoh penggunaan relasi HAS_ONE model users terhadap model profiles di dalam controller:</p>
 
 <textarea rows="36" cols="50" class="textarea">
 &lt;?php

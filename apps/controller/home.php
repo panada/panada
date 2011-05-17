@@ -9,10 +9,8 @@ class Controller_home extends Panada {
     
     public function index(){
         
-        $users = new Model_users();
-        $users->name = 'Budi';
-        $users->email = 'budi@budi.com';
-        $users->password = 'mypassword';
-        var_dump($users->save());
+        $views['page_title']    = 'hello world!';
+        $views['body']          = 'This is hello world body!';
+        $this->view_index($views);
     }
 }
