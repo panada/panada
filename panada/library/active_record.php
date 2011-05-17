@@ -334,8 +334,13 @@ class Library_active_record {
      * @param string | array $select
      * @return object
      */
-    public function select($select = '*'){
+    public function select(){
         
+        $select = func_get_args();
+        
+        if( empty($select) )
+            $select = '*';
+            
         $this->select = $select;
         return $this;
     }
@@ -491,6 +496,4 @@ class Library_active_record {
                 }
             }
     }
-    
-    
 }
