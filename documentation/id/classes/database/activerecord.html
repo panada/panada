@@ -124,10 +124,10 @@
 		<h3 id="init">Inisialisasi</h3>
 		<p>Untuk menggunakan Active Record pastikan konfigurasi koneksi ke database sudah benar. Untuk detail panduan koneksi database, silahkan klik di halaman <a href="index.html#config">configuration</a>.</p>
 		<h4>Class Model</h4>
-		<p>Untuk menggunakan Active Record Anda harus membuat sebuah class model yang di extend ke class <strong>Library_active_record</strong>. Setiap class yang dibuat mewakili sebuah tabel yang ada di database. Berikut adalah contoh model dari tabel <strong>posts</strong>:</p>
+		<p>Untuk menggunakan Active Record Anda harus membuat sebuah class model yang di extend ke class <strong>Library_active_record</strong>. Setiap class yang dibuat mewakili sebuah tabel yang ada di database. Berikut adalah contoh model dari tabel <strong>users</strong>:</p>
 <textarea rows="10" cols="50" class="textarea">
 &lt;?php
-class Model_posts extends Library_active_record {
+class Model_users extends Library_active_record {
     
     public function __construct(){
         
@@ -141,7 +141,7 @@ class Model_posts extends Library_active_record {
 		<p>Namun Anda juga bisa menentukan nama lain yang tidak sama dengan nama class. Untuk melakukan hal ini Anda bisa mendeklarasikannya di properti <strong>$this->table</strong>. Berikut adalah contohnya:</p>
 <textarea rows="12" cols="50" class="textarea">
 &lt;?php
-class Model_posts extends Library_active_record {
+class Model_users extends Library_active_record {
     
     public function __construct(){
         
@@ -202,7 +202,7 @@ CREATE TABLE `users` (
   KEY `password` (`password`)
 ) ;
 
-CREATE `profiles` (
+CREATE TABLE `profiles` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL,
   `description` text NOT NULL,

@@ -26,6 +26,7 @@
                         <ul>
                             <li class="active"><a href="index.html#about">Tentang Panada</a></li>
                             <li><a href="index.html#feature">Keunggulan (<em>Feature</em>)</a></li>
+			    <li><a href="index.html#requirement">Requirement</a></li>
                             <li><a href="index.html#license">Lisensi</a></li>
                         </ul>
                     </li>
@@ -75,8 +76,10 @@
         <div class="content">
             <div id="about" class="lead">
                 <h2>Tentang Panada</h2>
-                <p>Panada adalah framework sederhana dan simpel untuk pembuatan website berbasiskan
-                        PHP 5. Panada dikembangkan dengan tujuan membantu para pengembang website untuk
+		<p>Panada adalah high performance PHP development framework nan sederhana. Tidak hanya sederhana dalam pengertian cara penggunaanya, tetapi juga bagaimana core system-nya bekerja.</p>
+                <p>Dari awal dikembangkan, Panada secara khusus ditujukan untuk membantu para PHP developer yang ingin mengembangkan aplikasi web  berferforma tinggi (high performance web application). Namun demikian, prinsip kesederhanaan <strong>KISS</strong> atau <strong>Keep it Simple Son!</strong> selalu menjadi prinsip utama dalam setiap pengembangan.</p>
+		<p>Panada adalah framework sederhana dan simpel untuk pembuatan website berbasiskan
+                        PHP 5.2 ke atas. Framework ini dikembangkan dengan tujuan membantu para pengembang website untuk
                         bekerja lebih cepat, lebih mudah dan lebih alamiah dalam penulisan kode.</p>
                 <p>Setiap
                         komponen didesign untuk bisa saling memanfaatkan sumberdaya (<em>resource</em>) dari komponen-komponen
@@ -131,6 +134,19 @@
                     </li>
             </ul>
 			
+	    </div>
+	    <div id="requirement" class="main">
+		<h3>Requirement</h3>
+		<p>Panada setidaknya membutuhkan:</p>
+		<ul>
+		    <li><a href="http://php.net/" target="_blank">PHP</a> versi 5.2 atau yang lebih baru.</li>
+		    <li>Web server seperti <a href="http://httpd.apache.org/" target="_blank">Apache</a>, <a href="http://wiki.nginx.org/Main" target="_blank">Nginx</a> ataupun <a href="www.lighttpd.net/" target="_blank">Lighttpd</a> untuk menjalankan PHP.</li>
+		</ul>
+		<p>Untuk meningkatkan performa aplikasi, disarankan juga untuk menggunakan:</p>
+		<ul>
+		    <li><a href="http://php.net/manual/en/book.apc.php" target="_blank">APC</a> ataupun <a href="http://eaccelerator.net/" target="_blank">eAccelerator</a> untuk eksekusi script PHP yang lebih cepat.</li>
+		    <li><a href="http://memcached.org/" target="_blank"> Memcached</a> untuk meminimalisir overhead pada database.</li>
+		</ul>
 	    </div>
             <div id="license" class="main">
                 <h3>Lisensi</h3>

@@ -10,10 +10,10 @@ $CONFIG['index_file']                       = 'index.php/'; /* Remove this index
  * EN: Database configuration.
  */
 $CONFIG['db']['default']['driver']          = 'mysql';
-$CONFIG['db']['default']['host']            = ''; 
-$CONFIG['db']['default']['user']            = ''; 
+$CONFIG['db']['default']['host']            = 'localhost'; 
+$CONFIG['db']['default']['user']            = 'root'; 
 $CONFIG['db']['default']['password']        = ''; 
-$CONFIG['db']['default']['database']        = '';
+$CONFIG['db']['default']['database']        = 'samples';
 $CONFIG['db']['default']['charset']         = 'utf8';
 $CONFIG['db']['default']['collate']         = 'utf8_general_ci';
 $CONFIG['db']['default']['persistent']      = false;
