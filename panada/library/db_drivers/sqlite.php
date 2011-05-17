@@ -607,7 +607,7 @@ class Driver_sqlite {
 	    unset($this->criteria);
 	}
 	
-        if ( is_array( $where ) ){
+        elseif ( is_array( $where ) ){
             foreach ( $where as $c => $v )
                 $wheres[] = "$c = '" . $this->escape( $v ) . "'";
 	    
