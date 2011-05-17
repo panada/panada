@@ -76,7 +76,7 @@
                             <li><a href="request.html">Request</a></li>
                             <li><a href="rest.html">RESTfull</a></li>
 			    <li><a href="memcached.html">Memcached</a></li>
-                            <li><a href="mongodb.html">Mongodb</a></li>
+                            
                             <li><a href="apc.html">APC</a></li>
 			    <li><a href="tools.html">Tools</a></li>
                         </ul>
@@ -152,13 +152,13 @@ $CONFIG['session']['session_db_name'] = 'sessions';
 			    </ul>	
 			    <p>Jika Anda memilih database, Anda harus mempersiapkan sebuah table dengan struktur seperti berikut:</p>
 <textarea rows="8" cols="50" class="textarea">
-CREATE TABLE IF NOT EXISTS `sessions` (
-  `session_id` varchar(32) NOT NULL,
-  `session_data` text NOT NULL,
-  `session_expiration` int(11) NOT NULL,
-  PRIMARY KEY (`session_id`),
-  KEY `session_expiration` (`session_expiration`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+CREATE TABLE sessions (
+  session_id varchar(32) NOT NULL,
+  session_data text NOT NULL,
+  session_expiration int NOT NULL,
+  PRIMARY KEY (session_id),
+  KEY session_expiration (session_expiration)
+);
 </textarea>
 			</li>
 			<li>
