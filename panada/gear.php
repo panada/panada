@@ -323,10 +323,12 @@ class Panada {
             // EN: Second, construct the file name
             $arr_file_name = array_splice($file, $arr_file_key, count($file) );
             
+            $folder_name = implode('/', $file);
             $file_name = implode('_', $arr_file_name);
-            $file_name = str_replace(APPLICATION.'view/', '', $file_path.$file_name);
             
-            $this->output($file_name, $data[0]);
+            $file_path = ltrim($folder_name.'/'.$file_name, '/');
+            
+            $this->output($file_path, $data[0]);
         }
     }
     
