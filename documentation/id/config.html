@@ -138,7 +138,7 @@ class Controller_home extends Panada {
                 <code>
                     $CONFIG['index_file'] = '';
                 </code>
-                <p>Berikutnya Anda juga perlu melakukan konfigurasi pada sisi webserver. Berikut ini penjelasan pengaturannya untuk webserver <a href="http://httpd.apache.org/" target="_blank">Apache</a> dan <a href="http://wiki.nginx.org/Main" target="_blank">Nginx</a>.
+                <p>Berikutnya Anda juga perlu melakukan konfigurasi pada sisi webserver. Berikut ini penjelasan pengaturannya untuk webserver <a href="http://httpd.apache.org/" target="_blank">Apache</a>, <a href="http://wiki.nginx.org/Main" target="_blank">Nginx</a> dan <a href="http://www.lighttpd.net/" target="_blank">Lighttpd</a>.
                 <ul>
                     <li>
                         <h4>Apache</h4>
@@ -171,19 +171,51 @@ location ~ /index.php/ {
     include fastcgi_params;
 }
 </textarea>
+			<p>Restart service Nginx.</p>
                         <div class="notice">
                             <strong>Catatan</strong>: Jika Anda menggunakan Nginx, konfigurasi di atas harus dilakukan. Jika tidak, aplikasi tidak akan ter-<em>routing</em> dengan benar.<br />Anda juga harus menghapus comment yang ada pada file <strong>panada/library/uri.php</strong> pada method <strong>extract_uri_string()</strong> sehingga menjadi seperti berikut:
                         </div>
 <textarea rows="6" cols="50" class="textarea">
-$path = str_replace($GLOBALS['CONFIG']['base_url'], '', ($this->is_https())?'https://':'http://' . $_SERVER['SERVER_NAME']. $_SERVER['REQUEST_URI']);
+$path = str_replace($this->config->base_url, '', ($this->is_https())?'https://':'http://' . $_SERVER['SERVER_NAME']. $_SERVER['REQUEST_URI']);
 $path = $this->remove_query($path);
 if (trim($path, '/') != '' && trim($path, '/') != 'index.php')
     return '/'.$path;
 </textarea>
                     </li>
-                </ul>
+		    <li>
+			<h4>Lighttpd</h4>
+			<p>Buka dan edit file konfigurasi lighttpd, umumnya berada di:</p>
+			<code>
+			    /etc/lighttpd/lighttpd.conf
+			</code>
+			<p>Edit pada bagian:</p>
+			<code>
+			    server.document-root  = "/www/var/your_site/"
+			</code>
+			<p>Pastikan modul <strong>mod_rewrite</strong> sudah tersedia:</p>
+<textarea rows="8" cols="50" class="textarea">
+server.modules = (
+    "mod_access",
+    "mod_alias",
+    "mod_accesslog",
+    "mod_compress",
+    "mod_rewrite"
+)
+</textarea>
+			
+			<p>Kemudian tambahkan setting url rewrite seperti berikut di bagian manapun di dalam file konfigurasi Lighttpd:</p>
+<textarea rows="6" cols="50" class="textarea">
+url.rewrite-once = (
+    "/(.*)\.(.*)" => "$0",
+    "/(css|files|img|js|stats)/" => "$0",
+    "^/([^.]+)$" => "index.php/$1"
+)   
+</textarea>
+			<p>Restart service lighttpd.</p>
+		    </li>
+		</ul>
                
-                <p>Jika konfigurasi webserver sudah dilakukan, baik itu Apache ataupun Nginx, maka "index.php" di dalam url seharusnya sudah bisa dihilangkan.</p>
+                <p>Jika konfigurasi webserver sudah dilakukan, baik itu Apache, Nginx ataupun Lighttpd, maka "index.php" di dalam url seharusnya sudah bisa dihilangkan.</p>
                 <code>
                     http://www.mysite.com/home
                 </code>
