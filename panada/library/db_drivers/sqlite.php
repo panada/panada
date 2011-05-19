@@ -396,6 +396,79 @@ class Driver_sqlite {
     }
     
     /**
+     * Previously called get_results.
+     * 
+     * @since Version 0.3.1
+     * @param mix
+     * @param array
+     * @param array
+     * @return object
+     */
+    public function find_all( $table = false, $where = array(), $fields = array() ){
+	
+	if( ! $table )
+	    return $this->results( $this->_command() );
+	
+	$column = '*';
+	
+	if( ! empty($fields) )
+	    $column = $fields;
+	
+	$this->select($column)->from($table);
+	
+	if ( ! empty( $where ) ) {
+	    
+	    $separator = 'AND';
+            foreach($where as $key => $val){
+		
+		if( end($where) == $val)
+		    $separator = false;
+		
+		$this->where($key, '=', $val, $separator);
+            }
+        }
+	
+        return $this->find_all();
+    }
+    
+    /**
+     * Previously called get_row.
+     * 
+     * @since Version 0.3.1
+     * @param mix
+     * @param array
+     * @param array
+     * @return object
+     */
+    public function find_one( $table = false, $where = array(), $fields = array() ){
+	
+	if( ! $table )
+	    return $this->row( $this->_command() );
+	
+	$column = '*';
+	
+	if( ! empty($fields) )
+	    $column = $fields;
+	
+	$this->select($column)->from($table);
+	
+	if ( ! empty( $where ) ) {
+	    
+	    $separator = 'AND';
+	    foreach($where as $key => $val){
+		
+		if( end($where) == $val)
+		    $separator = false;
+		
+		$this->where($key, '=', $val, $separator);
+	    }
+	}
+	
+	return $this->find_one();
+	
+    }
+    
+    /**
      * Get multiple records
      *
      * @param string $query The sql query
@@ -478,24 +551,7 @@ class Driver_sqlite {
      */
     public function get_row($table, $where = array(), $fields = array()){
         
-        if( ! empty($fields) )
-	    call_user_func_array(array($this, 'select'), $fields);
-	
-	$this->from($table);
-	
-	if ( ! empty( $where ) ) {
-	    
-	    $separator = 'AND';
-            foreach($where as $key => $val){
-		
-		if( end($where) == $val)
-		    $separator = false;
-		
-		$this->where($key, '=', $val, $separator);
-            }
-        }
-	
-        return $this->row();
+        return $this->find_one( $table, $where, $fields );
         
     }
     
@@ -509,24 +565,7 @@ class Driver_sqlite {
      */
     public function get_results($table, $where = array(), $fields = array()){
         
-	if( ! empty($fields) )
-	    call_user_func_array(array($this, 'select'), $fields);
-	
-	$this->from($table);
-	
-	if ( ! empty( $where ) ) {
-	    
-	    $separator = 'AND';
-            foreach($where as $key => $val){
-		
-		if( end($where) == $val)
-		    $separator = false;
-		
-		$this->where($key, '=', $val, $separator);
-            }
-        }
-	
-        return $this->results();
+	return $this->find_all( $table, $where, $fields );
     }
     
     /**
