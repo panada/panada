@@ -410,32 +410,6 @@ class Driver_postgresql {
     }
     
     /**
-     * Get multiple records
-     *
-     * @param string $query The sql query
-     * @param string $type return data type option. the default is "object"
-     */
-    public function results($query, $type = 'object'){
-        
-	if( is_null($query) )
-	    $query = $this->_command();
-	
-        $result = $this->query($query);
-        
-        while ($row = @pg_fetch_object($result, null, $this->instantiate_class)) {
-            
-            if($type == 'array')
-                $return[] = (array) $row;
-            else
-                $return[] = $row;
-        }
-        
-        @pg_free_result($result);
-        
-        return @$return;
-    }
-    
-    /**
      * Previously called get_results.
      * 
      * @since Version 0.3.1
@@ -506,6 +480,32 @@ class Driver_postgresql {
 	
 	return $this->find_one();
 	
+    }
+    
+    /**
+     * Get multiple records
+     *
+     * @param string $query The sql query
+     * @param string $type return data type option. the default is "object"
+     */
+    public function results($query, $type = 'object'){
+        
+	if( is_null($query) )
+	    $query = $this->_command();
+	
+        $result = $this->query($query);
+        
+        while ($row = @pg_fetch_object($result, null, $this->instantiate_class)) {
+            
+            if($type == 'array')
+                $return[] = (array) $row;
+            else
+                $return[] = $row;
+        }
+        
+        @pg_free_result($result);
+        
+        return @$return;
     }
     
     /**
