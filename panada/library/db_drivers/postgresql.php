@@ -483,6 +483,24 @@ class Driver_postgresql {
     }
     
     /**
+     * Get value directly from single field. Previusly called get_var().
+     *
+     * @since Version 0.3.1
+     * @param string @query
+     * @return string|int Depen on it record value.
+     */
+    public function find_var( $query = null ){
+	
+	if( is_null($query) )
+	    $query = $this->_command();
+	
+        $result = $this->row($query);
+        $key = array_keys(get_object_vars($result));
+        
+        return $result->$key[0];
+    }
+    
+    /**
      * Get multiple records
      *
      * @param string $query The sql query
@@ -539,13 +557,7 @@ class Driver_postgresql {
      */
     public function get_var($query = null) {
         
-	if( is_null($query) )
-	    $query = $this->_command();
-	
-        $result = $this->row($query);
-        $key = array_keys(get_object_vars($result));
-        
-        return $result->$key[0];
+	return $this->find_var($query);
     }
     
     /**
