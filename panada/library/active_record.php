@@ -173,7 +173,7 @@ class Library_active_record {
             if( $cached = Library_local_memory_cache::get($cache_key) )
                 return $cached;
             
-            if( ! $return = $this->db->where($this->primary_key, '=', $args[0])->row() )
+            if( ! $return = $this->db->where($this->primary_key, '=', $args[0])->find_one() )
                 return false;
             
             foreach( get_object_vars($return) as $key => $val )
@@ -195,7 +195,7 @@ class Library_active_record {
             if( $cached = Library_local_memory_cache::get($cache_key) )
                 return $cached;
             
-            $return = $this->db->where($this->primary_key, 'IN', $args)->results();
+            $return = $this->db->where($this->primary_key, 'IN', $args)->find_all();
             
             Library_local_memory_cache::set($cache_key, $return);
             
@@ -235,7 +235,7 @@ class Library_active_record {
         if( $cached = Library_local_memory_cache::get( $cache_key ) )
             return $cached;
         
-        $return = $this->db->results();
+        $return = $this->db->find_all();
         
         Library_local_memory_cache::set($cache_key, $return);
         
@@ -388,12 +388,12 @@ class Library_active_record {
         
         if($name == 'first'){
             $cache_key .= $this->primary_key.'ASC';
-            return $this->db->order_by($this->primary_key, 'ASC')->limit(1)->row();
+            return $this->db->order_by($this->primary_key, 'ASC')->limit(1)->find_one();
         }
         
         if($name == 'last'){
             $cache_key .= $this->primary_key.'DESC';
-            return $this->db->order_by($this->primary_key, 'DESC')->limit(1)->row();
+            return $this->db->order_by($this->primary_key, 'DESC')->limit(1)->find_one();
         }
         
         $split_name = explode('find_by_', strtolower($name) );
@@ -419,7 +419,7 @@ class Library_active_record {
             if( $cached = Library_local_memory_cache::get( $cache_key ) )
                 return $cached;
         
-            $results = $this->db->results();
+            $results = $this->db->find_all();
             $this->set_instantiate_class = false;
             
             if( count($results) == 1 ){
@@ -500,4 +500,6 @@ class Library_active_record {
                 }
             }
     }
+    
+    
 }
