@@ -144,7 +144,7 @@ foreach ($data as $data) {
 		
 		<p>Untuk mendapatkan single variable/field, bisa dilakukan dengan cara berikut:</p>
 <textarea rows="3" cols="50" class="textarea">
-$data = $this->db->get_var("SELECT COUNT(*) FROM table_name");
+$data = $this->db->find_var("SELECT COUNT(*) FROM table_name");
 echo $data;
 </textarea>
 	    </div>
