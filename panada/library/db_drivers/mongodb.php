@@ -15,28 +15,28 @@
 if( ! extension_loaded('mongo') )
     Library_error::_500('Mongo extension that required by Library_mongodb is not available.');
 
-class Library_mongodb extends Mongo {
+class Driver_mongodb extends Mongo {
     
-    public $database;
+    private $database;
+    private $db_config;
+    private $connection;
     
-    public function __construct( $connection = 'default' ){
+    public function __construct( $config_instance, $connection_name ){
         
-        $this->config = Library_config::instance();
-        
-        $this->database = $this->config->mongodb->$connection->database;
-        $host = $this->config->mongodb->$connection->host;
+        $this->db_config = $config_instance;
+        $this->connection = $connection_name;
         
         /**
          * EN: This is the mongodb connection option. Eg: array('replicaSet' => true, 'connect' => false)
          */
-        $connection_options = array();
+        $connection_options = (array) $this->db_config->options;
         
-        parent::__construct($host, $connection_options);
+        parent::__construct($this->db_config->host, $connection_options);
     }
     
     public function collection($collection){
         
-        $database = $this->database;
+        $database = $this->db_config->database;
         $db = $this->$database;
         return $db->$collection;
     }
@@ -92,4 +92,5 @@ class Library_mongodb extends Mongo {
         
         return new MongoId($_id);
     }
-}
+    
+} // End Driver_mysql Class
