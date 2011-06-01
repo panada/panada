@@ -15,7 +15,7 @@ class Library_db {
     
     public function __construct( $connection = 'default' ){
         
-        $this->config = new Library_config();
+        $this->config = Library_config::instance();
         
         require_once 'db_drivers/'.$this->config->db->$connection->driver.'.php';
         
