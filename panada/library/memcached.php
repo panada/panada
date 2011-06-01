@@ -24,7 +24,7 @@ class Library_memcached extends Memcache {
     
     public function __construct(){
         
-        $this->config = new Library_config();
+        $this->config = Library_config::instance();
         
         foreach($this->config->memcached_host as $host)
 	    $this->addServer($host, $this->config->memcached_port);

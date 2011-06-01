@@ -74,7 +74,7 @@ class Library_session {
     
     public function __construct(){
 	
-	$this->config			= new Library_config();
+	$this->config			= Library_config::instance();
 	$this->sesion_expire		= $this->config->session->session_expire;
 	$this->session_name		= $this->config->session->session_name;
 	$this->session_cookie_expire	= $this->config->session->session_cookie_expire;

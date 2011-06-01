@@ -21,7 +21,7 @@ class Library_mongodb extends Mongo {
     
     public function __construct( $connection = 'default' ){
         
-        $this->config = new Library_config();
+        $this->config = Library_config::instance();
         
         $this->database = $this->config->mongodb->$connection->database;
         $host = $this->config->mongodb->$connection->host;
