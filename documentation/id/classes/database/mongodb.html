@@ -51,7 +51,7 @@
                                     <li><a href="query_builder.html">Query Builder</a></li>
 				    <li><a href="activerecord.html">Active Record</a></li>
                                     <li><a href="manual_query.html">Manual Query</a></li>
-				    <li><a href="mongodb.html">Mongodb</a></li>
+				    <li><a href="mongodb.html">MongoDB</a></li>
 				</ul>
 			    </li>
 			    
@@ -81,7 +81,7 @@
                 <p>MongoDB adalah scalable, high-performance, open source database NoSQL yang berorientasikan dokumen. Dengan MongoDB memungkinkan penyimpanan data dilakukan tanpa perlu diawali dengan pembuatan skema database. Setiap data disimpan berformat herarki, di mana setiap record bisa memiliki herarki yang berbeda dengan record lainnya dalam satu collection/tabel yang sama.</p>
                 <p>Lebih lanjut mengenai MongoDB bisa dilihat di <a href="http://www.mongodb.org" target="_blank">http://www.mongodb.org</a>.</p>
                 <p><strong>Untuk menggunakan Library ini, pastikan PHP Anda telah terinstall ekstensi Mongo</strong>.</p>
-                <p>Library Mongodb Panada merupakan inheritance dari class Mongo yang telah tersedia secara natif oleh ekstensi Mongo. Hal ini berarti, semua resources yang ada pada class Mongo, bisa juga langsung digunakan pada Library Mongodb.</p>
+                <p>Driver MongoDB Panada merupakan inheritance dari class Mongo yang telah tersedia secara natif oleh ekstensi Mongo. Hal ini berarti, semua resources yang ada pada class Mongo, bisa juga langsung digunakan pada Driver MongoDB.</p>
                 <p>Di bawah adalah beberapa contoh dari method-method yang paling sering digunakan.</p>
                 <p>Informasi lebih lanjut mengenai MongoDB API's silahkan lihat <a target="_blank" href="http://www.mongodb.org/display/DOCS/Tutorial">http://www.mongodb.org/display/DOCS/Tutorial</a></p>
             </div>
@@ -90,48 +90,46 @@
                 <h3>Konfigurasi</h3>
 		
                 <p>Konfigurasi dilakukan di file <strong>apps/config.php</strong></p>
-                <p>Bagian-bagian yang harus dilengkapi adalah host, dan nama databse.</p>
-<textarea rows="3" cols="50" class="textarea">
-$CONFIG['mongodb']['default']['host'] = 'localhost, otherhost';
-$CONFIG['mongodb']['default']['database'] = 'database_name';
+                <p>Berikut adalah contohnya:</p>
+<textarea rows="10" cols="50" class="textarea">
+$CONFIG['db']['default']['driver']      = 'mongodb';
+$CONFIG['db']['default']['host']        = 'localhost'; 
+$CONFIG['db']['default']['user']        = ''; 
+$CONFIG['db']['default']['password']    = ''; 
+$CONFIG['db']['default']['database']    = 'my_database';
+$CONFIG['db']['default']['charset']     = '';
+$CONFIG['db']['default']['collate']     = '';
+$CONFIG['db']['default']['persistent']  = false;
+$CONFIG['db']['default']['options']     = array();
 </textarea>
-                <p>Jika ingin menambahkan opsi tambahan pada connection option, bisa dilakukan pada bagian <b>panada/library/mongodb.php:25</b></p>
+                <p>Jika ingin menambahkan opsi tambahan pada connection option, bisa dilakukan pada bagian <b>$CONFIG['db']['default']['options']</b></p>
                 <p>Lebih lanjut mengenai connection option, silahkan lihat di <a href="http://www.php.net/manual/en/mongo.construct.php" target="_blank">http://www.php.net/manual/en/mongo.construct.php</a></p>
                 <p>Berikut adalah contoh connection option replica set dengan setting auto-connect false:</p>
                 <code>
-                    $connection_options = array('replicaSet' => true, 'connect' => false);
+                    $CONFIG['db']['default']['options'] = array('replicaSet' => true, 'connect' => false);
                 </code>
-		<p>Berikut adalah contoh penerapan connection option pada constructor dari calss Library_mongodb:</p>
-<textarea rows="15" cols="50" class="textarea">
-    public function __construct( $connection = 'default' ){
-        
-        $this->config = new Library_config();
-        
-        $this->database = $this->config->mongodb->$connection->database;
-        $host = $this->config->mongodb->$connection->host;
-        
-        /**
-         * EN: This is the mongodb connection option. Eg: array('replicaSet' => true, 'connect' => false)
-         */
-        $connection_options = array('replicaSet' => true, 'connect' => false);
-        
-        parent::__construct($host, $connection_options);
-    }
-</textarea>
+		<p>Jika koneksi ke server MongoDB lebih dari satu (misalnya pada penggunaan <strong>Replica Set</strong>), berikut adalah contohnya:</p>
+		<code>
+                    $CONFIG['db']['default']['host'] = 'localhost, 192.168.10.20, 192.168.10.21';
+                </code>
             </div>
             
             <div class="main">
                 <h3 id="init">Inisialisasi</h3>
-                <p>Inisialisasi Library Mongodb bisa dilakukan di dalam constructor ataupun method yang bersangkutan.</p>
+                <p>Jika MongoDB digunakan sebagai database default, inisialisasinya sama seperti database yang lainnya.</p>
                 <code>
-                    $this->mongodb = new Library_mongodb();
+                    $this->db = new Library_db();
+                </code>
+		<p>Atau jika MongoDB terletak pada <a href="index.html#config">setting koneksi</a> dengan nama koneksi <strong>mongodb</strong>, maka contoh inisalisasinya:</p>
+		<code>
+                    $this->mongodb = new Library_db('mongodb');
                 </code>
 		
             </div>
             
             <div class="main">
                 <h3 id="connect">Connect</h3>
-                <p>Secara default, ketika Library Mongodb maka koneksi ke Mongo server akan dibuat. Namun feature ini bisa dinonaktifkan dengan menambahkan parameter <b>array('connect' => false); </b> seperti contoh di atas.</p>
+                <p>Secara default, ketika Library MongoDB maka koneksi ke Mongo server akan dibuat. Namun feature ini bisa dinonaktifkan dengan menambahkan parameter <b>array('connect' => false); </b> seperti contoh di atas.</p>
                 <p>Jika setting ini dilakukan, maka setiap akan melakukan request data perlu diinisialisasi konkeksi baru, dengan method:</p>
                 <code>
                     $this->mongodb-><b>connect</b>();
