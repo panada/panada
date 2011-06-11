@@ -27,14 +27,14 @@ $CONFIG['auto_loader'] = array();
  * EN: Session configuration.
  */
 
-$CONFIG['session']['session_expire']        = 7200; /* 2 hour. */
-$CONFIG['session']['session_name']          = 'PAN_SID';
-$CONFIG['session']['session_cookie_expire'] = 0;
-$CONFIG['session']['session_cookie_path']   = '/';
-$CONFIG['session']['session_cookie_secure'] = false;
-$CONFIG['session']['session_cookie_domain'] = '';
-$CONFIG['session']['session_store']         = 'native'; /* The option is 'native' or 'db' */
-$CONFIG['session']['session_db_name']       = 'sessions';
+$CONFIG['session']['expiration']    = 7200; /* 2 hour. */
+$CONFIG['session']['name']          = 'PAN_SID';
+$CONFIG['session']['cookie_expire'] = 0;
+$CONFIG['session']['cookie_path']   = '/';
+$CONFIG['session']['cookie_secure'] = false;
+$CONFIG['session']['cookie_domain'] = '';
+$CONFIG['session']['driver']        = 'native'; /* The option is 'native', 'cookie', cache or 'database' */
+$CONFIG['session']['storage_name']  = 'sessions';
 
 // MySQL Table structure for session table
 /*
@@ -70,9 +70,7 @@ $CONFIG['alias_method'] = 'alias';
 $CONFIG['request_filter_type'] = FILTER_SANITIZE_STRING;
 
 /**
- * EN:  Memcached configuration
+ * EN:  Cache configuration
  */
-/*
-$CONFIG['memcached_host'] = array('localhost');
-$CONFIG['memcached_port'] = 11211;
-*/
+$CONFIG['cache']['default']['driver']   = 'default'; /* The option is 'default', 'apc' or 'memcached' */
+$CONFIG['cache']['default']['host']     = '';
