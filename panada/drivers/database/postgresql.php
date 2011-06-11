@@ -8,7 +8,7 @@
  * @since	Version 0.3
  */
 
-class Driver_postgresql {
+class Drivers_database_postgresql {
     
     protected $port = 5432;
     protected $column = '*';

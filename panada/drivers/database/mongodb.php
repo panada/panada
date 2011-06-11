@@ -13,13 +13,14 @@
  * EN: Makesure Memcache extension is enabled
  */
 if( ! extension_loaded('mongo') )
-    Library_error::_500('Mongo extension that required by Library_mongodb is not available.');
+    Library_error::_500('Mongo extension that required by Driver_mongodb is not available.');
 
-class Driver_mongodb extends Mongo {
+class Drivers_database_mongodb extends Mongo {
     
     private $database;
     private $db_config;
     private $connection;
+    private $criteria = array();
     
     public function __construct( $config_instance, $connection_name ){
         
@@ -91,6 +92,44 @@ class Driver_mongodb extends Mongo {
     public function _id($_id = null){
         
         return new MongoId($_id);
+    }
+    
+    public function select(){
+        
+	$this->documents = func_get_args();
+	
+        if( ! empty($this->documents) )
+	    $this->documents = array_fill_keys($this->documents, 1);
+        
+        return $this;
+    }
+    
+    public function from($collection_name){
+	
+	$this->collection_name = $collection_name;
+	
+	return $this;
+    }
+    
+    public function where($document, $operator = null, $value = null, $separator = false){
+        
+        if( is_array($document) )
+            $this->criteria = $document;
+        
+        if($operator == '=')
+            $this->criteria = array($document => $value);
+        
+        return $this;
+    }
+    
+    public function find_all(){
+        
+        return $this->collection($this->collection_name)->find( $this->criteria, $this->documents );
+    }
+    
+    public function find_one(){
+        
+        return $this->collection($this->collection_name)->findOne( $this->criteria, $this->documents );
     }
     
 } // End Driver_mysql Class

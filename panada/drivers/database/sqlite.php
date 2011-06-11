@@ -8,7 +8,7 @@
  * @since	Version 0.3
  */
 
-class Driver_sqlite {
+class Drivers_database_sqlite {
     
     protected $column = '*';
     protected $distinct_ = false;

@@ -17,9 +17,9 @@ class Library_db {
         
         $this->config = Library_config::instance();
         
-        require_once 'db_drivers/'.$this->config->db->$connection->driver.'.php';
+        require_once GEAR.'drivers/database/'.$this->config->db->$connection->driver.'.php';
         
-        $class_name = 'Driver_'.$this->config->db->$connection->driver;
+        $class_name = 'Drivers_database_'.$this->config->db->$connection->driver;
         
         $this->driver = new $class_name( $this->config->db->$connection, $connection );
     }

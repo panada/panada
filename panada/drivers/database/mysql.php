@@ -8,7 +8,7 @@
  * @since	Version 0.1
  */
 
-class Driver_mysql {
+class Drivers_database_mysql {
     
     protected $port = 3306;
     protected $column = '*';
