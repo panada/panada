@@ -34,6 +34,8 @@ class Library_active_record {
     
     public function __construct(){
         
+        $this->cache = new Library_cache();
+        
         // Mendapatkan argument yg diberikan user
         $args = func_get_args();
         
@@ -170,7 +172,7 @@ class Library_active_record {
             $cache_key .= $this->primary_key . '=' . $args[0];
             $cache_key = md5($cache_key);
             
-            if( $cached = Library_local_memory_cache::get($cache_key) )
+            if( $cached = $this->cache->get($cache_key) )
                 return $cached;
             
             if( ! $return = $this->db->where($this->primary_key, '=', $args[0])->find_one() )
@@ -179,7 +181,7 @@ class Library_active_record {
             foreach( get_object_vars($return) as $key => $val )
                 $this->$key = $val;
             
-            Library_local_memory_cache::set($cache_key, $return);
+            $this->cache->set($cache_key, $return);
             
             $this->set_instantiate_class = false;
             
@@ -192,12 +194,12 @@ class Library_active_record {
             $cache_key .= $this->primary_key . 'IN' . http_build_query($args);
             $cache_key = md5($cache_key);
             
-            if( $cached = Library_local_memory_cache::get($cache_key) )
+            if( $cached = $this->cache->get($cache_key) )
                 return $cached;
             
             $return = $this->db->where($this->primary_key, 'IN', $args)->find_all();
             
-            Library_local_memory_cache::set($cache_key, $return);
+            $this->cache->set($cache_key, $return);
             
             $this->set_instantiate_class = false;
             
@@ -232,12 +234,12 @@ class Library_active_record {
         
         $cache_key = md5($cache_key);
         
-        if( $cached = Library_local_memory_cache::get( $cache_key ) )
+        if( $cached = $this->cache->get( $cache_key ) )
             return $cached;
         
         $return = $this->db->find_all();
         
-        Library_local_memory_cache::set($cache_key, $return);
+        $this->cache->set($cache_key, $return);
         
         $this->set_instantiate_class = false;
         
@@ -416,7 +418,7 @@ class Library_active_record {
             
             $cache_key = md5($cache_key);
             
-            if( $cached = Library_local_memory_cache::get( $cache_key ) )
+            if( $cached = $this->cache->get( $cache_key ) )
                 return $cached;
         
             $results = $this->db->find_all();
@@ -427,7 +429,7 @@ class Library_active_record {
                 $pk = $this->primary_key;
                 $this->$pk = $results[0]->$pk;
                 
-                Library_local_memory_cache::set($cache_key, $results[0]);
+                $this->cache->set($cache_key, $results[0]);
                 
                 return $results[0];
             }
