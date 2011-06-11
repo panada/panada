@@ -4,21 +4,53 @@
  * This class useful when you calling an object twice or
  * more in a single run time.
  *
- * @package	Panada
- * @subpackage	Library
+ * @package	Driver
+ * @subpackage	Cache
  * @author	Iskandar Soesman
  * @since	Version 0.3
  */
 
-class Library_local_memory_cache {
+class Drivers_cache_default {
     
     static private $holder = array();
+    
+    public function __construct(){
+        // none
+    }
     
     /**
      * @param string $key
      * @return mix
      */
-    public static function get($key = false){
+    public function get($key){
+        
+        return self::_get($key);
+    }
+    
+    /**
+     * @param string $key
+     * @param mix
+     * @return void
+     */
+    public function set($key, $value){
+        
+        return self::_set($key, $value);
+    }
+    
+    /**
+     * @param string $key
+     * @return void
+     */
+    public function delete($key){
+        
+        return self::_delete($key);
+    }
+    
+    /**
+     * @param string $key
+     * @return mix
+     */
+    public static function _get($key = false){
         
         if( isset(self::$holder[$key]) )
             return self::$holder[$key];
@@ -31,7 +63,7 @@ class Library_local_memory_cache {
      * @param mix
      * @return void
      */
-    public static function set($key, $value){
+    public static function _set($key, $value){
         
         self::$holder[$key] = $value;
     }
@@ -40,7 +72,7 @@ class Library_local_memory_cache {
      * @param string $key
      * @return void
      */
-    public static function delete($key){
+    public static function _delete($key){
         
         unset(self::$holder[$key]);
     }
