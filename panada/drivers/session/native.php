@@ -1,9 +1,9 @@
 <?php defined('THISPATH') or die('Can\'t access directly!');
 /**
- * Panada session hendler.
+ * Panada PHP native session hendler.
  *
- * @package	Library
- * @subpackage	Session Driver
+ * @package	Driver
+ * @subpackage	Session
  * @author	Iskandar Soesman
  * @since	Version 0.1
  */
@@ -11,20 +11,17 @@
 class Drivers_session_native {
     
     /**
-    * @var integer	EN: This variable set the maximum life in seconds of a session file on the server since last activity.
-    *			ID: Parameter ini menentukan berapa lama file session disimpan di server sejak aktivitas terakhir.
+    * @var integer	This variable set the maximum life in seconds of a session file on the server since last activity.
     */
     public $sesion_expire = 120; //minute or 2 hour
     
     /**
      * @var string	EN: Change the default PHP session name (PHPSESSIONID) to Panada session name (PAN_SID).
-     * 			ID: Merubah nama cookie session PHP dari PHPSESSIONID menjadi PAN_SID.
      */
     public $session_name = 'PAN_SID';
     
     /**
      * @var integer	EN: Sets the session cookies to N seconds.
-     *			ID: Menentukan berapa lama cookie session disimpan di browser.
      */
     public $session_cookie_expire = 0;
     
@@ -35,25 +32,21 @@ class Drivers_session_native {
     
     /**
      * @var string	EN: Session cookie path.
-     * 			ID: Lokasi path di mana cookie berlaku.
      */
     public $session_cookie_path = '/';
     
     /**
      * @var boolean	EN: Define the cookie only working on https or not.
-     *			ID: Menentukan apakah cookie hanya berlaku pada https atau tidak.
      */
     public $session_cookie_secure = false;
     
     /**
      * @var string	EN: Define the cookie domain.
-     *			ID: Menentukan domain cookie.
      */
     public $session_cookie_domain = '';
     
     /**
      * @var string	EN: Where we store the session? file (PHP native) or db.
-     *			ID: Di mana kita akan simpan session? file (PHP native) atau db.
      */
     public $session_store = 'native';
     
@@ -61,7 +54,6 @@ class Drivers_session_native {
      * Class constructor.
      *
      * EN: Set costumized PHP Session parameter.
-     * ID: Modifikasi konfigurasi PHP session.
      *
      * @return void
      */
@@ -103,14 +95,13 @@ class Drivers_session_native {
     }
     
     /**
-     * EN: Get next time in minute. Default is 300 sec or five minute.
-     * ID: Dapatkan waktu beberapa menit kemudian. Default lima menit.
+     * EN: Get next time in second. Default is 300 sec or five minute.
      *
      * @return int
      */
-    protected function upcoming_time($m = 5){
+    protected function upcoming_time($s = 300){
 	
-	return strtotime('+'.$m.' min');
+	return strtotime('+'.$s.' sec');
     }
     
     /**
@@ -120,7 +111,6 @@ class Drivers_session_native {
      *     requests). For security reasons it's recommended that you manually call regenerate() whenever a visitor's
      *     session privileges are escalated (e.g. they logged in, accessed a restricted area, etc).
      *     
-     * ID: Hapus file/record session yang ada dan ganti dengan yang baru dengan tetep menggunakan nilai yang sama.
      *
      * @return void
      */

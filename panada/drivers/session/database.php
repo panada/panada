@@ -1,8 +1,17 @@
 <?php defined('THISPATH') or die('Can\'t access directly!');
+/**
+ * Panada Database session hendler.
+ *
+ * @package	Driver
+ * @subpackage	Session
+ * @author	Iskandar Soesman
+ * @since	Version 0.3
+ */
 
+// Load the Drivers_session_native class for inheritance.
 require_once 'native.php';
 
-class Drivers_session_database extends Driver_session_native {
+class Drivers_session_database extends Drivers_session_native {
     
     /**
      * @var string	EN: Session table name.
@@ -55,13 +64,12 @@ class Drivers_session_database extends Driver_session_native {
      */
     public function session_read($id){
 	
-	$sql = "SELECT session_data FROM $this->session_db_name
-		WHERE session_id ='$id' AND session_expiration > ".time().")";
+	$session = $this->db->select('session_data')->from( $this->session_db_name )->where('session_id', '=', $id, 'and')->where('session_expiration', '>', time())->find_one();
 	
-	if( $session = $this->db->row($sql) )
+	if( $session )
 	    return $session->session_data;
-	else
-	    return false;
+	
+	return false;
     }
     
     /**
@@ -72,7 +80,7 @@ class Drivers_session_database extends Driver_session_native {
      */
     private function session_exist($id){
 	
-	$session = $this->db->find_var("SELECT COUNT(session_id) FROM $this->session_db_name WHERE session_id = '$id'");
+	$session = $this->db->select('session_id')->from( $this->session_db_name )->where('session_id', '=', $id)->find_one();
 	return $session;
     }
     
@@ -85,20 +93,13 @@ class Drivers_session_database extends Driver_session_native {
      */
     public function session_write($id, $sess_data){
 	
-	$sess_data	= $this->db->escape($sess_data);
 	$curent_session = $this->session_exist($id);
 	$expiration	= $this->upcoming_time($this->sesion_expire);
 	
-	if( $curent_session == 0 ){
-	    
-	    $sql = "INSERT INTO $this->session_db_name (session_id, session_data, session_expiration) VALUES('$id', '$sess_data', '$expiration')";
-	}
-	else {
-	    
-	    $sql  = "UPDATE $this->session_db_name SET session_data ='$sess_data', session_expiration = '$expiration' WHERE session_id ='$id'";
-	}
-	
-	return $this->db->query($sql);
+	if( $curent_session )
+	    return $this->db->update($this->session_db_name, array('session_id' => $id, 'session_data' => $sess_data, 'session_expiration' => $expiration), array('session_id' => $id) ); 
+	else
+	    return $this->db->insert($this->session_db_name, array('session_id' => $id, 'session_data' => $sess_data, 'session_expiration' => $expiration)); 
     }
     
     /**
@@ -120,6 +121,7 @@ class Drivers_session_database extends Driver_session_native {
      */
     public function session_gc($maxlifetime = ''){
 	
-	return $this->db->query( "DELETE FROM $this->session_db_name WHERE session_expiration < ".time().")" );
+	return $this->db->where( 'session_expiration', '<', time() )->delete( $this->session_db_name );
     }
-}
+    
+} // End Drivers_session_database

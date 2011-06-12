@@ -2,8 +2,8 @@
 /**
  * Cookies base session.
  *
- * @package	Library
- * @subpackage	Session Driver
+ * @package	Driver
+ * @subpackage	Session
  * @author	Iskandar Soesman
  * @since	Version 0.3
  */
@@ -19,14 +19,24 @@ class Drivers_session_cookie {
     protected $hash_key = 'my_key';
     protected $curent_values = array();
     
+    /**
+     * Define all properties needed.
+     *
+     * @param object $config_instance
+     * @return void
+     */
     public function __construct( $config_instance ){
         
         $this->session_name             = $config_instance->name;
-        $this->session_cookie_expire    = $config_instance->cookie_expire;
+        $this->session_cookie_expire    = $config_instance->expiration;
         $this->session_cookie_path      = $config_instance->cookie_path;
         $this->session_cookie_secure    = $config_instance->cookie_secure;
         $this->session_cookie_domain    = $config_instance->cookie_domain;
         
+	/**
+	 * If set, we have to make sure this value is valid.
+	 * If true, then update the expiration date. Otherwise, destroy it!
+	 */
         if( isset( $_COOKIE[$this->session_name] ) ){
             
             parse_str( $_COOKIE[$this->session_name], $current_values);
@@ -34,6 +44,8 @@ class Drivers_session_cookie {
             
             if( ! $this->validates_cookie_values() )
                 $this->destroy();
+	    else
+		$this->set_session_values();
         }
         else{
             
@@ -43,6 +55,12 @@ class Drivers_session_cookie {
         
     }
     
+    /**
+     * Create a second cooke that content the md5sum of the values.
+     * Every new value will update this checksum too.
+     * 
+     * @return void
+     */
     protected function set_check_sum(){
         
         $curent_values = $this->curent_values;
@@ -54,6 +72,11 @@ class Drivers_session_cookie {
         $this->set_cookie($this->cookie_chek_sum_name, $values);
     }
     
+    /**
+     * Validating cookie value against the md5sum.
+     *
+     * @return bool
+     */
     public function validates_cookie_values(){
         
         $curent_values = $this->curent_values;
@@ -68,6 +91,11 @@ class Drivers_session_cookie {
         return true;
     }
     
+    /**
+     * Buid and construct the cooke values.
+     *
+     * @return void
+     */
     protected function set_session_values(){
         
         $value = http_build_query($this->curent_values);
@@ -77,18 +105,28 @@ class Drivers_session_cookie {
         $this->set_check_sum();
     }
     
+    /**
+     * Create a cooke
+     *
+     * @return void
+     */
     protected function set_cookie($name, $value = ''){
         
         setcookie(
             $name,
             $value,
-            $this->session_cookie_expire,
+            time() + $this->session_cookie_expire,
             $this->session_cookie_path,
             $this->session_cookie_domain,
             $this->session_cookie_secure
         );
     }
     
+    /**
+     * Set a new session value.
+     *
+     * @return void
+     */
     public function set($name, $value = ''){
         
 	if( is_array($name) ) {
@@ -102,6 +140,11 @@ class Drivers_session_cookie {
         $this->set_session_values();
     }
     
+    /**
+     * Get a session value base on the name.
+     *
+     * @return mix
+     */
     public function get( $name = null ){
         
         $curent_values = $this->curent_values;
@@ -119,12 +162,22 @@ class Drivers_session_cookie {
 	return false;
     }
     
+    /**
+     * Remove certain session value.
+     *
+     * @return void
+     */
     public function remove($name){
         
         unset( $this->curent_values[$name] );
         $this->set_session_values();
     }
     
+    /**
+     * Clear all session value
+     *
+     * @return void
+     */
     public function destroy(){
         
         $this->curent_values = array();
@@ -133,6 +186,11 @@ class Drivers_session_cookie {
         $this->set_session_values();
     }
     
+    /**
+     * Clear the values and remove the cookie.
+     *
+     * @return void
+     */
     public function session_clear_all(){
         
         header('Expires: Mon, 1 Jul 1998 01:00:00 GMT');
@@ -150,7 +208,11 @@ class Drivers_session_cookie {
         $this->set_session_values();
     }
     
+    /**
+     * Regenerate the cooke id
+     */
     public function regenerate(){
         return;
     }
-}
+    
+} // End Drivers_session_cookie
