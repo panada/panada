@@ -58,4 +58,5 @@ class Library_cache {
         
         $this->driver->$name = $value;
     }
+    
 } // End Library_cache

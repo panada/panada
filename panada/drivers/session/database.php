@@ -80,7 +80,7 @@ class Drivers_session_database extends Drivers_session_native {
      */
     private function session_exist($id){
 	
-	$session = $this->db->select('session_id')->from( $this->session_db_name )->where('session_id', '=', $id)->find_one();
+	$session = $this->db->select('session_data', 'session_expiration')->from( $this->session_db_name )->where('session_id', '=', $id)->find_one();
 	return $session;
     }
     
@@ -96,10 +96,16 @@ class Drivers_session_database extends Drivers_session_native {
 	$curent_session = $this->session_exist($id);
 	$expiration	= $this->upcoming_time($this->sesion_expire);
 	
-	if( $curent_session )
+	if( $curent_session ){
+	    
+	    if( (md5($curent_session->session_data) == md5($sess_data)) && ($curent_session->session_expiration > time() + 10 ) )
+		return true;
+	    
 	    return $this->db->update($this->session_db_name, array('session_id' => $id, 'session_data' => $sess_data, 'session_expiration' => $expiration), array('session_id' => $id) ); 
-	else
+	}
+	else{
 	    return $this->db->insert($this->session_db_name, array('session_id' => $id, 'session_data' => $sess_data, 'session_expiration' => $expiration)); 
+	}
     }
     
     /**

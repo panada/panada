@@ -73,4 +73,5 @@ $CONFIG['request_filter_type'] = FILTER_SANITIZE_STRING;
  * EN:  Cache configuration
  */
 $CONFIG['cache']['default']['driver']   = 'default'; /* The option is 'default', 'apc' or 'memcached' */
-$CONFIG['cache']['default']['host']     = '';
+
+$CONFIG['secret_key']                   = '_put_your_random_string_here_';

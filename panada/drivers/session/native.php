@@ -13,7 +13,7 @@ class Drivers_session_native {
     /**
     * @var integer	This variable set the maximum life in seconds of a session file on the server since last activity.
     */
-    public $sesion_expire = 120; //minute or 2 hour
+    public $sesion_expire = 7200; //second or 2 hour
     
     /**
      * @var string	EN: Change the default PHP session name (PHPSESSIONID) to Panada session name (PAN_SID).

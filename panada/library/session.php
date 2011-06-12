@@ -16,6 +16,7 @@ class Library_session {
     public function __construct(){
         
         $this->config = Library_config::instance();
+	$this->config->session->secret_key = $this->config->secret_key;
         
         require_once GEAR.'drivers/session/'.$this->config->session->driver.'.php';
         

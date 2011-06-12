@@ -32,6 +32,7 @@ class Drivers_session_cookie {
         $this->session_cookie_path      = $config_instance->cookie_path;
         $this->session_cookie_secure    = $config_instance->cookie_secure;
         $this->session_cookie_domain    = $config_instance->cookie_domain;
+	$this->hash_key			= $config_instance->secret_key;
         
 	/**
 	 * If set, we have to make sure this value is valid.
