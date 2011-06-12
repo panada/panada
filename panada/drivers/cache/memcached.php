@@ -35,4 +35,70 @@ class Drivers_cache_memcached extends Memcache {
 	 */
 	//$this->setCompressThreshold(20000, 0.2);
     }
+    
+    /**
+     * @param string $key
+     * @param mix $value
+     * @param int $expire
+     * @return void
+     */
+    public function set_value( $key, $value, $expire = 0 ){
+        
+        return $this->set($key, $value, 0, $expire);
+    }
+    
+    /**
+     * Cached the value if the key doesn't exists,
+     * other wise will false.
+     *
+     * @param string $key
+     * @param mix $value
+     * @param int $expire
+     * @return void
+     */
+    public function add_value( $key, $value, $expire = 0 ){
+        
+	return $this->add($key, $value, 0, $expire); 
+    }
+    
+    /**
+     * Update cache value base on the key given.
+     *
+     * @param string $key
+     * @param mix $value
+     * @param int $expire
+     * @return void
+     */
+    public function update_value( $key, $value, $expire = 0 ){
+        
+	return $this->replace($key, $value, 0, $expire);
+    }
+    
+    /**
+     * @param string $key
+     * @return mix
+     */
+    public function get_value( $key ){
+        
+        return $this->get($key);
+    }
+    
+    /**
+     * @param string $key
+     * @return void
+     */
+    public function delete_value( $key ){
+        
+        return $this->delete($key);
+    }
+    
+    /**
+     * Flush all cached object.
+     * @return bool
+     */
+    public function flush_values(){
+        
+	return $this->flush();
+    }
+    
 } // End Drivers_cache_memcached

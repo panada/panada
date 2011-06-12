@@ -53,26 +53,63 @@ class Drivers_cache_apc {
      * @param int $expire
      * @return void
      */
-    public function set( $key, $value, $expire = 0 ){
+    public function set_value( $key, $value, $expire = 0 ){
         
-        return $this->apc_add($key, $value, $expire); 
+        return apc_store($key, $value, $expire); 
+    }
+    
+    /**
+     * Cached the value if the key doesn't exists,
+     * other wise will false.
+     *
+     * @param string $key
+     * @param mix $value
+     * @param int $expire
+     * @return void
+     */
+    public function add_value( $key, $value, $expire = 0 ){
+        
+        return apc_add($key, $value, $expire);
+    }
+    
+    /**
+     * Update cache value base on the key given.
+     *
+     * @param string $key
+     * @param mix $value
+     * @param int $expire
+     * @return void
+     */
+    public function update_value( $key, $value, $expire = 0 ){
+        
+        return $this->set_value($key, $value, $expire);
     }
     
     /**
      * @param string $key
      * @return mix
      */
-    public function get( $key ){
+    public function get_value( $key ){
         
-        return $this->apc_fetch($key); 
+        return apc_fetch($key); 
     }
     
     /**
      * @param string $key
      * @return void
      */
-    public function delete( $key ){
+    public function delete_value( $key ){
         
-        return $this->apc_delete($key);
+        return apc_delete($key);
     }
+    
+    /**
+     * Flush all cached object.
+     * @return bool
+     */
+    public function flush_values(){
+        
+        return apc_clear_cache('user');
+    }
+    
 } // End Drivers_cache_apc
