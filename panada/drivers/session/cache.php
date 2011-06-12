@@ -64,17 +64,6 @@ class Drivers_session_cache extends Drivers_session_native {
     }
     
     /**
-     * EN: Get session data by session id
-     *
-     * @param string
-     * @return int
-     */
-    private function session_exist($id){
-        
-	return $this->cache->get_value($this->session_storage_name.$id);
-    }
-    
-    /**
      * EN: Write the session data
      *
      * @param string
@@ -83,7 +72,7 @@ class Drivers_session_cache extends Drivers_session_native {
      */
     public function session_write($id, $sess_data){
 	
-	if( $this->session_exist($id) )
+	if( $this->session_read($id) )
             return $this->cache->update_value($this->session_storage_name.$id, $sess_data, $this->sesion_expire);
 	else
             return $this->cache->set_value($this->session_storage_name.$id, $sess_data, $this->sesion_expire);
