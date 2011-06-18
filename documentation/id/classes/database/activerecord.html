@@ -591,7 +591,7 @@ class Model_users extends Library_active_record {
 }
 </textarea>
 		<p>Berikut adalah contoh penggunaan model posts di dalam controller:</p>
-<textarea rows="33" cols="50" class="textarea">
+<textarea rows="35" cols="50" class="textarea">
 &lt;?php
 class Controller_home extends Panada {
     
@@ -606,11 +606,14 @@ class Controller_home extends Panada {
         $posts = new Model_posts();
 	$data = $posts->find(10);
 	
-	// Output artikel dengan id 10
-	echo 'id: '.$data->id.' Title: '.$data->title.'&lt;br /&gt;';
-	
-	// Output penulis dari artikel ber id 10
-	print_r($posts->author);
+	if( $data ) {
+	    
+	    // Output artikel dengan id 10
+	    echo 'id: '.$data->id.' Title: '.$data->title.'&lt;br /&gt;';
+	    
+	    // Output penulis dari artikel ber id 10
+	    print_r($posts->author);
+	}
     }
     
     public function all_posts(){
