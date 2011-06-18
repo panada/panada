@@ -505,4 +505,4 @@ class Library_active_record {
         }
     }
     
-}
+} // End Library_active_record class

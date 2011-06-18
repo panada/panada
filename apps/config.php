@@ -36,16 +36,16 @@ $CONFIG['session']['cookie_domain'] = '';
 $CONFIG['session']['driver']        = 'native'; /* The option is 'native', 'cookie', cache or 'database' */
 $CONFIG['session']['storage_name']  = 'sessions';
 
-// MySQL Table structure for session table
+// SQL Table structure for session table
 /*
 
-CREATE TABLE IF NOT EXISTS `sessions` (
-  `session_id` varchar(32) NOT NULL,
-  `session_data` text NOT NULL,
-  `session_expiration` int(11) NOT NULL,
-  PRIMARY KEY (`session_id`),
-  KEY `session_expiration` (`session_expiration`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+CREATE TABLE sessions (
+  session_id varchar(32) NOT NULL,
+  session_data text NOT NULL,
+  session_expiration int NOT NULL,
+  PRIMARY KEY (session_id),
+  KEY session_expiration (session_expiration)
+);
  */
 
 /**
@@ -73,5 +73,8 @@ $CONFIG['request_filter_type'] = FILTER_SANITIZE_STRING;
  * EN:  Cache configuration
  */
 $CONFIG['cache']['default']['driver']   = 'default'; /* The option is 'default', 'apc' or 'memcached' */
+// Add this options for memcached
+//$CONFIG['cache']['memcached']['host'] = array('localhost');
+//$CONFIG['cache']['memcached']['port'] = 11211;
 
 $CONFIG['secret_key']                   = '_put_your_random_string_here_';
