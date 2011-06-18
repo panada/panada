@@ -289,8 +289,10 @@ class Drivers_database_postgresql {
         
         $query = 'SELECT ';
 	
-	if($this->distinct_)
+	if($this->distinct_){
 	    $query .= 'DISTINCT ';
+	    $this->distinct_ = false;
+	}
         
         $column = '*';
         
@@ -301,13 +303,17 @@ class Drivers_database_postgresql {
         
         $query .= $column;
         
-        if( ! empty($this->tables) )
+        if( ! empty($this->tables) ){
             $query .= ' FROM '.implode(', ', $this->tables);
+	    unset($this->tables);
+        }
 	
 	if( ! is_null($this->joins) ) {
 	    
-	    if( ! is_null($this->joins_type) )
+	    if( ! is_null($this->joins_type) ){
 		$query .= ' '.strtoupper($this->joins_type);
+		$this->joins_type = null;
+	    }
 	    
 	    $query .= ' JOIN '.$this->joins;
 	    
@@ -315,32 +321,42 @@ class Drivers_database_postgresql {
 		$query .= ' ON ('.implode(' ', $this->joins_on).')';
 		unset($this->joins_on);
 	    }
+	    
+	    $this->joins = null;
 	}
 	
 	if( ! empty($this->criteria) ){
 	    $cr = implode(' ', $this->criteria);
 	    $query .= ' WHERE ' . rtrim($cr, 'AND');
-	    unset($this->create_criteria);
+	    unset($this->criteria);
 	}
 	
-	if( ! is_null($this->group_by_) )
+	if( ! is_null($this->group_by_) ){
 	    $query .= ' GROUP BY '.$this->group_by_;
-	    
+	    $this->group_by_ = null;
+	}
+	
 	if( ! empty($this->is_having) ){
 	    $query .= ' HAVING '.implode(' ', $this->is_having);
 	    unset($this->is_having);
 	}
 	
-	if( ! is_null($this->order_by_) )
+	if( ! is_null($this->order_by_) ){
 	    $query .= ' ORDER BY '.$this->order_by_.' '.strtoupper($this->order_);
+	    $this->order_by_ = null;
+	}
 	
 	
 	if( ! is_null($this->limit_) ){
 	    
 	    $query .= ' LIMIT '.$this->limit_;
 	    
-	    if( ! is_null($this->offset_) )
+	    if( ! is_null($this->offset_) ){
 		$query .= ' OFFSET '.$this->offset_;
+		$this->offset_ = null;
+	    }
+	    
+	    $this->limit_ = null;
 	}
         
         return $query;

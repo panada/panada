@@ -43,8 +43,7 @@ CREATE TABLE sessions (
   session_id varchar(32) NOT NULL,
   session_data text NOT NULL,
   session_expiration int NOT NULL,
-  PRIMARY KEY (session_id),
-  KEY session_expiration (session_expiration)
+  PRIMARY KEY (session_id)
 );
  */
 
