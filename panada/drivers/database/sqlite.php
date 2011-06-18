@@ -515,6 +515,9 @@ class Drivers_database_sqlite {
 	
         $result = $this->query($query);
         
+	if( $result->numColumns() < 1 )
+	    return false;
+	
         while ( $row = $result->fetchArray(SQLITE3_ASSOC) ) {
             
             if($type == 'object'){
@@ -547,7 +550,9 @@ class Drivers_database_sqlite {
 	    $this->init();
         
         $result = $this->query($query);
-        $return = $result->fetchArray(SQLITE3_ASSOC);
+	
+        if( ! $return = $result->fetchArray(SQLITE3_ASSOC) )
+	    return false;
         
         if($type == 'object')
 	    if($this->instantiate_class == 'stdClass' )
