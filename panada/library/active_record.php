@@ -34,7 +34,7 @@ class Library_active_record {
     
     public function __construct(){
         
-        $this->cache = new Library_cache();
+        $this->cache = new Library_cache('default', 'default');
         
         // Mendapatkan argument yg diberikan user
         $args = func_get_args();
@@ -102,7 +102,8 @@ class Library_active_record {
                 $this->fields['fields'],
                 $this->fields['db'],
                 $this->fields['primary_key'],
-                $this->fields['set_instantiate_class']
+                $this->fields['set_instantiate_class'],
+                $this->fields['cache']
             );
         }
         
@@ -462,7 +463,7 @@ class Library_active_record {
         if( ! $relations = $this->relations() )
             return false;
         
-        foreach($relations as $key => $relations)
+        foreach($relations as $key => $relations){
             if( $name == $key ){
                 
                 $class_name = 'Model_'.$relations[1];
@@ -501,7 +502,7 @@ class Library_active_record {
                     return $name;
                 }
             }
+        }
     }
-    
     
 }
