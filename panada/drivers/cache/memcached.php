@@ -40,10 +40,12 @@ class Drivers_cache_memcached extends Memcache {
      * @param string $key
      * @param mix $value
      * @param int $expire
+     * @param string $namespace
      * @return void
      */
-    public function set_value( $key, $value, $expire = 0 ){
+    public function set_value( $key, $value, $expire = 0, $namespace = false ){
         
+	$key = $this->key_to_namespace($key, $namespace);
         return $this->set($key, $value, 0, $expire);
     }
     
@@ -54,10 +56,12 @@ class Drivers_cache_memcached extends Memcache {
      * @param string $key
      * @param mix $value
      * @param int $expire
+     * @param string $namespace
      * @return void
      */
-    public function add_value( $key, $value, $expire = 0 ){
+    public function add_value( $key, $value, $expire = 0, $namespace = false ){
         
+	$key = $this->key_to_namespace($key, $namespace);
 	return $this->add($key, $value, 0, $expire); 
     }
     
@@ -67,28 +71,34 @@ class Drivers_cache_memcached extends Memcache {
      * @param string $key
      * @param mix $value
      * @param int $expire
+     * @param string $namespace
      * @return void
      */
-    public function update_value( $key, $value, $expire = 0 ){
+    public function update_value( $key, $value, $expire = 0, $namespace = false ){
         
+	$key = $this->key_to_namespace($key, $namespace);
 	return $this->replace($key, $value, 0, $expire);
     }
     
     /**
      * @param string $key
+     * @param string $namespace
      * @return mix
      */
-    public function get_value( $key ){
+    public function get_value( $key, $namespace = false ){
         
+	$key = $this->key_to_namespace($key, $namespace);
         return $this->get($key);
     }
     
     /**
      * @param string $key
+     * @param string $namespace
      * @return void
      */
-    public function delete_value( $key ){
+    public function delete_value( $key, $namespace = false ){
         
+	$key = $this->key_to_namespace($key, $namespace);
         return $this->delete($key);
     }
     
@@ -99,6 +109,25 @@ class Drivers_cache_memcached extends Memcache {
     public function flush_values(){
         
 	return $this->flush();
+    }
+    
+    /**
+     * Namespace usefull when we need to wildcard deleting cache object.
+     *
+     * @param string $namespace_key
+     * @return int Unixtimestamp
+     */
+    private function key_to_namespace( $key, $namespace_key = false ){
+	
+	if( ! $namespace_key )
+	    return $key;
+	
+	if( ! $namespace_value = $this->get($namespace_key) ){
+	    $namespace_value = time();
+	    $this->set($namespace_key, $namespace_value, 0, 0);
+	}
+	
+	return $namespace_value.'_'.$key;
     }
     
 } // End Drivers_cache_memcached

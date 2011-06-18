@@ -24,7 +24,7 @@ class Drivers_cache_default {
      * @param int $expire
      * @return void
      */
-    public function set_value($key, $value, $expire = 0){
+    public function set_value($key, $value, $expire = 0, $namespace = false){
         
         return self::_set($key, $value);
     }
@@ -38,7 +38,7 @@ class Drivers_cache_default {
      * @param int $expire
      * @return void
      */
-    public function add_value( $key, $value, $expire = 0 ){
+    public function add_value( $key, $value, $expire = 0, $namespace = false ){
         
         return self::_get($key) ? false : self::_set($key, $value);
     }
@@ -51,7 +51,7 @@ class Drivers_cache_default {
      * @param int $expire
      * @return void
      */
-    public function update_value( $key, $value, $expire = 0 ){
+    public function update_value( $key, $value, $expire = 0, $namespace = false ){
         
         return self::_set($key, $value);
     }
@@ -60,7 +60,7 @@ class Drivers_cache_default {
      * @param string $key
      * @return mix
      */
-    public function get_value($key){
+    public function get_value($key, $namespace = false){
         
         return self::_get($key);
     }
@@ -69,7 +69,7 @@ class Drivers_cache_default {
      * @param string $key
      * @return void
      */
-    public function delete_value($key){
+    public function delete_value($key, $namespace = false){
         
         return self::_delete($key);
     }

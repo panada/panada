@@ -53,8 +53,9 @@ class Drivers_cache_apc {
      * @param int $expire
      * @return void
      */
-    public function set_value( $key, $value, $expire = 0 ){
+    public function set_value( $key, $value, $expire = 0, $namespace = false ){
         
+        $key = $this->key_to_namespace($key, $namespace);
         return apc_store($key, $value, $expire); 
     }
     
@@ -67,8 +68,9 @@ class Drivers_cache_apc {
      * @param int $expire
      * @return void
      */
-    public function add_value( $key, $value, $expire = 0 ){
+    public function add_value( $key, $value, $expire = 0, $namespace = false ){
         
+        $key = $this->key_to_namespace($key, $namespace);
         return apc_add($key, $value, $expire);
     }
     
@@ -80,8 +82,9 @@ class Drivers_cache_apc {
      * @param int $expire
      * @return void
      */
-    public function update_value( $key, $value, $expire = 0 ){
+    public function update_value( $key, $value, $expire = 0, $namespace = false ){
         
+        $key = $this->key_to_namespace($key, $namespace);
         return $this->set_value($key, $value, $expire);
     }
     
@@ -89,8 +92,9 @@ class Drivers_cache_apc {
      * @param string $key
      * @return mix
      */
-    public function get_value( $key ){
+    public function get_value( $key, $namespace = false ){
         
+        $key = $this->key_to_namespace($key, $namespace);
         return apc_fetch($key); 
     }
     
@@ -98,8 +102,9 @@ class Drivers_cache_apc {
      * @param string $key
      * @return void
      */
-    public function delete_value( $key ){
+    public function delete_value( $key, $namespace = false ){
         
+        $key = $this->key_to_namespace($key, $namespace);
         return apc_delete($key);
     }
     
@@ -110,6 +115,25 @@ class Drivers_cache_apc {
     public function flush_values(){
         
         return apc_clear_cache('user');
+    }
+    
+    /**
+     * Namespace usefull when we need to wildcard deleting cache object.
+     *
+     * @param string $namespace_key
+     * @return int Unixtimestamp
+     */
+    private function key_to_namespace( $key, $namespace_key = false ){
+	
+	if( ! $namespace_key )
+	    return $key;
+	
+	if( ! $namespace_value = apc_fetch($namespace_key) ){
+	    $namespace_value = time();
+	    apc_store($namespace_key, $namespace_value, 0);
+	}
+	
+	return $namespace_value.'_'.$key;
     }
     
 } // End Drivers_cache_apc
