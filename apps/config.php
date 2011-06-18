@@ -27,14 +27,15 @@ $CONFIG['auto_loader'] = array();
  * EN: Session configuration.
  */
 
-$CONFIG['session']['expiration']    = 7200; /* 2 hour. */
-$CONFIG['session']['name']          = 'PAN_SID';
-$CONFIG['session']['cookie_expire'] = 0;
-$CONFIG['session']['cookie_path']   = '/';
-$CONFIG['session']['cookie_secure'] = false;
-$CONFIG['session']['cookie_domain'] = '';
-$CONFIG['session']['driver']        = 'native'; /* The option is 'native', 'cookie', cache or 'database' */
-$CONFIG['session']['storage_name']  = 'sessions';
+$CONFIG['session']['expiration']        = 7200; /* 2 hour. */
+$CONFIG['session']['name']              = 'PAN_SID';
+$CONFIG['session']['cookie_expire']     = 0;
+$CONFIG['session']['cookie_path']       = '/';
+$CONFIG['session']['cookie_secure']     = false;
+$CONFIG['session']['cookie_domain']     = '';
+$CONFIG['session']['driver']            = 'native'; /* The option is 'native', 'cookie', cache or 'database' */
+$CONFIG['session']['driver_connection'] = 'default'; /* Connection name for the driver. */
+$CONFIG['session']['storage_name']      = 'sessions';
 
 // SQL Table structure for session table
 /*

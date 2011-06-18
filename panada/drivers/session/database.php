@@ -22,7 +22,7 @@ class Drivers_session_database extends Drivers_session_native {
     public function __construct( $config_instance ){
         
 	$this->session_db_name	= $config_instance->storage_name;
-        $this->db		= new Library_db();
+        $this->db		= new Library_db( $config_instance->driver_connection );
         
         session_set_save_handler (
 	    array($this, 'session_start'),
@@ -100,10 +100,11 @@ class Drivers_session_database extends Drivers_session_native {
 	    
 	    if( (md5($curent_session->session_data) == md5($sess_data)) && ($curent_session->session_expiration > time() + 10 ) )
 		return true;
-	    
+	   
 	    return $this->db->update($this->session_db_name, array('session_id' => $id, 'session_data' => $sess_data, 'session_expiration' => $expiration), array('session_id' => $id) ); 
 	}
 	else{
+	    
 	    return $this->db->insert($this->session_db_name, array('session_id' => $id, 'session_data' => $sess_data, 'session_expiration' => $expiration)); 
 	}
     }

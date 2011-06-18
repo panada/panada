@@ -18,7 +18,7 @@ class Drivers_session_cache extends Drivers_session_native {
     public function __construct( $config_instance ){
         
 	$this->session_storage_name = $config_instance->storage_name.'_';
-        $this->cache		    = new Library_cache();
+        $this->cache		    = new Library_cache( $config_instance->driver_connection );
         
         session_set_save_handler (
 	    array($this, 'session_start'),
