@@ -13,9 +13,12 @@ class Library_cache {
     private $driver;
     private $config;
     
-    public function __construct( $connection = 'default' ){
+    public function __construct( $connection = 'default', $specified_driver = false ){
         
         $this->config = Library_config::instance();
+        
+        if( $specified_driver )
+            $this->config->cache->$connection->driver = $specified_driver;
         
         require_once GEAR.'drivers/cache/'.$this->config->cache->$connection->driver.'.php';
         
