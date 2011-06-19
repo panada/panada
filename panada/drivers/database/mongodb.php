@@ -117,19 +117,66 @@ class Drivers_database_mongodb extends Mongo {
             $this->criteria = $document;
         
         if($operator == '=')
-            $this->criteria = array($document => $value);
+            $this->criteria[$document] = $value;
+	
+	if($operator == '>')
+            $this->criteria[$document]['$gt'] = $value;
+	
+	if($operator == '<')
+            $this->criteria[$document]['$lt'] = $value;
+	
+	if($operator == '>=')
+            $this->criteria[$document]['$gte'] = $value;
+	
+	if($operator == '<=')
+            $this->criteria[$document]['$lte'] = $value;
         
         return $this;
     }
     
     public function find_all(){
         
-        return $this->collection($this->collection_name)->find( $this->criteria, $this->documents );
+	$value = $this->collection($this->collection_name)->find( $this->criteria, $this->documents );
+	$this->criteria = $this->documents = array();
+	
+	if( ! empty($value) )
+	    return $this->cursor_results($value);
+	
+	return false;
     }
     
     public function find_one(){
         
-        return $this->collection($this->collection_name)->findOne( $this->criteria, $this->documents );
+	$value = $this->collection($this->collection_name)->findOne( $this->criteria, $this->documents );
+	$this->criteria = $this->documents = array();
+	
+	if( ! empty($value) )
+	    return (object) $value;
+	
+	return false;
+    }
+    
+    public function insert($collection, $data = array()) {
+        
+        return $this->collection($collection)->insert($data); 
+    }
+    
+    public function update($collection, $data, $criteria = null){
+	
+	$this->where($criteria);
+	$value = $this->collection($collection)->update( $this->criteria, array('$set' => $data) );
+	$this->criteria = array();
+	
+	return $value;
+    }
+    
+    public function delete( $collection, $criteria = null ){
+        
+	$this->where($criteria);
+	$value = $this->collection($collection)->remove( $this->criteria );
+	$this->criteria = array();
+	
+	return $value;
     }
     
 } // End Driver_mysql Class
