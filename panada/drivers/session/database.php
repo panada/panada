@@ -18,11 +18,12 @@ class Drivers_session_database extends Drivers_session_native {
      *			ID: Nama table session.
      */
     private $session_db_name = 'sessions';
+    private $session_db_conn;
     
     public function __construct( $config_instance ){
         
 	$this->session_db_name	= $config_instance->storage_name;
-        $this->db		= new Library_db( $config_instance->driver_connection );
+        $this->session_db_conn	= new Library_db( $config_instance->driver_connection );
         
         session_set_save_handler (
 	    array($this, 'session_start'),
@@ -45,6 +46,7 @@ class Drivers_session_database extends Drivers_session_native {
      */
     public function session_start($save_path, $session_name){
 	//EN: We don't need anythings at this time.
+	
     }
     
     /**
@@ -64,7 +66,7 @@ class Drivers_session_database extends Drivers_session_native {
      */
     public function session_read($id){
 	
-	$session = $this->db->select('session_data')->from( $this->session_db_name )->where('session_id', '=', $id, 'and')->where('session_expiration', '>', time())->find_one();
+	$session = $this->session_db_conn->select('session_data')->from( $this->session_db_name )->where('session_id', '=', $id, 'and')->where('session_expiration', '>', time())->find_one();
 	
 	if( $session )
 	    return $session->session_data;
@@ -80,7 +82,7 @@ class Drivers_session_database extends Drivers_session_native {
      */
     private function session_exist($id){
 	
-	$session = $this->db->select('session_data', 'session_expiration')->from( $this->session_db_name )->where('session_id', '=', $id)->find_one();
+	$session = $this->session_db_conn->select('session_data', 'session_expiration')->from( $this->session_db_name )->where('session_id', '=', $id)->find_one();
 	return $session;
     }
     
@@ -101,11 +103,11 @@ class Drivers_session_database extends Drivers_session_native {
 	    if( (md5($curent_session->session_data) == md5($sess_data)) && ($curent_session->session_expiration > time() + 10 ) )
 		return true;
 	   
-	    return $this->db->update($this->session_db_name, array('session_id' => $id, 'session_data' => $sess_data, 'session_expiration' => $expiration), array('session_id' => $id) ); 
+	    return $this->session_db_conn->update($this->session_db_name, array('session_id' => $id, 'session_data' => $sess_data, 'session_expiration' => $expiration), array('session_id' => $id) ); 
 	}
 	else{
 	    
-	    return $this->db->insert($this->session_db_name, array('session_id' => $id, 'session_data' => $sess_data, 'session_expiration' => $expiration)); 
+	    return $this->session_db_conn->insert($this->session_db_name, array('session_id' => $id, 'session_data' => $sess_data, 'session_expiration' => $expiration)); 
 	}
     }
     
@@ -117,7 +119,7 @@ class Drivers_session_database extends Drivers_session_native {
      */
     public function session_destroy($id){
 	
-	return $this->db->delete($this->session_db_name, array('session_id' => $id));
+	return $this->session_db_conn->delete($this->session_db_name, array('session_id' => $id));
     }
     
     /**
@@ -128,7 +130,7 @@ class Drivers_session_database extends Drivers_session_native {
      */
     public function session_gc($maxlifetime = ''){
 	
-	return $this->db->where( 'session_expiration', '<', time() )->delete( $this->session_db_name );
+	return $this->session_db_conn->where( 'session_expiration', '<', time() )->delete( $this->session_db_name );
     }
     
 } // End Drivers_session_database
