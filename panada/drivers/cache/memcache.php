@@ -11,21 +11,29 @@
 /**
  * EN: Makesure Memcache extension is enabled
  */
-if( ! extension_loaded('memcached') )
-    Library_error::_500('Memcached extension that required by Library_memcached is not available.');
+if( ! extension_loaded('memcache') )
+    Library_error::_500('Memcache extension that required by Library_memcached is not available.');
 
-class Drivers_cache_memcached extends Memcached {
+class Drivers_cache_memcache extends Memcache {
     
     public $port = 11211;
     
+    /**
+     * EN: Load configuration from config file.
+     * @return void
+     */
+    
     public function __construct( $config_instance ){
         
-        parent::__construct();
-        
-        $config_instance->host = (array) $config_instance->host;
-        
+	$config_instance->host = (array) $config_instance->host;
+	
         foreach($config_instance->host as $host)
 	    $this->addServer($host, $this->port);
+	
+	/**
+	 * EN: If you need compression Threshold, you can uncomment this
+	 */
+	//$this->setCompressThreshold(20000, 0.2);
     }
     
     /**
@@ -38,7 +46,7 @@ class Drivers_cache_memcached extends Memcached {
     public function set_value( $key, $value, $expire = 0, $namespace = false ){
         
 	$key = $this->key_to_namespace($key, $namespace);
-        return $this->set($key, $value, $expire);
+        return $this->set($key, $value, 0, $expire);
     }
     
     /**
@@ -54,7 +62,7 @@ class Drivers_cache_memcached extends Memcached {
     public function add_value( $key, $value, $expire = 0, $namespace = false ){
         
 	$key = $this->key_to_namespace($key, $namespace);
-	return $this->add($key, $value, $expire); 
+	return $this->add($key, $value, 0, $expire); 
     }
     
     /**
@@ -69,7 +77,7 @@ class Drivers_cache_memcached extends Memcached {
     public function update_value( $key, $value, $expire = 0, $namespace = false ){
         
 	$key = $this->key_to_namespace($key, $namespace);
-	return $this->replace($key, $value, $expire);
+	return $this->replace($key, $value, 0, $expire);
     }
     
     /**
@@ -116,9 +124,10 @@ class Drivers_cache_memcached extends Memcached {
 	
 	if( ! $namespace_value = $this->get($namespace_key) ){
 	    $namespace_value = time();
-	    $this->set($namespace_key, $namespace_value, 0);
+	    $this->set($namespace_key, $namespace_value, 0, 0);
 	}
 	
 	return $namespace_value.'_'.$key;
     }
-} // End Drivers_cache_memcached
+    
+} // End Drivers_cache_memcache
