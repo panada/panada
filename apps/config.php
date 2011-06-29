@@ -72,8 +72,10 @@ $CONFIG['request_filter_type'] = FILTER_SANITIZE_STRING;
 /**
  * EN:  Cache configuration
  */
-$CONFIG['cache']['default']['driver']   = 'default'; /* The option is 'default', 'apc' or 'memcached' */
-// Add this options for memcached
+$CONFIG['cache']['default']['driver']   = 'default'; /* The option is 'default', 'apc', 'memcache' or 'memcached' */
+
+// Add this options for memcached/memcache
+//$CONFIG['cache']['memcached']['driver'] = 'memcached';
 //$CONFIG['cache']['memcached']['host'] = array('localhost');
 //$CONFIG['cache']['memcached']['port'] = 11211;
 
