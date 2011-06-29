@@ -56,9 +56,11 @@ class Library_uri {
 	
 	
 	// Just litle tweek
+	/*
 	$path = trim( str_replace( 'index.php', '', $_SERVER["PHP_SELF"] ), '/');
 	if( $path != '' )
 	    return '/'.$path;
+	*/
 	
 	/**
 	 * ID: Terakhir, coba gunakan parameter base_url dari file config.php. Ini untuk menangani masalah yang biasa muncul di Nginx.
