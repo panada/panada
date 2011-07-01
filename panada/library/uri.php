@@ -66,11 +66,12 @@ class Library_uri {
 	 * ID: Terakhir, coba gunakan parameter base_url dari file config.php. Ini untuk menangani masalah yang biasa muncul di Nginx.
 	 * 	Uncomment bagian ini jika menggunakan Nginx webserver.
 	 */
+	/*
 	$path = str_replace($this->config->base_url, '', ($this->is_https())?'https://':'http://' . $_SERVER['SERVER_NAME']. $_SERVER['REQUEST_URI']);
 	$path = $this->remove_query($path);
 	if (trim($path, '/') != '' && trim($path, '/') != 'index.php')
 	    return '/'.$path;
-	
+	*/
         return false;
     }
     
