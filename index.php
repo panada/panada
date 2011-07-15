@@ -29,7 +29,7 @@ define('THISPATH', dirname(__FILE__) . '/');
  * EN: Panada main system folder location.
  * ID: Lokasi dimana folder panada berada.
  */
-define('GEAR', 'panada' . '/');
+define('GEAR', THISPATH . 'panada' . '/');
 
 
 
