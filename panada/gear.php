@@ -287,34 +287,20 @@ class Panada {
     * @since	Version 0.2.1
     */
     public function __call($file, $data = null){
-	
-        $this->build_view_file($file, $data);
-    }
-    
-    /**
-     * Pharse from view string path into view path file
-     *
-     * @access protected
-     * @param string File path
-     * @param array
-     * @return void
-     * @since Version 0.3.1
-     */
-    protected function build_view_file($file, $data){
         
         $file = explode('_', $file);
         
         if( ! isset($data[0]) )
             $data[0] = array();
-	
-	if( $file[0] != 'view' )
-	    Library_error::_404();
+        
+        if( $file[0] != 'view' )
+            Library_error::_404();
         
         $file = array_slice($file, 1);
         
         $file_path = $this->base_path.'view/';
         
-	if( count($file) == 1 ){
+        if( count($file) == 1 ){
            $this->output($file[0], $data[0]);
         }
         else{
@@ -330,12 +316,11 @@ class Panada {
                     }
                 }
             }
-           
+            
             if( ! isset($arr_file_key) ){
                 $arr_file_key = 0;
                 $file_path = $this->base_path.'view/';
             }
-            
             // EN: Second, construct the file name
             $arr_file_name = array_splice($file, $arr_file_key, count($file) );
             
@@ -347,33 +332,23 @@ class Panada {
             $this->output($file_path, $data[0]);
         }
     }
-    
-    /**
-    * Create a view file
-    *
-    * @access	public
-    * @param	string
-    * @param	array
-    * @return	void
-    * @since	Version 0.2.1
-    */
+
     public function output( $file_path, $data = array() ){
         
         $file_path = $this->base_path.'view/'.$file_path;
         
         if( ! file_exists($view_file = $file_path.'.php') )
-	    Library_error::_500('<b>Error:</b> No <b>' . $view_file . '</b> file in view folder.');
-	
+            Library_error::_500('<b>Error:</b> No <b>' . $view_file . '</b> file in view folder.');
+        
         if( ! empty($data) )
             $this->view = $data;
-	
+        
         if( ! empty($this->view ) )
             extract( $this->view, EXTR_SKIP );
-	
+        
         include_once $view_file;
     }
 }
-
 
 
 /**
