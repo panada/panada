@@ -1,4 +1,34 @@
 <?php defined('THISPATH') or die('Can\'t access directly!');
+
+/**
+ * Experiment for Module hendler
+ */
+class Panada_module extends Panada {
+    
+    static public $_module_name;
+    
+    public function __construct(){
+        
+        parent::__construct();
+        
+        spl_autoload_register(array($this, 'component_loader'));
+        spl_autoload_register('__autoload');
+        
+        $this->base_path = GEAR . 'module/' . self::$_module_name . '/';
+    }
+    
+    public function component_loader($class){
+        
+        $file_name = explode('_', strtolower($class) );
+        
+        $file = GEAR . 'module/'. self::$_module_name . '/' . $file_name[0] . '/' . $file_name[1] .'.php';
+        
+        include_once $file;
+    }
+}
+//end module hendler
+
+
 /**
  * Panada Class Magic loader.
  *
@@ -25,6 +55,7 @@ class Library_loader {
         $arr = explode('/', $file_path);
         $file_name = end( $arr );
         
+        // Are we try to load a module?
         if($arr[0] == 'module' ){
             $prefix = $arr[2];
             $file_path = GEAR . $file_path.'.php';
@@ -37,10 +68,10 @@ class Library_loader {
         if( ! file_exists( $file_path ) )
             Library_error::_500('<b>Error:</b> No <b>'.$file_name.'</b> file in '.$arr[0].' folder.');
         
-        include $file_path;
-        
         $class = ucwords($prefix).'_'.$file_name;
-       
+        
+        include_once $file_path;
+        
         if( ! class_exists($class) )
             Library_error::_500('<b>Error:</b> No class <b>'.$class.'</b> exists in file '.$file_name.'.');
         
@@ -94,7 +125,7 @@ class Library_loader {
             
             $args = array(
                 'name' => $args,
-                'controller' => 'home'
+                'controller' => $args
             );
         }
         
@@ -106,7 +137,11 @@ class Library_loader {
         
         $file = 'module/' . $module['name'] . '/controller/' . $module['controller'];
         
-        return new Library_loader($file);
+        Panada_module::$_module_name = $module['name'];
+        
+        $module_controller = new Library_loader($file);
+        
+        return $module_controller;
     }
 }
 
