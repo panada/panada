@@ -1,34 +1,4 @@
 <?php defined('THISPATH') or die('Can\'t access directly!');
-
-/**
- * Experiment for Module hendler
- */
-class Panada_module extends Panada {
-    
-    static public $_module_name;
-    
-    public function __construct(){
-        
-        parent::__construct();
-        
-        spl_autoload_register(array($this, 'component_loader'));
-        spl_autoload_register('__autoload');
-        
-        $this->base_path = GEAR . 'module/' . self::$_module_name . '/';
-    }
-    
-    public function component_loader($class){
-        
-        $file_name = explode('_', strtolower($class) );
-        
-        $file = GEAR . 'module/'. self::$_module_name . '/' . $file_name[0] . '/' . $file_name[1] .'.php';
-        
-        include_once $file;
-    }
-}
-//end module hendler
-
-
 /**
  * Panada Class Magic loader.
  *
@@ -55,15 +25,9 @@ class Library_loader {
         $arr = explode('/', $file_path);
         $file_name = end( $arr );
         
-        // Are we try to load a module?
-        if($arr[0] == 'module' ){
-            $prefix = $arr[2];
-            $file_path = GEAR . $file_path.'.php';
-        }
-        else{
-            $file_path = APPLICATION . $file_path.'.php';
-            $prefix = $arr[0];
-        }
+        $file_path = APPLICATION . $file_path.'.php';
+        $prefix = $arr[0];
+       
         
         if( ! file_exists( $file_path ) )
             Library_error::_500('<b>Error:</b> No <b>'.$file_name.'</b> file in '.$arr[0].' folder.');
@@ -111,37 +75,6 @@ class Library_loader {
     public function __set($name, $value){
         
         $this->class_inctance->$name = $value;
-    }
-    
-    /**
-     * Loader for module
-     *
-     * @param mix String or array for module configuration
-     * @return object
-     */
-    public static function module($args){
-        
-        if( is_string($args) ){
-            
-            $args = array(
-                'name' => $args,
-                'controller' => $args
-            );
-        }
-        
-        $default = array(
-            'controller' => 'home'
-        );
-        
-        $module = array_merge($default, $args);
-        
-        $file = 'module/' . $module['name'] . '/controller/' . $module['controller'];
-        
-        Panada_module::$_module_name = $module['name'];
-        
-        $module_controller = new Library_loader($file);
-        
-        return $module_controller;
     }
 }
 
