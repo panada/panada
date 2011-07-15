@@ -150,7 +150,7 @@ function __autoload($class_name) {
         $class_name == 'Library_time_execution' ||
         $class_name == 'Controller_'.$var_name ||
         $class_name == 'Library_active_record' ||
-        $class_name == 'Library_loader'
+        $class_name == 'Library_module'
     )
         
         return;
