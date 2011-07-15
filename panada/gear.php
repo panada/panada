@@ -183,6 +183,7 @@ function __autoload($class_name) {
 class Panada {
     
     private static $instance;
+    protected $base_path = APPLICATION;
     
     public function __construct(){
         
@@ -275,10 +276,9 @@ class Panada {
     }
     
     /**
-    * View Loader
+    * View Loader from app controller
     *
-    * EN: Load the "view" file.
-    * ID: Berfungsi untuk me-load file "view".
+    * Load the "view" file.
     *
     * @access	public
     * @param	string
@@ -288,7 +288,21 @@ class Panada {
     */
     public function __call($file, $data = null){
 	
-	$file = explode('_', $file);
+        $this->build_view_file($file, $data);
+    }
+    
+    /**
+     * Pharse from view string path into view path file
+     *
+     * @access protected
+     * @param string File path
+     * @param array
+     * @return void
+     * @since Version 0.3.1
+     */
+    protected function build_view_file($file, $data){
+        
+        $file = explode('_', $file);
         
         if( ! isset($data[0]) )
             $data[0] = array();
@@ -298,7 +312,7 @@ class Panada {
         
         $file = array_slice($file, 1);
         
-        $file_path = APPLICATION.'view/';
+        $file_path = $this->base_path.'view/';
         
 	if( count($file) == 1 ){
            $this->output($file[0], $data[0]);
@@ -319,8 +333,9 @@ class Panada {
            
             if( ! isset($arr_file_key) ){
                 $arr_file_key = 0;
-                $file_path = APPLICATION.'view/';
+                $file_path = $this->base_path.'view/';
             }
+            
             // EN: Second, construct the file name
             $arr_file_name = array_splice($file, $arr_file_key, count($file) );
             
@@ -333,9 +348,18 @@ class Panada {
         }
     }
     
+    /**
+    * Create a view file
+    *
+    * @access	public
+    * @param	string
+    * @param	array
+    * @return	void
+    * @since	Version 0.2.1
+    */
     public function output( $file_path, $data = array() ){
         
-        $file_path = APPLICATION.'view/'.$file_path;
+        $file_path = $this->base_path.'view/'.$file_path;
         
         if( ! file_exists($view_file = $file_path.'.php') )
 	    Library_error::_500('<b>Error:</b> No <b>' . $view_file . '</b> file in view folder.');
