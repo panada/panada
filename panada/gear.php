@@ -392,7 +392,14 @@ if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->get_class() . '.php'
             Library_error::_404();
     }
     else {
-        Library_error::_404();
+        
+        // Does module with this name exist?
+        
+        if ( ! is_dir( GEAR . 'module/' . $pan_uri->get_class() . '/' ) )
+            Library_error::_404();
+        
+        $class = 'Library_module';
+        $method = 'public_routing';
     }
 }
 
@@ -401,7 +408,7 @@ if ( ! file_exists( APPLICATION . 'controller/' . $pan_uri->get_class() . '.php'
  * EN: Oke the file exits, now create class's instance.
  * ID: File telah siap, waktunya membuat instance class.
  */
-$Panada = new $class;
+$Panada = new $class();
 
 
 
