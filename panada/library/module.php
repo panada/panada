@@ -27,8 +27,29 @@ class Panada_module extends Panada {
         
         $class      = strtolower($class);
         $file_name  = explode('_', $class);
-        $file       = str_ireplace($file_name[0].'_'.$file_name[1].'_', '', $class);
-        $file       = GEAR . 'module/'. self::$_module_name . '/' . $file_name[1] . '/' . $file .'.php';
+        $components = array('library', 'model');
+        $module_name= false;
+        
+        foreach($components as $component){
+            
+            $key = array_search($component, $file_name);
+            
+            if( $key !== false ){
+                
+                $module_name = array_slice($file_name, 0, $key);
+                $module_name = implode('_', $module_name);
+                
+                $class_name = array_slice($file_name, $key + 1, count($file_name));
+                $class_name = implode('_', $class_name);
+                
+                break;
+            }
+        }
+        
+        if( ! $module_name )
+            return false;
+        
+        $file = GEAR . 'module/'. $module_name . '/' . $component . '/' . $class_name .'.php';
         
         include_once $file;
     }
@@ -102,6 +123,18 @@ class Library_module {
             Library_error::_500('<b>Error:</b> No class <b>'.$class.'</b> exists in file '.$file_name.'.');
         
         $this->class_inctance = new $class;
+        
+        $config = Library_config::instance();
+        
+        if( ! empty($config->auto_loader) ) {
+            
+            $auto_loader = (array) $config->auto_loader;
+            
+            foreach( $auto_loader as $class_name){
+		$var = Panada::var_name($class_name);
+                $this->class_inctance->$var = new $class_name();
+            }
+        }
     }
     
     /**
@@ -158,15 +191,42 @@ class Library_module {
         if( ! $request = $pan_uri->get_requests(4) )
             $request = array();
         
+        Panada_module::$_module_name = $module_name;
         
-        if( ! file_exists( $file = GEAR . 'module/' . $module_name . '/controller/' . $controller . '.php') )
-            Library_error::_404();
+        if( ! file_exists( $file = GEAR . 'module/' . $module_name . '/controller/' . $controller . '.php' ) ){
+            
+            $config = $this->config(true);
+            
+            // Does alias controller config exists?
+            if( ! isset($config['alias_controller']) || empty($config['alias_controller']) )
+                Library_error::_404();
+            
+            $controller = array_keys($config['alias_controller']);
+            $controller = $controller[0];
+            $method     = array_values($config['alias_controller']);
+            $method     = $method[0];
+            $class      = ucwords($module_name).'_controller_'.$controller;
+            $request    = $pan_uri->get_requests(2);
+            
+            if( ! file_exists( $file = GEAR . 'module/' . $module_name . '/controller/' . $controller . '.php' ) )
+                Library_error::_500('<b>Error:</b> No alias controller exists in module <b>' . $module_name . '</b>. Check your module configuration.');
+            
+        }
         
         include_once $file;
         
-        Panada_module::$_module_name = $module_name;
-        
         $Panada = new $class();
+        
+        // autoloader
+        if( ! empty($Panada->config->auto_loader) ) {
+            
+            $auto_loader = (array) $Panada->config->auto_loader;
+            
+            foreach( $auto_loader as $class_name){
+		$var = Panada::var_name($class_name);
+                $Panada->$var = new $class_name();
+            }
+        }
         
         if( ! method_exists($Panada, $method) ){
             
@@ -178,6 +238,33 @@ class Library_module {
         }
         
         call_user_func_array(array($Panada, $method), $request);
+    }
+    
+    /**
+     * Load the module config if exists
+     *
+     * @param bool
+     * @return mix
+     */
+    public function config($as_array = false){
+        
+        if( ! file_exists($file = GEAR . 'module/' . Panada_module::$_module_name . '/config.php') )
+            return false;
+        
+        include_once $file;
+        
+        if( ! isset($CONFIG) || empty($CONFIG) )
+            return false;
+        
+        if( $as_array )
+            return $CONFIG;
+        
+        $return = new stdClass();
+        
+        foreach($CONFIG as $key => $val)
+            $return->$key = Library_tools::array_to_object($val);
+        
+        return $return;
     }
     
 } // End Library_module
