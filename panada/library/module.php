@@ -25,18 +25,20 @@ class Panada_module extends Panada {
     
     public function component_loader($class){
         
-        $file_name = explode('_', strtolower($class) );
-        
-        $file = GEAR . 'module/'. self::$_module_name . '/' . $file_name[0] . '/' . $file_name[1] .'.php';
+        $class      = strtolower($class);
+        $file_name  = explode('_', $class);
+        $file       = str_ireplace($file_name[0].'_'.$file_name[1].'_', '', $class);
+        $file       = GEAR . 'module/'. self::$_module_name . '/' . $file_name[1] . '/' . $file .'.php';
         
         include_once $file;
     }
 }
-//end module hendler
+//end Panada_module class
 
 
 /**
  * Module loader.
+ * A class for load a module from main controller.
  *
  * @package	Panada
  * @subpackage	Library
@@ -46,6 +48,7 @@ class Panada_module extends Panada {
 class Library_module {
     
     private $class_inctance;
+    private $modile_name;
     
     /**
      * Loader for module
@@ -62,7 +65,7 @@ class Library_module {
             
             $args = array(
                 'name' => $args,
-                'controller' => $args
+                'controller' => 'home'
             );
         }
         
@@ -75,6 +78,7 @@ class Library_module {
         $file = 'module/' . $module['name'] . '/controller/' . $module['controller'];
         
         Panada_module::$_module_name = $module['name'];
+        $this->modile_name = $module['name'];
         
         $this->load_file($file);
     }
@@ -90,7 +94,7 @@ class Library_module {
         if( ! file_exists( $file_path ) )
             Library_error::_500('<b>Error:</b> No <b>'.$file_name.'</b> file in '.$arr[0].' folder.');
         
-        $class = ucwords($prefix).'_'.$file_name;
+        $class = ucwords($this->modile_name).'_'.$prefix.'_'.$file_name;
         
         include_once $file_path;
         
@@ -133,6 +137,47 @@ class Library_module {
     public function __set($name, $value){
         
         $this->class_inctance->$name = $value;
+    }
+    
+    /**
+     * Hendle routing direct from url. The url
+     * should looks: http://website.com/index.php/module_name/controller_name/method_name
+     *
+     */
+    public function public_routing(){
+        
+        $pan_uri        = new Library_uri();
+        $module_name    = $pan_uri->get_class();
+        $controller     = $pan_uri->get_method('home');
+        $method         = $pan_uri->break_uri_string(3);
+        $class          = ucwords($module_name).'_controller_'.$controller;
+        
+        if( empty($method) )
+            $method = 'index';
+        
+        if( ! $request = $pan_uri->get_requests(4) )
+            $request = array();
+        
+        
+        if( ! file_exists( $file = GEAR . 'module/' . $module_name . '/controller/' . $controller . '.php') )
+            Library_error::_404();
+        
+        include_once $file;
+        
+        Panada_module::$_module_name = $module_name;
+        
+        $Panada = new $class();
+        
+        if( ! method_exists($Panada, $method) ){
+            
+            $request = ( ! empty($request) ) ? array_merge(array($method), $request) : array($method);
+            $method = $Panada->config->alias_method;
+            
+            if( ! method_exists($Panada, $method) )
+                Library_error::_404();
+        }
+        
+        call_user_func_array(array($Panada, $method), $request);
     }
     
 } // End Library_module
