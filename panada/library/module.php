@@ -36,11 +36,10 @@ class Panada_module extends Panada {
             
             if( $key !== false ){
                 
-                $module_name = array_slice($file_name, 0, $key);
-                $module_name = implode('_', $module_name);
-                
-                $class_name = array_slice($file_name, $key + 1, count($file_name));
-                $class_name = implode('_', $class_name);
+                $module_name    = array_slice($file_name, 0, $key);
+                $module_name    = implode('_', $module_name);
+                $class_name     = array_slice($file_name, $key + 1, count($file_name));
+                $class_name     = implode('_', $class_name);
                 
                 break;
             }
@@ -69,7 +68,7 @@ class Panada_module extends Panada {
 class Library_module {
     
     private $class_inctance;
-    private $modile_name;
+    private $module_name;
     
     /**
      * Loader for module
@@ -99,11 +98,17 @@ class Library_module {
         $file = 'module/' . $module['name'] . '/controller/' . $module['controller'];
         
         Panada_module::$_module_name = $module['name'];
-        $this->modile_name = $module['name'];
+        $this->module_name = $module['name'];
         
         $this->load_file($file);
     }
     
+    /**
+     * Include the actual class file
+     *
+     * @param string $file_path Absolute path of the file location
+     * @return void
+     */
     private function load_file($file_path){
         
         $arr = explode('/', $file_path);
@@ -115,24 +120,35 @@ class Library_module {
         if( ! file_exists( $file_path ) )
             Library_error::_500('<b>Error:</b> No <b>'.$file_name.'</b> file in '.$arr[0].' folder.');
         
-        $class = ucwords($this->modile_name).'_'.$prefix.'_'.$file_name;
+        $class = ucwords($this->module_name).'_'.$prefix.'_'.$file_name;
         
         include_once $file_path;
         
         if( ! class_exists($class) )
             Library_error::_500('<b>Error:</b> No class <b>'.$class.'</b> exists in file '.$file_name.'.');
         
-        $this->class_inctance = new $class;
+        $this->class_inctance = new $class();
         
-        $config = Library_config::instance();
-        
-        if( ! empty($config->auto_loader) ) {
+        //assigning the autoloaded class into each vars object
+        if( ! empty($this->config->auto_loader) ) {
             
-            $auto_loader = (array) $config->auto_loader;
+            $object_vars = get_object_vars($this->class_inctance);
+            unset($object_vars['config'], $object_vars['base_url']);
+            
+            $object_vars = array_keys($object_vars);
+            
+            $auto_loader = (array) $this->config->auto_loader;
             
             foreach( $auto_loader as $class_name){
+                
 		$var = Panada::var_name($class_name);
-                $this->class_inctance->$var = new $class_name();
+                $class_instance = new $class_name();
+                $this->class_inctance->$var = $class_instance;
+                
+                foreach($object_vars as $object_vars)
+                    if($object_vars != $var && is_object($this->class_inctance->$object_vars) )
+                        $this->class_inctance->$object_vars->$var = $class_instance;
+                
             }
         }
     }
