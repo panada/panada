@@ -201,28 +201,41 @@ class Library_module {
         $method         = $pan_uri->break_uri_string(3);
         $class          = ucwords($module_name).'_controller_'.$controller;
         
+        Panada_module::$_module_name = $module_name;
+        
+        $module_config  = $this->config(true);
+       
+        // Does this controller can be accessed via URL?
+        if( ! $module_config['allow_url_routing'] )
+            Library_error::_404();
+        
+        if( is_array($module_config['allow_url_routing']) && ! empty($module_config['allow_url_routing']) ){
+            if( array_search($controller, $module_config['allow_url_routing']) === false )
+                goto alias_controller;
+        }
+        
         if( empty($method) )
             $method = 'index';
         
         if( ! $request = $pan_uri->get_requests(4) )
             $request = array();
         
-        Panada_module::$_module_name = $module_name;
-        
         if( ! file_exists( $file = GEAR . 'module/' . $module_name . '/controller/' . $controller . '.php' ) ){
             
-            $config = $this->config(true);
+            alias_controller:
             
             // Does alias controller config exists?
-            if( ! isset($config['alias_controller']) || empty($config['alias_controller']) )
+            if( empty($module_config['alias_controller']) )
                 Library_error::_404();
             
-            $controller = array_keys($config['alias_controller']);
+            $controller = array_keys($module_config['alias_controller']);
             $controller = $controller[0];
-            $method     = array_values($config['alias_controller']);
+            $method     = array_values($module_config['alias_controller']);
             $method     = $method[0];
             $class      = ucwords($module_name).'_controller_'.$controller;
-            $request    = $pan_uri->get_requests(2);
+            
+            if( ! $request = $pan_uri->get_requests(2) )
+                $request = array();
             
             if( ! file_exists( $file = GEAR . 'module/' . $module_name . '/controller/' . $controller . '.php' ) )
                 Library_error::_500('<b>Error:</b> No alias controller exists in module <b>' . $module_name . '</b>. Check your module configuration.');
@@ -236,11 +249,21 @@ class Library_module {
         // autoloader
         if( ! empty($Panada->config->auto_loader) ) {
             
+            $object_vars = get_object_vars($Panada);
+            unset($object_vars['config'], $object_vars['base_url']);
+            $object_vars = array_keys($object_vars);
+            
             $auto_loader = (array) $Panada->config->auto_loader;
             
             foreach( $auto_loader as $class_name){
+                
 		$var = Panada::var_name($class_name);
-                $Panada->$var = new $class_name();
+                $class_instance = new $class_name();
+                $Panada->$var = $class_instance;
+                
+                foreach($object_vars as $object_vars)
+                    if($object_vars != $var && is_object($Panada->$object_vars) )
+                        $Panada->$object_vars->$var = $class_instance;
             }
         }
         
