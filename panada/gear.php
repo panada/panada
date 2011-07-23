@@ -48,7 +48,7 @@ class Panada_cacher {
     
     static private $instance;
     public $class_object = array();
-    public $defined_objet = null;
+    public $defined_object = null;
     
     public static function instance(){
         
@@ -162,7 +162,7 @@ function __autoload($class_name) {
         $panada_cacher->class_object[$var_name] = $Panada->$var_name;
     }
     
-    $panada_cacher->defined_objet = array_keys(get_object_vars($Panada));
+    $panada_cacher->defined_object = array_keys(get_object_vars($Panada));
     
 }
 
@@ -228,8 +228,8 @@ class Panada {
         $Panada         = Panada::instance();
         $panada_cacher  = Panada_cacher::instance();
         
-	if( isset($panada_cacher->defined_objet) )
-	    foreach ($panada_cacher->defined_objet as $key) {
+	if( isset($panada_cacher->defined_object) )
+	    foreach ($panada_cacher->defined_object as $key) {
 		if($key != 'config'){
 		    foreach ($panada_cacher->class_object as $class => $object)
 			if( $class !== $key)
