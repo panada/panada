@@ -47,7 +47,7 @@
                             <li><a href="references/library.html">Library</a></li>
                             <li><a href="references/autoloader.html">Auto Loader</a></li>
                             <li><a href="references/global_method.html">Global Method dan Properties</a></li>
-                            
+                            <li><a href="references/module.html">Module</a></li>
                         </ul>
                     </li>
                     <li>
@@ -76,10 +76,10 @@
         <div class="content">
             <div id="about" class="lead">
                 <h2>Tentang Panada</h2>
-		<p>Panada adalah high performance PHP development framework nan sederhana. Tidak hanya sederhana dalam pengertian cara penggunaanya, tetapi juga bagaimana core system-nya bekerja.</p>
+		<p>Panada adalah high performance PHP development framework namun tetap sederhana. Tidak hanya sederhana dalam pengertian cara penggunaanya, tetapi juga bagaimana core system-nya bekerja.</p>
                 <p>Dari awal dikembangkan, Panada secara khusus ditujukan untuk membantu para PHP developer yang ingin mengembangkan aplikasi web  berferforma tinggi (high performance web application). Namun demikian, prinsip kesederhanaan <strong>KISS</strong> atau <strong>Keep it Simple Son!</strong> selalu menjadi prinsip utama dalam setiap pengembangan.</p>
 		<p>Panada adalah framework sederhana dan simpel untuk pembuatan website berbasiskan
-                        PHP 5.2 ke atas. Framework ini dikembangkan dengan tujuan membantu para pengembang website untuk
+                        PHP 5.3 ke atas. Framework ini dikembangkan dengan tujuan membantu para pengembang website untuk
                         bekerja lebih cepat, lebih mudah dan lebih alamiah dalam penulisan kode.</p>
                 <p>Setiap
                         komponen didesign untuk bisa saling memanfaatkan sumberdaya (<em>resource</em>) dari komponen-komponen
@@ -117,14 +117,14 @@
     cukup melakukan sekali pendeklarasian sebagaimana umumnya dalam mendeklarasikan
     sebuah class. Contohnya:</p>
     <code>
-    $this->nama_instance = new library_nama();
+    $this->nama_instance = new Library_nama();
     </code>
     <p>Atau:</p>
     <code>
-    $this->nama_instance = new model_nama();
+    $this->nama_instance = new Model_nama();
     </code>
     <p>Baik dalam pengambilan library ataupun model cara yang dilakukan adalah sama.
-    Perbedaaanya hanya terletak pada prefix ('library_' atau 'model_') nama class
+    Perbedaaanya hanya terletak pada prefix ('Library_' atau 'Model_') nama class
     yang menunjukan tugas dan lokasi folder.</p>
                     </li>
                     <li>
@@ -132,6 +132,10 @@
                         <p>Beberapa website bisa dibuat dengan menggunakan satu sistem utama yang sama, baik itu
     dengan domain utama yang sama ataupun berbeda.</p>
                     </li>
+		    <li>
+			<h4>HMVC/Modular</h4>
+			<p>Mulai versi 0.3.1 Panada sudah mendukung feature modulasi. Hal ini akan mempermudah terutama dalam pembuatan aplikasi bersekala besar. Setiap module dapat dibuat dan dikelola secara terpisah tanpa harus mempengaruhi module yang lain.</p>
+		    </li>
             </ul>
 			
 	    </div>
@@ -139,7 +143,7 @@
 		<h3>Requirement</h3>
 		<p>Panada setidaknya membutuhkan:</p>
 		<ul>
-		    <li><a href="http://php.net/" target="_blank">PHP</a> versi 5.2 atau yang lebih baru.</li>
+		    <li><a href="http://php.net/" target="_blank">PHP</a> versi 5.3 atau yang lebih baru.</li>
 		    <li>Web server seperti <a href="http://httpd.apache.org/" target="_blank">Apache</a>, <a href="http://wiki.nginx.org/Main" target="_blank">Nginx</a> ataupun <a href="www.lighttpd.net/" target="_blank">Lighttpd</a> untuk menjalankan PHP.</li>
 		</ul>
 		<p>Untuk meningkatkan performa aplikasi, disarankan juga untuk menggunakan:</p>
