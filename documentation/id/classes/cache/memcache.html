@@ -1,0 +1,549 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <title>Panada PHP Framework 0.3.1 Documentation  - Memcache Cache Driver</title>
+    <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen" />
+</head>
+<body>
+    <div class="header">
+        <span class="logo"><a target="_blank" href="http://panadaframework.com">Panada</a></span>
+        <div class="menu">
+            <form action="http://www.google.com/search" method="get">
+	    <input type="hidden" value="panadaframework.com/documentation/" id="as_sitesearch" name="as_sitesearch">
+            <input class="search-input" type="text" name="q" /><button class="search-button" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="subheader">
+        <h1>Panada Framework 0.3.1 Documentation</h1>
+    </div>
+    
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="navigation">
+                <ul>
+                    <li>
+                        <a href="../index.html">Umum</a>
+                        <ul>
+                            <li><a href="../index.html#about">Tentang Panada</a></li>
+                            <li><a href="../index.html#feature">Keunggulan (<em>Feature</em>)</a></li>
+                            <li><a href="../index.html#license">Lisensi</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="../config.html">Konfigurasi</a>
+                        <ul>
+                            <li><a href="../config.html#general">Dasar</a></li>
+                            <li><a href="../config.html#additional_config">Tambahan</a></li>
+                            <li><a href="../config.html#webserver">Webserver</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Referensi
+                        <ul>
+                            <li><a href="../references/controller.html">Controller</a></li>
+                            <li><a href="../references/model.html">Model</a></li>
+                            <li><a href="../references/view.html">View</a></li>
+                            <li><a href="../references/library.html">Library</a></li>
+                            <li><a href="../references/autoloader.html">Auto Loader</a></li>
+                            <li><a href="../references/global_method.html">Global Method dan Properties</a></li>
+			    <li><a href="../references/module.html">Module</a></li>
+                        </ul>
+                            
+                    </li>
+                    <li>
+                        <a href="index.html">Paket Library</a>
+                        <ul>
+                            <li><a href="../database/index.html">Database</a></li>
+			    <li>
+				<a href="index.html">Cache</a>
+				<ul>
+				    <li><a href="index.html#config">Konfigurasi</a></li>
+				    <li><a href="index.html#init">Inisialisasi</a></li>
+				    <li><a href="index.html#method">Method</a></li>
+				    <li><a href="index.html#namespace">Namespace</a></li>
+				    <li><a href="index.html#specific">API Spesifik Driver</a></li>
+				</ul>
+			    </li>
+                            <li><a href="session.html">Session</a></li>
+                            <li><a href="pagination.html">Pagination</a></li>
+                            <li><a href="email.html">Email</a></li>
+                            <li><a href="encryption.html">Encryption</a></li>
+                            <li><a href="upload.html">Upload</a></li>
+                            <li><a href="image.html">Image</a></li>
+                            <li><a href="request.html">Request</a></li>
+                            <li><a href="rest.html">RESTfull</a></li>
+			    <li><a href="tools.html">Tools</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../contribution.html">Kontribusi</a></li>
+                    <li><a href="../credit.html">Credit</a></li>
+                </ul>
+	    </div>
+            
+        </div>
+        
+        <div class="content">
+            <div class="lead">
+                <h2>Memcache</h2>
+                <p><a target="_blank" href="http://memcached.org">Memcache</a> adalah aplikasi memory object caching yang terdistribusi. Dengan melakukan caching object, hal ini akan mempercepat kinerja aplikasi, karena mengurangi beban database.</p>
+		<p><strong>Untuk menggunakan driver ini, pastikan PHP Anda telah terinstall ekstensi Memcache</strong>.</p>
+                
+            </div>
+	    
+            <div class="main">
+                <h3>Konfigurasi</h3>
+		
+                <p>Konfigurasi dilakukan di file <strong>apps/config.php</strong></p>
+                <p>Bagian-bagian yang harus dilengkapi adalah host, dan port.</p>
+<textarea rows="4" cols="50" class="textarea">
+$CONFIG['cache']['default']['driver'] = 'memcache';
+$CONFIG['cache']['default']['host'] = array('localhost');
+$CONFIG['cache']['default']['port'] = 11211;
+</textarea>
+                <p>Jika diperlukan untuk melakukan setting Compression Threshold, lihat pada bagian <b>panada/drivers/cache/memcache.php: 36</b></p>
+                <code>
+                    <b>bool</b> $this->setCompressThreshold(20000, 0.2);
+                </code>
+                <p>Compression Threshold berfungsi untuk melakukan pengkompressan object yang besar secara otomatis.</p>
+                <p>Lebih lanjut mengenai Compression Threshold, silahkan lihat di <a href="http://www.php.net/manual/en/memcache.setcompressthreshold.php" target="_blank">http://www.php.net/manual/en/memcache.setcompressthreshold.php</a></p>
+            </div>
+            
+            <div class="main">
+                <h3 id="init">Inisialisasi</h3>
+                <p>Inisialisasi driver Memcached bisa dilakukan di dalam constructor ataupun method yang bersangkutan.</p>
+                <code>
+                    $this->cache = new Library_cache();
+                </code>
+		
+            </div>
+
+            <div class="main">
+                <h3 id="set">Set</h3>
+                <p>Menyimpan data yang akan dicache.</p>
+                <code>
+                    <b>bool</b> $this->cache->set($key, $var, $flag = 0, $expire = 0);
+                </code>
+                
+                <h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$key</td>
+			<td>string</td>
+			<td>Key unik sebagai identitas penanda item yang dicache.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$var</td>
+			<td> mix string | integer | array | object | boolan</td>
+			<td>Data yang ingin dicache.</td>
+		    </tr>
+		    <tr>
+			<td>$flag</td>
+			<td>Integer</td>
+			<td>Flag untuk melakukan kompresi terhadap data yang akan dicache. Gunakan <b>MEMCACHE_COMPRESSED</b> untuk falg-nya.</td>
+		    </tr>
+                    <tr class="odd">
+			<td>$expire</td>
+			<td>Integer</td>
+			<td>Waktu yang menunjukan berapa lama item di cache. Format waktu dalam satuan detik. Format waktu juga bisa diisikan dalam Unix timestamp. Nilai defaultnya adalah <b>0</b>, yang berarti cache disimpan selama mungkin.</td>
+		    </tr>
+                    
+		</tbody>
+		</table>
+                <p>Keterangan lebih lanjut bisa dilihat di <a href="http://www.php.net/manual/en/memcache.set.php" target="_blank">http://www.php.net/manual/en/memcache.set.php</a></p>
+            </div>
+	    
+	    <div class="main">
+                <h3 id="add">Add</h3>
+                <p>Menyimpan data yang akan dicache hanya jika key yang digunakan belum tersedia.</p>
+                <code>
+                    <b>bool</b> $this->cache->add($key, $var, $flag = 0, $expire = 0);
+                </code>
+                
+                <h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$key</td>
+			<td>string</td>
+			<td>Key unik sebagai identitas penanda item yang dicache.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$var</td>
+			<td> mix string | integer | array | object | boolan</td>
+			<td>Data yang ingin dicache.</td>
+		    </tr>
+		    <tr>
+			<td>$flag</td>
+			<td>Integer</td>
+			<td>Flag untuk melakukan kompresi terhadap data yang akan dicache. Gunakan <b>MEMCACHE_COMPRESSED</b> untuk falg-nya.</td>
+		    </tr>
+                    <tr class="odd">
+			<td>$expire</td>
+			<td>Integer</td>
+			<td>Waktu yang menunjukan berapa lama item di cache. Format waktu dalam satuan detik. Format waktu juga bisa diisikan dalam Unix timestamp. Nilai defaultnya adalah <b>0</b>, yang berarti cache disimpan selama mungkin.</td>
+		    </tr>
+                    
+		</tbody>
+		</table>
+                <p>Keterangan lebih lanjut bisa dilihat di <a href="http://www.php.net/manual/en/memcache.add.php" target="_blank">http://www.php.net/manual/en/memcache.add.php</a></p>
+            </div>
+	    
+	    <div class="main">
+                <h3 id="replace">Replace</h3>
+                <p>Menggantikan data yang sudah dicache sebelumnya berdasarkan key yang tersedia.</p>
+                <code>
+                    <b>bool</b> $this->cache->replace($key, $var, $flag = 0, $expire = 0);
+                </code>
+                
+                <h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$key</td>
+			<td>string</td>
+			<td>Key unik sebagai identitas penanda item yang dicache.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$var</td>
+			<td> mix string | integer | array | object | boolan</td>
+			<td>Data yang ingin dicache.</td>
+		    </tr>
+		    <tr>
+			<td>$flag</td>
+			<td>Integer</td>
+			<td>Flag untuk melakukan kompresi terhadap data yang akan dicache. Gunakan <b>MEMCACHE_COMPRESSED</b> untuk falg-nya.</td>
+		    </tr>
+                    <tr class="odd">
+			<td>$expire</td>
+			<td>Integer</td>
+			<td>Waktu yang menunjukan berapa lama item di cache. Format waktu dalam satuan detik. Format waktu juga bisa diisikan dalam Unix timestamp. Nilai defaultnya adalah <b>0</b>, yang berarti cache disimpan selama mungkin.</td>
+		    </tr>
+                    
+		</tbody>
+		</table>
+                <p>Keterangan lebih lanjut bisa dilihat di <a href="http://www.php.net/manual/en/memcache.replace.php" target="_blank">http://www.php.net/manual/en/memcache.replace.php</a></p>
+            </div>
+            
+            <div class="main">
+                <h3 id="get">Get</h3>
+                <p>Mendapatkan data yang sudah dicache.</p>
+                
+                <code>
+                    <b>string</b> $this->cache->get($key, $flags = 0);<br />
+                    <b>array</b> $this->cache->get($keys, $flags = array() );
+                </code>
+                
+                <h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$key</td>
+			<td>string | array</td>
+			<td>Key atau array key dari data yang akan didapatkan dari cache.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$flag</td>
+			<td>Integer</td>
+			<td>Flag yang digunakan pada method set.</td>
+		    </tr>
+                    
+                    
+		</tbody>
+		</table>
+                <p>Keterangan lebih lanjut bisa dilihat di <a href="http://www.php.net/manual/en/memcache.get.php" target="_blank">http://www.php.net/manual/en/memcache.get.php</a></p>
+                
+            </div>
+	    
+	    <div class="main">
+                <h3 id="delete">Delete</h3>
+                <p>Hapus item yang sudah dihapus dari cache berdasarkan key-nya.</p>
+                
+                <code>
+                    <b>bool</b> $this->cache->delete($key)
+                </code>
+                
+                <h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$key</td>
+			<td>string</td>
+			<td>Key dari cache yang akan dihapus.</td>
+		    </tr>
+		    
+		</tbody>
+		</table>
+                <p>Keterangan lebih lanjut bisa dilihat di <a href="http://www.php.net/manual/en/memcache.delete.php" target="_blank">http://www.php.net/manual/en/memcache.delete.php</a></p>
+                
+            </div>
+	    
+	    <div class="main">
+                <h3 id="flush">Flush</h3>
+                <p>Hapus semua item cache.</p>
+                
+                <code>
+                    <b>bool</b> $this->cache->flush();
+                </code>
+		
+		<div class="notice">
+		    <p><b>Perhatian:</b> Penggunaan method ini akan mengakibatkan terhapusnya semua object yang sudah disimpan sehingga bisa mengakibatkan meningkatnya penggunaan database.</p>
+		</div>
+                <p>Keterangan lebih lanjut bisa dilihat di <a href="http://www.php.net/manual/en/memcache.flush.php" target="_blank">http://www.php.net/manual/en/memcache.flush.php</a></p>
+                
+            </div>
+	    
+	    <div class="main">
+                <h3 id="increment">Increment</h3>
+                <p>Melakukan penambahan nilai incremental berdasarkan nilai item yang ada di cache.</p>
+                
+                <code>
+                    <b>int</b> $this->cache->increment($key, $value = 1);
+                </code>
+		
+		<h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$key</td>
+			<td>string</td>
+			<td>Key dari item yang dicache.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$value</td>
+			<td>Integer</td>
+			<td>Nilai integer penambah.</td>
+		    </tr>
+		    
+		</tbody>
+		</table>
+                <p>Keterangan lebih lanjut bisa dilihat di <a href="http://www.php.net/manual/en/memcache.increment.php" target="_blank">http://www.php.net/manual/en/memcache.increment.php</a></p>
+                
+            </div>
+	    
+	    <div class="main">
+                <h3 id="decrement">Decrement</h3>
+                <p>Melakukan pengurangan nilai decremental berdasarkan nilai item yang ada di cache.</p>
+                
+                <code>
+                    <b>int</b> $this->cache->decrement($key, $value = 1);
+                </code>
+		
+		<h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$key</td>
+			<td>string</td>
+			<td>Key dari item yang dicache.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$value</td>
+			<td>Integer</td>
+			<td>Nilai integer penambah.</td>
+		    </tr>
+		    
+		</tbody>
+		</table>
+                <p>Keterangan lebih lanjut bisa dilihat di <a href="http://www.php.net/manual/en/memcache.decrement.php" target="_blank">http://www.php.net/manual/en/memcache.decrement.php</a></p>
+                
+            </div>
+	    
+	    <div class="main">
+                <h3 id="other_method">Other Method</h3>
+                <p>Library Memcached panada merupakan <em>inheritance</em> dari class <b>Memcache</b> natif PHP. Hal ini berarti, semua resources yang ada pada class tersebut bisa langsung digunakan.</p>
+		<p>Berikut adalah matrik dari method-method class Memcache yang bisa digunakan:</p>
+		
+		<table>
+		    <thead>
+			<tr>
+			    <th scope="col">PHP Memcache</th>
+			    <th scope="col">Panada Memcached</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>Memcache::close</td>
+			<td>$this->cache->close()</td>
+			<td><a target="_blank" href="http://www.php.net/manual/en/memcache.close.php">http://www.php.net/manual/en/memcache.close.php</a></td>
+		    </tr>
+		    <tr class="odd">
+			<td>Memcache::getExtendedStats</td>
+			<td>$this->cache->getExtendedStats()</td>
+			<td><a target="_blank" href="http://www.php.net/manual/en/memcache.getextendedstats.php">http://www.php.net/manual/en/memcache.getextendedstats.php</a></td>
+		    </tr>
+		    
+		</tbody>
+		</table>
+                
+		
+	    </div>
+	    
+	    <div class="main">
+                <h3 id="other_method">Contoh</h3>
+                <p>Berikut adalah contoh penggunaan dari masing-masing method di atas.</p>
+		
+<textarea rows="85" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+        
+        $this->cache = new Library_cache();
+    }
+    
+    // Cache item baru selama 15 menit
+    public function index(){
+        
+	// Contoh string item
+        $string_value = 'This is the string value';
+	
+	// Contoh array item
+	$array_value = array('val1', 'val2', 'val3');
+	
+	// Contoh object item
+	$obj_value = new stdClass;
+	$obj_value->val1 = 'val1';
+	$obj_value->val2 = 'val2';
+	$obj_value->val3 = 'val3';
+	
+	// Contoh integer item
+	$int_value = 15;
+	
+	$this->cache->set('key1', $string_value, 0, 900);
+	$this->cache->set('key2', $array_value, 0, 900);
+	$this->cache->set('key3', $obj_value, 0, 900);
+	$this->cache->set('key4', $int_value);
+    }
+    
+    // Dapatkan item yang sudah dicache
+    public function get_memcached_cache(){
+	
+	// Output: This is the string value
+	print_r($this->cache->get('key1') );
+	
+	// Output: Array ( [0] => val1 [1] => val2 [2] => val3 )
+	print_r( $this->cache->get('key2') );
+	
+	// Output: stdClass Object ( [val1] => val1 [val2] => val2 [val3] => val3 )
+	print_r( $this->cache->get('key3') );
+	
+	// Output: 15
+	print_r( $this->cache->get('key4') );
+	
+	// Output: Array ( [key1] => This is the string value [key2] => Array ( [0] => val1 [1] => val2 [2] => val3 ) [key3] => stdClass Object ( [val1] => val1 [val2] => val2 [val3] => val3 ) [key4] => 15 )
+	$keys = array('key1', 'key2', 'key3', 'key4');
+	print_r($this->cache->get($keys) );
+	
+	// Output: 17
+	print_r( $this->cache->increment('key4', 2) );
+	
+	// Output: 7
+	print_r( $this->cache->decrement('key4', 10) );
+    }
+    
+    // Hapus item yang sudah dicache
+    public function delete_memcached_cache(){
+	
+	$this->cache->delete('key2');
+	
+	// Output: bool(false)
+	var_dump( $this->cache->get('key2') );
+    }
+    
+    public function clear_all_memcached_cache(){
+	
+	$this->cache->flush();
+	
+	// Output: bool(false)
+	var_dump( $this->cache->get('key1') );
+	
+	// Output: bool(false)
+	var_dump( $this->cache->get('key3') );
+	
+	// Output: bool(false)
+	var_dump( $this->cache->get('key4') );
+    }
+}
+</textarea>
+
+	    </div>
+	    <div id="discussion" class="main">
+		<h3>Diskusi</h3>
+		<div id="disqus_thread"></div>
+	    </div>
+
+        </div>
+        
+    </div>
+          
+    <div class="footer">
+        <span class="right">All Rights Reserved.</span>
+    </div>
+    <script type="text/javascript">
+	var disqus_shortname = 'panada';
+	var disqus_url = 'http://panadaframework.com/documentation/id/classes/cache/memcache.html';
+	var disqus_identifier = disqus_url;
+	(function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>

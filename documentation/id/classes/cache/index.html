@@ -1,0 +1,415 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <title>Panada PHP Framework 0.3.1 Documentation - Cache Configuration</title>
+    <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen" />
+</head>
+<body>
+    <div class="header">
+    <span class="logo"><a target="_blank" href="http://panadaframework.com">Panada</a></span>
+        <div class="menu">
+            <form action="http://www.google.com/search" method="get">
+	    <input type="hidden" value="panadaframework.com/documentation/" id="as_sitesearch" name="as_sitesearch">
+            <input class="search-input" type="text" name="q" /><button class="search-button" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="subheader">
+        <h1>Panada Framework 0.3.1 Documentation</h1>
+    </div>
+    
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="navigation">
+                <ul>
+                    <li>
+                        <a href="../index.html">Umum</a>
+                        <ul>
+                            <li><a href="../../index.html#about">Tentang Panada</a></li>
+                            <li><a href="../../index.html#feature">Keunggulan (<em>Feature</em>)</a></li>
+                            <li><a href="../../index.html#license">Lisensi</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="../../config.html">Konfigurasi</a>
+                        <ul>
+                            <li><a href="../../config.html#general">Dasar</a></li>
+                            <li><a href="../../config.html#additional_config">Tambahan</a></li>
+                            <li><a href="../../config.html#webserver">Webserver</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Referensi
+                        <ul>
+                            <li><a href="../../references/controller.html">Controller</a></li>
+                            <li><a href="../../references/model.html">Model</a></li>
+                            <li><a href="../../references/view.html">View</a></li>
+                            <li><a href="../../references/library.html">Library</a></li>
+                            <li><a href="../../references/autoloader.html">Auto Loader</a></li>
+                            <li><a href="../../references/global_method.html">Global Method dan Properties</a></li>
+			    <li><a href="../../references/module.html">Module</a></li>
+                        </ul>
+                            
+                    </li>
+                    <li>
+                        <a href="../index.html">Paket Library</a>
+                        <ul>
+                            <li><a href="../database/index.html">Database</a></li>
+                            <li>
+				<a href="index.html">Cache</a>
+				<ul>
+				    <li><a href="#config">Konfigurasi</a></li>
+				    <li><a href="#init">Inisialisasi</a></li>
+				    <li><a href="#method">Method</a></li>
+				    <li><a href="#namespace">Namespace</a></li>
+				    <li><a href="#specific">API Spesifik Driver</a></li>
+				</ul>
+			    </li>
+                            <li><a href="../session.html">Session</a></li>
+                            <li><a href="../pagination.html">Pagination</a></li>
+                            <li><a href="../email.html">Email</a></li>
+                            <li><a href="../encryption.html">Encryption</a></li>
+                            <li><a href="../upload.html">Upload</a></li>
+                            <li><a href="../image.html">Image</a></li>
+                            <li><a href="../request.html">Request</a></li>
+                            <li><a href="../rest.html">RESTfull</a></li>
+			    <li><a href="../tools.html">Tools</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../contribution.html">Kontribusi</a></li>
+                    <li><a href="../../credit.html">Credit</a></li>
+                </ul>
+	    </div>
+            
+        </div>
+        
+        <div class="content">
+            <div class="lead">
+                <h2>Cache</h2>
+		<p>Saat ini, driver Obeject Cache yang sudah tersedia adalah <a href="http://php.net/manual/en/book.apc.php">APC</a>, <a href="http://www.php.net/manual/en/book.memcache.php">Memcache</a> dan <a href="http://www.php.net/manual/en/book.memcached.php">Memcached</a>.</p>
+                <p>Sebelum menggunakan library cache, terlebih dahulu harus dilakukan konfigurasi. Bagian konfigurasi database terletak pada file <strong>apps/config.php</strong>.</p>
+            </div>
+            
+            <div class="main">
+                <h3 id="config">Konfigurasi</h3>
+                
+		<p>Bagian-bagian yang harus dilengkapi <strong>nama_koneksi</strong> dan <strong>driver</strong>.</p>
+		<code>
+		    $CONFIG['cache']['<strong>nama_koneksi</strong>']['driver'] = '<strong>driver</strong>';
+		</code>
+		<p>Saat ini pilihan driver yang tersedia adalah <strong>apc</strong>, <strong>memcache</strong> dan <strong>memcached</strong>.</p>
+		<p>Sebagai contoh jika ingin mengunakan APC sebagai cache, maka konfigurasinya adalah:</p>
+		<code>
+		    $CONFIG['cache']['default']['driver'] = '<strong>apc</strong>';
+		</code>
+		
+		<p>Nilai <strong>default</strong> pada konfigurasi di atas menunjukan koneksi cache default. Jika Anda menginginkan koneksi cache yang lain silahkan tambahkan nama baru pada bagian ini. Sebagai contoh:</p>
+
+<textarea rows="8" cols="50" class="textarea">
+// Koneksi default
+$CONFIG['cache']['default']['driver'] = 'apc';
+
+// Koneksi cache 2
+$CONFIG['cache']['cache_2']['driver'] = 'memcached';
+$CONFIG['cache']['cache_2']['host'] = array('localhost');
+$CONFIG['cache']['cache_2']['port'] = 11211;
+</textarea>
+		<h4 id="init">Inisialisasi</h4>
+		<p>Berikut adalah contoh membuat <em>instance</em> untuk DB baik itu di dalam model ataupun controller:</p>
+<textarea rows="12" cols="50" class="textarea">
+&lt;?php
+class Model_comments {
+    
+    public function __construct(){
+        
+	// Cache koneksi default
+	$this->cache = new Library_cache();
+	// Cache koneksi 2
+	$this->cache2 = new Library_cache('cache_2');
+    }
+}
+</textarea>
+		
+            </div>
+	    <div class="main">
+		<h3 id="method">Method</h3>
+		
+		<p>Untuk berinteraksi dengan cache driver, berikut adalah API yang tersedia:</p>
+		
+		<h4>set_value</h4>
+		<p>Melakukan penyimpanan data yang akan di-cache.</p>
+		<code>
+		    <strong>mix</strong> $this->cache-><strong>set_value</strong>($key, $value, $expire = 0, $namespace = false);
+		</code>
+		<p>Parameter</p>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$key</td>
+			<td>string</td>
+			<td>Nama key unik sebagai identifier cache.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$value</td>
+			<td>mix</td>
+			<td>Nilai yang akan disimpan ke dalam cache.</td>
+		    </tr>
+                    <tr>
+			<td>$expire</td>
+			<td>int</td>
+			<td>Berapa lama cache akan disimpan dalam satuan detik.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$namespace</td>
+			<td>string</td>
+			<td>Key dari namespace yang ingin digunakan.</td>
+		    </tr>
+                    
+		</tbody>
+		</table>
+		
+		<h4>add_value</h4>
+		<p>Melakukan penyimpanan data yang akan di-cache hanya jika key yang diberikan belum pernah digunakan sebelumnya. Jika ternyata key-nya sudah digunakan maka nilai returnnya adalah <strong>false</strong>.</p>
+		<code>
+		    <strong>mix</strong> $this->cache-><strong>add_value</strong>($key, $value, $expire = 0, $namespace = false);
+		</code>
+		<p>Parameter</p>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$key</td>
+			<td>string</td>
+			<td>Nama key unik sebagai identifier cache.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$value</td>
+			<td>mix</td>
+			<td>Nilai yang akan disimpan ke dalam cache.</td>
+		    </tr>
+                    <tr>
+			<td>$expire</td>
+			<td>int</td>
+			<td>Berapa lama cache akan disimpan dalam satuan detik.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$namespace</td>
+			<td>string</td>
+			<td>Key dari namespace yang ingin digunakan.</td>
+		    </tr>
+                    
+		</tbody>
+		</table>
+		
+		<h4>update_value</h4>
+		<p>Melakukan update data yang sudah di-cache berdasarkan key yang diberikan.</p>
+		<code>
+		    <strong>mix</strong> $this->cache-><strong>update_value</strong>($key, $value, $expire = 0, $namespace = false);
+		</code>
+		<p>Parameter</p>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$key</td>
+			<td>string</td>
+			<td>Nama key unik sebagai identifier cache.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$value</td>
+			<td>mix</td>
+			<td>Nilai yang akan disimpan ke dalam cache.</td>
+		    </tr>
+                    <tr>
+			<td>$expire</td>
+			<td>int</td>
+			<td>Berapa lama cache akan disimpan dalam satuan detik.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$namespace</td>
+			<td>string</td>
+			<td>Key dari namespace yang ingin digunakan.</td>
+		    </tr>
+                    
+		</tbody>
+		</table>
+		
+		<h4>get_value</h4>
+		<p>Mendapatkan data yang sudah di-cache berdasarkan key yang diberikan.</p>
+		<code>
+		    <strong>mix</strong> $this->cache-><strong>get_value</strong>($key, $namespace = false);
+		</code>
+		<p>Parameter</p>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$key</td>
+			<td>string</td>
+			<td>Nama key unik sebagai identifier cache.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$namespace</td>
+			<td>string</td>
+			<td>Key dari namespace yang ingin digunakan.</td>
+		    </tr>
+                    
+		</tbody>
+		</table>
+		
+		<h4>delete_value</h4>
+		<p>Menghapus data yang sudah di-cache berdasarkan key yang diberikan.</p>
+		<code>
+		    <strong>mix</strong> $this->cache-><strong>delete_value</strong>($key, $namespace = false);
+		</code>
+		<p>Parameter</p>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$key</td>
+			<td>string</td>
+			<td>Nama key unik sebagai identifier cache.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$namespace</td>
+			<td>string</td>
+			<td>Key dari namespace yang ingin digunakan.</td>
+		    </tr>
+                    
+		</tbody>
+		</table>
+		
+		<h4>flush_values</h4>
+		<p>Menghapus semua data yang sudah di-cache.</p>
+		<code>
+		    <strong>bool</strong> $this->cache-><strong>flush_values</strong>();
+		</code>
+		
+	    </div>
+	    
+	    <div class="main">
+		<h3 id="namespace">Namespace</h3>
+		<p>Namespace bisa dignakan jika Anda ingin melakukan modifikasi data cache dengan beberapa key yang berbeda-beda secara bersamaan.</p>
+		<p>Sebagai contoh jika ada sebuah data yang Anda tampilkan dengan cara paging.
+		Setiap halaman dapat menampung 10 data dimana data ini kemudian disimpan ke dalam cache. Key dari masing-masing halaman misalnya <strong>comment_page_1</strong>, <strong>comment_page_2</strong>, <strong>comment_page_3</strong> ... dst.
+		Jika ada data baru yang ingin ditambahkan dan semua data ini perlu di flush, maka untuk melakukan hal ini cukup dengan menghapus namespace-nya saja. Berikut adalah contohnya:</p>
+		
+<textarea rows="48" cols="50" class="textarea">
+&lt;?php
+
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+        
+        $this->cache = new Library_cache();
+    }
+    
+    public function index(){
+        
+	$namespace = 'comment_id_29';
+	
+        $key = 'comment_page_1';
+	print_r( $this->cache->get_value($key, $namespace) );
+	
+	$key = 'comment_page_2';
+	print_r( $this->cache->get_value($key, $namespace) );
+    }
+    
+    public function add_cache_comment(){
+	
+	$namespace = 'comment_id_29';
+	$key = 'comment_page_3';
+	
+	$comments = array(
+	    30 => array(
+		'id' => 30,
+		'comment' => 'This is my comment'
+	    ),
+	    31 => array(
+		'id' => 31,
+		'comment' => 'Enother my comment'
+	    ),
+	);
+	
+	$this->cache->set_value( $key, $comments, 0, $namespace );
+    }
+    
+    public function delete_namespace(){
+	
+	$namespace = 'comment_id_29';
+	$this->cache->delete_value($namespace);
+    }
+}
+</textarea>
+
+	    </div>
+	    <div class="main">
+		<h3 id="specific">API Spesifik Driver</h3>
+		<p>Selain dari API yang sudah disediakan, Anda juga bisa menggunakan API yang tersedia dari masing-masing driver.</p>
+		<ul>
+		    <li><a href="apc.html">APC</a></li>
+		    <li><a href="memcache.html">Memcache</a></li>
+		    <li><a href="memcached.html">Memcached</a></li>
+		</ul>
+	    </div>
+	    
+	    <div id="discussion" class="main">
+		<h3>Diskusi</h3>
+		<div id="disqus_thread"></div>
+	    </div>
+        
+        </div>
+        
+    </div>
+          
+    <div class="footer">
+        <span class="right">All Rights Reserved.</span>
+    </div>
+    <script type="text/javascript">
+	var disqus_shortname = 'panada';
+	var disqus_url = 'http://panadaframework.com/documentation/id/classes/cache/index.html';
+	var disqus_identifier = disqus_url;
+	(function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>
