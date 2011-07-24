@@ -90,7 +90,7 @@
         <div class="content">
             <div class="lead">
                 <h2>Session</h2>
-                <p>Panada menggunakan session bawaan dari PHP (<em>native session</em>). Sebelm digunakan, library session terlebih dahulu harus diinisialisasi.</p>
+                <p>Panada memiliki tiga media penyimpanan data session yang bisa digunakan yaitu <strong>cookie</strong>, <strong>database</strong>, <strong>cache</strong> dan bawaan dari PHP (<strong><em>native session</em></strong>). Sebelm digunakan, library session terlebih dahulu harus diinisialisasi.</p>
             
 		<code>
 			$this->session  = new Library_session();
@@ -102,54 +102,56 @@
                 
                 <p>Bagian konfigurasi Library Session terletak pada file <strong>apps/config.php</strong>.</p>
 		<p>Anda bisa menyesuaikan parameter-parameter di bawah ini sesuai dengan kebutuhan.</p>
-<textarea rows="9" cols="50" class="textarea">
-$CONFIG['session']['session_expire'] = 7200;
-$CONFIG['session']['session_name'] = 'PAN_SID';
-$CONFIG['session']['session_cookie_expire'] = 0;
-$CONFIG['session']['session_cookie_path'] = '/';
-$CONFIG['session']['session_cookie_secure'] = false;
-$CONFIG['session']['session_cookie_domain'] = '';
-$CONFIG['session']['session_store'] = 'native';
-$CONFIG['session']['session_db_name'] = 'sessions';
+<textarea rows="10" cols="50" class="textarea">
+$CONFIG['session']['expiration'] = 7200;
+$CONFIG['session']['name'] = 'PAN_SID';
+$CONFIG['session']['cookie_expire'] = 0;
+$CONFIG['session']['cookie_path'] = '/';
+$CONFIG['session']['cookie_secure'] = false;
+$CONFIG['session']['cookie_domain'] = '';
+$CONFIG['session']['driver'] = 'native';
+$CONFIG['session']['driver_connection'] = 'default';
+$CONFIG['session']['storage_name'] = 'sessions';
 </textarea>
 		
 		<p>Berikut adalah penjelasan dari masing-masing parameter:</p>
 		<ul>
 			<li>
-			    <strong>session_expire</strong>
-			    <p>session_expire menentukan berapa lama waktu session bisa digunakan hingga <em>expired</em>. Waktu dihitung dimulai dari <em>request</em> terakhir.
+			    <strong>Expiration</strong>
+			    <p>Expiration menentukan berapa lama waktu session bisa digunakan hingga <em>expired</em>. Waktu dihitung dimulai dari <em>request</em> terakhir.
 			    <br />Secara <em>default</em> Panada menetapkan waktu <em>expired</em> selama 2 jam (7200 detik).
 			    <br /><strong>Catatan</strong>: Parameter ini tidak berlaku jika Anda menggunakan Debian dan turunannya dan menggunakan pilihan 'native' pada parameter 'session_store'.</p>
 			</li>
 			
 			<li>
-			    <strong>session_name</strong>
-			    <p>session_name adalah nama cookie yang digunakan sebagai identitas session di browser.</p>
+			    <strong>name</strong>
+			    <p>Name adalah nama cookie yang digunakan sebagai identitas session di browser.</p>
 			</li>
 			<li>
-			    <strong>session_cookie_expire</strong>
-			    <p>session_cookie_expire menentukan berapa lama cookie session disimpan di browser.</p>
+			    <strong>cookie_expire</strong>
+			    <p>Cookie_expire menentukan berapa lama cookie session disimpan di browser.</p>
 			</li>
 			<li>
-			    <strong>session_cookie_path</strong>
-			    <p>session_cookie_path menentukan path-mana berlakunya cookie session.</p>
+			    <strong>cookie_path</strong>
+			    <p>Cookie_path menentukan path-mana berlakunya cookie session.</p>
 			</li>
 			<li>
-			    <strong>session_cookie_secure</strong>
-			    <p>session_cookie_secure menentukan apakah cookie session hanya berlaku di protokol HTTPS saja atau tidak.</p>
+			    <strong>cookie_secure</strong>
+			    <p>Cookie_secure menentukan apakah cookie session hanya berlaku di protokol HTTPS saja atau tidak.</p>
 			</li>
 			<li>
-			    <strong>session_cookie_domain</strong>
-			    <p>session_cookie_domain menentukan di mana session cookie berlaku. Jika Anda ingin session berlaku pada semua sub-domain, maka isikan dengan format '.domainanda.com'</p>
+			    <strong>cookie_domain</strong>
+			    <p>Cookie_domain menentukan di mana session cookie berlaku. Jika Anda ingin session berlaku pada semua sub-domain, maka isikan dengan format '.domainanda.com'</p>
 			</li>
 			<li>
-			    <strong>session_store</strong>
-			    <p>session_store menentukan di mana tempat penyimpanan data session. Pilihannya adalah:</p>
-			    <ul>
-				<li><strong>native</strong> (file), yaitu mengikuti setting default PHP.</li>
-				<li><strong>database</strong>, yaitu menyimpannya ke dalam database.</li>
-			    </ul>	
-			    <p>Jika Anda memilih database, Anda harus mempersiapkan sebuah table dengan struktur seperti berikut:</p>
+			    <strong>driver</strong>
+			    <p>Driver menentukan media penyimpanan session. Pilihannya adalah <strong>cookie</strong>, <strong>database</strong>, <strong>cache</strong> dan <strong>native</strong>.</p>
+			</li>
+			<li>
+			    <strong>driver_connection</strong>
+			    <p>Koneksi yang digunakan pada driver database atau session.</p>
+			    <p>Jika driver yang dipilih adalah database dan driver database yang digunakan adalah mysql, postgresql atau sqlite, berikut adalah struktur databasenya:</p>
+			    
 <textarea rows="8" cols="50" class="textarea">
 CREATE TABLE sessions (
   session_id varchar(32) NOT NULL,
@@ -160,9 +162,10 @@ CREATE TABLE sessions (
 );
 </textarea>
 			</li>
+			
 			<li>
-			    <strong>session_db_name</strong>
-			    <p>Jika Anda menyimpan data session di dalam database dan ingin menggunakna nama table lain, silahkan tentukan pada parameter ini.</p>
+			    <strong>storage_name</strong>
+			    <p>Nama yang digunakan untuk menyimpan data session baik itu di dalam database (table) atapun cache (collection/namespace).</p>
 			</li>
 			
 		</ul>
