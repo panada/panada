@@ -138,7 +138,7 @@ class Controller_home extends Panada {
 
 				<p>Untuk menampilkan data <strong>output</strong> dari controller ke view, maka masing-masing data tersebut harus di isikan ke sebuah variable array. Nilai yang diisikan bisa data apapun, array, object, string, integer, boolean dll.</p>
 				<p>Berikut adalah contoh untuk meneruskan data yang diproduksi di controller dan menampilkannya di view:</p>
-<textarea rows="17" cols="50" class="textarea">
+<textarea rows="19" cols="50" class="textarea">
 &lt;?php
 class Controller_home extends Panada {
     
@@ -149,8 +149,10 @@ class Controller_home extends Panada {
     
     public function index(){
         
-	$data['title'] = 'Hello World Page!';
-	$data['content'] = 'Hello World!';
+	$data = array(
+            'title' => 'Hello World Page!',
+            'content' => 'Hello World!'
+        );
 	
         $this->view_helloworld($data);
     }
@@ -174,7 +176,7 @@ class Controller_home extends Panada {
 		</code>
 		<p>Berikut adalah contoh penggunaanya:</p>
 
-<textarea rows="17" cols="50" class="textarea">
+<textarea rows="19" cols="50" class="textarea">
 &lt;?php
 class Controller_home extends Panada {
     
@@ -185,8 +187,10 @@ class Controller_home extends Panada {
     
     public function index(){
         
-	$data['title'] = 'Hello World Page!';
-	$data['content'] = 'Hello World!';
+	$data = array(
+            'title' => 'Hello World Page!',
+            'content' => 'Hello World!'
+        );
 	
         $this->output( 'helloworld', $data );
     }

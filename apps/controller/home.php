@@ -9,8 +9,11 @@ class Controller_home extends Panada {
     
     public function index(){
         
-        $views['page_title']    = 'hello world!';
-        $views['body']          = 'This is hello world body!';
+        $views = array(
+            'page_title' => 'hello world!',
+            'body' => 'This is hello world body!',
+        );
+        
         $this->view_index($views);
     }
 }
