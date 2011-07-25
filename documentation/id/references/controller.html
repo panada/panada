@@ -234,9 +234,9 @@ class Controller_home extends Panada {
         parent::__construct();
         
         // Load model
-        $this->users = new model_users();
+        $this->users = new Model_users();
         // Load library
-        $this->session = new library_session();
+        $this->session = new Library_session();
     }
     
     public function index(){
