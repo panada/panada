@@ -200,8 +200,28 @@ class Library_upload {
          * ID: Apakah folder tersebut ada?
          */
         if( ! is_dir($this->folder_location) ) {
-            $this->set_error_mesage(10);
-            return false;
+            
+            // Create a folder if not exits
+            $arr = explode('/', $this->folder_location);
+            
+            $path = '';
+            if( substr($this->folder_location, 0, 1) == '/' )
+                $path = '/';
+            
+            foreach($arr as $name){
+                
+                if( empty($name) )
+                    continue;
+                
+                $path .= $name.'/';
+                
+                if( ! is_dir($path) )
+                    if( ! mkdir($path, 0777)) {
+                        $this->set_error_mesage(11);
+                        //$this->set_error_mesage(10);
+                        return false;
+                    }
+            }
         }
         
         /**
@@ -220,43 +240,6 @@ class Library_upload {
         if( $this->maximum_size > 0 && $this->file['size'] > $this->maximum_size) {
             $this->set_error_mesage(13);
             return false;
-        }
-        
-        if($this->auto_create_folder) {
-            
-            $folder         = $this->folder_location . '/' . date('Y') . date('m');
-            $year_folder    = $this->folder_location . '/' . date('Y');
-            $month_folder   = $year_folder . '/' . date('m');
-            
-            if( ! is_dir($folder) ) {
-                
-                /**
-                 * EN: Create year folder if it not exits.
-                 * ID: Buat folder tahun jika belum ada.
-                 */
-                if( ! is_dir($year_folder) ) {
-                    if( ! mkdir($year_folder, 0777)) {
-                        $this->set_error_mesage(11);
-                        return false;
-                    }
-                }
-                
-                /**
-                 * EN: Create month folder if it not exits.
-                 * ID: Buat folder bulan jika belum ada.
-                 */
-                if( ! is_dir($month_folder) ) {
-                    if( ! mkdir($month_folder, 0777)) {
-                        $this->set_error_mesage(11);
-                        return false;
-                    }
-                }
-                
-                $this->folder_location = $month_folder;
-            }
-            else {
-                $this->folder_location = $folder;
-            }
         }
         
         /**
