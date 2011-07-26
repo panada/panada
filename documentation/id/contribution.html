@@ -74,10 +74,52 @@
         <div class="content">
             <div class="lead">
                 <h2>Kontribusi</h2>
-                <p>Panada adalah aplikasi Open Source. Hal ini berarti, semua orang termasuk Anda didorong untuk berkontribusi dalam mengembangkan aplikasi ini bersama-sama agar menjadikannya lebih baik.</p>
+                <p>Panada adalah aplikasi Open Source. Hal ini berarti, semua orang termasuk Anda didorong untuk berkontribusi dalam mengembangkan aplikasi ini bersama-sama untuk menjadikannya lebih baik.</p>
             </div>
+	    <div class="main">
+                <h3>Patch Contributor</h3>
+		<p>Ingin memperbaiki bug yang Anda temukan? atau memperbaiki algoritma sehingga membuat Panada
+                        menjadi lebih baik? <em>Fork</em> source code Panada di <a href="http://github.com/k4ndar/Panada" target="_blank">http://github.com/k4ndar/Panada</a></p>
+		
+		<p>Berikut panduan singkat <em>Forking</em> project di <a href="https://github.com/">Github</a>:</p>
+		<p>Pastikan komputer Anda sudah terinstall <a href="<em>Fork</em>">Git</a>.</p>
+		<code>
+		    sudo apt-get install git-core
+		</code>
+		<p><a href="https://github.com/login">Login</a> dan fork Panada <a href="http://github.com/k4ndar/Panada" target="_blank">http://github.com/k4ndar/Panada</a>.</p>
+		<img src="http://help.github.com/images/bootcamp/bootcamp_3_fork.jpg" />
+		<p>Setelah project sudah ter-fork ke account Anda, silahkan <em>clone</em> ke komputer local.</p>
+		<code>
+		    git clone git@github.com:USERNAME_ANDA/Panada.git
+		</code>
+		<p>Selesai ter-clone, secara default remote repository akan terbuat dengan nama <strong>origin</strong> yang lokasinya mengarah ke https://github.com/USERNAME_ANDA/Panada.</p>
+		<p>Untuk selalu mendapatkan update source terbaru dari repository utama, tambahkan sebuah remote repository dengan nama <strong>upstream</strong>. Untuk menambahkannya silahkan jalankan perintah:</p>
+		<code>
+		    git remote add upstream git://github.com/k4ndar/Panada.git
+		</code>
+		<p>Silahkan modifikasi sesuai yang Anda inginkan. Jika perubahan yang dilakukan cukup besar pastikan Anda memberikan deskripsi yang jelas di file <strong>README</strong> apa dan kenapa perubahan ini dilakukan.</p>
+		<p>Selesai melakukan modifikasi jalankan perintah berikut di dalam working directory:</p>
+		<code>
+		    git add NAMAFILE
+		</code>
+		<P>Commit perubahan yang baru saja dilakukan:</P>
+		<code>
+		    git commit -m 'ISIKAN_PESAN_COMMIT'
+		</code>
+		<p>Anda bisa melakukan perubahan lainnya dan kemudian kembali melakukan perintah <strong>git add</strong> dan <strong>git commit</strong> atau langsung melakukan push ke repositoy Anda di Github. Untuk melakukan push gunakan perintah:</p>
+		<code>
+		    git push origin master
+		</code>
+		<p>Jika proses <strong>push</strong> berhasil silahkan melakukan <strong>Pull Request</strong>. Halaman Pull Request berada di pojok kanan atas halaman repositoy Anda (https://github.com/USERNAME_ANDA/Panada).</p>
+		<p>Jika sebelumnya Anda sudah pernah melakukan fork dan kembali ingin memberikan patch, pertama-tama update project Anda dan <strong>merge</strong> dengan repository utama.</p>
+		<code>
+		    git fetch upstream<br />
+		    git merge upstream/master
+		</code>
+		<p>Silahkan lakukan perubahan seperti yang diinginkan kemudian jalankan perintah <strong>git add</strong>, <strong>git commit</strong>, <strong>git push</strong> dan kemudian <strong>Pull Request</strong> seperti yang sudah dijelaskan sebelumnya.</p>
+	    </div>
             <div class="main">
-                <h3>Cara Berkontribusi</h3>
+                <h3>Kontribusi Lainnya</h3>
                 <p>Anda bisa melakukan banyak hal untuk berkontribusi di proyek Panada, diantaranya:</p>
                 
                 <ul>
@@ -85,11 +127,6 @@
                         <p>Install dan test Panada pada komputer Anda dan informasikan bug ataupun apa saja yang Anda alami
                         ketika menggunakan aplikasi ini. Kirimkan info Anda ke iskandarsoesman at google dot com (akan lebih bagus jika dilengkapi <em>screenshot</em>).</p>
 			<p>Anda juga bisa melaporkan bug ke halaman berikut <a target="_blank" href="https://github.com/k4ndar/Panada/issues">https://github.com/k4ndar/Panada/issues</a></p>
-                    </li>
-               
-                    <li><strong>Patch Contributor</strong>
-                        <p>Ingin memperbaiki bug yang Anda temukan? atau memperbaiki algoritma sehingga membuat Panada
-                        menjadi lebih baik? <em>Fork</em> source code Panada di <a href="http://github.com/k4ndar/Panada" target="_blank">http://github.com/k4ndar/Panada</a></p>
                     </li>
                
                     <li><strong>Library Contributor</strong>
