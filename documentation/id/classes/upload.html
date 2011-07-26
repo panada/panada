@@ -255,11 +255,11 @@ class Controller_sample extends Panada {
 		
 		<p>Jika Anda ingin membuat sub-folder secara otomatis di dalam folder upload, maka gunakan opsi:</p>
 		<code>
-			$this->upload->auto_create_folder = true;
+		    $this->upload->folder_location = 'uploads/'.date('Y').'/'.date('m').'/';
 		</code>
 		<p>Struktur folder yang dibuat berdasarkan <strong>tahun_ini/bulan_ini</strong>, contohya adalah:</p>
 		<code>
-			my_folders/2010/07/12799728631007713596.jpg
+			uploads/2010/07/12799728631007713596.jpg
 		</code>
 			
 	    </div>
