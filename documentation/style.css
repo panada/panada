@@ -31,6 +31,8 @@ a:visited {
     float: left;
     font: bold 20px/21px Helvetica, Arial, sans-serif;
     line-height: 45px;
+    height:30px;
+    padding-top:2px;
 }
 
 .header .logo a {
