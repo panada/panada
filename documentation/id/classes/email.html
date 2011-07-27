@@ -202,6 +202,43 @@ class Controller_home extends Panada {
     }
 }
 </textarea>
+		<p>Jika port <strong>SMTP</strong> yang digunakan bukan 25 (default), silahkan set di bagian:</p>
+		<code>
+		    $this->email->smtp_port = 25;
+		</code>
+		<p>Jika koneksi yang digunakan menggunakan <strong>SSL</strong> silahkan set bagian berikut:</p>
+		<code>
+		    $this->email->smtp_secure = 'ssl';
+		</code>
+		<p>Berikut adalah contoh penggunaan <strong>SSL</strong> dan <strong>port 465</strong> dengan menggunakan SMTP Gmail:</p>
+<textarea rows="26" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+	$this->email = new Library_email();
+    }
+    
+    public function index(){
+        
+	$this->email->smtp_host = 'smtp.gmail.com';
+	$this->email->smtp_username = 'USERNAMEANDA@gmail.com';
+	$this->email->smtp_password = 'PASSWORD GMAIL ANDA';
+	$this->email->smtp_port = 465;
+	$this->email->smtp_secure = 'ssl';
+        
+        $send = $this->email->mail('budi@example.com', 'the subject', 'email messages', 'my@test.com', 'my name');
+        
+        if( $send )
+            echo 'success';
+        else
+            echo 'failed';
+    }
+}
+</textarea>
+
 	    </div>
 	    
 	    <div class="main">
