@@ -73,6 +73,8 @@ class Library_email {
      */
     public  $smtp_port          = 25;
     
+    public  $smtp_secure        = false;
+    
     /**
      * @var string  EN: SMTP username.
      */
@@ -250,7 +252,13 @@ class Library_email {
     private function smtp_connect() {
         
         //EN: Connect to smtp server
-        $this->smtp_connection = fsockopen($this->smtp_host, $this->smtp_port, $errno, $errstr, $this->timeout_connection);
+        $this->smtp_connection = fsockopen(
+                                    ($this->smtp_secure && $this->smtp_secure == 'ssl' ? 'ssl://' : '').$this->smtp_host,
+                                    $this->smtp_port,
+                                    $errno,
+                                    $errstr,
+                                    $this->timeout_connection
+                                );
        
         if( empty($this->smtp_connection) ) {
             
