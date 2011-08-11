@@ -3,7 +3,6 @@
 /**
  * EN: Website base url.
  */
-$CONFIG['base_url']                         = 'http://' .$_SERVER['HTTP_HOST'].'/'; /* Change this with your application domain and/or path. */
 $CONFIG['index_file']                       = 'index.php/'; /* Remove this index.php if you wish an url without "index.php" */
 
 /**
@@ -21,7 +20,7 @@ $CONFIG['db']['default']['persistent']      = false;
 /**
  * ID: Defenisikan library apa saja yang akan diload secara otomatis.
  */
-$CONFIG['auto_loader'] = array();
+$CONFIG['auto_loader'] = array('Library_html');
 
 /**
  * EN: Session configuration.
