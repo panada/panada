@@ -20,7 +20,7 @@
  * EN: Start count time execution.
  * ID: Mulai menghitung waktu eksekusi. Silahkan uncomment method 'Library_time_execution::start()' untuk menghitung waktu eksekusi.
  */
-//Library_time_execution::start();
+Library_time_execution::start();
 
 
 
@@ -189,8 +189,8 @@ class Panada {
         
         self::$instance = $this;
         $this->config   = Library_config::instance();
-        $this->base_url	= $this->config->base_url;
-	$this->auto_loader();
+        $base_url	    = $this->config->base_url();
+        $this->auto_loader();
     }
     
     public static function instance(){
@@ -198,7 +198,7 @@ class Panada {
     }
     
     public function location($location = ''){
-	return $this->base_url . $this->config->index_file . $location;
+	return $base_url . $this->config->index_file . $location;
     }
     
     public function redirect($location = ''){
@@ -348,7 +348,7 @@ class Panada {
         
         include_once $view_file;
     }
-}
+} // akhir class Panada
 
 
 /**
