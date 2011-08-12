@@ -3,32 +3,35 @@
  * Panada HTML Generator.
  * EN: Create html tag programaticly.
  *
- * @package	    Panada
+ * @package	Panada
  * @subpackage	Library
- * @author	    Iskandar Soesman
- * @modify	    Aris S Ripandi
- * @since	    Version 0.1
+ * @author	Iskandar Soesman
+ * @modify	Aris S Ripandi
+ * @since	Version 0.1
  */
 
 class Library_html {
     
     static private $doctypes    = array();
-    static $break_line = "\r\n";
+    static private $break_line  = "\r\n";
     
     static function doctype($type = 'xhtml1-strict', $echo = true) {
-        global $doctypes;
-        if (!is_array($doctypes)) {
-            if (is_file(GEAR.'variable/doctypes.php')) {
+        
+        if ( empty(self::$doctypes) ) {
+            
+            if ( is_file(GEAR.'variable/doctypes.php') ) {
                 include GEAR.'variable/doctypes.php';
+                self::$doctypes = $doctypes;
             } else {
-                return FALSE;
+                return false;
             }
-            if ( ! is_array(self::$doctypes)) {
-                return FALSE;
-            }
+            
+            if ( ! is_array(self::$doctypes) )
+                return false;
         }
         
-        $str = $doctypes[$type] . self::$break_line;
+        $str = self::$doctypes[$type] . self::$break_line;
+        
         if($echo)
             echo $str;
         else
