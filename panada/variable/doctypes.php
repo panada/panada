@@ -6,6 +6,7 @@
  * ntuk mendefinisikan tipe dokumen html yang dibuat.
  *
  * @since	Version 0.3.1
+ * @author  Aris S Ripandi
  */
 
 $doctypes = array(
