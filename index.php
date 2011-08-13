@@ -73,6 +73,6 @@ if ( function_exists('get_magic_quotes_gpc') ) {
 
 /**
  * EN: Bootstrap file for Panada main system.
- * ID: Sistem utma Panada.
+ * ID: Sistem utama Panada.
  */
 require_once GEAR . 'gear.php';
