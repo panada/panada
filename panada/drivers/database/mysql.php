@@ -808,40 +808,4 @@ class Drivers_database_mysql {
 		return $this->last_error;
 	}
 	
-	/**
-	 *
-	 * Description: Add support for MySQL Transaction
-	 * Starts a transaction
-	 * added by Aryo Pinandito ( aryoxp@gmail.com ) 	 
-	 *
-	 * @return void
-	 */
-	function begin(){
-		$this->query( "START TRANSACTION" );
-		return $this->query( "BEGIN" );		
-	}
-	
-	/**
-	 *
-	 * Description: Add support for MySQL Transaction
-	 * Commits a transaction
-	 * added by Aryo Pinandito ( aryoxp@gmail.com )	 
-	 *
-	 * @return void
-	 */
-	function commit(){
-		return $this->query( "COMMIT" );
-	}
-	
-	/**
-	 *
-	 * Description: Add support for MySQL Transaction
-	 * Rollback a transaction
-	 * added by Aryo Pinandito ( aryoxp@gmail.com )	 	 
-	 *
-	 * @return void
-	 */
-	function rollback(){
-		return $this->query( "ROLLBACK" );
-	}
 } // End Driver_mysql Class
