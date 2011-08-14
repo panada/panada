@@ -96,18 +96,19 @@ class Library_error {
     }
     
      /**
-     * ID: Template untuk error costume.
+     * ID: Template untuk error custom. (typo: costume)
      *
      * @param int
      * @param string
      * @return string
+	 * @template string : Nama file template error yang digunakan.
      */
-    public function costume($code = 200, $message = '', $page_title = ''){
+    public function custom($code = 200, $message = '', $page_title = '', $template = '50x'){
 	
 	$data = array(
 	    'error_code' => $code,
 	    'header_page_title' => $page_title,
-	    'template_file' => '50x',
+	    'template_file' => $template,
 	    'content' => $message
 	);
 	
