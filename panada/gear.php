@@ -184,12 +184,14 @@ class Panada {
     
     private static $instance;
     protected $base_path = APPLICATION;
-    
+	public $base_url;
+	
     public function __construct(){
         
         self::$instance = $this;
         $this->config   = Library_config::instance();
         $base_url	    = $this->config->base_url();
+		$this->base_url	= $base_url; // add compatibility from Panada 0.2.1
         $this->auto_loader();
     }
     
@@ -198,7 +200,8 @@ class Panada {
     }
     
     public function location($location = ''){
-	return $base_url . $this->config->index_file . $location;
+		// add $this->base_url instead of only $base_url for compatibility from Panada 0.2.1
+		return $this->base_url . $this->config->index_file . $location;
     }
     
     public function redirect($location = ''){
