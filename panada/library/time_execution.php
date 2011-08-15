@@ -45,7 +45,7 @@ class Library_time_execution {
         $timetotal = self::_microtime() - $GLOBALS['timestart'];
         $r = number_format($timetotal, 4);
         
-        echo $r;
+        return $r;
     }
     
 } //End Library_time_execution class
