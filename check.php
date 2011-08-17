@@ -73,7 +73,7 @@ require_once THISPATH . DS . 'panada' . DS . 'variable' . DS . 'version.php';
 
 </head>
 <body>
-    <h1 class="logo"><img alt="Logo" src="http://localhost/panada//apps/asset/img/logo.png" /></h1> 
+    <h1 class="logo"><img alt="Logo" src="apps/asset/img/logo.png" /></h1> 
     <h1>Installation Check</h1>
     <h2>Minimum Requirements</h2>
     <?php $failed = FALSE ?>
@@ -182,7 +182,7 @@ require_once THISPATH . DS . 'panada' . DS . 'variable' . DS . 'version.php';
                 <td><span class="fail">FAIL</span></td>
             <?php endif ?>
         </tr>
-    <table>
+    </table>
     
     <h3>Cache</h3>
     
