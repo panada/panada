@@ -19,136 +19,206 @@ require_once THISPATH . DS . 'panada' . DS . 'variable' . DS . 'version.php';
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Panada Installation Check</title>
-
+    <link rel="stylesheet" href="apps/asset/css/main.css" type="text/css" media="screen" />
     <style type="text/css">
-    body {
-        font-family: Arial, Helvetica, sans-serif;
-        color: #454545;
-    }
-    a {
-        color: #1010CE; text-decoration: underline;
-    }
-    a:hover {
-        text-decoration: underline;
-    }
-    a:visited {
-        color: #1010CE; text-decoration: underline;
-    }
     .pass {
         color: #191;
+        font-weight: bold;
+    }
+    .pass:before {
+        content: '✔ ';
     }
     .fail {
         color: #911;
+        font-weight: bold;
+    }
+    .fail:before {
+        content: '✘ ';
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    tr:nth-child(odd) {
+        background: #dfdfdf;
+    }
+    tr:nth-child(even) {
+        background: #fcfcfc;
+    }
+    td {
+        padding: 4px 8px;
+        font-we
+    }
+    td { 
+        width: 25%; 
+    }
+    td+td{ 
+        width: 65%;
+    }
+    td+td+td{ 
+        width: 10%;
+    }
+    .monospace {
+        font: 14px Consolas,Courier New,Verdana;
+    }
+    .box {
+        font-size: 16px;
+        text-align: center;
+        background: #191;
+        padding: 8px 0;
+        color: #fff;
+        text-shadow: 1px 1px 0 #333;
     }
     </style>
 
 </head>
 <body>
-
-    <h1>Panada Installation Check</h1>
+    <h1 class="logo"><img alt="Logo" src="http://localhost/panada//apps/asset/img/logo.png" /></h1> 
+    <h1>Installation Check</h1>
     <h2>Minimum Requirements</h2>
     <?php $failed = FALSE ?>
 
-    <div>
-        <strong>PHP Version</strong>
-        <?php if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION, '>=')): ?>
-            <?php echo PHP_VERSION ?> <span class="pass">PASS</span>
-        <?php else: $failed = TRUE ?>
-            <?php echo PHP_VERSION ?> <span class="fail">FAIL</span>
-        <?php endif ?>
-    </div>
-    
-    <div>
-        <strong>System Directory</strong>
-        <?php if (is_dir(THISPATH . DS . 'panada') AND is_file(THISPATH . DS . 'panada' . DS . 'gear.php')): ?>
-            <?php echo THISPATH . DS . 'panada' ?> <span class="pass">PASS</span>
-        <?php else: $failed = TRUE ?>
-            <span class="fail">FAIL</span>
-        <?php endif ?>
-    </div>
-    
-    <div>
-        <strong>Application Directory</strong>
-        <?php if (is_dir(THISPATH . DS . 'apps') AND is_file(THISPATH . DS . 'apps' . DS . 'config.php')): ?>
-            <?php echo THISPATH . DS . 'apps' ?> <span class="pass">PASS</span>
-        <?php else: $failed = TRUE ?>
-            <span class="fail">FAIL</span>
-        <?php endif ?>
-    </div>
+    <table>
+        <tr>
+            <td>
+                PHP Version
+            </td>
+            <td>
+                <?php echo PHP_VERSION ?>
+            </td>
+            <td>
+                <?php if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION, '>=')): ?>
+                    <span class="pass">PASS</span>
+                <?php else: $failed = TRUE ?>
+                    <span class="fail">FAIL</span>
+                <?php endif ?>
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                System Directory
+            </td>
+            
+            <?php if (is_dir(THISPATH . DS . 'panada') AND is_file(THISPATH . DS . 'panada' . DS . 'gear.php')): ?>
+                <td><span class="monospace"><?php echo THISPATH . DS . 'panada' ?></span></td>
+                <td><span class="pass">PASS</span></td>
+            <?php else: $failed = TRUE ?>
+                <td>&nbsp;</td>
+                <td><span class="fail">FAIL</span></td>
+            <?php endif ?>
+            
+        </tr>
+        
+        <tr>
+            <td>
+                Application Directory
+            </td>
+            <?php if (is_dir(THISPATH . DS . 'apps') AND is_file(THISPATH . DS . 'apps' . DS . 'config.php')): ?>
+                <td><span class="monospace"><?php echo THISPATH . DS . 'apps' ?></td>
+                <td><span class="pass">PASS</span></td>
+            <?php else: $failed = TRUE ?>
+                <td>&nbsp;</td>
+                <td><span class="fail">FAIL</span></td>
+            <?php endif ?>
+        </tr>
+    </table>
 	
     <?php if ($failed === TRUE): ?>
-        <p class="fail">✘ Panada may not work correctly with your environment.</p>
+        <p class="box fail">Panada may not work correctly with your environment</p>
     <?php else: ?>
-        <p class="pass">✔ Your environment passed all requirements.</p>
+        <p class="box pass">Your environment passed all requirements</p>
     <?php endif ?>
     
     <h2>Optional</h2>
     
     <h3>Database</h3>
     
-    <div>
-    <strong>MySQL</strong>
-    <?php if (function_exists('mysql_connect')): ?>
-        <span class="pass">PASS</span>
-    <?php else: ?>
-        <span class="fail">FAIL</span>
-    <?php endif ?>
-    </div>
-    
-    <div>
-    <strong>PostgreSQL</strong>
-    <?php if (function_exists('pg_connect')): ?>
-        <span class="pass">PASS</span>
-    <?php else: ?>
-        <span class="fail">FAIL</span>
-    <?php endif ?>
-    </div>
-    
-    <div>
-    <strong>SQLite</strong>
-    <?php if (function_exists('sqlite_open')): ?>
-        <span class="pass">PASS</span>
-    <?php else: ?>
-        <span class="fail">FAIL</span>
-    <?php endif ?>
-    </div>
-    
-    <div>
-    <strong>MongoDB</strong>
-    <?php if (class_exists('Mongo')): ?>
-        <span class="pass">PASS</span>
-    <?php else: ?>
-        <span class="fail">FAIL</span>
-    <?php endif ?>
-    </div>
+    <table>
+        <tr>
+            <td>
+                MySQL
+            </td>
+            <?php if (function_exists('mysql_connect')): ?>
+                <td><?php echo mysql_get_client_info() ?></td>
+                <td><span class="pass">PASS</span></td>
+            <?php else: ?>
+                <td>&nbsp;</td>
+                <td><span class="fail">FAIL</span></td>
+            <?php endif ?>
+        </tr>
+        
+        <tr>
+            <td>
+                PostgreSQL
+            </td>
+            <?php if (function_exists('pg_connect')): ?>
+                <td>&nbsp;</td>
+                <td><span class="pass">PASS</span></td>
+            <?php else: ?>
+                <td>&nbsp;</td>
+                <td><span class="fail">FAIL</span></td>
+            <?php endif ?>
+        </tr>
+        
+        <tr>
+            <td>SQLite</td>
+            <?php if (function_exists('sqlite_open')): ?>
+                <td><?php echo sqlite_libversion(); ?></td>
+                <td><span class="pass">PASS</span></td>
+            <?php else: ?>
+                <td>&nbsp;</td>
+                <td><span class="fail">FAIL</span></td>
+            <?php endif ?>
+        </tr>
+        
+        <tr>
+            <td>MongoDB</td>
+            <?php if (class_exists('Mongo')): ?>
+                <td>&nbsp;</td>
+                <td><span class="pass">PASS</span></td>
+            <?php else: ?>
+                <td>&nbsp;</td>
+                <td><span class="fail">FAIL</span></td>
+            <?php endif ?>
+        </tr>
+    <table>
     
     <h3>Cache</h3>
     
-    <div>
-    <strong>APC</strong>
-    <?php if (extension_loaded('apc')): ?>
-        <span class="pass">PASS</span>
-    <?php else: ?>
-        <span class="fail">FAIL</span>
-    <?php endif ?>
-    </div>
-    
-    <div>
-    <strong>Memcache</strong>
-    <?php if (extension_loaded('memcache')): ?>
-        <span class="pass">PASS</span>
-    <?php else: ?>
-        <span class="fail">FAIL</span>
-    <?php endif ?>
-    </div>
-    
-    <div>
-    <strong>Memcached</strong>
-    <?php if (extension_loaded('memcached')): ?>
-        <span class="pass">PASS</span>
-    <?php else: ?>
-        <span class="fail">FAIL</span>
-    <?php endif ?>
-    </div>
+    <table>
+        <tr>
+            <td>APC</td>
+            <?php if (extension_loaded('apc')): ?>
+                <td>&nbsp;</td>
+                <td><span class="pass">PASS</span></td>
+            <?php else: ?>
+                <td>&nbsp;</td>
+                <td><span class="fail">FAIL</span></td>
+            <?php endif ?>
+        </tr>
+        
+        <tr>
+            <td>Memcache</td>
+            <?php if (extension_loaded('memcache')): ?>
+                <td>&nbsp;</td>
+                <td><span class="pass">PASS</span></td>
+            <?php else: ?>
+                <td>&nbsp;</td>
+                <td><span class="fail">FAIL</span></td>
+            <?php endif ?>
+        </tr>
+        
+        <tr>
+            <td>Memcached</td>
+            <?php if (extension_loaded('memcached')): ?>
+                <td>&nbsp;</td>
+                <td><span class="pass">PASS</span></td>
+            <?php else: ?>
+                <td>&nbsp;</td>
+                <td><span class="fail">FAIL</span></td>
+            <?php endif ?>
+        </tr>
+    </table>
 </body>
 </html>
