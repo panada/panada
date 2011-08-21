@@ -446,17 +446,9 @@ class Drivers_database_postgresql {
 	
 	$this->select($column)->from($table);
 	
-	if ( ! empty( $where ) ) {
-	    
-	    $separator = 'AND';
-            foreach($where as $key => $val){
-		
-		if( end($where) == $val)
-		    $separator = false;
-		
-		$this->where($key, '=', $val, $separator);
-            }
-        }
+	if ( ! empty( $where ) )
+	    foreach($where as $key => $val)
+		$this->where($key, '=', $val, 'AND');
 	
         return $this->find_all();
     }
@@ -482,17 +474,9 @@ class Drivers_database_postgresql {
 	
 	$this->select($column)->from($table);
 	
-	if ( ! empty( $where ) ) {
-	    
-	    $separator = 'AND';
-	    foreach($where as $key => $val){
-		
-		if( end($where) == $val)
-		    $separator = false;
-		
-		$this->where($key, '=', $val, $separator);
-	    }
-	}
+	if ( ! empty( $where ) )
+	    foreach($where as $key => $val)
+		$this->where($key, '=', $val, 'AND');
 	
 	return $this->find_one();
 	
