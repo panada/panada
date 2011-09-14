@@ -209,20 +209,19 @@ class Library_module {
         if( ! $module_config['allow_url_routing'] )
             Library_error::_404();
         
+        $url_routing_is_allowed = true;
         if( is_array($module_config['allow_url_routing']) && ! empty($module_config['allow_url_routing']) ){
             if( array_search($controller, $module_config['allow_url_routing']) === false )
-                goto alias_controller;
+                $url_routing_is_allowed = false; //prev: goto alias_controller;
         }
         
-        if( empty($method) )
+        if( empty($method) && $url_routing_is_allowed )
             $method = 'index';
         
-        if( ! $request = $pan_uri->get_requests(4) )
+        if( ! $request = $pan_uri->get_requests(4) && $url_routing_is_allowed )
             $request = array();
         
-        if( ! file_exists( $file = GEAR . 'module/' . $module_name . '/controller/' . $controller . '.php' ) ){
-            
-            alias_controller:
+        if( ! file_exists( $file = GEAR . 'module/' . $module_name . '/controller/' . $controller . '.php' ) || !$url_routing_is_allowed ){
             
             // Does alias controller config exists?
             if( empty($module_config['alias_controller']) )
