@@ -6,16 +6,41 @@
  * @package	Panada
  * @subpackage	Library
  * @author	Iskandar Soesman
+ * @modify	Aris S Ripandi
  * @since	Version 0.1
  */
 
 class Library_html {
     
-    static $break_line = "\r\n";
+    static private $doctypes    = array();
+    static private $break_line  = "\r\n";
     
+    static function doctype($type = 'xhtml1-strict', $echo = true) {
+        
+        if ( empty(self::$doctypes) ) {
+            
+            if ( is_file(GEAR.'variable/doctypes.php') ) {
+                include GEAR.'variable/doctypes.php';
+                self::$doctypes = $doctypes;
+            } else {
+                return false;
+            }
+            
+            if ( ! is_array(self::$doctypes) )
+                return false;
+        }
+        
+        $str = self::$doctypes[$type] . self::$break_line;
+        
+        if($echo)
+            echo $str;
+        else
+            return $str;
+    }
+
     static function load_js($link, $echo = true){
         
-        $str = '<script type="text/javascript" src="'.$link.'"></script>';
+        $str = '<script type="text/javascript" src="'.$link.'"></script>'. self::$break_line;
         if($echo)
             echo $str;
         else
@@ -24,7 +49,7 @@ class Library_html {
     
     static function load_css($link, $echo = true){
         
-        $str = '<link rel="stylesheet" href="'.$link.'" type="text/css" media="screen" />';
+        $str = '<link rel="stylesheet" href="'.$link.'" type="text/css" media="screen" />'. self::$break_line;
         if($echo)
             echo $str;
         else
