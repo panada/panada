@@ -504,5 +504,15 @@ class Library_active_record {
             }
         }
     }
+
+    /**
+     * Get latest executed query string
+     *
+     * @return string
+     */
+	public function last_query()
+	{
+		return $this->db->last_query();
+	}
     
 } // End Library_active_record class
