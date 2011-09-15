@@ -769,6 +769,16 @@ class Drivers_database_mysql {
         // If there is an error then take note of it
         Library_error::database($str.'<br /><b>Query</b>: '.$query.'<br /><b>Backtrace</b>: '.$caller);
     }
+
+    /**
+     * Get latest executed query string
+     *
+     * @return string
+     */
+    public function last_query()
+    {
+    	return $this->last_query;
+    }
     
     /**
      * Get this db version
