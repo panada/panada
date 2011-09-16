@@ -54,6 +54,14 @@ class Drivers_database_mysql {
      */
     private function establish_connection(){
 	
+	if (isset($this->db_config->port)) {
+		$this->port = $this->db_config->port;
+	}
+	
+	if (isset($this->db_config->persistent)) {
+		$this->persistent_connection = $this->db_config->persistent;
+	}
+	
 	$arguments = array(
 			$this->db_config->host.':'.$this->port,
 			$this->db_config->user,
@@ -64,10 +72,10 @@ class Drivers_database_mysql {
 	
 	$function = 'mysql_connect';
 	
-	if( $this->db_config->persistent ){
+	if( $this->persistent_connection ){
 	    
 	    $arguments = array(
-			$this->db_config->host,
+			$this->db_config->host.':'.$this->port,
 			$this->db_config->user,
 			$this->db_config->password,
 			$this->client_flags

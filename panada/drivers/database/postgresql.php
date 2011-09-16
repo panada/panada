@@ -53,7 +53,15 @@ class Drivers_database_postgresql {
      * @return string | boolean postgreSQL persistent link identifier on success, or FALSE on failure.
      */
     private function establish_connection(){
-        
+
+	if (isset($this->db_config->port)) {
+		$this->port = $this->db_config->port;
+	}
+	
+	if (isset($this->db_config->persistent)) {
+		$this->persistent_connection = $this->db_config->persistent;
+	}
+	        
         $arguments = 'host='.$this->db_config->host.'
                     port='.$this->port.'
                     dbname='.$this->db_config->database.'
@@ -67,7 +75,7 @@ class Drivers_database_postgresql {
 		    );
 	$function = 'pg_connect';
 	
-	if( $this->db_config->persistent )
+	if( $this->persistent_connection )
 	    $function = 'pg_pconnect';
 	
 	return call_user_func_array($function, $arguments);
