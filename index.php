@@ -6,73 +6,85 @@
  * Not only in contexts about how to use it, but it also how the core system run it.
  * Version: 0.3.1
  *
- * @package	Panada
- * @author	Iskandar Soesman
+ * @package	    Panada
+ * @author	    Iskandar Soesman
+ * @modify	    Aris S Ripandi
  * @copyright	Copyright (c) 2010, Iskandar Soesman.
- * @license	http://www.opensource.org/licenses/bsd-license.php
- * @link	http://panadaframework.com/
- * @since	Version 0.1
+ * @license	    http://www.opensource.org/licenses/bsd-license.php
+ * @link	    http://panadaframework.com/
+ * @since	    Version 0.1
  */
 
-
-
 /**
- * CONSTANTS
- * EN: Define the application root folder.
- * ID: Defenisikan applikasi root folder.
-*/
-define('THISPATH', dirname(__FILE__) . '/');
-
-
-
-/**
- * EN: Panada main system folder location.
- * ID: Lokasi dimana folder panada berada.
- */
-define('GEAR', THISPATH . 'panada' . '/');
-
-
-
-/**
- * EN:	Application folder location.
- *	IF you have more then one application (multysite),
- *	copy this file (index.php) into your each folder application and
- *	adjust "THISPATH" and "APPLICATION" constants.
+ * --------------------------------------------------------------------
+ * ENVIRONMENT & ERROR REPORTING
+ * --------------------------------------------------------------------
+ * Sesuaikan nilai parameter folder sistem dan aplikasi
  *
- * ID:  Jika Anda memiliki beberapa website, copy file ini (index.php)
- *      ke dalam folder applikasi dan sesuaikan isi parameter untuk konstanta
- *      "THISPATH" dan "APPLICATION".
+ * Path parameter:
+ *    sys_folder    : folder tempat sistem panada berada
+ *    app_folder    : folder tempat aplikasi diletakan
+ *
+ * The value is:
+ *    production    : hide error message
+ *    development   : show all error message for debugging
+ * --------------------------------------------------------------------
  */
-define('APPLICATION', THISPATH . 'apps' .'/');
-
-
-
-/**
- * ERROR REPORTING
- * ID:	Setting untuk menampilkan atau tidak menampilkan pesan error.
- *	Informasi lebih lanjut lihat di http://www.php.net/error_reporting
-*/
-error_reporting(E_ALL);
-
-
-
-/**
- * ID: Nonaktifkan magic quotes jika masih aktif!
-*/
-if ( function_exists('get_magic_quotes_gpc') ) {
+	$app_folder     = 'apps';
+	$sys_folder     = 'panada';
+	$environment    = 'development';
     
-    function stripslashes_gpc(&$value){
-        $value = stripslashes($value);
+
+// --------------------------------------------------------------------
+// END OF USER CONFIGURABLE SETTINGS. DO NOT EDIT BELOW THIS LINE
+// --------------------------------------------------------------------
+
+    // error reporting
+    define('ENVIRONMENT', $environment);
+    if (defined('ENVIRONMENT')) {
+        switch (ENVIRONMENT) {
+            case 'development':
+                error_reporting(E_ALL);
+            break;
+            case 'production':
+                error_reporting(0);
+            break;
+            default:
+                exit('The application environment is not set correctly.');
+        }
     }
     
-    array_walk_recursive($_GET, 'stripslashes_gpc');
-    array_walk_recursive($_POST, 'stripslashes_gpc');
-    array_walk_recursive($_COOKIE, 'stripslashes_gpc');
-    array_walk_recursive($_REQUEST, 'stripslashes_gpc');
-}
+	// Is the system path correct?
+	if (!is_dir($sys_folder)) {
+		exit("Your system folder path does not appear to be set correctly. Please open the following file and correct this: ".pathinfo(__FILE__, PATHINFO_BASENAME));
+	}
+	
 
-/**
- * EN: Bootstrap file for Panada main system.
- * ID: Sistem utma Panada.
- */
-require_once GEAR . 'gear.php';
+	// Is the application path correct?
+	if (!is_dir($app_folder)) {
+		exit("Your application folder path does not appear to be set correctly. Please open the following file and correct this: ".pathinfo(__FILE__, PATHINFO_BASENAME));
+	}
+    
+	// Definiskan path folder system dan aplikasi
+	define('THISPATH', realpath('.') . '/');
+	define('GEAR', THISPATH . $sys_folder . '/');
+	define('APPLICATION', THISPATH . $app_folder . '/');
+    
+    // Nonaktifkan magic quotes jika masih aktif
+    if ( function_exists('get_magic_quotes_gpc') ) {
+        function stripslashes_gpc(&$value){
+            $value = stripslashes($value);
+        }
+        array_walk_recursive($_GET, 'stripslashes_gpc');
+        array_walk_recursive($_POST, 'stripslashes_gpc');
+        array_walk_recursive($_COOKIE, 'stripslashes_gpc');
+        array_walk_recursive($_REQUEST, 'stripslashes_gpc');
+    }
+    
+    // cek versi php di server
+    require_once GEAR. 'variable/version.php';
+    check_php_version();
+    
+    // Load bootstrap
+    require_once GEAR . 'gear.php';
+    

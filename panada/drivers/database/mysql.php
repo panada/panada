@@ -490,17 +490,9 @@ class Drivers_database_mysql {
 	
 	$this->select($column)->from($table);
 	
-	if ( ! empty( $where ) ) {
-	    
-	    $separator = 'AND';
-            foreach($where as $key => $val){
-		
-		if( end($where) == $val)
-		    $separator = false;
-		
-		$this->where($key, '=', $val, $separator);
-            }
-        }
+	if ( ! empty( $where ) )
+	    foreach($where as $key => $val)
+		$this->where($key, '=', $val, 'AND');
 	
         return $this->find_all();
     }
@@ -526,17 +518,9 @@ class Drivers_database_mysql {
 	
 	$this->select($column)->from($table);
 	
-	if ( ! empty( $where ) ) {
-	    
-	    $separator = 'AND';
-	    foreach($where as $key => $val){
-		
-		if( end($where) == $val)
-		    $separator = false;
-		
-		$this->where($key, '=', $val, $separator);
-	    }
-	}
+	if ( ! empty( $where ) )
+	    foreach($where as $key => $val)
+		$this->where($key, '=', $val, 'AND');
 	
 	return $this->find_one();
 	
@@ -808,4 +792,22 @@ class Drivers_database_mysql {
 	mysql_close($this->link);
     }
     
+	/**
+	 *
+	 * Description: Getting last error message of mysql query
+	 * Notes:
+	 * As of Panada (v0.2.1) the $last_error property was public, 
+	 * in Panada v0.3.1 the $last_error property has become a private property
+	 * so this function is used as an accessor (getter) for $last_error property.
+	 * As of Panada (v0.2.1) $last_error property can be accessed by $this->db->last_error
+	 * in Panada v0.3.1 the $last_error property can be accessed through this method
+	 * for example: $error = $this->db->last_error();
+	 *
+	 * @return error message string
+	 * added by Aryo Pinandito ( aryoxp@gmail.com )
+	 */
+	public function last_error(){
+		return $this->last_error;
+	}
+	
 } // End Driver_mysql Class
