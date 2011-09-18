@@ -89,15 +89,15 @@
         <div class="content">
             <div class="lead">
                 <h2>Module</h2>
-                <p>Module adalah sebuah sub-aplikasi yang memiliki kompenen lengkap seperti layaknya aplikasi utama yang terdiri dari Model, View, Controller dan Library. Yang membedakannya adalah sebuah module harus digabungkan ke dalam aplikasi utama dan tidak dapat berdiri sendiri.
+                <p>Module adalah sebuah sub-aplikasi yang memiliki komponen lengkap seperti layaknya aplikasi utama yang terdiri dari Model, View, Controller dan Library. Yang membedakannya adalah sebuah module harus digabungkan ke dalam aplikasi utama dan tidak dapat berdiri sendiri.
                 </p>
-                <p>Resource sebuah module bisa langsung diakses dari dalam contorller utama. Module ini akan memberikan output resource melalui interface controller module. Resource sebuah module juga dimungkinkan untuk diakses melalui URL routing. Sebuah module juga dapat mengakses resource dari module lain.</p>
-                <p>Herarki interaksi dari sebuah controller utama ke dalam controller module, ataupun dari sebuah controller module kepada controller module lainnya sering juga disebut Hierarchical Model View Controller(HMVC). Lebih jauh mengenai ini silahkan lihat <a target="_blank" href="http://en.wikipedia.org/wiki/Presentation-abstraction-control">Presentation Abstraction Control (PAC)</a>.</p>
+                <p>Resource sebuah module bisa langsung diakses dari dalam controller utama. Module ini akan memberikan output resource melalui interface controller module. Resource sebuah module juga dimungkinkan untuk diakses melalui URL routing. Sebuah module juga dapat mengakses resource dari module lain.</p>
+                <p>Hierarki interaksi dari sebuah controller utama ke dalam controller module, ataupun dari sebuah controller module kepada controller module lainnya sering juga disebut Hierarchical Model View Controller(HMVC). Lebih jauh mengenai ini silahkan lihat <a target="_blank" href="http://en.wikipedia.org/wiki/Presentation-abstraction-control">Presentation Abstraction Control (PAC)</a>.</p>
             </div>
             
             <div class="main">
                 <h3 id="create_module">Membuat Module</h3>
-                <p>Buat sebuah folder dan berinama sesuai dengan nama module yang ingin dibuat. Letakkan folder ini di dalam direktori:</p>
+                <p>Buat sebuah folder dan beri nama sesuai dengan nama module yang ingin dibuat. Letakkan folder ini di dalam direktori:</p>
                 <code>
                     panada/module/<strong>nama_module</strong>
                 </code>
@@ -164,7 +164,7 @@ $CONFIG = array(
 		<tr class="odd">
                     <td>alias_controller</td>
                     <td>
-                        <p>Jika controller alias ingin diaktifkan silahkan defenisikan nama controller dan nama method pada bagian ini. Cara penggunaan controller alias pada module sama seperti <a href="controller.html#alias_controller">Alias Controller</a> di aplikasi utama.</p>
+                        <p>Jika controller alias ingin diaktifkan silahkan definisikan nama controller dan nama method pada bagian ini. Cara penggunaan controller alias pada module sama seperti <a href="controller.html#alias_controller">Alias Controller</a> di aplikasi utama.</p>
                         <p>Alias controller pada module alamat URL-nya akan seperti: <strong>http://website.com/module_name/dynamic_arguments</strong></p>
                     </td>
 		</tr>
@@ -206,7 +206,7 @@ class User_controller_home extends Panada_module {
     }
 }
 </textarea>
-                <p>Penggunaan prefix <strong>Namamodule_</strong> juga berlaku untuk memanggil komponent library atau model yang ada di dalam module. Sebagaimana yang ada pada contoh di atas.</p>
+                <p>Penggunaan prefix <strong>Namamodule_</strong> juga berlaku untuk memanggil komponen library atau model yang ada di dalam module. Sebagaimana yang ada pada contoh di atas.</p>
                 <p>Contoh memanggil sebuah model:</p>
                 <code>
                     $this->dummy = new User_model_dummy;
@@ -215,7 +215,7 @@ class User_controller_home extends Panada_module {
                 <code>
                     $this->test = new User_library_test;
                 </code>
-                <p>Untuk memanggil library yang berada di aplikasi utama cara pemanggilananya tidak berubah:</p>
+                <p>Untuk memanggil library yang berada di aplikasi utama cara pemanggilannya tidak berubah:</p>
                 <code>
                     $this->request = new Library_request;
                 </code>
@@ -233,7 +233,7 @@ class User_controller_home extends Panada_module {
             
             <div class="main">
                 <h3 id="view_module">View Module</h3>
-                <p>Pemanggilan file view di dalam controller module tidak ada perbedaan dengan pemanggilan <a href="view.html">view</a> pada aplikasi uatama.</p>
+                <p>Pemanggilan file view di dalam controller module tidak ada perbedaan dengan pemanggilan <a href="view.html">view</a> pada aplikasi utama.</p>
             </div>
             <div class="main">
                 <h3>Model Module</h3>
@@ -253,7 +253,7 @@ class User_model_dummy {
             </div>
             <div class="main">
                 <h3 id="library_module">Library Module</h3>
-                <p>Demikian juga hal yang sama berlaku pada nama class untuk library. Perefix nama classnya adalah <strong>Namamodule_library</strong>.</p>
+                <p>Demikian juga hal yang sama berlaku pada nama class untuk library. Prefix nama classnya adalah <strong>Namamodule_library</strong>.</p>
 
 <textarea rows="10" cols="50" class="textarea">
 &lt;?php
@@ -282,7 +282,7 @@ class User_library_test {
                 <code>
                     $this-><strong>nama_module</strong> = new Library_module( array('name' => '<strong>nama_module</strong>', 'controller' => '<strong>nama_controller</strong>' ) );
                 </code>
-                <p>Misalnya module <strong>user</strong> ingin dipanggil dari controlloler utama <strong>home</strong> seperti contoh berikut:</p>
+                <p>Misalnya module <strong>user</strong> ingin dipanggil dari controller utama <strong>home</strong> seperti contoh berikut:</p>
 
 <textarea rows="19" cols="50" class="textarea">
 &lt;?php
