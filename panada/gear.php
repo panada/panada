@@ -130,8 +130,16 @@ function __autoload($class_name) {
         
     }
     else{
-	
-	$class_file = APPLICATION . $file .'.php';
+		
+		// EN: resolve Zend_Config to apps/library/Zend/Config.php
+		$class_file = APPLICATION.'/library/'
+			.str_replace('_', '/', $class_name).'.php'
+			;
+			
+		if (file_exists($class_file) == false) {
+			$class_file = APPLICATION . $file .'.php';
+		}
+		
     }
     
     include_once $class_file;
