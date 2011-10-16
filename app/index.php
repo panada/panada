@@ -1,6 +1,5 @@
 <?php
-define('APPS', dirname(__FILE__) . '/');
+define('APP', dirname(__FILE__) . '/');
+define('GEAR', '../panada/');
 
-require 'config/main.php';
-
-require $main['gearPath'].'gear.php';
+require_once GEAR.'gear.php';

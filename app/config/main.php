@@ -1,9 +1,11 @@
 <?php
 
 $main = array(
-    'gearPath' => '../panada/',
     'module' => array(
-        'path' => '../panada/modules/',
+        'path' => GEAR.'modules/',
         'domainMapping' => array(),
     ),
+    'vendor' => array(
+        'path' => GEAR.'Vendors/'
+    )
 );

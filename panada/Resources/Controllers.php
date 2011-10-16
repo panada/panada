@@ -22,7 +22,7 @@ class Controllers {
     
     public function output( $filePath, $data = array() ){
         
-        $filePath = APPS.'views/'.$filePath;
+        $filePath = APP.'views/'.$filePath;
         
         if( ! file_exists($viewFile = $filePath.'.php') )
             die('500');
