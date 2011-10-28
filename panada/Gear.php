@@ -1,6 +1,8 @@
 <?php
 class Gear {
     
+    private static $uriObj;
+    
     public static function loader($file){
         
         $prefix = explode('\\', $file);
@@ -24,23 +26,47 @@ class Gear {
         
         spl_autoload_register('Gear::loader');
         
-        $uri                = new Resources\Uri;
-        $controllerClass    = ucwords( $uri->getClass() );
+        self::$uriObj       = new Resources\Uri;
+        $controllerClass    = ucwords( self::$uriObj->getClass() );
         $controller         = 'Controllers\\' . $controllerClass;
         
         if( ! file_exists( APP . 'Controllers/' . $controllerClass . '.php' ) ){
-            die('Error 404 - Controller not exists!');
+            self::controller();
+            return;
         }
         
-        $method = $uri->getMethod();
+        $method = self::$uriObj->getMethod();
         
-        if( ! $request = $uri->getRequests() )
+        if( ! $request = self::$uriObj->getRequests() )
             $request = array();
         
         $instance = new $controller;
         
         if( ! method_exists($instance, $method) )
             die('Error 404 - Method not exists!');
+        
+        self::run($instance, $method, $request);
+    }
+    
+    private static function controller(){
+        
+        $configMain = Resources\Config::main();
+        
+        if( isset($configMain['alias']['controller'][0]) ){
+            
+            $controller = $configMain['alias']['controller'][0];
+            $method     = $configMain['alias']['controller'][1];
+            $instance   = new $controller;
+            $request    = self::$uriObj->breakUriString();
+            
+            self::run($instance, $method, $request);
+            return;
+        }
+        
+        die('Error 404 - Controller not exists!');
+    }
+    
+    private static function run($instance, $method, $request){
         
         call_user_func_array(array($instance, $method), $request);
     }
