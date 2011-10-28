@@ -43,9 +43,9 @@ class Uri {
      */
     public function removeQuery($path){
 	
-	$path_ar = explode('?', $path);
-	if(count($path_ar) > 0)
-	    $path = $path_ar[0];
+	$pathAr = explode('?', $path);
+	if(count($pathAr) > 0)
+	    $path = $pathAr[0];
 	
 	return $path;
     }
@@ -73,10 +73,10 @@ class Uri {
      */
     public function getClass(){
 	
-	if( $uri_string = $this->breakUriString(0) ){
+	if( $uriString = $this->breakUriString(0) ){
 	    
-	    if( $this->stripUriCtring($uri_string) )
-	    return strtolower($uri_string);
+	    if( $this->stripUriCtring($uriString) )
+	    return strtolower($uriString);
 	    else
 	    return false;
 	}
@@ -94,12 +94,12 @@ class Uri {
      */
     public function getMethod($default = 'index'){
 	
-	$uri_string = $this->breakUriString(1);
+	$uriString = $this->breakUriString(1);
 
-	if( isset($uri_string) && ! empty($uri_string) ){
+	if( isset($uriString) && ! empty($uriString) ){
 
-	    if( $this->stripUriCtring($uri_string) )
-		return strtolower($uri_string);
+	    if( $this->stripUriCtring($uriString) )
+		return strtolower($uriString);
 	    else
 		return '';
     
@@ -119,9 +119,9 @@ class Uri {
      */
     public function getRequests($segment = 2){
 
-	$uri_string = $this->breakUriString($segment);
+	$uriString = $this->breakUriString($segment);
     
-	if( isset($uri_string) && ! empty($uri_string) ) {
+	if( isset($uriString) && ! empty($uriString) ) {
     
 	    $requests = array_slice($this->breakUriString(), $segment);
     
