@@ -15,4 +15,9 @@ class Home extends Controllers {
         
         echo 'mika';
     }
+    
+    public function alias(){
+        
+        print_r( func_get_args() );
+    }
 }

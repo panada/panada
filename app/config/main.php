@@ -12,7 +12,10 @@ $main = array(
     ),
     
     'alias' => array(
-        'controller' => array('Controllers\Alias', 'index'),
+        'controller' => array(
+            'class' => 'Controllers\Alias',
+            'method' => 'index'
+        ),
         'method' => 'alias'
     ),
 );

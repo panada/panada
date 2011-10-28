@@ -2,6 +2,7 @@
 class Gear {
     
     private static $uriObj;
+    private static $config;
     
     public static function loader($file){
         
@@ -26,6 +27,8 @@ class Gear {
         
         spl_autoload_register('Gear::loader');
         
+        self::$config['main'] = Resources\Config::main();
+        
         self::$uriObj       = new Resources\Uri;
         $controllerClass    = ucwords( self::$uriObj->getClass() );
         $controller         = 'Controllers\\' . $controllerClass;
@@ -42,20 +45,24 @@ class Gear {
         
         $instance = new $controller;
         
-        if( ! method_exists($instance, $method) )
-            die('Error 404 - Method not exists!');
+        if( ! method_exists($instance, $method) ){
+            
+            $request = ( ! empty($request) ) ? array_merge(array($method), $request) : array($method);
+            $method = self::$config['main']['alias']['method'];
+            
+            if( ! method_exists($instance, $method) )
+                die('Error 404 - Method not exists!');
+        }
         
         self::run($instance, $method, $request);
     }
     
     private static function controller(){
         
-        $configMain = Resources\Config::main();
-        
-        if( isset($configMain['alias']['controller'][0]) ){
+        if( isset(self::$config['main']['alias']['controller']['class']) ){
             
-            $controller = $configMain['alias']['controller'][0];
-            $method     = $configMain['alias']['controller'][1];
+            $controller = self::$config['main']['alias']['controller']['class'];
+            $method     = self::$config['main']['alias']['controller']['method'];
             $instance   = new $controller;
             $request    = self::$uriObj->breakUriString();
             
