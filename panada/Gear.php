@@ -15,12 +15,14 @@ class Gear {
         }
         
         if( ! file_exists( $file = $folder . str_ireplace('\\', '/', $file) . '.php' ) )
-            die('500');
+            die('Error 500 - Resource not available!');
         
         include $file;
     }
     
-    public static function init(){
+    public static function main(){
+        
+        spl_autoload_register('Gear::loader');
         
         $uri                = new Resources\Uri;
         $controllerClass    = ucwords( $uri->getClass() );

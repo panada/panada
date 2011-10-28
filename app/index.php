@@ -5,5 +5,4 @@ define('GEAR', '../panada/');
 
 require_once GEAR.'Gear.php';
 
-spl_autoload_register('Gear::loader');
-Gear::init();
+Gear::main();

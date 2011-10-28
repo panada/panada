@@ -10,4 +10,9 @@ class Home extends Controllers {
         
         $this->output('home', $data);
     }
+    
+    public function mika(){
+        
+        echo 'mika';
+    }
 }
