@@ -59,6 +59,11 @@ class Gear {
     
     private static function controller(){
         
+        /**
+         * Cek apakah alias controller di set di konfigurasi.
+         * Jika tidak, adakah sub controller?
+         * Jika tidak apakah module dengan nama ini ada?
+         */
         if( isset(self::$config['main']['alias']['controller']['class']) ){
             
             $controller = self::$config['main']['alias']['controller']['class'];
@@ -70,7 +75,25 @@ class Gear {
             return;
         }
         
-        die('Error 404 - Controller not exists!');
+        self::subController();
+    }
+    
+    private static function subController(){
+        
+        $folder             = ucwords( self::$uriObj->getClass() );
+        $controllerClass    = ucwords(self::$uriObj->getMethod() );
+        
+        if( ! file_exists( APP . 'Controllers/' . $folder . '/' . $controllerClass . '.php') )
+            die('Error 404 - Sub-controller not exists!');
+        
+        $controller = 'Controllers\\' . $folder . '\\' .$controllerClass;
+        $instance   = new $controller;
+        $request    = array_slice( self::$uriObj->breakUriString(), 3);
+        
+        if( ! $method = self::$uriObj->breakUriString(2) )
+            $method = 'index';
+        
+        self::run($instance, $method, $request);
     }
     
     private static function run($instance, $method, $request){
