@@ -1,7 +1,7 @@
 <?php
 class Gear {
     
-    public static function loadFile($file){
+    public static function loader($file){
         
         $prefix = explode('\\', $file);
         
@@ -43,6 +43,3 @@ class Gear {
         call_user_func_array(array($instance, $method), $request);
     }
 }
-
-spl_autoload_register('Gear::loadFile');
-Gear::init();
