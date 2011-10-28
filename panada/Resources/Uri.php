@@ -57,7 +57,7 @@ class Uri {
      * @param    integer
      * @return  string
      */
-    public function breakUriString($segment = false){
+    public function path($segment = false){
 	
 	if( $segment !== false )
 	    return isset( $this->pathUri[$segment] )? $this->pathUri[$segment]:false;
@@ -73,7 +73,7 @@ class Uri {
      */
     public function getClass(){
 	
-	if( $uriString = $this->breakUriString(0) ){
+	if( $uriString = $this->path(0) ){
 	    
 	    if( $this->stripUriCtring($uriString) )
 	    return strtolower($uriString);
@@ -94,7 +94,7 @@ class Uri {
      */
     public function getMethod($default = 'index'){
 	
-	$uriString = $this->breakUriString(1);
+	$uriString = $this->path(1);
 
 	if( isset($uriString) && ! empty($uriString) ){
 
@@ -119,11 +119,11 @@ class Uri {
      */
     public function getRequests($segment = 2){
 
-	$uriString = $this->breakUriString($segment);
+	$uriString = $this->path($segment);
     
 	if( isset($uriString) && ! empty($uriString) ) {
     
-	    $requests = array_slice($this->breakUriString(), $segment);
+	    $requests = array_slice($this->path(), $segment);
     
 	    return $requests;
 	}

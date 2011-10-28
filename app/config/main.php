@@ -11,11 +11,11 @@ $main = array(
         'path' => GEAR.'Vendors/'
     ),
     
-    //'alias' => array(
-    //    'controller' => array(
-    //        'class' => 'Controllers\Alias',
-    //        'method' => 'index'
-    //    ),
-    //    'method' => 'alias'
-    //),
+    'alias' => array(
+        'controller' => array(
+            'class' => 'Controllers\Alias',
+            'method' => 'index'
+        ),
+        'method' => 'alias'
+    ),
 );

@@ -34,7 +34,7 @@ class Gear {
         $controller         = 'Controllers\\' . $controllerClass;
         
         if( ! file_exists( APP . 'Controllers/' . $controllerClass . '.php' ) ){
-            self::controller();
+            self::controllerHandler();
             return;
         }
         
@@ -47,7 +47,7 @@ class Gear {
         
         if( ! method_exists($instance, $method) ){
             
-            $request = ( ! empty($request) ) ? array_merge(array($method), $request) : array($method);
+            $request = array_slice( self::$uriObj->path(), 1);
             $method = self::$config['main']['alias']['method'];
             
             if( ! method_exists($instance, $method) )
@@ -57,7 +57,7 @@ class Gear {
         self::run($instance, $method, $request);
     }
     
-    private static function controller(){
+    private static function controllerHandler(){
         
         /**
          * Cek apakah alias controller di set di konfigurasi.
@@ -69,16 +69,16 @@ class Gear {
             $controller = self::$config['main']['alias']['controller']['class'];
             $method     = self::$config['main']['alias']['controller']['method'];
             $instance   = new $controller;
-            $request    = self::$uriObj->breakUriString();
+            $request    = self::$uriObj->path();
             
             self::run($instance, $method, $request);
             return;
         }
         
-        self::subController();
+        self::subControllerHandler();
     }
     
-    private static function subController(){
+    private static function subControllerHandler(){
         
         $folder             = ucwords( self::$uriObj->getClass() );
         $controllerClass    = ucwords(self::$uriObj->getMethod() );
@@ -88,9 +88,9 @@ class Gear {
         
         $controller = 'Controllers\\' . $folder . '\\' .$controllerClass;
         $instance   = new $controller;
-        $request    = array_slice( self::$uriObj->breakUriString(), 3);
+        $request    = array_slice( self::$uriObj->path(), 3);
         
-        if( ! $method = self::$uriObj->breakUriString(2) )
+        if( ! $method = self::$uriObj->path(2) )
             $method = 'index';
         
         self::run($instance, $method, $request);
