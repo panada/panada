@@ -2,55 +2,14 @@
 namespace Resources;
 
 class Uri {
-
-    public function extractUriString(){
-	
-	// First, try with $_SERVER['PATH_INFO'] gobal variable.
-        $path = (isset($_SERVER['PATH_INFO'])) ? $_SERVER['PATH_INFO'] : @getenv('PATH_INFO');
-        if (trim($path, '/') != '' && $path != '/index.php')
-            return $path;
-
-
-	// Still don't work? try with $_SERVER['ORIG_PATH_INFO']
-        $path = str_replace($_SERVER['SCRIPT_NAME'], '', (isset($_SERVER['ORIG_PATH_INFO'])) ? $_SERVER['ORIG_PATH_INFO'] : @getenv('ORIG_PATH_INFO'));
-        if (trim($path, '/') != '' && $path != '/index.php')
-            return $path;
-
-
-	// ID: Jika tidak berhasil, deklarasikan array berisikan komponen2 yang tidak digunakan. Array ini akan digunakan di dalam fungis str_replace di bawah.
-	$script_remove_string = explode('/', $_SERVER['SCRIPT_NAME']);
-
-	// ID: Jika cara pertama tidak berhasil, coba lagi menggunakan varibel global $_SERVER["PHP_SELF"]
-	$path = trim(str_replace($script_remove_string, '', $_SERVER["PHP_SELF"]), '/');
-	if( $path != '' )
-	    return '/'.$path;
-
-
-	// ID: Belum berhasil juga? coba dengan $_SERVER["REQUEST_URI"]
-	$path = trim(str_replace($script_remove_string, '', $_SERVER["REQUEST_URI"]), '/');
-	$path = $this->removeQuery($path);
-	if (trim($path, '/') != '')
-	    return '/'.$path;
-
-
-	// Just litle tweek
-	/*
-	$path = trim( str_replace( 'index.php', '', $_SERVER["PHP_SELF"] ), '/');
-	if( $path != '' )
-	    return '/'.$path;
-	*/
     
-	/**
-	 * ID: Terakhir, coba gunakan parameter base_url dari file config.php. Ini untuk menangani masalah yang biasa muncul di Nginx.
-	 *     Uncomment bagian ini jika menggunakan Nginx webserver.
-	 */
-	/*
-	$path = str_replace($this->config->base_url, '', ($this->isHttps())?'https://':'http://' . $_SERVER['SERVER_NAME']. $_SERVER['REQUEST_URI']);
-	$path = $this->removeQuery($path);
-	if (trim($path, '/') != '' && trim($path, '/') != 'index.php')
-	    return '/'.$path;
-	*/
-        return false;
+    private $pathUri = array();
+    
+    public function __construct(){
+	
+	$selfArray  	= explode('/', $_SERVER['PHP_SELF']);
+	$selfKey    	= array_search(INDEX_FILE, $selfArray);
+	$this->pathUri	= array_slice($selfArray, ($selfKey + 1));
     }
 
     /**
@@ -98,15 +57,12 @@ class Uri {
      * @param    integer
      * @return  string
      */
-    public function breakUriString($segment = 0){
+    public function breakUriString($segment = false){
 	
-	$uri_string = $this->extractUriString();
-	$uri_string = explode('/', $uri_string);
-	
-	if( $segment > 0 )
-	    return isset( $uri_string[$segment] )? $uri_string[$segment]:false;
+	if( $segment !== false )
+	    return isset( $this->pathUri[$segment] )? $this->pathUri[$segment]:false;
 	else
-	    return $uri_string;
+	    return $this->pathUri;
     }
 
     /**
@@ -117,7 +73,7 @@ class Uri {
      */
     public function getClass(){
 	
-	if( $uri_string = $this->breakUriString(1) ){
+	if( $uri_string = $this->breakUriString(0) ){
 	    
 	    if( $this->stripUriCtring($uri_string) )
 	    return strtolower($uri_string);
@@ -138,7 +94,7 @@ class Uri {
      */
     public function getMethod($default = 'index'){
 	
-	$uri_string = $this->breakUriString(2);
+	$uri_string = $this->breakUriString(1);
 
 	if( isset($uri_string) && ! empty($uri_string) ){
 
@@ -161,7 +117,7 @@ class Uri {
      * @param    int
      * @return  array
      */
-    public function getRequests($segment = 3){
+    public function getRequests($segment = 2){
 
 	$uri_string = $this->breakUriString($segment);
     
