@@ -1,8 +1,8 @@
 <?php
 class Gear {
     
-    private static $uriObj;
-    private static $config;
+    private static $uriObj, $config, $firstUriPath;
+    
     
     public static function loader($file){
         
@@ -27,13 +27,12 @@ class Gear {
         
         spl_autoload_register('Gear::loader');
         
-        self::$config['main'] = Resources\Config::main();
+        self::$config['main']   = Resources\Config::main();
+        self::$uriObj           = new Resources\Uri;
+        self::$firstUriPath     = ucwords( self::$uriObj->getClass() );
+        $controllerNamespace    = 'Controllers\\' . self::$firstUriPath;
         
-        self::$uriObj       = new Resources\Uri;
-        $controllerClass    = ucwords( self::$uriObj->getClass() );
-        $controller         = 'Controllers\\' . $controllerClass;
-        
-        if( ! file_exists( APP . 'Controllers/' . $controllerClass . '.php' ) ){
+        if( ! file_exists( APP . 'Controllers/' . self::$firstUriPath . '.php' ) ){
             self::controllerHandler();
             return;
         }
@@ -43,7 +42,7 @@ class Gear {
         if( ! $request = self::$uriObj->getRequests() )
             $request = array();
         
-        $instance = new $controller;
+        $instance = new $controllerNamespace;
         
         if( ! method_exists($instance, $method) ){
             
@@ -80,20 +79,28 @@ class Gear {
     
     private static function subControllerHandler(){
         
-        $folder             = ucwords( self::$uriObj->getClass() );
-        $controllerClass    = ucwords(self::$uriObj->getMethod() );
+        $controllerClass    = ucwords( self::$uriObj->getMethod() );
         
-        if( ! file_exists( APP . 'Controllers/' . $folder . '/' . $controllerClass . '.php') )
-            die('Error 404 - Sub-controller not exists!');
+        if( ! file_exists( APP . 'Controllers/' . self::$firstUriPath . '/' . $controllerClass . '.php') ){
+            self::moduleHandler();
+            return;
+            //die('Error 404 - Sub-controller not exists!');
+        }
         
-        $controller = 'Controllers\\' . $folder . '\\' .$controllerClass;
-        $instance   = new $controller;
-        $request    = array_slice( self::$uriObj->path(), 3);
+        $controllerNamespace    = 'Controllers\\' . self::$firstUriPath . '\\' .$controllerClass;
+        $instance               = new $controller;
+        $request                = array_slice( self::$uriObj->path(), 3);
         
         if( ! $method = self::$uriObj->path(2) )
             $method = 'index';
         
         self::run($instance, $method, $request);
+    }
+    
+    private static function moduleHandler(){
+        
+        if ( ! is_dir( self::$config['module']['path'] . $pan_uri->get_class() . '/' ) )
+            die('Error 404 - Module not exists!');
     }
     
     private static function run($instance, $method, $request){
