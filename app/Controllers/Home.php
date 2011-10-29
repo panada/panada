@@ -1,12 +1,12 @@
 <?php
 namespace Controllers;
-use Resources\Controllers;
+use Resources\Controller;
 
-class Home extends Controllers {
+class Home extends Controller {
     
     public function index(){
         
-        $data['mod'] = $this->models->sampleData->getData();
+        $data['mod'] = $this->model->sampleData->getData();
         
         $this->output('home', $data);
     }

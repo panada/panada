@@ -1,8 +1,8 @@
 <?php
 namespace Controllers\Asal;
-use Resources\Controllers;
+use Resources\Controller;
 
-class Testing extends Controllers {
+class Testing extends Controller {
     
     public function index(){
         

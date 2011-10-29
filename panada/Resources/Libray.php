@@ -1,14 +1,14 @@
 <?php
 namespace Resources;
 
-class Libraries {
+class Library {
     
     public function __get($name){
         
         $class = 'Libraries\\'.ucwords($name);
         $object = new $class;
-        $object->libraries = new Libraries;
-        $object->models = new Models;
+        $object->library = new Library;
+        $object->model = new Model;
         
         return new $object;
     }

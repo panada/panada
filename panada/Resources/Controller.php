@@ -1,18 +1,18 @@
 <?php
 namespace Resources;
 
-class Controllers {
+class Controller {
     
     public function __get($class){
         
         $class = str_ireplace(
                     array(
-                        'models',
-                        'libraries'
+                        'model',
+                        'library'
                     ),
                     array(
-                        'Resources\Models',
-                        'Resources\Libraries',
+                        'Resources\Model',
+                        'Resources\Libray',
                     ),
                     $class
                 );

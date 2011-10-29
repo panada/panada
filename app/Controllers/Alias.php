@@ -1,8 +1,8 @@
 <?php
 namespace Controllers;
-use Resources\Controllers;
+use Resources\Controller;
 
-class Alias extends Controllers {
+class Alias extends Controller {
     
     public function index(){
         

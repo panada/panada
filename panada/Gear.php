@@ -18,7 +18,7 @@ class Gear {
         }
         
         if( ! file_exists( $file = $folder . str_ireplace('\\', '/', $file) . '.php' ) )
-            die('Error 500 - Resource not available!');
+            die($file);
         
         include $file;
     }
@@ -99,7 +99,7 @@ class Gear {
     
     private static function moduleHandler(){
         
-        if ( ! is_dir( self::$config['module']['path'] . $pan_uri->get_class() . '/' ) )
+        if ( ! is_dir( self::$config['main']['module']['path'] . self::$firstUriPath . '/' ) )
             die('Error 404 - Module not exists!');
     }
     
