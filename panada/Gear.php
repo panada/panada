@@ -7,6 +7,8 @@ class Gear {
         
         spl_autoload_register( array($this, 'loader') );
         
+        $this->disableMagicQuotes();
+        
         $this->config['main']   = Resources\Config::main();
         $this->uriObj           = new Resources\Uri;
         $this->firstUriPath     = ucwords( $this->uriObj->getClass() );
@@ -45,6 +47,9 @@ class Gear {
             case 'Resources':
                 $folder = GEAR;
                 break;
+            case 'Modules':
+                $folder = $this->config['main']['module']['path'];
+                break;
             default:
                 $folder = APP;
                 break;
@@ -54,6 +59,20 @@ class Gear {
             die('Error 500 - Resource: '.$file.' not available!');
         
         include $file;
+    }
+    
+    private function disableMagicQuotes(){
+        
+        if ( get_magic_quotes_gpc() ) {
+            array_walk_recursive($_GET,  array($this, 'stripslashesGpc') );
+            array_walk_recursive($_POST, array($this, 'stripslashesGpc') );
+            array_walk_recursive($_COOKIE, array($this, 'stripslashesGpc') );
+            array_walk_recursive($_REQUEST, array($this, 'stripslashesGpc') );
+        }
+    }
+    
+    private function stripslashesGpc(&$value){
+        $value = stripslashes($value);
     }
     
     private function controllerHandler(){
@@ -88,19 +107,43 @@ class Gear {
         }
         
         $controllerNamespace    = 'Controllers\\' . $this->firstUriPath . '\\' .$controllerClass;
-        $instance               = new $controller;
+        $instance               = new $controllerNamespace;
         $request                = array_slice( $this->uriObj->path(), 3);
         
         if( ! $method = $this->uriObj->path(2) )
             $method = 'index';
+        
+        if( ! method_exists($instance, $method) )
+            die('Error 404 - Method '.$method.' not exists!');
         
         $this->run($instance, $method, $request);
     }
     
     private function moduleHandler(){
         
-        if ( ! is_dir( $this->config['main']['module']['path'] . $this->firstUriPath . '/' ) )
+        if ( ! is_dir( $moduleFolder = $this->config['main']['module']['path'] . 'Modules/'. $this->firstUriPath . '/' ) )
             die('Error 404 - Module '.$this->firstUriPath.' not exists!');
+        
+        if( ! $controllerClass = $this->uriObj->path(1) )
+            $controllerClass = 'Home';
+        
+        $controllerClass = ucwords( $controllerClass );
+        
+        // Pastikan apakah file untuk class ini tersedia.
+        if( ! file_exists( $moduleFolder . 'Controllers/' . $controllerClass . '.php' ) )
+            die('file controller module tidak tersedia.');
+        
+        $controllerNamespace    = 'Modules\\'.$this->firstUriPath.'\Controllers\\'.$controllerClass;
+        $instance               = new $controllerNamespace;
+        $request                = array_slice( $this->uriObj->path(), 3);
+        
+        if( ! $method = $this->uriObj->path(2) )
+            $method = 'index';
+        
+        if( ! method_exists($instance, $method) )
+            die('Error 404 - Method '.$method.' not exists!');
+        
+        $this->run($instance, $method, $request );
     }
     
     private function run($instance, $method, $request){

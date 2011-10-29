@@ -3,7 +3,7 @@
 $main = array(
     
     'module' => array(
-        'path' => GEAR.'Modules/',
+        'path' => GEAR,
         'domainMapping' => array(),
     ),
     
