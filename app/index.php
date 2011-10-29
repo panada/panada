@@ -5,4 +5,4 @@ define('GEAR', '../panada/');
 
 require_once GEAR.'Gear.php';
 
-Gear::main();
+new Gear;
