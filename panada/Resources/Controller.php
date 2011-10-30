@@ -3,6 +3,13 @@ namespace Resources;
 
 class Controller {
     
+    private $childClass;
+    
+    public function __construct(){
+        
+        $this->childClass = get_class($this);
+    }
+    
     public function __get($class){
         
         $class = str_ireplace(
