@@ -1,8 +1,24 @@
 <?php
+/**
+ * Gear Class File
+ *
+ * This is the heart of the whole Panada system.
+ *
+ * @author Iskandar Soesman <k4ndar@yahoo.com>
+ * @link http://panadaframework.com/
+ * @license http://www.opensource.org/licenses/bsd-license.php
+ * @since version 1.0.0
+ */
+
 class Gear {
     
     private $uriObj, $config, $firstUriPath;
     
+    /**
+     * Preparation step before anything else.
+     *
+     * @return void
+     */
     public function __construct(){
         
         spl_autoload_register( array($this, 'loader') );
@@ -38,7 +54,12 @@ class Gear {
         $this->run($instance, $method, $request);
     }
     
-    
+    /**
+     * Magic loader to load instantiated class.
+     *
+     * @param string $file Class namespace.
+     * @return void
+     */
     private function loader($file){
         
         $prefix = explode('\\', $file);
@@ -61,6 +82,11 @@ class Gear {
         include $file;
     }
     
+    /**
+     * We don't need Magic Quotes, let's kill it.
+     *
+     * @return void
+     */
     private function disableMagicQuotes(){
         
         if ( get_magic_quotes_gpc() ) {
@@ -71,17 +97,29 @@ class Gear {
         }
     }
     
+    /**
+     * Strip the slash mark.
+     *
+     * @param string $value
+     * @return void
+     */
     private function stripslashesGpc(&$value){
         $value = stripslashes($value);
     }
     
+    /**
+     * Hendle the controller calling process.
+     *
+     * The steps is:
+     *  - Does alias controller are defined in main config?
+     *  - If not, is sub-controller exists?
+     *  - If not, module with this name exists?
+     *  - If all fault, then throw 404.
+     *
+     *  @return void
+     */
     private function controllerHandler(){
         
-        /**
-         * Cek apakah alias controller di set di konfigurasi.
-         * Jika tidak, adakah sub controller?
-         * Jika tidak apakah module dengan nama ini ada?
-         */
         if( isset($this->config['main']['alias']['controller']['class']) ){
             
             $controller = $this->config['main']['alias']['controller']['class'];
@@ -96,6 +134,11 @@ class Gear {
         $this->subControllerHandler();
     }
     
+    /**
+     * Hendle the sub-controller calling process.
+     *
+     * @return void
+     */
     private function subControllerHandler(){
         
         $controllerClass    = ucwords( $this->uriObj->getMethod() );
@@ -103,7 +146,6 @@ class Gear {
         if( ! file_exists( APP . 'Controllers/' . $this->firstUriPath . '/' . $controllerClass . '.php') ){
             $this->moduleHandler();
             return;
-            //die('Error 404 - Sub-controller not exists!');
         }
         
         $controllerNamespace    = 'Controllers\\' . $this->firstUriPath . '\\' .$controllerClass;
@@ -119,6 +161,11 @@ class Gear {
         $this->run($instance, $method, $request);
     }
     
+    /**
+     * Hendle the module calling process.
+     *
+     * @return void
+     */
     private function moduleHandler(){
         
         if ( ! is_dir( $moduleFolder = $this->config['main']['module']['path'] . 'Modules/'. $this->firstUriPath . '/' ) )
@@ -129,7 +176,7 @@ class Gear {
         
         $controllerClass = ucwords( $controllerClass );
         
-        // Pastikan apakah file untuk class ini tersedia.
+        // Does this class's file exists?
         if( ! file_exists( $moduleFolder . 'Controllers/' . $controllerClass . '.php' ) )
             die('file controller module tidak tersedia.');
         
@@ -146,6 +193,14 @@ class Gear {
         $this->run($instance, $method, $request );
     }
     
+    /**
+     * Call the controller's method
+     *
+     * @param object $instance
+     * @param string $method
+     * @param array $request
+     * @return void
+     */
     private function run($instance, $method, $request){
         
         call_user_func_array(array($instance, $method), $request);
