@@ -36,8 +36,6 @@ class Controller {
         
         $filePath = APP.'views/'.$file;
         
-        echo 'File: '.$file. ' Prefix: '.$this->childClass['namespaceString'].'<br />';
-        
         if( $this->childClass['namespaceArray'][0] == 'Modules' ){
             $mainConfig = Config::main();
             $filePath = $mainConfig['module']['path'].$this->childClass['namespaceArray'][0].'/'.$this->childClass['namespaceArray'][1].'/views/'.$file;
