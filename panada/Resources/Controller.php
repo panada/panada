@@ -17,19 +17,19 @@ class Controller {
     
     public function __get($class){
         
-        $class = str_ireplace(
+        $classNamespace = str_ireplace(
                     array(
                         'model',
                         'library'
                     ),
                     array(
-                        'Resources\Model',
-                        'Resources\Libray',
+                        'Models',
+                        'Libraries',
                     ),
                     $class
                 );
         
-        return new $class($this->childClass['namespaceArray']);
+        return new PropertiesLoader($this->childClass['namespaceArray'], $classNamespace);
     }
     
     public function output( $file, $data = array(), $isReturnValue = false ){
