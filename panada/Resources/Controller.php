@@ -3,11 +3,16 @@ namespace Resources;
 
 class Controller {
     
-    private $childClass;
+    private $childNamespace, $viewCache;
     
     public function __construct(){
         
-        $this->childClass = get_class($this);
+        $child = get_class($this);
+        
+        $this->childClass = array(
+                            'namespaceArray' => explode( '\\', $child),
+                            'namespaceString' => $child
+                        );
     }
     
     public function __get($class){
@@ -24,22 +29,41 @@ class Controller {
                     $class
                 );
         
-        return new $class;
+        return new $class($this->childClass['namespaceArray']);
     }
     
-    public function output( $filePath, $data = array() ){
+    public function output( $file, $data = array(), $isReturnValue = false ){
         
-        $filePath = APP.'views/'.$filePath;
+        $filePath = APP.'views/'.$file;
+        
+        echo 'File: '.$file. ' Prefix: '.$this->childClass['namespaceString'].'<br />';
+        
+        if( $this->childClass['namespaceArray'][0] == 'Modules' ){
+            $mainConfig = Config::main();
+            $filePath = $mainConfig['module']['path'].$this->childClass['namespaceArray'][0].'/'.$this->childClass['namespaceArray'][1].'/views/'.$file;
+        }
         
         if( ! file_exists($viewFile = $filePath.'.php') )
-            die('500');
+            die('Error 500: No view file.');
         
-        if( ! empty($data) )
-            $this->view = $data;
+        if( ! empty($data) ){
+            $this->viewCache = array(
+                'data' => $data,
+                'prefix' => $this->childClass['namespaceString'],
+            );
+        }
         
-        if( ! empty($this->view ) )
-            extract( $this->view, EXTR_SKIP );
+        if( ! empty($this->viewCache) && $this->viewCache['prefix'] == $this->childClass['namespaceString'] )
+            extract( $this->viewCache['data'], EXTR_SKIP );
         
         include_once $viewFile;
+    }
+    
+    public function outputJSON($data, $isReturnValue = false){
+        
+    }
+    
+    public function outputXML($data, $isReturnValue = false){
+        
     }
 }
