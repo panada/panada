@@ -6,14 +6,10 @@ class Home extends Controller {
     
     public function index(){
         
+        $data['title'] = 'Hello world!';
         $data['mod'] = $this->model->sampleData->getData();
         
         $this->output('home', $data);
-    }
-    
-    public function mika(){
-        
-        echo 'mika';
     }
     
     public function alias(){

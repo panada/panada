@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>Hello World!</title>
-</head>
-
+<?php $this->output('header');?>
 <body>
-
 <?php echo $mod;?>
-
 </body>
 </html>
