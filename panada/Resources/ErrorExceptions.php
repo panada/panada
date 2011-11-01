@@ -7,16 +7,17 @@ class ErrorExceptions extends \Exception {
         
         parent::__construct($message, $code, $previous);
         
-        $this->main();
+        //$this->main();
     }
     
     public function __toString() {
+        
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }
     
-    public function main(){
+    public static function main($exception){
         
-        $trace = $this->getTrace();
+        $trace = $exception->getTrace();
         $fileString = file_get_contents($trace[2]['file']);
         $getLine = explode("\n", $fileString);
         
@@ -24,7 +25,7 @@ class ErrorExceptions extends \Exception {
         
         echo '<h2>Runtime Error!</h2>';
         echo '<strong>Error in file</strong>: '.$trace[2]['file'].' Line: '.$trace[2]['line'].'<br />';
-        echo '<strong>Error message</strong>: '.$this->getMessage().'<br />' . "\n";
+        echo '<strong>Error message</strong>: '.$exception->getMessage().'<br />' . "\n";
         
         echo '<pre>';
         

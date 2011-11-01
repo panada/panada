@@ -22,6 +22,7 @@ class Gear {
     public function __construct(){
         
         spl_autoload_register( array($this, 'loader') );
+        set_exception_handler( 'Resources\ErrorExceptions::main');
         
         $this->disableMagicQuotes();
         
@@ -76,8 +77,13 @@ class Gear {
                 break;
         }
         
-        if( ! file_exists( $file = $folder . str_ireplace('\\', '/', $file) . '.php' ) )
-            die('Error 500 - Resource: '.$file.' not available!');
+        //try{
+            if( ! file_exists( $file = $folder . str_ireplace('\\', '/', $file) . '.php' ) )
+                throw new Resources\ErrorExceptions('Resource '.$file.' not available!');
+        //}catch(Resources\ErrorExceptions $e){
+        //    die($e);
+        //}
+        
         
         include $file;
     }
