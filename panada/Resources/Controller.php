@@ -20,10 +20,14 @@ class Controller {
         $classNamespace = str_ireplace(
                     array(
                         'model',
-                        'library'
+                        'models',
+                        'library',
+                        'libraries'
                     ),
                     array(
                         'Models',
+                        'Models',
+                        'Libraries',
                         'Libraries',
                     ),
                     $class
