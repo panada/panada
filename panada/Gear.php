@@ -22,7 +22,6 @@ class Gear {
     public function __construct(){
         
         spl_autoload_register( array($this, 'loader') );
-        set_exception_handler( 'Resources\ErrorExceptions::main');
         
         $this->disableMagicQuotes();
         
@@ -49,7 +48,7 @@ class Gear {
             $method = $this->config['main']['alias']['method'];
             
             if( ! method_exists($instance, $method) )
-                die('Error 404 - Method '.$method.' not exists!');
+                throw new Resources\HttpException('Method '.$method.' does not exists in controller '.$this->firstUriPath.'.');
         }
         
         $this->run($instance, $method, $request);
@@ -77,13 +76,8 @@ class Gear {
                 break;
         }
         
-        //try{
-            if( ! file_exists( $file = $folder . str_ireplace('\\', '/', $file) . '.php' ) )
-                throw new Resources\ErrorExceptions('Resource '.$file.' not available!');
-        //}catch(Resources\ErrorExceptions $e){
-        //    die($e);
-        //}
-        
+        if( ! file_exists( $file = $folder . str_ireplace('\\', '/', $file) . '.php' ) )
+            throw new Resources\RunException('Resource '.$file.' not available!');
         
         include $file;
     }
@@ -162,7 +156,7 @@ class Gear {
             $method = 'index';
         
         if( ! method_exists($instance, $method) )
-            die('Error 404 - Method '.$method.' not exists!');
+            throw new Resources\HttpException('Method '.$method.' does not exists in controller /'.$this->firstUriPath.'/'.$controllerClass.'.');
         
         $this->run($instance, $method, $request);
     }
@@ -176,6 +170,7 @@ class Gear {
         
         if ( ! is_dir( $moduleFolder = $this->config['main']['module']['path'] . 'Modules/'. $this->firstUriPath . '/' ) )
             die('Error 404 - Module '.$this->firstUriPath.' not exists!');
+            throw new Resources\HttpException('Module '.$this->firstUriPath.' does not exists');
         
         if( ! $controllerClass = $this->uriObj->path(1) )
             $controllerClass = 'Home';
@@ -195,6 +190,8 @@ class Gear {
         
         if( ! method_exists($instance, $method) )
             die('Error 404 - Method '.$method.' not exists!');
+            throw new Resources\HttpException('Method '.$method.' does not exists in controller '.$moduleFolder);
+            
         
         $this->run($instance, $method, $request );
     }

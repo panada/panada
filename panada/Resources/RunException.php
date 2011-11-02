@@ -3,7 +3,7 @@ namespace Resources;
 
 class RunException extends \Exception {
     
-    public function __construct($message, $code = 0, Exception $previous = null) {
+    public function __construct($message = null, $code = 0, Exception $previous = null) {
         
         set_exception_handler( array($this, 'main') );
         parent::__construct($message, $code, $previous);
