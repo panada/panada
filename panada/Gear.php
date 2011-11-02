@@ -169,7 +169,6 @@ class Gear {
     private function moduleHandler(){
         
         if ( ! is_dir( $moduleFolder = $this->config['main']['module']['path'] . 'Modules/'. $this->firstUriPath . '/' ) )
-            die('Error 404 - Module '.$this->firstUriPath.' not exists!');
             throw new Resources\HttpException('Module '.$this->firstUriPath.' does not exists');
         
         if( ! $controllerClass = $this->uriObj->path(1) )
@@ -178,8 +177,8 @@ class Gear {
         $controllerClass = ucwords( $controllerClass );
         
         // Does this class's file exists?
-        if( ! file_exists( $moduleFolder . 'Controllers/' . $controllerClass . '.php' ) )
-            die('file controller module tidak tersedia.');
+        if( ! file_exists( $file = $moduleFolder . 'Controllers/' . $controllerClass . '.php' ) )
+            throw new Resources\RunException('Resource '.$file.' not available!');
         
         $controllerNamespace    = 'Modules\\'.$this->firstUriPath.'\Controllers\\'.$controllerClass;
         $instance               = new $controllerNamespace;
@@ -189,7 +188,6 @@ class Gear {
             $method = 'index';
         
         if( ! method_exists($instance, $method) )
-            die('Error 404 - Method '.$method.' not exists!');
             throw new Resources\HttpException('Method '.$method.' does not exists in controller '.$moduleFolder);
             
         
