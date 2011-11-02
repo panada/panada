@@ -42,6 +42,7 @@ class Gear {
             $request = array();
         
         $instance = new $controllerNamespace;
+        $instance->uri = $this->uriObj;
         
         if( ! method_exists($instance, $method) ){
             
@@ -123,10 +124,10 @@ class Gear {
         
         if( isset($this->config['main']['alias']['controller']['class']) ){
             
-            $controller = $this->config['main']['alias']['controller']['class'];
-            $method     = $this->config['main']['alias']['controller']['method'];
-            $instance   = new $controller;
-            $request    = $this->uriObj->path();
+            $controller         = $this->config['main']['alias']['controller']['class'];
+            $method             = $this->config['main']['alias']['controller']['method'];
+            $instance           = new $controller;
+            $request            = $this->uriObj->path();
             
             $this->run($instance, $method, $request);
             return;

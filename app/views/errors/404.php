@@ -24,5 +24,6 @@ code{font:14px Consolas,Courier New,Verdana;background:#ddf;color:#c00;border:1p
         <h1>Page not found!</h1>
         <p>Message: <?php echo $message;?></p>
     </div>
+    <div id="foot">Powered by <a target="_blank" href="http://panadaframework.com/">Panada</a></div>
 </body>
 </html>

@@ -4,12 +4,15 @@ namespace Resources;
 class Uri {
     
     private $pathUri = array();
+    public $baseUri;
     
     public function __construct(){
 	
 	$selfArray  	= explode('/', $_SERVER['PHP_SELF']);
 	$selfKey    	= array_search(INDEX_FILE, $selfArray);
 	$this->pathUri	= array_slice($selfArray, ($selfKey + 1));
+	$this->baseUri	= ( $this->isHttps() ) ? 'https://':'http://'. $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';
+	
     }
 
     /**

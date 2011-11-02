@@ -65,5 +65,6 @@ class RunException extends \Exception {
         }
         
         \Resources\Controller::outputError('errors/500', $data);
+        exit(1);
     }
 }
