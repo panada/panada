@@ -20,6 +20,11 @@ class RunException extends \Exception {
         self::outputError($exception->getMessage(), $trace[2]['file'], $trace[2]['line']);
     }
     
+    public static function errorHandlerCallback($errno, $message, $file, $file){
+        
+        self::outputError($message, $file, $file);
+    }
+    
     public static function outputError($message, $file, $line){
         
         $fileString     = file_get_contents($file);
@@ -37,23 +42,28 @@ class RunException extends \Exception {
         
         header("HTTP/1.1 500 Internal Server Error", true, 500);
         
-        $html = '<h2>Runtime Error!</h2>';
-        $html .= '<strong>Error message</strong>: '.$message.'<br />' . "\n";
-        $html .= '<strong>Error in file</strong>: '.$file.' Line: '.$line.'<br />';
-        $html .= '<pre>';
+        if ( ! error_reporting() )
+            return;
+        
+        $data = array(
+            'message' => $message,
+            'file' => $file,
+            'line' => $line,
+            'code' => array()
+        );
         
         for($i = $startIterate; $i <= $endIterate; $i++){
             
-            $html .= '<span style="margin-right:10px;background:#CFCFCF;">'.$i.'</span>';
+            $html = '<span style="margin-right:10px;background:#CFCFCF;">'.$i.'</span>';
             
             if($line == $i )
                 $html .= '<span style="color:#DD0000">'.$getLine[$i] . "</span>\n";
             else
                 $html .= $getLine[$i] . "\n";
+                
+            $data['code'][] = $html;
         }
         
-        $html .= '</pre>';
-        
-        die($html);
+        \Resources\Controller::outputError('errors/500', $data);
     }
 }

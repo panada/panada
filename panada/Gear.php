@@ -22,6 +22,7 @@ class Gear {
     public function __construct(){
         
         spl_autoload_register( array($this, 'loader') );
+        set_error_handler( 'Resources\RunException::errorHandlerCallback' );
         
         $this->disableMagicQuotes();
         
@@ -48,7 +49,7 @@ class Gear {
             $method = $this->config['main']['alias']['method'];
             
             if( ! method_exists($instance, $method) )
-                throw new Resources\HttpException('Method '.$method.' does not exists in controller '.$this->firstUriPath.'.');
+                throw new Resources\HttpException('Method '.$method.' does not exists in controller '.$this->firstUriPath);
         }
         
         $this->run($instance, $method, $request);
@@ -188,7 +189,7 @@ class Gear {
             $method = 'index';
         
         if( ! method_exists($instance, $method) )
-            throw new Resources\HttpException('Method '.$method.' does not exists in controller '.$moduleFolder);
+            throw new Resources\HttpException('Method '.$method.' does not exists in controller '.$moduleFolder.$controllerClass);
             
         
         $this->run($instance, $method, $request );

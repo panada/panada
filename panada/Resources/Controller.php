@@ -41,6 +41,12 @@ class Controller {
         return new PropertiesLoader($this->childClass['namespaceArray'], $classNamespace[$class]);
     }
     
+    public static function outputError($file, $data = array(), $isReturnValue = false){
+        
+        $controller = new Controller;
+        $controller->output($file, $data, $isReturnValue);
+    }
+    
     public function output( $file, $data = array(), $isReturnValue = false ){
         
         $filePath = APP.'views/'.$file;
