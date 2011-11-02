@@ -79,7 +79,7 @@ class Uri {
 	if( $uriString = $this->path(0) ){
 	    
 	    if( $this->stripUriCtring($uriString) )
-	    return strtolower($uriString);
+	    return $uriString;
 	    else
 	    return false;
 	}
@@ -102,7 +102,7 @@ class Uri {
 	if( isset($uriString) && ! empty($uriString) ){
 
 	    if( $this->stripUriCtring($uriString) )
-		return strtolower($uriString);
+		return $uriString;
 	    else
 		return '';
     

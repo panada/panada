@@ -53,7 +53,7 @@ class Controller {
         
         if( $this->childClass['namespaceArray'][0] == 'Modules' ){
             $mainConfig = Config::main();
-            $panadaFilePath = $mainConfig['module']['path'].$this->childClass['namespaceArray'][0].'/'.$this->childClass['namespaceArray'][1].'/views/'.$file;
+            $panadaFilePath = $mainConfig['module']['path'].$this->childClass['namespaceArray'][0].'/'.$this->childClass['namespaceArray'][1].'/views/'.$panadaViewfile;
         }
         
         try{

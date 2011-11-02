@@ -7,11 +7,12 @@
  * @since	Version 0.4.1
  * @author	Mulia Arifandy Nasution <https://github.com/mul14>
  */
- 
+
+define('GEAR', '../panada/');
 define('DS', DIRECTORY_SEPARATOR);
 define('THISPATH', dirname(__FILE__));
-require_once THISPATH . DS . 'apps' . DS . 'config.php';
-require_once THISPATH . DS . 'panada' . DS . 'variable' . DS . 'version.php';
+require_once THISPATH . DS . 'config/main.php';
+//require_once THISPATH . DS . '../panada' . DS . 'variable' . DS . 'version.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -19,7 +20,7 @@ require_once THISPATH . DS . 'panada' . DS . 'variable' . DS . 'version.php';
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Panada Installation Check</title>
-    <link rel="stylesheet" href="apps/asset/css/main.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="assets/css/main.css" type="text/css" media="screen" />
     <style type="text/css">
     .pass {
         color: #191;
@@ -73,7 +74,7 @@ require_once THISPATH . DS . 'panada' . DS . 'variable' . DS . 'version.php';
 
 </head>
 <body>
-    <h1 class="logo"><img alt="Logo" src="apps/asset/img/logo.png" /></h1> 
+    <h1 class="logo"><img alt="Logo" src="assets/img/logo.png" /></h1> 
     <h1>Installation Check</h1>
     <h2>Minimum Requirements</h2>
     <?php $failed = FALSE ?>
@@ -87,7 +88,7 @@ require_once THISPATH . DS . 'panada' . DS . 'variable' . DS . 'version.php';
                 <?php echo PHP_VERSION ?>
             </td>
             <td>
-                <?php if (version_compare(PHP_VERSION, REQUIRED_PHP_VERSION, '>=')): ?>
+                <?php if (version_compare(PHP_VERSION, '5.3.0', '>=')): ?>
                     <span class="pass">PASS</span>
                 <?php else: $failed = TRUE ?>
                     <span class="fail">FAIL</span>
@@ -100,7 +101,7 @@ require_once THISPATH . DS . 'panada' . DS . 'variable' . DS . 'version.php';
                 System Directory
             </td>
             
-            <?php if (is_dir(THISPATH . DS . 'panada') AND is_file(THISPATH . DS . 'panada' . DS . 'gear.php')): ?>
+            <?php if (is_dir(THISPATH . DS . '../panada') AND is_file(THISPATH . DS . '../panada' . DS . 'Gear.php')): ?>
                 <td><span class="monospace"><?php echo THISPATH . DS . 'panada' ?></span></td>
                 <td><span class="pass">PASS</span></td>
             <?php else: $failed = TRUE ?>
@@ -114,8 +115,8 @@ require_once THISPATH . DS . 'panada' . DS . 'variable' . DS . 'version.php';
             <td>
                 Application Directory
             </td>
-            <?php if (is_dir(THISPATH . DS . 'apps') AND is_file(THISPATH . DS . 'apps' . DS . 'config.php')): ?>
-                <td><span class="monospace"><?php echo THISPATH . DS . 'apps' ?></td>
+            <?php if (is_dir(THISPATH . DS) AND is_file(THISPATH . DS . 'config' . DS . 'main.php')): ?>
+                <td><span class="monospace"><?php echo THISPATH . DS ?></td>
                 <td><span class="pass">PASS</span></td>
             <?php else: $failed = TRUE ?>
                 <td>&nbsp;</td>
