@@ -12,7 +12,9 @@ class Home extends Controller {
     
     public function mika(){
         
-        $data = new Modules\Data;
-        print_r( $data->name() );
+        //$data = new Modules\Data;
+        //print_r( $this->model->data->name() );
+        
+        $this->output('template');
     }
 }
