@@ -47,17 +47,24 @@ class Controller {
         $controller->output($file, $data, $isReturnValue);
     }
     
-    public function output( $file, $data = array(), $isReturnValue = false ){
+    public function output( $panadaViewfile, $data = array(), $isReturnValue = false ){
         
-        $filePath = APP.'views/'.$file;
+        $panadaFilePath = APP.'views/'.$panadaViewfile;
         
         if( $this->childClass['namespaceArray'][0] == 'Modules' ){
             $mainConfig = Config::main();
-            $filePath = $mainConfig['module']['path'].$this->childClass['namespaceArray'][0].'/'.$this->childClass['namespaceArray'][1].'/views/'.$file;
+            $panadaFilePath = $mainConfig['module']['path'].$this->childClass['namespaceArray'][0].'/'.$this->childClass['namespaceArray'][1].'/views/'.$file;
         }
         
-        if( ! file_exists($viewFile = $filePath.'.php') )
-            die('Error 500: No view file.');
+        try{
+            if( ! file_exists($panadaViewFile = $panadaFilePath.'.php') )
+                throw new \Resources\RunException('View file in '.$panadaViewFile.' does not exits');
+        }
+        catch(\Resources\RunException $e){
+            $arr = $e->getTrace();
+            RunException::outputError($e->getMessage(), $arr[0]['file'], $arr[0]['line']);
+        }
+        
         
         if( ! empty($data) ){
             $this->viewCache = array(
@@ -69,7 +76,7 @@ class Controller {
         if( ! empty($this->viewCache) && $this->viewCache['prefix'] == $this->childClass['namespaceString'] )
             extract( $this->viewCache['data'], EXTR_SKIP );
         
-        include_once $viewFile;
+        include_once $panadaViewFile;
     }
     
     public function outputJSON($data, $isReturnValue = false){

@@ -20,12 +20,16 @@ class RunException extends \Exception {
         self::outputError($exception->getMessage(), $trace[2]['file'], $trace[2]['line']);
     }
     
-    public static function errorHandlerCallback($errno, $message, $file, $file){
+    public static function errorHandlerCallback($errno, $message, $file, $line){
         
-        self::outputError($message, $file, $file);
+        self::outputError($message, $file, $line);
     }
     
     public static function outputError($message, $file, $line){
+        
+        if( array_search( 'views', explode('/', $file) ) !== false){
+            die('Error '.$message.' in '.$file . ' line: ' . $line);
+        }
         
         $fileString     = file_get_contents($file);
         $arrLine        = explode("\n", $fileString);
@@ -40,10 +44,8 @@ class RunException extends \Exception {
         if($endIterate > $totalLine)
             $endIterate = $totalLine;
         
-        header("HTTP/1.1 500 Internal Server Error", true, 500);
-        
-        if ( ! error_reporting() )
-            return;
+        //if ( ! error_reporting() )
+        //    return;
         
         $data = array(
             'message' => $message,
@@ -63,6 +65,8 @@ class RunException extends \Exception {
                 
             $data['code'][] = $html;
         }
+        
+        header("HTTP/1.1 500 Internal Server Error", true, 500);
         
         \Resources\Controller::outputError('errors/500', $data);
         exit(1);
