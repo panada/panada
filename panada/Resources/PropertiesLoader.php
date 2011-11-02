@@ -20,8 +20,8 @@ class PropertiesLoader {
         
         $object = new $class;
         
-        $object->library    = new PropertiesLoader( $this->childNamespace, 'libray' );
-        $object->model      = new PropertiesLoader( $this->childNamespace, 'model' );
+        $object->library    = new PropertiesLoader( $this->childNamespace, 'Libraries' );
+        $object->model      = new PropertiesLoader( $this->childNamespace, 'Models' );
         $object->Library    = clone $object->library;
         $object->libraries  = clone $object->library;
         $object->Libraries  = clone $object->library;

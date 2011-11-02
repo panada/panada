@@ -17,23 +17,28 @@ class Controller {
     
     public function __get($class){
         
-        $classNamespace = str_ireplace(
-                    array(
-                        'model',
-                        'models',
-                        'library',
-                        'libraries'
-                    ),
-                    array(
-                        'Models',
-                        'Models',
-                        'Libraries',
-                        'Libraries',
-                    ),
-                    $class
-                );
+        $classNamespace = array(
+            'model' => 'Models',
+            'Model' => 'Models',
+            'models' => 'Models',
+            'Models' => 'Models',
+            'library' => 'Libraries',
+            'Library' => 'Libraries',
+            'libraries' => 'Libraries',
+            'Libraries' => 'Libraries',
+        );
         
-        return new PropertiesLoader($this->childClass['namespaceArray'], $classNamespace);
+        try{
+            if( ! isset($classNamespace[$class]) )
+                throw new \Exception('Undefined property '.$class);
+        }
+        catch(\Exception $e){
+            $arr = $e->getTrace();
+            RunException::outputError($e->getMessage(), $arr[0]['file'], $arr[0]['line']);
+        }
+        
+        
+        return new PropertiesLoader($this->childClass['namespaceArray'], $classNamespace[$class]);
     }
     
     public function output( $file, $data = array(), $isReturnValue = false ){
