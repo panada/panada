@@ -19,7 +19,7 @@
         <li>For help and bug report, submit to <a target="_blank" href="https://github.com/k4ndar/Panada/issues">issues</a> page.</li>
     </ul>
     <p>
-        To get more hint how to use Panada, see this offline <a href="<?php echo $this->uri->baseUri; ?>documentation/id/index.html">documentation</a> page.
+        To get more hint how to use Panada, see this offline <a href="<?php echo $this->uri->baseUri; ?>index.php/docs/">documentation</a> page.
         Panada licensed under <a href="<?php echo $this->uri->baseUri; ?>LICENSE">BSD License</a>
     </p>
 </div>

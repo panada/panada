@@ -11,9 +11,4 @@ class Home extends Controller {
         
         $this->output('home', $data);
     }
-    
-    public function alias(){
-        
-        print_r( func_get_args() );
-    }
 }
