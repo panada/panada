@@ -1,13 +1,12 @@
 <?php
 /**
- * Gear Class File
- *
  * This is the heart of the whole Panada system.
  *
  * @author Iskandar Soesman <k4ndar@yahoo.com>
  * @link http://panadaframework.com/
  * @license http://www.opensource.org/licenses/bsd-license.php
  * @since version 1.0.0
+ * @package Core System
  */
 
 class Gear {

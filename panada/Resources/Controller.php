@@ -1,4 +1,13 @@
 <?php
+/**
+ * Hendler for controller process.
+ *
+ * @author Iskandar Soesman <k4ndar@yahoo.com>
+ * @link http://panadaframework.com/
+ * @license http://www.opensource.org/licenses/bsd-license.php
+ * @since version 0.1.0
+ * @package Resources
+ */
 namespace Resources;
 
 class Controller {

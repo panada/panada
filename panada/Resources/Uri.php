@@ -1,4 +1,13 @@
 <?php
+/**
+ * Hendler for request and mapped into, controller, metohd and requests.
+ *
+ * @author Iskandar Soesman <k4ndar@yahoo.com>
+ * @link http://panadaframework.com/
+ * @license http://www.opensource.org/licenses/bsd-license.php
+ * @since version 0.1.0
+ * @package Resources
+ */
 namespace Resources;
 
 class Uri {
@@ -24,7 +33,6 @@ class Uri {
 	$selfKey        = array_search(INDEX_FILE, $selfArray);
 	$this->pathUri  = array_slice($selfArray, ($selfKey + 1));
 	$this->baseUri  = ( $this->isHttps() ) ? 'https://':'http://'. $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';  
-	
 	
     }
 
