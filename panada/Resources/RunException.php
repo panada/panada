@@ -27,8 +27,15 @@ class RunException extends \Exception {
     
     public static function outputError($message, $file, $line){
         
-        if( array_search( 'views', explode('/', $file) ) !== false){
-            die('Error '.$message.' in '.$file . ' line: ' . $line);
+        // Message for log
+        $errorMessage = 'Error '.$message.' in '.$file . ' line: ' . $line;
+        
+        // Write the error to log file
+	@error_log($errorMessage);
+        
+        // Just output the error if the error source for view file or if in cli mode.
+        if( (array_search( 'views', explode('/', $file) ) !== false) || (PHP_SAPI == 'cli') ){
+            exit($errorMessage);
         }
         
         $fileString     = file_get_contents($file);
@@ -36,16 +43,13 @@ class RunException extends \Exception {
         $totalLine      = count($arrLine);
         $getLine        = array_combine(range(1, $totalLine), array_values($arrLine));
         $startIterate   = $line - 5;
-        $endIterate     = $totalLine + 5;
+        $endIterate     = $line + 5;
         
         if($startIterate < 0)
             $startIterate  = 0;
         
         if($endIterate > $totalLine)
             $endIterate = $totalLine;
-        
-        //if ( ! error_reporting() )
-        //    return;
         
         $data = array(
             'message' => $message,

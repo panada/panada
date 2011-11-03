@@ -21,6 +21,9 @@ class HttpException extends \Exception {
     
     public static function outputError($message = null){
         
+        // Write the error to log file
+	@error_log('Error 404 Page Not Found: '.$_SERVER['REQUEST_URI']);
+        
         header('HTTP/1.1 404 Not Found', true, 500);
         \Resources\Controller::outputError('errors/404', array('message' => $message) );
     }

@@ -1,3 +1,4 @@
+<?php if ( ! error_reporting() ) exit(1); ?>
 <!DOCTYPE html>
 <html>
 <head>
