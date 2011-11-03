@@ -6,12 +6,25 @@ class Uri {
     private $pathUri = array();
     public $baseUri;
     
+    /**
+     * Class constructor
+     *
+     * Difine the SPI mode, cli or web/http
+     *
+     * @return void
+     */
     public function __construct(){
 	
-	$selfArray  	= explode('/', $_SERVER['PHP_SELF']);
-	$selfKey    	= array_search(INDEX_FILE, $selfArray);
-	$this->pathUri	= array_slice($selfArray, ($selfKey + 1));
-	$this->baseUri	= ( $this->isHttps() ) ? 'https://':'http://'. $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';
+	if(PHP_SAPI == 'cli'){
+	    $this->pathUri = array_slice($_SERVER['argv'], 1);
+	    return;
+	}
+	
+	$selfArray      = explode('/', $_SERVER['PHP_SELF']);
+	$selfKey        = array_search(INDEX_FILE, $selfArray);
+	$this->pathUri  = array_slice($selfArray, ($selfKey + 1));
+	$this->baseUri  = ( $this->isHttps() ) ? 'https://':'http://'. $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';  
+	
 	
     }
 
@@ -38,8 +51,7 @@ class Uri {
     }
 
     /**
-     * EN: Clean the 'standard' model query.
-     * ID: Jika di url ada query seperti ini ?abc=123&def=345, string-nya akan terbawa, untuk itu harus dibersihkan terlebih dahulu.
+     * Clean the 'standard' model query.
      *
      * @param string
      * @return string
@@ -54,8 +66,7 @@ class Uri {
     }
 
     /**
-     * EN: Break the string given from extractUriString() into class, method and request.
-     * ID: Memecah string query menjadi class, method dan request.
+     * Break the string given from extractUriString() into class, method and request.
      *
      * @param    integer
      * @return  string
@@ -69,8 +80,7 @@ class Uri {
     }
 
     /**
-     * EN: Get class name from the url.
-     * ID: Mendapatkan nama class dari url.
+     * Get class name from the url.
      *
      * @return  string
      */
@@ -90,8 +100,7 @@ class Uri {
     }
 
     /**
-     * EN: Get method name from the url.
-     * ID: Mendapatkan nama method dari url.
+     * Get method name from the url.
      *
      * @return  string
      */
@@ -114,8 +123,7 @@ class Uri {
     }
 
     /**
-     * EN: Get "GET" request from the url.
-     * ID: Mendapatkan request dari url.
+     * Get "GET" request from the url.
      *
      * @param    int
      * @return  array
@@ -136,8 +144,7 @@ class Uri {
     }
 
     /**
-     * EN: Cleaner for class and method name
-     * ID: Membersihkan nama clas dan method dari karakter yang tidak perlu.
+     * Cleaner for class and method name
      *
      * @param string
      * @return boolean

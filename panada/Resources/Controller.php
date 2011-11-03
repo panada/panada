@@ -3,7 +3,7 @@ namespace Resources;
 
 class Controller {
     
-    private $childNamespace, $viewCache;
+    private $childNamespace, $viewCache, $viewFile;
     
     public function __construct(){
         
@@ -57,14 +57,13 @@ class Controller {
         }
         
         try{
-            if( ! file_exists($panadaViewFile = $panadaFilePath.'.php') )
+            if( ! file_exists($this->viewFile = $panadaFilePath.'.php') )
                 throw new \Resources\RunException('View file in '.$panadaViewFile.' does not exits');
         }
         catch(\Resources\RunException $e){
             $arr = $e->getTrace();
             RunException::outputError($e->getMessage(), $arr[0]['file'], $arr[0]['line']);
         }
-        
         
         if( ! empty($data) ){
             $this->viewCache = array(
@@ -73,10 +72,13 @@ class Controller {
             );
         }
         
+        // We don't need this variables anymore.
+        unset($panadaViewFile, $data, $panadaFilePath);
+        
         if( ! empty($this->viewCache) && $this->viewCache['prefix'] == $this->childClass['namespaceString'] )
             extract( $this->viewCache['data'], EXTR_SKIP );
         
-        include_once $panadaViewFile;
+        include_once $this->viewFile;
     }
     
     public function outputJSON($data, $isReturnValue = false){

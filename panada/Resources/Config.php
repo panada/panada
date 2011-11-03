@@ -3,10 +3,17 @@ namespace Resources;
 
 class Config {
     
+    static private $config = array();
+    
     static public function main(){
         
-        require APP . 'config/main.php';
-        
-        return $main;
+        if( ! isset(self::$config['main']) ) {
+            require APP . 'config/main.php';
+            self::$config['main'] = $main;
+            return $main;
+        }
+        else {
+            return self::$config['main'];
+        }
     }
 }
