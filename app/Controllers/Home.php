@@ -1,8 +1,8 @@
 <?php
 namespace Controllers;
-use Resources\Controller;
+use Resources;
 
-class Home extends Controller {
+class Home extends Resources\Controller {
     
     public function index(){
         

@@ -25,7 +25,7 @@ class Dummy {
      * @param int $expire
      * @return void
      */
-    public function set_value($key, $value, $expire = 0, $namespace = false){
+    public function setValue($key, $value, $expire = 0, $namespace = false){
         
         return self::_set($key, $value);
     }
@@ -39,7 +39,7 @@ class Dummy {
      * @param int $expire
      * @return void
      */
-    public function add_value( $key, $value, $expire = 0, $namespace = false ){
+    public function addValue( $key, $value, $expire = 0, $namespace = false ){
         
         return self::_get($key) ? false : self::_set($key, $value);
     }
@@ -52,7 +52,7 @@ class Dummy {
      * @param int $expire
      * @return void
      */
-    public function update_value( $key, $value, $expire = 0, $namespace = false ){
+    public function updateValue( $key, $value, $expire = 0, $namespace = false ){
         
         return self::_set($key, $value);
     }
@@ -61,7 +61,7 @@ class Dummy {
      * @param string $key
      * @return mix
      */
-    public function get_value($key, $namespace = false){
+    public function getValue($key, $namespace = false){
         
         return self::_get($key);
     }
@@ -70,7 +70,7 @@ class Dummy {
      * @param string $key
      * @return void
      */
-    public function delete_value($key, $namespace = false){
+    public function deleteValue($key, $namespace = false){
         
         return self::_delete($key);
     }
@@ -79,7 +79,7 @@ class Dummy {
      * Flush all cached object.
      * @return bool
      */
-    public function flush_values(){
+    public function flushValues(){
         
         return self::_flush();
     }
@@ -120,5 +120,4 @@ class Dummy {
         unset(self::$holder);
         return true;
     }
-
-} // End Library_local_memory_cache
+}

@@ -7,87 +7,86 @@
  * @author	Iskandar Soesman
  * @since	Version 0.3
  */
-namespace Dirvers\Session;
+namespace Drivers\Session;
+use Drivers\Session\Native;
+use Resources;
 
-// Load the Drivers_session_native class for inheritance.
-require_once 'native.php';
-
-class Cache extends \Native {
+class Cache extends Native {
     
-    private $session_storage_name = 'sessions_';
+    private $sessionStorageName = 'sessions_';
     
-    public function __construct( $config_instance ){
+    public function __construct( $config ){
         
-	$this->session_storage_name = $config_instance->storage_name.'_';
-        $this->cache		    = new Library_cache( $config_instance->driver_connection );
+	$this->sessionStorageName   = $config['storageName'].'_';
+        $this->cache		    = new Resources\Cache( $config['driverConnection'] );
         
         session_set_save_handler (
-	    array($this, 'session_start'),
-	    array($this, 'session_end'),
-	    array($this, 'session_read'),
-	    array($this, 'session_write'),
-	    array($this, 'session_destroy'),
-	    array($this, 'session_gc')
+	    array($this, 'sessionStart'),
+	    array($this, 'sessionEnd'),
+	    array($this, 'sessionRead'),
+	    array($this, 'sessionWrite'),
+	    array($this, 'sessionDestroy'),
+	    array($this, 'sessionGc')
 	);
         
-        parent::__construct( $config_instance );
+        parent::__construct( $config );
     }
     
     /**
-     * EN: Required function for session_set_save_handler act like constructor in a class
+     * Required function for session_set_save_handler act like constructor in a class
      *
      * @param string
      * @param string
      * @return void
      */
-    public function session_start($save_path, $session_name){
-	//EN: We don't need anythings at this time.
+    public function sessionStart($savePath, $sessionName){
+	//We don't need anythings at this time.
     }
     
     /**
-     * EN: Required function for session_set_save_handler act like destructor in a class
+     * Required function for session_set_save_handler act like destructor in a class
      *
      * @return void
      */
-    public function session_end(){
-	//EN: we also don't have do anythings too!
+    public function sessionEnd(){
+	//we also don't have do anythings too!
     }
     
     /**
-     * EN: Read session from db or file
+     * Read session from db or file
      *
      * @param string $id The session id
      * @return string|array|object|boolean
      */
-    public function session_read($id){
+    public function sessionRead($id){
         
-        return $this->cache->get_value($this->session_storage_name.$id);
+        return $this->cache->getValue($this->sessionStorageName.$id);
     }
     
     /**
-     * EN: Write the session data
+     * Write the session data
      *
      * @param string
      * @param string
      * @return boolean
      */
-    public function session_write($id, $sess_data){
+    public function sessionWrite($id, $sessData){
 	
-	if( $this->session_read($id) )
-            return $this->cache->update_value($this->session_storage_name.$id, $sess_data, $this->sesion_expire);
+	if( $this->sessionRead($id) )
+            return $this->cache->updateValue($this->sessionStorageName.$id, $sessData, $this->sesionExpire);
 	else
-            return $this->cache->set_value($this->session_storage_name.$id, $sess_data, $this->sesion_expire);
+            return $this->cache->setValue($this->sessionStorageName.$id, $sessData, $this->sesionExpire);
     }
     
     /**
-     * EN: Remove session data
+     * Remove session data
      *
      * @param string
      * @return boolean
      */
-    public function session_destroy($id){
+    public function sessionDestroy($id){
 	
-	return $this->cache->delete_value($this->session_storage_name.$id);
+	return $this->cache->deleteValue($this->sessionStorageName.$id);
     }
     
     /**
@@ -97,8 +96,7 @@ class Cache extends \Native {
      *
      * @return void
      */
-    public function session_gc($maxlifetime = 0){
+    public function sessionGc($maxlifetime = 0){
 	//none
     }
-    
-} // End Drivers_session_cache
+}

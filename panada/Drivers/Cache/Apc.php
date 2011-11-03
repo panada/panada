@@ -15,7 +15,7 @@ namespace Drivers\Cache;
 /**
  * Makesure APC extension is enabled
  */
-if( ! \extension_loaded('apc') )
+if( ! extension_loaded('apc') )
     die('APC extension that required by Library_apc is not available.');
     
 class Apc {
@@ -54,9 +54,9 @@ class Apc {
      * @param int $expire
      * @return void
      */
-    public function set_value( $key, $value, $expire = 0, $namespace = false ){
+    public function setValue( $key, $value, $expire = 0, $namespace = false ){
         
-        $key = $this->key_to_namespace($key, $namespace);
+        $key = $this->keyToNamespace($key, $namespace);
         return apc_store($key, $value, $expire); 
     }
     
@@ -69,9 +69,9 @@ class Apc {
      * @param int $expire
      * @return void
      */
-    public function add_value( $key, $value, $expire = 0, $namespace = false ){
+    public function addValue( $key, $value, $expire = 0, $namespace = false ){
         
-        $key = $this->key_to_namespace($key, $namespace);
+        $key = $this->keyToNamespace($key, $namespace);
         return apc_add($key, $value, $expire);
     }
     
@@ -83,19 +83,19 @@ class Apc {
      * @param int $expire
      * @return void
      */
-    public function update_value( $key, $value, $expire = 0, $namespace = false ){
+    public function updateValue( $key, $value, $expire = 0, $namespace = false ){
         
-        $key = $this->key_to_namespace($key, $namespace);
-        return $this->set_value($key, $value, $expire);
+        $key = $this->keyToNamespace($key, $namespace);
+        return $this->setValue($key, $value, $expire);
     }
     
     /**
      * @param string $key
      * @return mix
      */
-    public function get_value( $key, $namespace = false ){
+    public function getValue( $key, $namespace = false ){
         
-        $key = $this->key_to_namespace($key, $namespace);
+        $key = $this->keyToNamespace($key, $namespace);
         return apc_fetch($key); 
     }
     
@@ -103,9 +103,9 @@ class Apc {
      * @param string $key
      * @return void
      */
-    public function delete_value( $key, $namespace = false ){
+    public function deleteValue( $key, $namespace = false ){
         
-        $key = $this->key_to_namespace($key, $namespace);
+        $key = $this->keyToNamespace($key, $namespace);
         return apc_delete($key);
     }
     
@@ -113,7 +113,7 @@ class Apc {
      * Flush all cached object.
      * @return bool
      */
-    public function flush_values(){
+    public function flushValues(){
         
         return apc_clear_cache('user');
     }
@@ -124,7 +124,7 @@ class Apc {
      * @param string $namespace_key
      * @return int Unixtimestamp
      */
-    private function key_to_namespace( $key, $namespace_key = false ){
+    private function keyToNamespace( $key, $namespace_key = false ){
 	
 	if( ! $namespace_key )
 	    return $key;
@@ -136,5 +136,4 @@ class Apc {
 	
 	return $namespace_value.'_'.$key;
     }
-    
-} // End Drivers_cache_apc
+}

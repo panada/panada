@@ -5,15 +5,31 @@ class Config {
     
     static private $config = array();
     
-    static public function main(){
+    static private function _cache($name){
         
-        if( ! isset(self::$config['main']) ) {
-            require APP . 'config/main.php';
-            self::$config['main'] = $main;
-            return $main;
+        if( ! isset(self::$config[$name]) ) {
+            require APP . 'config/'.$name.'.php';
+            self::$config['main'] = $$name;
+            return $$name;
         }
         else {
-            return self::$config['main'];
+            return self::$config[$name];
         }
+    }
+    
+    static public function main(){
+        return self::_cache('main');
+    }
+    
+    static public function session(){
+        return self::_cache('session');
+    }
+    
+    static public function cache(){
+        return self::_cache('cache');
+    }
+    
+    static public function database(){
+        return self::_cache('database');
     }
 }

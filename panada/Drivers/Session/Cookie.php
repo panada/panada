@@ -7,18 +7,18 @@
  * @author	Iskandar Soesman
  * @since	Version 0.3
  */
-namespace Dirvers\Session;
+namespace Drivers\Session;
 
 class Cookie {
     
-    public $session_name = 'PAN_SID';
-    public $session_cookie_expire = 0;
-    public $session_cookie_path = '/';
-    public $session_cookie_secure = false;
-    public $session_cookie_domain = '';
-    public $cookie_chek_sum_name = 'chs';
-    protected $hash_key = 'my_key';
-    protected $curent_values = array();
+    public $sessionName = 'PAN_SID';
+    public $sessionCookieExpire = 0;
+    public $sessionCookiePath = '/';
+    public $sessionCookieSecure = false;
+    public $sessionCookieDomain = '';
+    public $cookieChekSumName = 'chs';
+    protected $hashKey = 'my_key';
+    protected $curentValues = array();
     
     /**
      * Define all properties needed.
@@ -26,52 +26,52 @@ class Cookie {
      * @param object $config_instance
      * @return void
      */
-    public function __construct( $config_instance ){
-        
-        $this->session_name             = $config_instance->name;
-        $this->session_cookie_expire    = $config_instance->expiration;
-        $this->session_cookie_path      = $config_instance->cookie_path;
-        $this->session_cookie_secure    = $config_instance->cookie_secure;
-        $this->session_cookie_domain    = $config_instance->cookie_domain;
-	$this->hash_key			= $config_instance->secret_key;
+    public function __construct( $config ){
+	
+        $this->sessionName          = $config['name'];
+        $this->sessionCookieExpire  = $config['expiration'];
+        $this->sessionCookiePath    = $config['cookiePath'];
+        $this->sessionCookieSecure  = $config['cookieSecure'];
+        $this->sessionCookieDomain  = $config['cookieDomain'];
+	$this->hashKey		    = $config['secretKey'];
         
 	/**
 	 * If set, we have to make sure this value is valid.
 	 * If true, then update the expiration date. Otherwise, destroy it!
 	 */
-        if( isset( $_COOKIE[$this->session_name] ) ){
+        if( isset( $_COOKIE[$this->sessionName] ) ){
             
-            parse_str( $_COOKIE[$this->session_name], $current_values);
-            $this->curent_values = $current_values;
+            parse_str( $_COOKIE[$this->sessionName], $currentValues);
+            $this->curentValues = $currentValues;
             
-            if( ! $this->validates_cookie_values() )
+            if( ! $this->validatesCookieValues() )
                 $this->destroy();
 	    else
-		$this->set_session_values();
+		$this->setSessionValues();
         }
         else{
             
-            $this->curent_values['_d'] = '.';
-            $this->set_session_values();
+            $this->curentValues['_d'] = '.';
+            $this->setSessionValues();
         }
         
     }
     
     /**
-     * Create a second cooke that content the md5sum of the values.
+     * Create a second cookie that content the md5sum of the values.
      * Every new value will update this checksum too.
      * 
      * @return void
      */
-    protected function set_check_sum(){
+    protected function setCheckSum(){
         
-        $curent_values = $this->curent_values;
+        $curentValues = $this->curentValues;
         
-        $curent_values['agent'] = $_SERVER['HTTP_USER_AGENT'];
+        $curentValues['agent'] = $_SERVER['HTTP_USER_AGENT'];
         
-        $values = md5(http_build_query($curent_values).$this->hash_key);
+        $values = md5(http_build_query($curentValues).$this->hashKey);
         
-        $this->set_cookie($this->cookie_chek_sum_name, $values);
+        $this->setCookie($this->cookieChekSumName, $values);
     }
     
     /**
@@ -79,50 +79,50 @@ class Cookie {
      *
      * @return bool
      */
-    public function validates_cookie_values(){
+    public function validatesCookieValues(){
         
-        $curent_values = $this->curent_values;
+        $curentValues = $this->curentValues;
         
-        $curent_values['agent'] = $_SERVER['HTTP_USER_AGENT'];
+        $curentValues['agent'] = $_SERVER['HTTP_USER_AGENT'];
         
-        $values = md5(http_build_query($curent_values).$this->hash_key);
+        $values = md5(http_build_query($curentValues).$this->hashKey);
         
-        if( $values != $_COOKIE[$this->cookie_chek_sum_name] )
+        if( $values != $_COOKIE[$this->cookieChekSumName] )
             return false;
         
         return true;
     }
     
     /**
-     * Build and construct the cooke values.
+     * Build and construct the cookie values.
      *
      * @return void
      */
-    protected function set_session_values(){
+    protected function setSessionValues(){
         
-        $value = http_build_query($this->curent_values);
+        $value = http_build_query($this->curentValues);
 
-        $this->set_cookie($this->session_name, $value);
+        $this->setCookie($this->sessionName, $value);
         
-        $this->set_check_sum();
+        $this->setCheckSum();
     }
     
     /**
-     * Create a cooke
+     * Create a cookie
      *
      * @param string $name
      * @param string $value
      * @return void
      */
-    protected function set_cookie($name, $value = ''){
+    protected function setCookie($name, $value = ''){
         
         setcookie(
             $name,
             $value,
-            time() + $this->session_cookie_expire,
-            $this->session_cookie_path,
-            $this->session_cookie_domain,
-            $this->session_cookie_secure
+            time() + $this->sessionCookieExpire,
+            $this->sessionCookiePath,
+            $this->sessionCookieDomain,
+            $this->sessionCookieSecure
         );
     }
     
@@ -137,13 +137,13 @@ class Cookie {
         
 	if( is_array($name) ) {
 	    foreach($name AS $key => $val)
-		$this->curent_values[$key] = $val;
+		$this->curentValues[$key] = $val;
 	}
 	else {
-	    $this->curent_values[$name] = $value;
+	    $this->curentValues[$name] = $value;
 	}
         
-        $this->set_session_values();
+        $this->setSessionValues();
     }
     
     /**
@@ -154,17 +154,17 @@ class Cookie {
      */
     public function get( $name = null ){
         
-        $curent_values = $this->curent_values;
-        unset($curent_values['_d']);
+        $curentValues = $this->curentValues;
+        unset($curentValues['_d']);
         
-        if( empty($curent_values) )
+        if( empty($curentValues) )
             return false;
         
         if( is_null($name) )
-            return $curent_values;
+            return $curentValues;
         
-	if( isset($curent_values[$name]) )
-	    return $curent_values[$name];
+	if( isset($curentValues[$name]) )
+	    return $curentValues[$name];
 	
 	return false;
     }
@@ -177,8 +177,8 @@ class Cookie {
      */
     public function remove($name){
         
-        unset( $this->curent_values[$name] );
-        $this->set_session_values();
+        unset( $this->curentValues[$name] );
+        $this->setSessionValues();
     }
     
     /**
@@ -188,10 +188,10 @@ class Cookie {
      */
     public function destroy(){
         
-        $this->curent_values = array();
-        $this->curent_values['_d'] = '.';
+        $this->curentValues = array();
+        $this->curentValues['_d'] = '.';
         
-        $this->set_session_values();
+        $this->setSessionValues();
     }
     
     /**
@@ -199,7 +199,7 @@ class Cookie {
      *
      * @return void
      */
-    public function session_clear_all(){
+    public function clearAll(){
         
         header('Expires: Mon, 1 Jul 1998 01:00:00 GMT');
         header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -207,20 +207,19 @@ class Cookie {
         header('Pragma: no-cache');
         header('Last-Modified: ' . gmdate( 'D, j M Y H:i:s' ) . ' GMT' );
         
-        $this->curent_values = array();
+        $this->curentValues = array();
         
-        $this->session_cookie_expire = strtotime('-10 years');
-        $this->set_cookie($this->session_name);
-        $this->set_cookie($this->cookie_chek_sum_name);
+        $this->sessionCookieExpire = strtotime('-10 years');
+        $this->setCookie($this->sessionName);
+        $this->setCookie($this->cookieChekSumName);
         
-        $this->set_session_values();
+        $this->setSessionValues();
     }
     
     /**
-     * Regenerate the cooke id
+     * Regenerate the cookie id
      */
     public function regenerate(){
         return;
-    }
-    
-} // End Drivers_session_cookie
+    }   
+}

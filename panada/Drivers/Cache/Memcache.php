@@ -18,19 +18,17 @@ if( ! \extension_loaded('memcache') )
 
 class Memcache extends \Memcache {
     
-    public $port = 11211;
+    private $port = 11211;
     
     /**
      * EN: Load configuration from config file.
      * @return void
      */
     
-    public function __construct( $config_instance ){
+    public function __construct( $config ){
         
-	$config_instance->host = (array) $config_instance->host;
-	
-        foreach($config_instance->host as $host)
-	    $this->addServer($host, $this->port);
+        foreach($config['host'] as $host)
+	    $this->addServer($host, $config['port']);
 	
 	/**
 	 * EN: If you need compression Threshold, you can uncomment this
@@ -45,9 +43,9 @@ class Memcache extends \Memcache {
      * @param string $namespace
      * @return void
      */
-    public function set_value( $key, $value, $expire = 0, $namespace = false ){
+    public function setValue( $key, $value, $expire = 0, $namespace = false ){
         
-	$key = $this->key_to_namespace($key, $namespace);
+	$key = $this->keyToNamespace($key, $namespace);
         return $this->set($key, $value, 0, $expire);
     }
     
@@ -61,9 +59,9 @@ class Memcache extends \Memcache {
      * @param string $namespace
      * @return void
      */
-    public function add_value( $key, $value, $expire = 0, $namespace = false ){
+    public function addValue( $key, $value, $expire = 0, $namespace = false ){
         
-	$key = $this->key_to_namespace($key, $namespace);
+	$key = $this->keyToNamespace($key, $namespace);
 	return $this->add($key, $value, 0, $expire); 
     }
     
@@ -76,9 +74,9 @@ class Memcache extends \Memcache {
      * @param string $namespace
      * @return void
      */
-    public function update_value( $key, $value, $expire = 0, $namespace = false ){
+    public function updateValue( $key, $value, $expire = 0, $namespace = false ){
         
-	$key = $this->key_to_namespace($key, $namespace);
+	$key = $this->keyToNamespace($key, $namespace);
 	return $this->replace($key, $value, 0, $expire);
     }
     
@@ -87,9 +85,9 @@ class Memcache extends \Memcache {
      * @param string $namespace
      * @return mix
      */
-    public function get_value( $key, $namespace = false ){
+    public function getValue( $key, $namespace = false ){
         
-	$key = $this->key_to_namespace($key, $namespace);
+	$key = $this->keyToNamespace($key, $namespace);
         return $this->get($key);
     }
     
@@ -98,9 +96,9 @@ class Memcache extends \Memcache {
      * @param string $namespace
      * @return void
      */
-    public function delete_value( $key, $namespace = false ){
+    public function deleteValue( $key, $namespace = false ){
         
-	$key = $this->key_to_namespace($key, $namespace);
+	$key = $this->keyToNamespace($key, $namespace);
         return $this->delete($key);
     }
     
@@ -108,7 +106,7 @@ class Memcache extends \Memcache {
      * Flush all cached object.
      * @return bool
      */
-    public function flush_values(){
+    public function flushValues(){
         
 	return $this->flush();
     }
@@ -119,7 +117,7 @@ class Memcache extends \Memcache {
      * @param string $namespace_key
      * @return int Unixtimestamp
      */
-    private function key_to_namespace( $key, $namespace_key = false ){
+    private function keyToNamespace( $key, $namespace_key = false ){
 	
 	if( ! $namespace_key )
 	    return $key;
@@ -132,4 +130,4 @@ class Memcache extends \Memcache {
 	return $namespace_value.'_'.$key;
     }
     
-} // End Drivers_cache_memcache
+}

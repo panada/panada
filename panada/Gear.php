@@ -69,6 +69,9 @@ class Gear {
             case 'Resources':
                 $folder = GEAR;
                 break;
+            case 'Drivers':
+                $folder = GEAR;
+                break;
             case 'Modules':
                 $folder = $this->config['main']['module']['path'];
                 break;

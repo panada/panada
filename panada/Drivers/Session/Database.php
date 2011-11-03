@@ -7,7 +7,7 @@
  * @author	Iskandar Soesman
  * @since	Version 0.3
  */
-namespace Dirvers\Session;
+namespace Drivers\Session;
 
 // Load the Drivers_session_native class for inheritance.
 require_once 'native.php';

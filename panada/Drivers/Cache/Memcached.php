@@ -13,21 +13,19 @@
  */
 namespace Drivers\Cache;
 
-if( ! \extension_loaded('memcached') )
-    die('Memcached extension that required by Library_memcached is not available.');
+if( ! extension_loaded('memcached') )
+    die('Memcached extension that required by Driver memcached is not available.');
 
 class Memcached extends \Memcached {
     
-    public $port = 11211;
+    private $port = 11211;
     
-    public function __construct( $config_instance ){
-        
+    public function __construct( $config ){
+	
         parent::__construct();
         
-        $config_instance->host = (array) $config_instance->host;
-        
-        foreach($config_instance->host as $host)
-	    $this->addServer($host, $this->port);
+        foreach($config['host'] as $host)
+	    $this->addServer($host, $config['port']);
     }
     
     /**
@@ -37,9 +35,9 @@ class Memcached extends \Memcached {
      * @param string $namespace
      * @return void
      */
-    public function set_value( $key, $value, $expire = 0, $namespace = false ){
+    public function setValue( $key, $value, $expire = 0, $namespace = false ){
         
-	$key = $this->key_to_namespace($key, $namespace);
+	$key = $this->keyToNamespace($key, $namespace);
         return $this->set($key, $value, $expire);
     }
     
@@ -53,9 +51,9 @@ class Memcached extends \Memcached {
      * @param string $namespace
      * @return void
      */
-    public function add_value( $key, $value, $expire = 0, $namespace = false ){
+    public function addValue( $key, $value, $expire = 0, $namespace = false ){
         
-	$key = $this->key_to_namespace($key, $namespace);
+	$key = $this->keyToNamespace($key, $namespace);
 	return $this->add($key, $value, $expire); 
     }
     
@@ -68,9 +66,9 @@ class Memcached extends \Memcached {
      * @param string $namespace
      * @return void
      */
-    public function update_value( $key, $value, $expire = 0, $namespace = false ){
+    public function updateValue( $key, $value, $expire = 0, $namespace = false ){
         
-	$key = $this->key_to_namespace($key, $namespace);
+	$key = $this->keyToNamespace($key, $namespace);
 	return $this->replace($key, $value, $expire);
     }
     
@@ -79,9 +77,9 @@ class Memcached extends \Memcached {
      * @param string $namespace
      * @return mix
      */
-    public function get_value( $key, $namespace = false ){
+    public function getValue( $key, $namespace = false ){
         
-	$key = $this->key_to_namespace($key, $namespace);
+	$key = $this->keyToNamespace($key, $namespace);
         return $this->get($key);
     }
     
@@ -90,9 +88,9 @@ class Memcached extends \Memcached {
      * @param string $namespace
      * @return void
      */
-    public function delete_value( $key, $namespace = false ){
+    public function deleteValue( $key, $namespace = false ){
         
-	$key = $this->key_to_namespace($key, $namespace);
+	$key = $this->keyToNamespace($key, $namespace);
         return $this->delete($key);
     }
     
@@ -100,7 +98,7 @@ class Memcached extends \Memcached {
      * Flush all cached object.
      * @return bool
      */
-    public function flush_values(){
+    public function flushValues(){
         
 	return $this->flush();
     }
@@ -111,7 +109,7 @@ class Memcached extends \Memcached {
      * @param string $namespace_key
      * @return int Unixtimestamp
      */
-    private function key_to_namespace( $key, $namespace_key = false ){
+    private function keyToNamespace( $key, $namespace_key = false ){
 	
 	if( ! $namespace_key )
 	    return $key;
@@ -123,4 +121,4 @@ class Memcached extends \Memcached {
 	
 	return $namespace_value.'_'.$key;
     }
-} // End Drivers_cache_memcached
+}
