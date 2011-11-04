@@ -8,8 +8,7 @@
  * @since	Version 0.3
  */
 namespace Drivers\Session;
-use Drivers\Session\Native;
-use Resources;
+use Drivers\Session\Native, Resources;
 
 class Cache extends Native {
     

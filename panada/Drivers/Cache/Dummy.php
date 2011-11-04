@@ -10,8 +10,9 @@
  * @since	Version 0.3
  */
 namespace Drivers\Cache;
+use Resources\Interfaces as Interfaces;
 
-class Dummy {
+class Dummy implements Interfaces\Cache {
     
     static private $holder = array();
     

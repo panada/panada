@@ -12,15 +12,16 @@
  * EN: Makesure Memcache extension is enabled
  */
 namespace Drivers\Cache;
+use Resources\Interfaces as Interfaces;
 
-if( ! extension_loaded('memcached') )
-    die('Memcached extension that required by Driver memcached is not available.');
-
-class Memcached extends \Memcached {
+class Memcached extends \Memcached implements Interfaces\Cache {
     
     private $port = 11211;
     
     public function __construct( $config ){
+	
+	if( ! extension_loaded('memcached') )
+	    die('Memcached extension that required by Driver memcached is not available.');
 	
         parent::__construct();
         

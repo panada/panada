@@ -7,45 +7,45 @@
  * @author	Iskandar Soesman.
  * @since	Version 0.1
  */
-namespace Dirvers\Database;
+namespace Drivers\Database;
+use Resources\Interfaces as Interfaces;
 
-class Mysql {
+class Mysql implements Interfaces\Database {
     
     protected $port = 3306;
     protected $column = '*';
     protected $distinct_ = false;
     protected $tables = array();
     protected $joins = null;
-    protected $joins_type = null;
-    protected $joins_on = array();
+    protected $joinsType = null;
+    protected $joinsOn = array();
     protected $criteria = array();
-    protected $group_by_ = null;
-    protected $is_having = array();
-    protected $limit_ = null;
-    protected $offset_ = null;
-    protected $order_by_ = null;
-    protected $order_ = null;
-    protected $is_quotes = true;
+    protected $groupBy = null;
+    protected $isHaving = array();
+    protected $limit = null;
+    protected $offset = null;
+    protected $orderBy = null;
+    protected $order = null;
+    protected $isQuotes = true;
     private $link;
     private $connection;
-    private $db_config;
-    private $last_query;
-    private $last_error;
-    public $insert_id;
-    public $client_flags = 0;
-    public $new_link = true;
-    public $persistent_connection = false;
-    public $instantiate_class = 'stdClass';
+    private $config;
+    private $lastQuery;
+    private $lastError;
+    public $insertId;
+    public $clientFlags = 0;
+    public $newLink = true;
+    public $persistentConnection = false;
+    public $instantiateClass = 'stdClass';
     
     /**
      * Define all properties needed.
      * @return void
      */
-    function __construct( $config_instance, $connection_name ){
+    function __construct( $config, $connectionName ){
 	
-	$this->db_config = $config_instance;
-	$this->connection = $connection_name;
-	
+	$this->config = $config;
+	$this->connection = $connectionName;
     }
     
     /**
@@ -53,25 +53,25 @@ class Mysql {
      *
      * @return string | boolean MySQL persistent link identifier on success, or FALSE on failure.
      */
-    private function establish_connection(){
+    private function establishConnection(){
 	
 	$arguments = array(
-			$this->db_config->host.':'.$this->port,
-			$this->db_config->user,
-			$this->db_config->password,
-			$this->new_link,
-			$this->client_flags
+			$this->config['host'].':'.$this->port,
+			$this->config['user'],
+			$this->config['password'],
+			$this->newLink,
+			$this->clientFlags
 		    );
 	
 	$function = 'mysql_connect';
 	
-	if( $this->db_config->persistent ){
+	if( $this->config['persistent'] ){
 	    
 	    $arguments = array(
-			$this->db_config->host,
-			$this->db_config->user,
-			$this->db_config->password,
-			$this->client_flags
+			$this->config['host'],
+			$this->config['user'],
+			$this->config['password'],
+			$this->clientFlags
 		    );
 	    
 	    $function = 'mysql_pconnect';
@@ -88,25 +88,24 @@ class Mysql {
     private function init(){
 	
 	if( is_null($this->link) )
-	    $this->link = $this->establish_connection();
+	    $this->link = $this->establishConnection();
         
         if ( ! $this->link ){
-	    $this->error = new Library_error();
-            $this->error->database('Unable connet to database in <strong>'.$this->connection.'</strong> connection.');
+	    die('Unable connet to database in <strong>'.$this->connection.'</strong> connection.');
         }
         
         $collation_query = '';
         
-        if ( ! empty($this->db_config->charset) ) {
-            $collation_query = "SET NAMES '".$this->db_config->charset."'";
-	    if ( ! empty($this->db_config->collate) )
-                $collation_query .= " COLLATE '".$this->db_config->collate."'";
+        if ( ! empty($this->config['charset']) ) {
+            $collation_query = "SET NAMES '".$this->config['charset']."'";
+	    if ( ! empty($this->config['collate']) )
+                $collation_query .= " COLLATE '".$this->config['collate']."'";
 	}
 	
         if ( ! empty($collation_query) )
             $this->query($collation_query);
         
-        $this->select_db($this->db_config->database);
+        $this->selectDb($this->config['database']);
     }
     
     /**
@@ -114,13 +113,13 @@ class Mysql {
      *
      * @return void
      */
-    private function select_db($dbname){
+    private function selectDb($dbname){
 	
 	if( is_null($this->link) )
 	    $this->init();
         
         if ( ! @mysql_select_db($dbname, $this->link) )
-            Library_error::database('Unable to select database in <strong>'.$this->connection.'</strong> connection.');
+            die('Unable to select database in <strong>'.$this->connection.'</strong> connection.');
         
     }
     
@@ -182,7 +181,7 @@ class Mysql {
     public function join($table, $type = null){
 	
 	$this->joins = $table;
-	$this->joins_type = $type;
+	$this->joinsType = $type;
 	
 	return $this;
     }
@@ -195,9 +194,9 @@ class Mysql {
      * @param string $value
      * @param mix $separator
      */
-    protected function create_criteria($column, $operator, $value, $separator){
+    protected function createCriteria($column, $operator, $value, $separator){
 	
-	if( is_string($value) && $this->is_quotes ){
+	if( is_string($value) && $this->isQuotes ){
 	    $value = $this->escape($value);
 	    $value = " '$value'";
 	}
@@ -227,9 +226,9 @@ class Mysql {
      */
     public function on($column, $operator, $value, $separator = false){
 	
-	$this->is_quotes = false;
-	$this->joins_on[] = $this->create_criteria($column, $operator, $value, $separator);
-	$this->is_quotes = true;
+	$this->isQuotes = false;
+	$this->joinsOn[] = $this->createCriteria($column, $operator, $value, $separator);
+	$this->isQuotes = true;
 	
         return $this;
     }
@@ -250,11 +249,11 @@ class Mysql {
 	    $value_arr = explode('.', $value);
 	    if( count($value_arr) > 1)
 		if( array_search($value_arr[0], $this->tables) !== false )
-		    $this->is_quotes = false;
+		    $this->isQuotes = false;
 	}
 	
-	$this->criteria[] = $this->create_criteria($column, $operator, $value, $separator);
-	$this->is_quotes = true;
+	$this->criteria[] = $this->createCriteria($column, $operator, $value, $separator);
+	$this->isQuotes = true;
 	
         return $this;
     }
@@ -265,9 +264,9 @@ class Mysql {
      * @param string $column1, $column2 etc ...
      * @return object
      */
-    public function group_by(){
+    public function groupBy(){
 	
-	$this->group_by_ = implode(', ', func_get_args());
+	$this->groupBy = implode(', ', func_get_args());
 	return $this;
     }
     
@@ -281,7 +280,7 @@ class Mysql {
      */
     public function having($column, $operator, $value, $separator = false){
 	
-	$this->is_having[] = $this->create_criteria($column, $operator, $value, $separator);
+	$this->isHaving[] = $this->createCriteria($column, $operator, $value, $separator);
 	
         return $this;
     }
@@ -292,10 +291,10 @@ class Mysql {
      * @param string $column1, $column2 etc ...
      * @return object
      */
-    public function order_by($column, $order = null){
+    public function orderBy($column, $order = null){
 	
-	$this->order_by_ = $column;
-	$this->order_ = $order;
+	$this->orderBy = $column;
+	$this->order = $order;
 	
 	return $this;
     }
@@ -309,8 +308,8 @@ class Mysql {
      */
     public function limit($limit, $offset = null){
 	
-	$this->limit_ = $limit;
-	$this->offset_ = $offset;
+	$this->limit = $limit;
+	$this->offset = $offset;
 	
 	return $this;
     }
@@ -320,7 +319,7 @@ class Mysql {
      *
      * @return string The complited SQL statement
      */
-    public function _command(){
+    public function command(){
         
         $query = 'SELECT ';
 	
@@ -345,16 +344,16 @@ class Mysql {
 	
 	if( ! is_null($this->joins) ) {
 	    
-	    if( ! is_null($this->joins_type) ){
-		$query .= ' '.strtoupper($this->joins_type);
-		$this->joins_type = null;
+	    if( ! is_null($this->joinsType) ){
+		$query .= ' '.strtoupper($this->joinsType);
+		$this->joinsType = null;
 	    }
 	    
 	    $query .= ' JOIN '.$this->joins;
 	    
-	    if( ! empty($this->joins_on) ){
-		$query .= ' ON ('.implode(' ', $this->joins_on).')';
-		unset($this->joins_on);
+	    if( ! empty($this->joinsOn) ){
+		$query .= ' ON ('.implode(' ', $this->joinsOn).')';
+		unset($this->joinsOn);
 	    }
 	    
 	    $this->joins = null;
@@ -366,33 +365,33 @@ class Mysql {
 	    unset($this->criteria);
 	}
 	
-	if( ! is_null($this->group_by_) ){
-	    $query .= ' GROUP BY '.$this->group_by_;
-	    $this->group_by_ = null;
+	if( ! is_null($this->groupBy) ){
+	    $query .= ' GROUP BY '.$this->groupBy;
+	    $this->groupBy = null;
 	}
 	
-	if( ! empty($this->is_having) ){
-	    $query .= ' HAVING '.implode(' ', $this->is_having);
-	    unset($this->is_having);
+	if( ! empty($this->isHaving) ){
+	    $query .= ' HAVING '.implode(' ', $this->isHaving);
+	    unset($this->isHaving);
 	}
 	
-	if( ! is_null($this->order_by_) ){
-	    $query .= ' ORDER BY '.$this->order_by_.' '.strtoupper($this->order_);
-	    $this->order_by_ = null;
+	if( ! is_null($this->orderBy) ){
+	    $query .= ' ORDER BY '.$this->orderBy.' '.strtoupper($this->order);
+	    $this->orderBy = null;
 	}
 	
 	
-	if( ! is_null($this->limit_) ){
+	if( ! is_null($this->limit) ){
 	    
 	    $query .= ' LIMIT';
 	    
-	    if( ! is_null($this->offset_) ){
-		$query .= ' '.$this->offset_.' ,';
-		$this->offset_ = null;
+	    if( ! is_null($this->offset) ){
+		$query .= ' '.$this->offset.' ,';
+		$this->offset = null;
 	    }
 	    
-	    $query .= ' '.$this->limit_;
-	    $this->limit_ = null;
+	    $query .= ' '.$this->limit;
+	    $this->limit = null;
 	}
         
         return $query;
@@ -452,10 +451,10 @@ class Mysql {
 	    $this->init();
         
         $query = mysql_query($sql, $this->link);
-        $this->last_query = $sql;
+        $this->lastQuery = $sql;
         
-        if ( $this->last_error = mysql_error($this->link) ) {
-            $this->print_error();
+        if ( $this->lastError = mysql_error($this->link) ) {
+            $this->printError();
             return false;
         }
         
@@ -471,10 +470,10 @@ class Mysql {
      * @param array
      * @return object
      */
-    public function find_all( $table = false, $where = array(), $fields = array() ){
+    public function findAll( $table = false, $where = array(), $fields = array() ){
 	
 	if( ! $table )
-	    return $this->results( $this->_command() );
+	    return $this->results( $this->command() );
 	
 	$column = '*';
 	
@@ -495,7 +494,7 @@ class Mysql {
             }
         }
 	
-        return $this->find_all();
+        return $this->findAll();
     }
     
     /**
@@ -507,10 +506,10 @@ class Mysql {
      * @param array
      * @return object
      */
-    public function find_one( $table = false, $where = array(), $fields = array() ){
+    public function findOne( $table = false, $where = array(), $fields = array() ){
 	
 	if( ! $table )
-	    return $this->row( $this->_command() );
+	    return $this->row( $this->command() );
 	
 	$column = '*';
 	
@@ -531,7 +530,7 @@ class Mysql {
 	    }
 	}
 	
-	return $this->find_one();
+	return $this->findOne();
 	
     }
     
@@ -542,10 +541,10 @@ class Mysql {
      * @param string @query
      * @return string|int Depen on it record value.
      */
-    public function find_var( $query = null ){
+    public function findVar( $query = null ){
 	
 	if( is_null($query) )
-	    $query = $this->_command();
+	    $query = $this->command();
 	
         $result = $this->row($query);
         $key = array_keys(get_object_vars($result));
@@ -562,11 +561,11 @@ class Mysql {
     public function results($query, $type = 'object'){
         
 	if( is_null($query) )
-	    $query = $this->_command();
+	    $query = $this->command();
 	
         $result = $this->query($query);
         
-        while ($row = @mysql_fetch_object($result, $this->instantiate_class)) {
+        while ($row = @mysql_fetch_object($result, $this->instantiateClass)) {
             
             if($type == 'array')
                 $return[] = (array) $row;
@@ -588,55 +587,18 @@ class Mysql {
     public function row($query, $type = 'object'){
 	
 	if( is_null($query) )
-	    $query = $this->_command();
+	    $query = $this->command();
 	
 	if( is_null($this->link) )
 	    $this->init();
         
         $result = $this->query($query);
-        $return = mysql_fetch_object($result, $this->instantiate_class);
+        $return = mysql_fetch_object($result, $this->instantiateClass);
         
         if($type == 'array')
             return (array) $return;
         else
             return $return;
-    }
-    
-    /**
-     * Get value directly from single field
-     *
-     * @param string @query
-     * @return string|int Depen on it record value.
-     */
-    public function get_var($query = null) {
-        
-	return $this->find_var($query);
-    }
-    
-    /**
-     * Abstraction to get single record
-     *
-     * @param string
-     * @param array Default si null
-     * @param array Default is all
-     * @return object
-     */
-    public function get_row( $table, $where = array(), $fields = array() ){
-	
-        return $this->find_one( $table, $where, $fields );
-    }
-    
-    /**
-     * Abstraction to get multple records
-     *
-     * @param string
-     * @param array Default si null
-     * @param array Default is all
-     * @return object
-     */
-    public function get_results( $table, $where = array(), $fields = array() ){
-	
-	return $this->find_all( $table, $where, $fields );
     }
     
     /**
@@ -661,7 +623,7 @@ class Mysql {
      *
      * @return int
      */
-    public function insert_id(){
+    public function insertId(){
 	
 	return @mysql_insert_id($this->link);
     }
@@ -750,25 +712,26 @@ class Mysql {
      *
      * @return string
      */
-    private function print_error() {
-    
+    private function printError() {
+	/*
         if ( $caller = Library_error::get_caller(2) )
-            $error_str = sprintf('Database error %1$s for query %2$s made by %3$s', $this->last_error, $this->last_query, $caller);
+            $error_str = sprintf('Database error %1$s for query %2$s made by %3$s', $this->lastError, $this->lastQuery, $caller);
         else
-            $error_str = sprintf('Database error %1$s for query %2$s', $this->last_error, $this->last_query);
+	*/
+            $error_str = sprintf('Database error %1$s for query %2$s', $this->lastError, $this->lastQuery);
     
         //write the error to log
-        @error_log($error_str, 0);
+        @error_log($error_str);
     
         //Is error output turned on or not..
         if ( error_reporting() == 0 )
             return false;
     
-        $str = htmlspecialchars($this->last_error, ENT_QUOTES);
-        $query = htmlspecialchars($this->last_query, ENT_QUOTES);
+        $str = htmlspecialchars($this->lastError, ENT_QUOTES);
+        $query = htmlspecialchars($this->lastQuery, ENT_QUOTES);
     
         // If there is an error then take note of it
-        Library_error::database($str.'<br /><b>Query</b>: '.$query.'<br /><b>Backtrace</b>: '.$caller);
+        die($str.'<br /><b>Query</b>: '.$query.'<br /><b>Backtrace</b>: '.$caller);
     }
     
     /**
@@ -778,7 +741,7 @@ class Mysql {
      */
     public function version(){
 	
-	return $this->get_var("SELECT version() AS version");
+	return $this->findVar("SELECT version() AS version");
     }
     
     /**
@@ -791,4 +754,4 @@ class Mysql {
 	mysql_close($this->link);
     }
     
-} // End Driver_mysql Class
+}

@@ -79,13 +79,16 @@ class Cookie {
      *
      * @return bool
      */
-    public function validatesCookieValues(){
+    private function validatesCookieValues(){
         
         $curentValues = $this->curentValues;
         
         $curentValues['agent'] = $_SERVER['HTTP_USER_AGENT'];
         
         $values = md5(http_build_query($curentValues).$this->hashKey);
+	
+	if( ! isset($_COOKIE[$this->cookieChekSumName]) )
+	    return false;
         
         if( $values != $_COOKIE[$this->cookieChekSumName] )
             return false;
@@ -98,7 +101,7 @@ class Cookie {
      *
      * @return void
      */
-    protected function setSessionValues(){
+    private function setSessionValues(){
         
         $value = http_build_query($this->curentValues);
 
@@ -114,7 +117,7 @@ class Cookie {
      * @param string $value
      * @return void
      */
-    protected function setCookie($name, $value = ''){
+    private function setCookie($name, $value = ''){
         
         setcookie(
             $name,
@@ -133,7 +136,7 @@ class Cookie {
      * @param string $value
      * @return void
      */
-    public function set($name, $value = ''){
+    public function setValue($name, $value = ''){
         
 	if( is_array($name) ) {
 	    foreach($name AS $key => $val)
@@ -152,7 +155,7 @@ class Cookie {
      * @param string $name
      * @return mix
      */
-    public function get( $name = null ){
+    public function getValue( $name = null ){
         
         $curentValues = $this->curentValues;
         unset($curentValues['_d']);
@@ -175,7 +178,7 @@ class Cookie {
      * @param string $name
      * @return void
      */
-    public function remove($name){
+    public function deleteValue($name){
         
         unset( $this->curentValues[$name] );
         $this->setSessionValues();
@@ -219,7 +222,7 @@ class Cookie {
     /**
      * Regenerate the cookie id
      */
-    public function regenerate(){
+    public function regenerateId(){
         return;
     }   
 }

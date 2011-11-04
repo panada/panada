@@ -12,11 +12,9 @@
  * EN: Makesure Memcache extension is enabled
  */
 namespace Drivers\Cache;
+use Resources\Interfaces as Interfaces;
 
-if( ! \extension_loaded('memcache') )
-    die('Memcache extension that required by Library_memcached is not available.');
-
-class Memcache extends \Memcache {
+class Memcache extends \Memcache implements Interfaces\Cache {
     
     private $port = 11211;
     
@@ -26,6 +24,9 @@ class Memcache extends \Memcache {
      */
     
     public function __construct( $config ){
+	
+	if( ! extension_loaded('memcache') )
+	    die('Memcache extension that required by Memcache Driver is not available.');
         
         foreach($config['host'] as $host)
 	    $this->addServer($host, $config['port']);

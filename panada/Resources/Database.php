@@ -11,18 +11,16 @@ namespace Resources;
 
 class Database {
     
-    private $driver;
-    private $config;
+    private $driver, $config;
     
     public function __construct( $connection = 'default' ){
         
-        $this->config = Library_config::instance();
+        $config         = Config::database();
+        $this->config   = $config[$connection];
         
-        require_once GEAR.'drivers/database/'.$this->config->db->$connection->driver.'.php';
+        $driverNamespace = 'Drivers\Database\\'.ucwords($this->config['driver']);
         
-        $class_name = 'Drivers_database_'.$this->config->db->$connection->driver;
-        
-        $this->driver = new $class_name( $this->config->db->$connection, $connection );
+        $this->driver = new $driverNamespace( $this->config, $connection );
     }
     
     /**
@@ -47,4 +45,4 @@ class Database {
         $this->driver->$name = $value;
     }
     
-} // End Class Library_database
+}

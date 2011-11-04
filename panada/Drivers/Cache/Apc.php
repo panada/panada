@@ -11,17 +11,17 @@
  * pecl install apc
  */
 namespace Drivers\Cache;
-
-/**
- * Makesure APC extension is enabled
- */
-if( ! extension_loaded('apc') )
-    die('APC extension that required by Library_apc is not available.');
+use Resources\Interfaces as Interfaces;
     
-class Apc {
+class Apc implements Interfaces\Cache {
     
     public function __construct(){
-        // none
+        
+        /**
+        * Makesure APC extension is enabled
+        */
+       if( ! extension_loaded('apc') )
+           die('APC extension that required by APC Deiver is not available.');
     }
     
     /**

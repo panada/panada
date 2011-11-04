@@ -8,8 +8,9 @@
  * @since	Version 0.1
  */
 namespace Drivers\Session;
+use Resources\Interfaces as Interfaces;
 
-class Native {
+class Native implements Interfaces\Session {
     
     /**
     * @var integer	This variable set the maximum life in seconds of a session file on the server since last activity.
@@ -115,7 +116,7 @@ class Native {
      *
      * @return void
      */
-    public function regenerate(){
+    public function regenerateId(){
 	
 	\session_regenerate_id(true);
 	$this->sessionId = \session_id();
@@ -128,7 +129,7 @@ class Native {
      * @param string|array|object
      * @return void
      */
-    public function set($name, $value = ''){
+    public function setValue($name, $value = ''){
         
 	if( \is_array($name) ) {
 	    foreach($name AS $key => $val)
@@ -145,7 +146,7 @@ class Native {
      * @param string
      * @return string|array|object
      */
-    public function get($name){
+    public function getValue($name){
         
 	if(isset($_SESSION[$name]))
 	    return $_SESSION[$name];
@@ -159,7 +160,7 @@ class Native {
      * @param string
      * @return void
      */
-    public function remove($name){
+    public function deleteValue($name){
         
 	unset($_SESSION[$name]);
     }
