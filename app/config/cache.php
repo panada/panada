@@ -12,17 +12,23 @@ $cache = array(
     
     'memcached' => array(
         'driver' => 'memcached',
-        'host' => array(
-            'localhost'
-        ),
-        'port' => 11211,
+        'server' => array(
+            array(
+                'host' => 'localhost',
+                'port' => 11211,
+                'persistent' => false,
+            ),
+        )
     ),
     
     'memcache' => array(
         'driver' => 'memcache',
-        'host' => array(
-            'localhost'
-        ),
-        'port' => 11211,
+        'server' => array(
+            array(
+                'host' => 'localhost',
+                'port' => 11211,
+                'persistent' => false,
+            ),
+        )
     ),
 );

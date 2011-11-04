@@ -28,8 +28,8 @@ class Memcache extends \Memcache implements Interfaces\Cache {
 	if( ! extension_loaded('memcache') )
 	    die('Memcache extension that required by Memcache Driver is not available.');
         
-        foreach($config['host'] as $host)
-	    $this->addServer($host, $config['port']);
+        foreach($config['server'] as $server)
+	    $this->addServer($server['host'], $server['port'], $server['persistent']);
 	
 	/**
 	 * EN: If you need compression Threshold, you can uncomment this

@@ -25,8 +25,8 @@ class Memcached extends \Memcached implements Interfaces\Cache {
 	
         parent::__construct();
         
-        foreach($config['host'] as $host)
-	    $this->addServer($host, $config['port']);
+        foreach($config['server'] as $server)
+	    $this->addServer($server['host'], $server['port'], $server['persistent']);
     }
     
     /**
