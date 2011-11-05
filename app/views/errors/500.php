@@ -1,4 +1,4 @@
-<?php //if ( ! error_reporting() ) exit(1); ?>
+<?php if ( ! error_reporting() ) exit(1); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,13 +24,15 @@ pre{font:14px Consolas,Courier New,Verdana;background:#ddf;/*color:#c00;*/border
 <div id="konten">
 <h1>Runtime Error!</h1>
 <p><strong>Error message</strong>: <?php echo $message; ?></p>
+<?php if( $file ): ?>
 <p><strong>Error in file</strong>: <?php echo $file; ?> Line: <?php echo $line; ?></p>
 <pre>
 <?php foreach($code as $code): ?>
 <?php echo $code;?>
 <?php endforeach; ?>
 </pre>
+<?php endif; ?>
 </div>
-<div id="foot">Powered by <a target="_blank" href="http://panadaframework.com/">Panada</a></div>
+<div id="foot">&nbsp;</div>
 </body>
 </html>

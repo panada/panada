@@ -9,7 +9,7 @@
  * @package Core System
  */
 
-class Gear {
+final class Gear {
     
     private $uriObj, $config, $firstUriPath;
     

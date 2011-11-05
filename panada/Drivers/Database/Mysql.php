@@ -8,7 +8,7 @@
  * @since	Version 0.1
  */
 namespace Drivers\Database;
-use Resources\Interfaces as Interfaces;
+use Resources\Interfaces as Interfaces, Resources\RunException as RunException;
 
 class Mysql implements Interfaces\Database {
     
@@ -90,9 +90,13 @@ class Mysql implements Interfaces\Database {
 	if( is_null($this->link) )
 	    $this->link = $this->establishConnection();
         
-        if ( ! $this->link ){
-	    die('Unable connet to database in <strong>'.$this->connection.'</strong> connection.');
-        }
+	try{
+	    if ( ! $this->link )
+		throw new RunException('Unable connet to database in <strong>'.$this->connection.'</strong> connection.');
+	}
+	catch(RunException $e){
+	    RunException::outputError( $e->getMessage() );
+	}
         
         $collation_query = '';
         
@@ -118,8 +122,14 @@ class Mysql implements Interfaces\Database {
 	if( is_null($this->link) )
 	    $this->init();
         
-        if ( ! @mysql_select_db($dbname, $this->link) )
-            die('Unable to select database in <strong>'.$this->connection.'</strong> connection.');
+	try{
+	    if ( ! @mysql_select_db($dbname, $this->link) )
+		throw new RunException('Unable to select database in <strong>'.$this->connection.'</strong> connection.');
+	}
+	catch(RunException $e){
+	    RunException::outputError( $e->getMessage() );
+	}
+        
         
     }
     
@@ -708,30 +718,18 @@ class Mysql implements Interfaces\Database {
     }
     
     /**
-     * Print the error at least to PHP error log file
+     * Print the error
      *
      * @return string
      */
     private function printError() {
-	/*
-        if ( $caller = Library_error::get_caller(2) )
+	
+        if ( $caller = RunException::getErrorCaller(5) )
             $error_str = sprintf('Database error %1$s for query %2$s made by %3$s', $this->lastError, $this->lastQuery, $caller);
         else
-	*/
             $error_str = sprintf('Database error %1$s for query %2$s', $this->lastError, $this->lastQuery);
-    
-        //write the error to log
-        @error_log($error_str);
-    
-        //Is error output turned on or not..
-        if ( error_reporting() == 0 )
-            return false;
-    
-        $str = htmlspecialchars($this->lastError, ENT_QUOTES);
-        $query = htmlspecialchars($this->lastQuery, ENT_QUOTES);
-    
-        // If there is an error then take note of it
-        die($str.'<br /><b>Query</b>: '.$query.'<br /><b>Backtrace</b>: '.$caller);
+	
+	RunException::outputError( $error_str );
     }
     
     /**

@@ -34,7 +34,7 @@ class RunException extends \Exception {
         self::outputError($message, $file, $line);
     }
     
-    public static function outputError($message, $file, $line){
+    public static function outputError($message = null, $file = false, $line = false){
         
         // Message for log
         $errorMessage = 'Error '.$message.' in '.$file . ' line: ' . $line;
@@ -46,6 +46,11 @@ class RunException extends \Exception {
         if( (array_search( 'views', explode('/', $file) ) !== false) || (PHP_SAPI == 'cli') ){
             exit($errorMessage);
         }
+        
+        $code = array();
+        
+        if( ! $file )
+            goto constructViewData;
         
         $fileString     = file_get_contents($file);
         $arrLine        = explode("\n", $fileString);
@@ -60,13 +65,6 @@ class RunException extends \Exception {
         if($endIterate > $totalLine)
             $endIterate = $totalLine;
         
-        $data = array(
-            'message' => $message,
-            'file' => $file,
-            'line' => $line,
-            'code' => array()
-        );
-        
         for($i = $startIterate; $i <= $endIterate; $i++){
             
             $html = '<span style="margin-right:10px;background:#CFCFCF;">'.$i.'</span>';
@@ -76,12 +74,54 @@ class RunException extends \Exception {
             else
                 $html .= $getLine[$i] . "\n";
                 
-            $data['code'][] = $html;
+            $code[] = $html;
         }
+        
+        constructViewData:
+        
+        $data = array(
+            'message' => $message,
+            'file' => $file,
+            'line' => $line,
+            'code' => $code
+        );
         
         header("HTTP/1.1 500 Internal Server Error", true, 500);
         
         \Resources\Controller::outputError('errors/500', $data);
         exit(1);
+    }
+    
+    /**
+     * EN: generates class/method backtrace
+     * @param integer
+     * @return array
+     */
+    public static function getErrorCaller($offset = 1) {
+        
+	$caller = array();
+        $bt = debug_backtrace(false);
+	$bt = array_slice($bt, $offset);
+        $bt = array_reverse( $bt );
+	
+        foreach ( (array) $bt as $call ) {
+	    
+	    if ( ! isset( $call['class'] ) )
+		continue;
+	    
+            if ( @$call['class'] == __CLASS__ )
+                continue;
+	    
+	    $function = $call['class'] . '->'.$call['function'];
+        
+	    if( isset($call['line']) )
+		$function .= ' line '.$call['line'];
+	    
+            $caller[] = $function;
+        }
+	
+        $caller = implode( ', ', $caller );
+	
+        return $caller;
     }
 }
