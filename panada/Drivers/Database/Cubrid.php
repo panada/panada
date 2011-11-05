@@ -36,6 +36,9 @@ class Cubrid implements Interfaces\Database {
      * @return void
      */
     function __construct( $config, $connectionName ){
+        
+        if( ! \extension_loaded('cubrid') )
+           die('Cubrid extension that required by Cubrid Driver is not available.');
 	
 	$this->config = $config;
 	$this->connection = $connectionName;

@@ -8,49 +8,47 @@
  * @since	Version 0.2
  */
 namespace Dirvers\Database;
-
-/**
- * ID: Pastikan ektensi Mongo telah terinstall
- * EN: Makesure Memcache extension is enabled
- */
-if( ! \extension_loaded('mongo') )
-    die('Mongo extension that required by Driver_mongodb is not available.');
+use Resources\Tools as Tools;
 
 class Mongodb extends \Mongo {
     
     private $database;
-    private $db_config;
+    private $config;
     private $connection;
     private $criteria = array();
     
-    public function __construct( $config_instance, $connection_name ){
-        
-        $this->db_config = $config_instance;
-        $this->connection = $connection_name;
+    public function __construct( $config, $connectionName ){
         
         /**
-         * EN: This is the mongodb connection option. Eg: array('replicaSet' => true, 'connect' => false)
-         */
-        $connection_options = (array) $this->db_config->options;
+        * Makesure Memcache extension is enabled
+        */
+       if( ! \extension_loaded('mongo') )
+           die('Mongo extension that required by Mongodb Driver is not available.');
         
-        parent::__construct($this->db_config->host, $connection_options);
+        $this->config = $config;
+        $this->connection = $connectionName;
+        
+        /**
+         * $this->config['options'] is the mongodb connection option. Eg: array('replicaSet' => true, 'connect' => false)
+         */
+        parent::__construct($this->config['host'], $this->config['options']);
     }
     
     public function collection($collection){
         
-        $database = $this->db_config->database;
+        $database = $this->config['database'];
         $db = $this->$database;
         return $db->$collection;
     }
     
     /**
-     * EN: Wrap results from mongo output into object or array.
+     * Wrap results from mongo output into object or array.
      *
      * @param array $cursor The array data given from Mongodb
      * @param string $output The output type: object | array
      * @return boolean | object | array
      */
-    public function cursor_results($cursor, $output = 'object'){
+    public function cursorResults($cursor, $output = 'object'){
         
         if( ! $cursor )
             return false;
@@ -68,14 +66,14 @@ class Mongodb extends \Mongo {
         }
         
         foreach ($cursor as $value)
-            $return[] = (object) Library_tools::array_to_object($value);
+            $return[] = (object) Tools::arrayToObject($value);
             
         return $return;
         
     }
     
     /**
-     * EN: Convert string time into mongo date
+     * Convert string time into mongo date
      *
      * @param string $str
      */
@@ -85,7 +83,7 @@ class Mongodb extends \Mongo {
     }
     
     /**
-     * EN: Convert a string unique identifier into MongoId object.
+     * Convert a string unique identifier into MongoId object.
      *
      * @param string $_id Mongodb string id
      * @return object
@@ -161,13 +159,13 @@ class Mongodb extends \Mongo {
      *
      * @return mix
      */
-    public function find_all(){
+    public function findAll(){
         
 	$value = $this->collection($this->collection_name)->find( $this->criteria, $this->documents );
 	$this->criteria = $this->documents = array();
 	
 	if( ! empty($value) )
-	    return $this->cursor_results($value);
+	    return $this->cursorResults($value);
 	
 	return false;
     }
@@ -177,13 +175,13 @@ class Mongodb extends \Mongo {
      *
      * @return mix
      */
-    public function find_one(){
+    public function findOne_(){
         
 	$value = $this->collection($this->collection_name)->findOne( $this->criteria, $this->documents );
 	$this->criteria = $this->documents = array();
 	
 	if( ! empty($value) )
-	    return Library_tools::array_to_object($value);
+	    return Tools::arrayToObject($value);
 	
 	return false;
     }
@@ -236,4 +234,4 @@ class Mongodb extends \Mongo {
 	return $value;
     }
     
-} // End Driver_mysql Class
+}
