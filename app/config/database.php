@@ -8,6 +8,7 @@ $database = array(
         'user' => 'root',
         'password' => '',
         'database' => 'panada',
+        'tablePrefix' => '',
         'charset' => 'utf8',
         'collate' => 'utf8_general_ci',
         'persistent' => false,
@@ -48,4 +49,17 @@ $database = array(
         'options' => array(),
     ),
     */
+    
+    'cubrid' => array(
+        'driver' => 'cubrid',
+        'host' => 'localhost',
+        'user' => 'root',
+        'password' => '',
+        'database' => 'panada',
+        'tablePrefix' => '',
+        'charset' => 'utf8',
+        'collate' => 'utf8_general_ci',
+        'persistent' => false,
+        'autoCommit' => true,
+    ),
 );
