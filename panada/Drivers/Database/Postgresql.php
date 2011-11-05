@@ -7,8 +7,9 @@
  * @author	Iskandar Soesman.
  * @since	Version 0.3
  */
-namespace Dirvers\Database;
-use Resources\Interfaces as Interfaces, Resources\RunException as RunException;
+namespace Drivers\Database;
+use Resources\Interfaces as Interfaces,
+Resources\RunException as RunException;
 
 class Postgresql implements Interfaces\Database {
     
@@ -33,8 +34,6 @@ class Postgresql implements Interfaces\Database {
     private $lastQuery;
     private $lastError;
     public $insertId;
-    public $clientFlags = 0;
-    public $newLink = true;
     public $persistentConnection = false;
     public $instantiateClass = 'stdClass';
     

@@ -7,43 +7,43 @@
  * @author	Iskandar Soesman.
  * @since	Version 0.3
  */
-namespace Dirvers\Database;
+namespace Drivers\Database;
+use Resources\Interfaces as Interfaces,
+Resources\RunException as RunException,
+Resources\Tools as Tools;
 
-class Sqlite {
+class Sqlite implements Interfaces\Database {
     
     protected $column = '*';
-    protected $distinct_ = false;
+    protected $distinct = false;
     protected $tables = array();
     protected $joins = null;
-    protected $joins_type = null;
-    protected $joins_on = array();
+    protected $joinsType = null;
+    protected $joinsOn = array();
     protected $criteria = array();
-    protected $group_by_ = null;
-    protected $is_having = array();
-    protected $limit_ = null;
-    protected $offset_ = null;
-    protected $order_by_ = null;
-    protected $order_ = null;
-    protected $is_quotes = true;
+    protected $groupBy = null;
+    protected $isHaving = array();
+    protected $limit = null;
+    protected $offset = null;
+    protected $orderBy = null;
+    protected $order = null;
+    protected $isQuotes = true;
     private $link;
     private $connection;
-    private $db_config;
-    private $last_query;
-    private $last_error;
-    public $insert_id;
-    public $client_flags = 0;
-    public $new_link = true;
-    public $persistent_connection = false;
-    public $instantiate_class = 'stdClass';
+    private $config;
+    private $lastQuery;
+    private $lastError;
+    public $insertId;
+    public $instantiateClass = 'stdClass';
     
     /**
      * EN: Define all properties needed.
      * @return void
      */
-    function __construct( $config_instance, $connection_name ){
+    function __construct( $config, $connectionName ){
 	
-	$this->db_config = $config_instance;
-	$this->connection = $connection_name;
+	$this->config = $config;
+	$this->connection = $connectionName;
 	
     }
     
@@ -51,13 +51,16 @@ class Sqlite {
      * Establish a new connection to SQLite server
      *
      */
-    private function establish_connection(){
+    private function establishConnection(){
 	
-	if( ! $this->link = new SQLite3( $this->db_config->database, SQLITE3_OPEN_READWRITE ) ){
-	    
-	    $this->error = new Library_error();
-            $this->error->database('Unable connet to database in <strong>'.$this->connection.'</strong> connection.');
+	try{
+	    if( ! $this->link = new SQLite3( $this->config['database'], SQLITE3_OPEN_READWRITE ) )
+		throw new RunException('Unable connet to database in <strong>'.$this->connection.'</strong> connection.');
 	}
+	catch(RunException $e){
+	    RunException::outputError( $e->getMessage() );
+	}
+	
     }
     
     /**
@@ -68,7 +71,7 @@ class Sqlite {
     private function init(){
 	
 	if( is_null($this->link) )
-	    $this->establish_connection();
+	    $this->establishConnection();
     }
     
     /**
@@ -98,7 +101,7 @@ class Sqlite {
      */
     public function distinct(){
 	
-	$this->distinct_ = true;
+	$this->distinct = true;
 	return $this;
     }
     
@@ -129,7 +132,7 @@ class Sqlite {
     public function join($table, $type = null){
 	
 	$this->joins = $table;
-	$this->joins_type = $type;
+	$this->joinsType = $type;
 	
 	return $this;
     }
@@ -142,9 +145,9 @@ class Sqlite {
      * @param string $value
      * @param mix $separator
      */
-    protected function create_criteria($column, $operator, $value, $separator){
+    protected function createCriteria($column, $operator, $value, $separator){
 	
-	if( is_string($value) && $this->is_quotes ){
+	if( is_string($value) && $this->isQuotes ){
 	    $value = $this->escape($value);
 	    $value = " '$value'";
 	}
@@ -174,9 +177,9 @@ class Sqlite {
      */
     public function on($column, $operator, $value, $separator = false){
 	
-	$this->is_quotes = false;
-	$this->joins_on[] = $this->create_criteria($column, $operator, $value, $separator);
-	$this->is_quotes = true;
+	$this->isQuotes = false;
+	$this->joinsOn[] = $this->createCriteria($column, $operator, $value, $separator);
+	$this->isQuotes = true;
 	
         return $this;
     }
@@ -197,11 +200,11 @@ class Sqlite {
 	    $value_arr = explode('.', $value);
 	    if( count($value_arr) > 1)
 		if( array_search($value_arr[0], $this->tables) !== false )
-		    $this->is_quotes = false;
+		    $this->isQuotes = false;
 	}
 	
-	$this->criteria[] = $this->create_criteria($column, $operator, $value, $separator);
-	$this->is_quotes = true;
+	$this->criteria[] = $this->createCriteria($column, $operator, $value, $separator);
+	$this->isQuotes = true;
 	
         return $this;
     }
@@ -212,9 +215,9 @@ class Sqlite {
      * @param string $column1, $column2 etc ...
      * @return object
      */
-    public function group_by(){
+    public function groupBy(){
 	
-	$this->group_by_ = implode(', ', func_get_args());
+	$this->groupBy = implode(', ', func_get_args());
 	return $this;
     }
     
@@ -228,7 +231,7 @@ class Sqlite {
      */
     public function having($column, $operator, $value, $separator = false){
 	
-	$this->is_having[] = $this->create_criteria($column, $operator, $value, $separator);
+	$this->isHaving[] = $this->createCriteria($column, $operator, $value, $separator);
 	
         return $this;
     }
@@ -239,10 +242,10 @@ class Sqlite {
      * @param string $column1, $column2 etc ...
      * @return object
      */
-    public function order_by($column, $order = null){
+    public function orderBy($column, $order = null){
 	
-	$this->order_by_ = $column;
-	$this->order_ = $order;
+	$this->orderBy = $column;
+	$this->order = $order;
 	
 	return $this;
     }
@@ -256,8 +259,8 @@ class Sqlite {
      */
     public function limit($limit, $offset = null){
 	
-	$this->limit_ = $limit;
-	$this->offset_ = $offset;
+	$this->limit = $limit;
+	$this->offset = $offset;
 	
 	return $this;
     }
@@ -267,13 +270,13 @@ class Sqlite {
      *
      * @return string The complited SQL statement
      */
-    public function _command(){
+    public function command(){
         
         $query = 'SELECT ';
 	
-	if($this->distinct_){
+	if($this->distinct){
 	    $query .= 'DISTINCT ';
-	    $this->distinct_ = false;
+	    $this->distinct = false;
 	}
         
         $column = '*';
@@ -292,16 +295,16 @@ class Sqlite {
 	
 	if( ! is_null($this->joins) ) {
 	    
-	    if( ! is_null($this->joins_type) ){
-		$query .= ' '.strtoupper($this->joins_type);
-		unset($this->joins_type);
+	    if( ! is_null($this->joinsType) ){
+		$query .= ' '.strtoupper($this->joinsType);
+		unset($this->joinsType);
 	    }
 	    
 	    $query .= ' JOIN '.$this->joins;
 	    
-	    if( ! empty($this->joins_on) ){
-		$query .= ' ON ('.implode(' ', $this->joins_on).')';
-		unset($this->joins_on);
+	    if( ! empty($this->joinsOn) ){
+		$query .= ' ON ('.implode(' ', $this->joinsOn).')';
+		unset($this->joinsOn);
 	    }
 	    
 	    $this->joins = null;
@@ -313,32 +316,32 @@ class Sqlite {
 	    unset($this->criteria);
 	}
 	
-	if( ! is_null($this->group_by_) ){
-	    $query .= ' GROUP BY '.$this->group_by_;
-	    $this->group_by_ = null;
+	if( ! is_null($this->groupBy) ){
+	    $query .= ' GROUP BY '.$this->groupBy;
+	    $this->groupBy = null;
 	}
 	
-	if( ! empty($this->is_having) ){
-	    $query .= ' HAVING '.implode(' ', $this->is_having);
-	    unset($this->is_having);
+	if( ! empty($this->isHaving) ){
+	    $query .= ' HAVING '.implode(' ', $this->isHaving);
+	    unset($this->isHaving);
 	}
 	
-	if( ! is_null($this->order_by_) ){
-	    $query .= ' ORDER BY '.$this->order_by_.' '.strtoupper($this->order_);
-	    $this->order_by_ = null;
+	if( ! is_null($this->orderBy) ){
+	    $query .= ' ORDER BY '.$this->orderBy.' '.strtoupper($this->order);
+	    $this->orderBy = null;
 	}
 	
 	
-	if( ! is_null($this->limit_) ){
+	if( ! is_null($this->limit) ){
 	    
-	    $query .= ' LIMIT '.$this->limit_;
+	    $query .= ' LIMIT '.$this->limit;
 	    
-	    if( ! is_null($this->offset_) ){
-		$query .= ' OFFSET '.$this->offset_;
-		$this->offset_ = null;
+	    if( ! is_null($this->offset) ){
+		$query .= ' OFFSET '.$this->offset;
+		$this->offset = null;
 	    }
 	    
-	    $this->limit_ = null;
+	    $this->limit = null;
 	}
         
         return $query;
@@ -401,10 +404,10 @@ class Sqlite {
 	else
 	    $query = $this->link->exec($sql);
 	
-        $this->last_query = $sql;
+        $this->lastQuery = $sql;
         
 	if($this->link->lastErrorMsg() != 'not an error' ){
-	    $this->last_error = $this->link->lastErrorMsg();
+	    $this->lastError = $this->link->lastErrorMsg();
             $this->print_error();
             return false;
         }
@@ -421,10 +424,10 @@ class Sqlite {
      * @param array
      * @return object
      */
-    public function find_all( $table = false, $where = array(), $fields = array() ){
+    public function findAll( $table = false, $where = array(), $fields = array() ){
 	
 	if( ! $table )
-	    return $this->results( $this->_command() );
+	    return $this->results( $this->command() );
 	
 	$column = '*';
 	
@@ -445,7 +448,7 @@ class Sqlite {
             }
         }
 	
-        return $this->find_all();
+        return $this->findAll();
     }
     
     /**
@@ -457,10 +460,10 @@ class Sqlite {
      * @param array
      * @return object
      */
-    public function find_one( $table = false, $where = array(), $fields = array() ){
+    public function findOne( $table = false, $where = array(), $fields = array() ){
 	
 	if( ! $table )
-	    return $this->row( $this->_command() );
+	    return $this->row( $this->command() );
 	
 	$column = '*';
 	
@@ -481,7 +484,7 @@ class Sqlite {
 	    }
 	}
 	
-	return $this->find_one();
+	return $this->findOne();
 	
     }
     
@@ -492,10 +495,10 @@ class Sqlite {
      * @param string @query
      * @return string|int Depen on it record value.
      */
-    public function find_var( $query = null ){
+    public function findVar( $query = null ){
 	
 	if( is_null($query) )
-	    $query = $this->_command();
+	    $query = $this->command();
 	
         $result = $this->row($query);
         $key = array_keys(get_object_vars($result));
@@ -512,7 +515,7 @@ class Sqlite {
     public function results($query = null, $type = 'object'){
         
 	if( is_null($query) )
-	    $query = $this->_command();
+	    $query = $this->command();
 	
         $result = $this->query($query);
         
@@ -523,10 +526,10 @@ class Sqlite {
             
             if($type == 'object'){
 		
-		if($this->instantiate_class == 'stdClass' )
+		if($this->instantiateClass == 'stdClass' )
 		    $return[] = (object) $row;
 		else 
-		    $return[] = Library_tools::array_to_object($row, $this->instantiate_class, false);
+		    $return[] = Tools::arrayToObject($row, $this->instantiateClass, false);
             }
             else{
                 $return[] = $row;
@@ -545,7 +548,7 @@ class Sqlite {
     public function row($query = null, $type = 'object'){
 	
 	if( is_null($query) )
-	    $query = $this->_command();
+	    $query = $this->command();
 	
 	if( is_null($this->link) )
 	    $this->init();
@@ -556,50 +559,12 @@ class Sqlite {
 	    return false;
         
         if($type == 'object')
-	    if($this->instantiate_class == 'stdClass' )
+	    if($this->instantiateClass == 'stdClass')
 		return (object) $return;
 	    else
-		return Library_tools::array_to_object($return, $this->instantiate_class, false);
+		return Tools::arrayToObject($return, $this->instantiateClass, false);
         else
             return $return;
-    }
-    
-    /**
-     * Get value directly from single field
-     *
-     * @param string @query
-     * @return string|int Depen on it record value.
-     */
-    public function get_var($query = null) {
-        
-	return $this->find_var($query);
-    }
-    
-    /**
-     * Abstraction to get single record
-     *
-     * @param string
-     * @param array Default si null
-     * @param array Default is all
-     * @return object
-     */
-    public function get_row($table, $where = array(), $fields = array()){
-        
-        return $this->find_one( $table, $where, $fields );
-        
-    }
-    
-    /**
-     * Abstraction to get multyple records
-     *
-     * @param string
-     * @param array Default si null
-     * @param array Default is all
-     * @return object
-     */
-    public function get_results($table, $where = array(), $fields = array()){
-        
-	return $this->find_all( $table, $where, $fields );
     }
     
     /**
@@ -624,7 +589,7 @@ class Sqlite {
      *
      * @return int
      */
-    public function insert_id(){
+    public function insertId(){
 	
 	if( is_null($this->link) )
 	    $this->init();
@@ -699,25 +664,14 @@ class Sqlite {
      *
      * @return string
      */
-    private function print_error() {
-    
-        if ( $caller = Library_error::get_caller(2) )
-            $error_str = sprintf('Database error %1$s for query %2$s made by %3$s', $this->last_error, $this->last_query, $caller);
+    private function printError() {
+	
+        if ( $caller = RunException::getErrorCaller(5) )
+            $error_str = sprintf('Database error %1$s for query %2$s made by %3$s', $this->lastError, $this->lastQuery, $caller);
         else
-            $error_str = sprintf('Database error %1$s for query %2$s', $this->last_error, $this->last_query);
-    
-        //write the error to log
-        @error_log($error_str, 0);
-    
-        //Is error output turned on or not..
-        if ( error_reporting() == 0 )
-            return false;
-    
-        $str = htmlspecialchars($this->last_error, ENT_QUOTES);
-        $query = htmlspecialchars($this->last_query, ENT_QUOTES);
-    
-        // If there is an error then take note of it
-        Library_error::database($str.'<br /><b>Query</b>: '.$query.'<br /><b>Backtrace</b>: '.$caller);
+            $error_str = sprintf('Database error %1$s for query %2$s', $this->lastError, $this->lastQuery);
+	
+	RunException::outputError( $error_str );
     }
     
     /**
@@ -741,4 +695,4 @@ class Sqlite {
 	unset($this->link);
     }
     
-} // End Driver_sqlite Class
+}

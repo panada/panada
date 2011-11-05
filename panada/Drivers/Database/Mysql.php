@@ -8,7 +8,8 @@
  * @since	Version 0.1
  */
 namespace Drivers\Database;
-use Resources\Interfaces as Interfaces, Resources\RunException as RunException;
+use Resources\Interfaces as Interfaces,
+Resources\RunException as RunException;
 
 class Mysql implements Interfaces\Database {
     
