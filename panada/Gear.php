@@ -18,8 +18,9 @@ class Gear {
      *
      * @return void
      */
-    public function __construct(){
+    public function __construct($errorReporting = E_ALL){
         
+        error_reporting( $errorReporting );
         spl_autoload_register( array($this, 'loader') );
         set_error_handler( 'Resources\RunException::errorHandlerCallback' );
         

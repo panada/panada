@@ -14,7 +14,7 @@ class Mysql implements Interfaces\Database {
     
     protected $port = 3306;
     protected $column = '*';
-    protected $distinct_ = false;
+    protected $distinct = false;
     protected $tables = array();
     protected $joins = null;
     protected $joinsType = null;
@@ -150,7 +150,7 @@ class Mysql implements Interfaces\Database {
      */
     public function distinct(){
 	
-	$this->distinct_ = true;
+	$this->distinct = true;
 	return $this;
     }
     
@@ -323,9 +323,9 @@ class Mysql implements Interfaces\Database {
         
         $query = 'SELECT ';
 	
-	if($this->distinct_){
+	if($this->distinct){
 	    $query .= 'DISTINCT ';
-	    $this->distinct_ = false;
+	    $this->distinct = false;
 	}
         
         $column = '*';

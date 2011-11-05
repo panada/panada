@@ -13,4 +13,5 @@ define('GEAR', '../panada/');
 
 require_once GEAR.'Gear.php';
 
+// http://www.php.net/error_reporting
 new Gear;
