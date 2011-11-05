@@ -13,5 +13,12 @@ define('GEAR', '../panada/');
 
 require_once GEAR.'Gear.php';
 
-// http://www.php.net/error_reporting
+// To sets which PHP errors are reported just like documented in this page
+// http://php.net/manual/en/function.error-reporting.php
+// You can pass a parameter into the Gear class.
+
+// Turn off all errors reporting - production use.
+// new Gear(0);
+
+// By default all errors will displayed - development use.
 new Gear;
