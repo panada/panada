@@ -155,11 +155,11 @@ class Mongodb extends \Mongo {
     }
     
     /**
-     * Find more the one document
+     * Find more then one document
      *
      * @return mix
      */
-    public function findAll(){
+    public function getAll(){
         
 	$value = $this->collection($this->collection_name)->find( $this->criteria, $this->documents );
 	$this->criteria = $this->documents = array();
@@ -175,7 +175,7 @@ class Mongodb extends \Mongo {
      *
      * @return mix
      */
-    public function findOne_(){
+    public function getOne(){
         
 	$value = $this->collection($this->collection_name)->findOne( $this->criteria, $this->documents );
 	$this->criteria = $this->documents = array();

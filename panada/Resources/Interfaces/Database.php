@@ -28,8 +28,8 @@ interface Database {
     public function rollback();
     public function escape( $string );
     public function query( $sql );
-    public function findAll( $table = false, $where = array(), $fields = array() );
-    public function findOne( $table = false, $where = array(), $fields = array() );
+    public function getAll( $table = false, $where = array(), $fields = array() );
+    public function getOne( $table = false, $where = array(), $fields = array() );
     public function findVar( $query = null );
     public function results( $query, $type = 'object' );
     public function row( $query, $type = 'object' );

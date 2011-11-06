@@ -424,7 +424,7 @@ class Sqlite implements Interfaces\Database {
      * @param array
      * @return object
      */
-    public function findAll( $table = false, $where = array(), $fields = array() ){
+    public function getAll( $table = false, $where = array(), $fields = array() ){
 	
 	if( ! $table )
 	    return $this->results( $this->command() );
@@ -460,7 +460,7 @@ class Sqlite implements Interfaces\Database {
      * @param array
      * @return object
      */
-    public function findOne( $table = false, $where = array(), $fields = array() ){
+    public function getOne( $table = false, $where = array(), $fields = array() ){
 	
 	if( ! $table )
 	    return $this->row( $this->command() );
