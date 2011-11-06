@@ -13,7 +13,8 @@ namespace Resources;
 class Uri {
     
     private $pathUri = array();
-    public $baseUri;
+    public $baseUri, $indexFile = null;
+    static public $cacheObj;
     
     /**
      * Class constructor
@@ -29,11 +30,19 @@ class Uri {
 	    return;
 	}
 	
+	if( array_search(INDEX_FILE, explode('/', $_SERVER['REQUEST_URI'])) !== false )
+	    $this->indexFile = INDEX_FILE . '/';
+	
 	$selfArray      = explode('/', $_SERVER['PHP_SELF']);
 	$selfKey        = array_search(INDEX_FILE, $selfArray);
 	$this->pathUri  = array_slice($selfArray, ($selfKey + 1));
 	$this->baseUri  = ( $this->isHttps() ) ? 'https://':'http://'. $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';  
 	
+	Uri::setCacheObj($this);
+    }
+    
+    public static function setCacheObj($obj){
+	self::$cacheObj = $obj;
     }
 
     /**

@@ -13,15 +13,18 @@ namespace Resources;
 class Controller {
     
     private $childNamespace, $viewCache, $viewFile;
+    public $config = array();
     
     public function __construct(){
         
-        $child = get_class($this);
+        $child      = get_class($this);
+        $this->uri  = Uri::$cacheObj;
         
         $this->childClass = array(
                             'namespaceArray' => explode( '\\', $child),
                             'namespaceString' => $child
                         );
+        
     }
     
     public function __get($class){
@@ -61,8 +64,8 @@ class Controller {
         $panadaFilePath = APP.'views/'.$panadaViewfile;
         
         if( $this->childClass['namespaceArray'][0] == 'Modules' ){
-            $mainConfig = Config::main();
-            $panadaFilePath = $mainConfig['module']['path'].$this->childClass['namespaceArray'][0].'/'.$this->childClass['namespaceArray'][1].'/views/'.$panadaViewfile;
+            $configMain = Config::main();
+            $panadaFilePath = $configMain['module']['path'].$this->childClass['namespaceArray'][0].'/'.$this->childClass['namespaceArray'][1].'/views/'.$panadaViewfile;
         }
         
         try{
@@ -96,5 +99,20 @@ class Controller {
     
     public function outputXML($data, $isReturnValue = false){
         
+    }
+    
+    public function location($location = ''){
+	return $this->uri->baseUri . $this->uri->indexFile . $location;
+    }
+    
+    public function redirect($location = '', $status = 302){
+        
+        $location = ( empty($location) ) ? $this->location() : $location;
+        
+        if ( substr($location,0,4) != 'http' )
+            $location = $this->location() . $location;
+        
+        header('Location:' . $location, true, $status);
+        exit;
     }
 }
