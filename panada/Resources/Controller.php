@@ -70,9 +70,9 @@ class Controller {
         
         try{
             if( ! file_exists($this->viewFile = $panadaFilePath.'.php') )
-                throw new \Resources\RunException('View file in '.$panadaViewFile.' does not exits');
+                throw new RunException('View file in '.$this->viewFile.' does not exits');
         }
-        catch(\Resources\RunException $e){
+        catch(RunException $e){
             $arr = $e->getTrace();
             RunException::outputError($e->getMessage(), $arr[0]['file'], $arr[0]['line']);
         }
