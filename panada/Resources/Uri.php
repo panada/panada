@@ -10,11 +10,10 @@
  */
 namespace Resources;
 
-class Uri {
+final class Uri {
     
     private $pathUri = array();
     public $baseUri, $indexFile = null;
-    static public $cacheObj;
     
     /**
      * Class constructor
@@ -38,11 +37,6 @@ class Uri {
 	$this->pathUri  = array_slice($selfArray, ($selfKey + 1));
 	$this->baseUri  = ( $this->isHttps() ) ? 'https://':'http://'. $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';  
 	
-	Uri::setCacheObj($this);
-    }
-    
-    public static function setCacheObj($obj){
-	self::$cacheObj = $obj;
     }
 
     /**
@@ -171,5 +165,4 @@ class Uri {
 	$uri = ( ! preg_match('/[^a-zA-Z0-9_.-]/', $uri) ) ? true : false;
 	return $uri;
     }
-
 }

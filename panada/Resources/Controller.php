@@ -17,8 +17,7 @@ class Controller {
     
     public function __construct(){
         
-        $child      = get_class($this);
-        $this->uri  = Uri::$cacheObj;
+        $child = get_class($this);
         
         $this->childClass = array(
                             'namespaceArray' => explode( '\\', $child),
