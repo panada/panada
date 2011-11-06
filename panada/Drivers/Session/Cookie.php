@@ -189,33 +189,21 @@ class Cookie {
      *
      * @return void
      */
-    public function destroy(){
+    public function destroy( $setExpireHeader = false ){
+	
+	if( $setExpireHeader ){
+	    header('Expires: Mon, 1 Jul 1998 01:00:00 GMT');
+	    header('Cache-Control: no-store, no-cache, must-revalidate');
+	    header('Cache-Control: post-check=0, pre-check=0', false);
+	    header('Pragma: no-cache');
+	    header('Last-Modified: ' . \gmdate( 'D, j M Y H:i:s' ) . ' GMT' );
+	}
         
         $this->curentValues = array();
         $this->curentValues['_d'] = '.';
-        
-        $this->setSessionValues();
-    }
-    
-    /**
-     * Clear the values and remove the cookie.
-     *
-     * @return void
-     */
-    public function clearAll(){
-        
-        header('Expires: Mon, 1 Jul 1998 01:00:00 GMT');
-        header('Cache-Control: no-store, no-cache, must-revalidate');
-        header('Cache-Control: post-check=0, pre-check=0', false);
-        header('Pragma: no-cache');
-        header('Last-Modified: ' . gmdate( 'D, j M Y H:i:s' ) . ' GMT' );
-        
-        $this->curentValues = array();
-        
-        $this->sessionCookieExpire = strtotime('-10 years');
+	$this->sessionCookieExpire = strtotime('-10 years');
         $this->setCookie($this->sessionName);
         $this->setCookie($this->cookieChekSumName);
-        
         $this->setSessionValues();
     }
     

@@ -30,7 +30,7 @@ interface Database {
     public function query( $sql );
     public function getAll( $table = false, $where = array(), $fields = array() );
     public function getOne( $table = false, $where = array(), $fields = array() );
-    public function findVar( $query = null );
+    public function getVar( $query = null );
     public function results( $query, $type = 'object' );
     public function row( $query, $type = 'object' );
     public function insert( $table, $data = array() );

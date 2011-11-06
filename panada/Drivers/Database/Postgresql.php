@@ -509,7 +509,7 @@ class Postgresql implements Interfaces\Database {
      * @param string @query
      * @return string|int Depen on it record value.
      */
-    public function findVar( $query = null ){
+    public function getVar( $query = null ){
 	
 	if( is_null($query) )
 	    $query = $this->command();
