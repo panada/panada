@@ -1,0 +1,475 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <title>Panada PHP Framework 0.3.1 Documentation - Database Abstraction</title>
+    <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen" />
+</head>
+<body>
+    <div class="header">
+    <span class="logo"><a target="_blank" href="http://panadaframework.com">Panada</a></span>
+        <div class="menu">
+            <form action="http://www.google.com/search" method="get">
+	    <input type="hidden" value="panadaframework.com/documentation/" id="as_sitesearch" name="as_sitesearch">
+            <input class="search-input" type="text" name="q" /><button class="search-button" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="subheader">
+        <h1>Panada Framework 0.3.1 Documentation</h1>
+    </div>
+    
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="navigation">
+                <ul>
+                    <li>
+                        <a href="../index.html">Umum</a>
+                        <ul>
+                            <li><a href="../../index.html#about">Tentang Panada</a></li>
+                            <li><a href="../../index.html#feature">Keunggulan (<em>Feature</em>)</a></li>
+                            <li><a href="../../index.html#license">Lisensi</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="../../config.html">Konfigurasi</a>
+                        <ul>
+                            <li><a href="../../config.html#general">Dasar</a></li>
+                            <li><a href="../../config.html#additional_config">Tambahan</a></li>
+                            <li><a href="../../config.html#webserver">Webserver</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Referensi
+                        <ul>
+                            <li><a href="../../references/controller.html">Controller</a></li>
+                            <li><a href="../../references/model.html">Model</a></li>
+                            <li><a href="../../references/view.html">View</a></li>
+                            <li><a href="../../references/library.html">Library</a></li>
+                            <li><a href="../../references/autoloader.html">Auto Loader</a></li>
+                            <li><a href="../../references/global_method.html">Global Method dan Properties</a></li>
+                        </ul>
+                            
+                    </li>
+                    <li>
+                        <a href="../index.html">Paket Library</a>
+                        <ul>
+                            <li>
+				<a href="index.html">Database</a>
+				<ul>
+				    <li><a href="index.html">Configuration</a></li>
+                                    <li><a href="abstraction.html">Abstraction</a></li>
+                                        <ul>
+                                            <li><a href="#select">Select</a></li>
+					    <li><a href="#distinct">Distinct</a></li>
+                                            <li><a href="#from">From</a></li>
+					    <li><a href="#join">Join</a></li>
+                                            <li><a href="#where">Where</a></li>
+					    <li><a href="#group_by">Group By</a></li>
+					    <li><a href="#having">Having</a></li>
+                                            <li><a href="#order_by">Order By</a></li>
+                                            <li><a href="#limit">Limit</a></li>
+					    <li><a href="#command">Command</a></li>
+                                            <li><a href="#Insert_id">Insert Id</a></li>
+                                            <li><a href="#get_row">Get Row</a></li>
+                                            <li><a href="#get_results">Get Results</a></li>
+                                            <li><a href="#insert">Insert</a></li>
+                                            <li><a href="#update">Update</a></li>
+                                            <li><a href="#delete">Delete</a></li>
+                                        </ul>
+				    <li><a href="activerecord.html">Active Record</a></li>
+                                    <li><a href="manual_query.html">Manual Query</a></li>
+				</ul>
+			    </li>
+                            <li><a href="../session.html">Session</a></li>
+                            <li><a href="../pagination.html">Pagination</a></li>
+                            <li><a href="../email.html">Email</a></li>
+                            <li><a href="../encryption.html">Encryption</a></li>
+                            <li><a href="../upload.html">Upload</a></li>
+                            <li><a href="../image.html">Image</a></li>
+                            <li><a href="../request.html">Request</a></li>
+                            <li><a href="../rest.html">RESTfull</a></li>
+			    <li><a href="../memcached.html">Memcached</a></li>
+                            <li><a href="../mongodb.html">Mongodb</a></li>
+                            <li><a href="../apc.html">APC</a></li>
+			    <li><a href="../tools.html">Tools</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../../contribution.html">Kontribusi</a></li>
+                    <li><a href="../../credit.html">Credit</a></li>
+                </ul>
+	    </div>
+            
+        </div>
+        
+        <div class="content">
+            <div class="lead">
+                <h2>Abstraction</h2>
+                <p>Databse Abstraction membantu Anda untuk membuat query database secara dinamas dengan lebih cepat. Sebagian besar penggunaan
+                method diakses dengan cara <strong>Method Chaining</strong>.</p>
+            </div>
+	    
+	    <div class="main">
+		<h3 id="select">Select</h3>
+		<p>Untuk mendapatkan data dari semua kolom tabel:</p>
+		<code>
+		    $data = $this->db-><strong>select()</strong>->from('users')->results();
+		</code>
+		
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    <strong>SELECT *</strong> FROM users
+		</code>
+		<p>Untuk mendapatkan beberapa kolom dari tabel:</p>
+		<code>
+		    $data = $this->db-><strong>select('id', 'name')</strong>->from('users')->results();<br />
+		    // atau bisa juga<br />
+		    $data = $this->db-><strong>select( array('id', 'name') )</strong>->from('users')->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    <strong>SELECT id, name</strong> FROM users
+		</code>
+                <p>Fungsi SQL juga bisa diisikan pada argument <strong>select()</strong>:</p>
+                <code>
+		    $data = $this->db-><strong>select('COUNT(*)')</strong>->from('users')->get_var();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    <strong>SELECT COUNT(*)</strong> FROM users
+		</code>
+		
+	    </div>
+	    
+	    <div class="main">
+		<h3 id="distinct">Distinct</h3>
+                <p>Berikut adalah contoh penggunaan statetment <strong>distinct</strong>:</p>
+                <code>
+		    $data = $this->db->select('name')-><strong>distinct()</strong>->from('users')->limit(10)->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT <strong>DISTINCT</strong> name FROM users LIMIT 10
+		</code>
+            </div>
+            
+            <div class="main">
+		<h3 id="from">From</h3>
+                <p>Method <strong>from()</strong> dari contoh-contoh yang ada merepresentasikan dari nama tabel.
+                <code>
+		    $data = $this->db->select()-><strong>from('users')</strong>->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT * FROM <strong>users</strong>
+		</code>
+		<p>Nilai argument bisa berupa <strong>string</strong> ataupun <strong>array</strong>.</p>
+		<code>
+		    $data = $this->db->select()-><strong>from('users', 'posts')</strong>->where('users.id', '=', 'posts.post_author')->results();<br />
+		    // atau<br />
+		    $data = $this->db->select()-><strong>from( array('users', 'posts') )</strong>->where('users.id', '=', 'posts.post_author')->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT * <strong>FROM users, posts</strong> WHERE users.id = posts.post_author
+		</code>
+            </div>
+	    
+	    <div class="main">
+		<h3 id="join">Join</h3>
+		<p>Untuk melakukan query dari beberapa tabel, method <strong>join()</strong> bisa digunakan. Penggunaan method ini diikuti penggunaan method <strong>on()</strong>.
+		<code>
+		    $data = $this->db->select('users.name', 'posts.post')->from('users')-><strong>join('posts')->on('users.id', '=', 'posts.post_author')</strong>;
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT users.name, posts.post FROM users <strong>JOIN posts ON (users.id = posts.post_author)</strong>
+		</code>
+		<p>Anda juga bisa menambahkan tipe join seperti <strong>LEFT</strong>, <strong>RIGHT</strong> dan <strong>INNER</strong> pada argument ke dua di dalam method <strong>join()</strong>.
+		<code>
+		    $data = $this->db->select('users.name', 'posts.post')->from('users')-><strong>join('posts', 'RIGHT')->on('users.id', '=', 'posts.post_author')</strong>;
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT users.name, posts.post FROM users <strong>RIGHT JOIN posts ON (users.id = posts.post_author)</strong>
+		</code>
+	    </div>
+            
+	    <div class="main">
+		<h3 id="where">Where</h3>
+		<p>Untuk membatasi hasil pencarian Anda bisa menggunakan method <strong>where()</strong>.
+		
+                <code>
+                    <b>object</b> where( string $column, string $operator, string $value, mix $seperator = false);
+                </code>
+                
+                <h4>Parameter</h4>
+                <table>
+		    <thead>
+			<tr>
+			    <th scope="col">Variable</th>
+			    <th scope="col">Tipe Data</th>
+			    <th scope="col">Keterangan</th>
+			</tr>
+		    </thead>
+		<tbody>
+		    <tr>
+			<td>$column</td>
+			<td>string</td>
+			<td>Nama kolom yang menjadi kriteria penyeleksian.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$operator</td>
+			<td>string</td>
+			<td>Operator SQL: IN, BETWEEN, >, =<, !=</td>
+		    </tr>
+                    <tr>
+			<td>$value</td>
+			<td>string | array</td>
+			<td>Nilai yang akan dibandingkan dengan kolom.</td>
+		    </tr>
+		    <tr class="odd">
+			<td>$seperator</td>
+			<td>mix</td>
+			<td>Operator pemisah antara kondisi sebelum dan kondisi sesudah. Contoh: OR, AND</td>
+		    </tr>
+                    
+		</tbody>
+		</table>
+		
+		<p>Berikut contoh penggunaan method ini:</p>
+		<code>
+		    $data = $this->db->select()->from('users')-><strong>where('id', '=', 1)</strong>->row(); 
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT * FROM users WHERE id = 1
+		</code>
+		<p>Jika penyeleksian data lebih dari satu kondisi:</p>
+		<code>
+		    $data = $this->db->select()->from('users')-><strong>where('id', '=', 1, 'OR')</strong>-><strong>where('email', '=', 'kandar@kandar.com')</strong>->row();
+		</code>
+		<p>Penggunaan operator <strong>IN</strong>:</p>
+		<code>
+		    $data = $this->db->select()->from('users')-><strong>where('id', 'IN', array(1,4,7))</strong>->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT * FROM users WHERE id IN 1,4,7
+		</code>
+		<p>Penggunaan operator <strong>BETWEEN</strong>:</p>
+		<code>
+		    $data = $this->db->select()->from('users')-><strong>where('id', 'BETWEEN', array(1,7))</strong>->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT * FROM users WHERE id BETWEEN 1 AND 7
+		</code>
+		
+	    </div>
+	    
+	    <div class="main">
+		<h3 id="group_by">Group By</h3>
+                <p>Penggunaan method <strong>group_by()</strong>:</p>
+                <code>
+		    $data = $this->db->select('id', 'name')->from('users')-><strong>group_by('name', 'id')</strong>->limit(10)->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT id, name FROM users <strong>GROUP BY</strong> name, id LIMIT 10
+		</code>
+            </div>
+	    
+	    <div class="main">
+		<h3 id="having">Having</h3>
+		<p>Berikut adalah contoh cara menggunakan method <strong>having()</strong>:</p>
+		<code>
+		    $data = $this->db->select('id', 'post_title')->from('posts')->group_by('post_author','id', 'post_title')-><strong>having('COUNT(id)', '>=', 2)</strong>->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT * FROM posts GROUP BY post_author <strong>HAVING COUNT(id) >= 2</strong>
+		</code>
+	    </div>
+            
+            <div class="main">
+		<h3 id="order_by">Order By</h3>
+                <p>Untuk mengurutkan hasil pencarian data, Anda bisa menggunakan method <strong>order_by()</strong></p>
+                <code>
+		    $data = $this->db->select()->from('users')-><strong>order_by('id')</strong>->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT * FROM users <strong>ORDER BY</strong> id
+		</code>
+                <p>Cara yang lain:</p>
+                <code>
+		    $data = $this->db->select()->from('users')-><strong>order_by('id', 'DESC')</strong>->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT * FROM users <strong>ORDER BY</strong> id DESC
+		</code>
+                <p>Penggunaan dengan method <strong>where()</strong>:</p>
+                 <code>
+		    $data = $this->db->select()->from('users')->where('id', '>', 1)-><strong>order_by('id', 'DESC')</strong>->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT * FROM users WHERE id > 1 <strong>ORDER BY</strong> id DESC
+		</code>
+            </div>
+            
+            <div class="main">
+		<h3 id="limit">Limit</h3>
+                <p>Argument pertama digunakan untuk menentukan jumlah limit. Berikut adalah cara penggunaan method <strong>limit()</strong>:</p>
+                <code>
+		    $data = $this->db->select()->from('users')->where('id', '>', 1)->order_by('id', 'DESC')-><strong>limit(3)</strong>->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT * FROM users WHERE id > 1 ORDER BY id DESC <strong>LIMIT 3</strong>
+		</code>
+                <p>Sedangkan argument ke dua digunakan untuk menentukan nilai offset:</p>
+                <code>
+		    $data = $this->db->select()->from('users')->where('id', '>', 1)->order_by('id', 'DESC')-><strong>limit(6,2)</strong>->results();
+		</code>
+		<p>Method ini menghasilkan output data SQL:</p>
+		<code>
+		    SELECT * FROM users WHERE id > 1 ORDER BY id DESC <strong>LIMIT 6 OFFSET 2</strong>
+		</code>
+            </div>
+	    
+	    <div class="main">
+		<h3 id="command">Command</h3>
+		<p>Jika Anda ingin melihat output SQL dari <em>method chain</em> yang sudah dibuat, silahkan gunakan method <strong>_command()</strong>.</p>
+		<code>
+		    $sql = $this->db->select()->from('users')->group_by('name')->limit(10)->_command();<br />
+		    die($sql);
+		</code>
+	    </div>
+	    
+	    <div class="main">
+                <h3 id="Insert_id">Insert Id</h3>
+		
+		<p>Untuk mendapatkan id dari proses insert terakhir, bisa menggunakan properties <strong>$this->db->insert_id</strong>.</p>
+		<code>
+			$this->db->query("INSERT INTO table_name (field_1, field_2) VALUES ('budi', 'budi@budi.com')");
+			<br /><br />echo $this->db->insert_id;
+		</code>
+	    </div>
+	    
+	    
+	    <div class="main">
+                <h3 id="get_row">Get Row</h3>
+		
+		<p>Untuk mendapatkan single record menggunakan method:</p>
+		<code>
+			get_row( table_name, where_argument, fields );
+		</code>
+		<p>Keterangan Method ini:</p>
+		<p><strong>table_name</strong> adalah string nama tabel yang akan diquery.</p>
+		<p><strong>where_argument</strong> adalah array dari argument "WHERE". Contoh: WHERE id = '1' AND status = '0' maka array-nya adalah array('id' => '1', 'status' => '0') Nilai default parameter ini adalah null atau tidak ada argument "WHERE"</p>
+		<p><strong>fields</strong> adalah array dari filed yang akan didapatkan. Nilai default argument ini adalah all (*). Untuk query seperti:</p>
+		<code>
+			SELECT id, name, status FROM ....
+		</code>
+		<p>Nilai array-nya adalah:</p>
+		<code>
+			array('id', 'name', 'status')
+		</code>
+		<p>Maka untuk query seperti ini:</p>
+		<code>
+			"SELECT id, name, status FROM table_name WHERE id = '1' AND status = '0'"
+		</code>
+		<p>Penggunaan method get_row-nya adalah:</p>
+		
+<textarea rows="4" cols="50" class="textarea">			
+$data = $this->db->get_row('table_name', array('id' => 1, 'status' => '0'), array('id', 'name', 'status') );
+echo $data->email;
+</textarea>
+	    </div>
+	    
+	    <div class="main">
+                <h3 id="get_results">Get Results</h3>
+		
+		<p>Untuk query seperti:</p>
+		<code>
+			"SELECT id, name, email FROM table_name WHERE status = '1'"
+		</code>
+		<p>Maka penggunaan Method get_results-nya adalah:</p>
+<textarea rows="8" cols="50" class="textarea">
+$data = $this->db->get_results('table_name', array('id' => 1, 'email' => 'budi@budi.com'), array('field_1', 'field_2'));
+
+foreach ($data as $data) {
+    
+    echo $data->field_1;
+    echo $data->field_2;
+}
+</textarea>
+	    </div>
+	    
+	    <div class="main">
+                <h3 id="insert">Insert</h3>
+		
+		<p>Untuk menambahkan data baru dengan cara:</p>
+		<code>
+			$query = $this->db->insert('table_name', array('name' => 'jhon', 'email' => 'budi@budi.com'));
+		</code>
+		<p>Method ini adalah abstraksi dari SQL:</p>
+		<code>
+			INSERT INTO table_name (name, email) VALUES ('jhon', 'budi@budi.com')
+		</code>
+	    </div>
+	    
+	    <div class="main">
+                <h3 id="update">Update</h3>
+		<p>Untuk meng-update record dengan cara:</p>
+		<code>
+			$query = $this->db->update('table_name', array('name' => 'jhon gmail', 'email' => 'jhon@gmail.com'), array('id' => 6));
+		</code>
+		
+		<p>Method ini adalah abstraksi dari SQL:</p>
+		<code>
+			UPDATE table_name SET name = 'budi', email = 'budi@budi.com' WHERE id = 6
+		</code>
+		
+	    </div>
+	    <div class="main">
+		<h3 id="delete">Delete</h3>
+		<p>Untuk menghapus record dengan cara:</p>
+		<code>
+			$query = $this->db->delete('table_name', array('id' => '6'));
+		</code>
+		
+		<p>Method ini adalah abstraksi dari SQL:</p>
+		<code>
+			DELETE FROM table_name WHERE id = 6
+		</code>
+	    </div>
+	    
+            <div id="discussion" class="main">
+		<h3>Diskusi</h3>
+		<div id="disqus_thread"></div>
+	    </div>
+        
+        </div>
+        
+    </div>
+          
+    <div class="footer">
+        <span class="right">All Rights Reserved.</span>
+    </div>
+    <script type="text/javascript">
+	var disqus_shortname = 'panada';
+	var disqus_url = 'http://panadaframework.com/documentation/id/classes/database/abstraction.html';
+	var disqus_identifier = disqus_url;
+	(function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <title>Panada PHP Framework 0.3.1 Documentation - MongoDB Library</title>
+    <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen" />
+</head>
+<body>
+    <div class="header">
+	<div class="logo">
+	    <a target="_blank" href="http://panadaframework.com/"><img src="../../../images/logo.png" height="21" border="0" /></a>
+	</div>
+        <div class="menu">
+            <form action="http://www.google.com/search" method="get">
+	    <input type="hidden" value="panadaframework.com/documentation/" id="as_sitesearch" name="as_sitesearch">
+            <input class="search-input" type="text" name="q" /><button class="search-button" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="subheader">
+        <h1>Panada Framework 0.3.1 Documentation</h1>
+    </div>
+    
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="navigation">
+                <ul>
+                    <li>
+                        <a href="../../index.html">Umum</a>
+                        <ul>
+                            <li><a href="../../index.html#about">Tentang Panada</a></li>
+                            <li><a href="../../index.html#feature">Keunggulan (<em>Feature</em>)</a></li>
+                            <li><a href="../../index.html#license">Lisensi</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="../../config.html">Konfigurasi</a>
+                        <ul>
+                            <li><a href="../../config.html#general">Dasar</a></li>
+                            <li><a href="../../config.html#additional_config">Tambahan</a></li>
+                            <li><a href="../../config.html#webserver">Webserver</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Referensi
+                        <ul>
+                            <li><a href="../../references/controller.html">Controller</a></li>
+                            <li><a href="../../references/model.html">Model</a></li>
+                            <li><a href="../../references/view.html">View</a></li>
+                            <li><a href="../../references/library.html">Library</a></li>
+                            <li><a href="../../references/autoloader.html">Auto Loader</a></li>
+                            <li><a href="../../references/global_method.html">Global Method dan Properties</a></li>
+			    <li><a href="../../references/module.html">Module</a></li>
+			    <li><a href="../../references/upgrade.html">Upgrade</a></li>
+                        </ul>
+                    </li>
+                    </li>
+                    <li>
+                        <a href="../index.html">Paket Library</a>
+                        <ul>
+                            <li>
+				<a href="index.html">Database</a>
+				<ul>
+				    
+                                    <li><a href="query_builder.html">Query Builder</a></li>
+				    <li><a href="activerecord.html">Active Record</a></li>
+                                    <li><a href="manual_query.html">Manual Query</a></li>
+				    <li><a href="mongodb.html">MongoDB</a></li>
+				</ul>
+			    </li>
+			    <li><a href="../cache/index.html">Cache</a></li>
+                            <li><a href="../session.html">Session</a></li>
+                            <li><a href="../pagination.html">Pagination</a></li>
+                            <li><a href="../email.html">Email</a></li>
+                            <li><a href="../encryption.html">Encryption</a></li>
+                            <li><a href="../upload.html">Upload</a></li>
+                            <li><a href="../image.html">Image</a></li>
+                            <li><a href="../request.html">Request</a></li>
+                            <li><a href="../rest.html">RESTfull</a></li>
+			    <li><a href="../tools.html">Tools</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../contribution.html">Kontribusi</a></li>
+                    <li><a href="../credit.html">Credit</a></li>
+                </ul>
+	    </div>
+            
+        </div>
+        
+        <div class="content">
+            <div class="lead">
+                <h2>MongoDB</h2>
+                <p>MongoDB adalah scalable, high-performance, open source database NoSQL yang berorientasikan dokumen. Dengan MongoDB memungkinkan penyimpanan data dilakukan tanpa perlu diawali dengan pembuatan skema database. Setiap data disimpan berformat herarki, di mana setiap record bisa memiliki herarki yang berbeda dengan record lainnya dalam satu collection/tabel yang sama.</p>
+                <p>Lebih lanjut mengenai MongoDB bisa dilihat di <a href="http://www.mongodb.org" target="_blank">http://www.mongodb.org</a>.</p>
+                <p><strong>Untuk menggunakan Library ini, pastikan PHP Anda telah terinstall ekstensi Mongo</strong>.</p>
+                <p>Driver MongoDB Panada merupakan inheritance dari class Mongo yang telah tersedia secara natif oleh ekstensi Mongo. Hal ini berarti, semua resources yang ada pada class Mongo, bisa juga langsung digunakan pada Driver MongoDB.</p>
+                <p>Di bawah adalah beberapa contoh dari method-method yang paling sering digunakan.</p>
+                <p>Informasi lebih lanjut mengenai MongoDB API's silahkan lihat <a target="_blank" href="http://www.mongodb.org/display/DOCS/Tutorial">http://www.mongodb.org/display/DOCS/Tutorial</a></p>
+            </div>
+            
+            <div class="main">
+                <h3>Konfigurasi</h3>
+		
+                <p>Konfigurasi dilakukan di file <strong>apps/config.php</strong></p>
+                <p>Berikut adalah contohnya:</p>
+<textarea rows="10" cols="50" class="textarea">
+$CONFIG['db']['default']['driver']      = 'mongodb';
+$CONFIG['db']['default']['host']        = 'localhost'; 
+$CONFIG['db']['default']['user']        = ''; 
+$CONFIG['db']['default']['password']    = ''; 
+$CONFIG['db']['default']['database']    = 'my_database';
+$CONFIG['db']['default']['charset']     = '';
+$CONFIG['db']['default']['collate']     = '';
+$CONFIG['db']['default']['persistent']  = false;
+$CONFIG['db']['default']['options']     = array();
+</textarea>
+                <p>Jika ingin menambahkan opsi tambahan pada connection option, bisa dilakukan pada bagian <b>$CONFIG['db']['default']['options']</b></p>
+                <p>Lebih lanjut mengenai connection option, silahkan lihat di <a href="http://www.php.net/manual/en/mongo.construct.php" target="_blank">http://www.php.net/manual/en/mongo.construct.php</a></p>
+                <p>Berikut adalah contoh connection option replica set dengan setting auto-connect false:</p>
+                <code>
+                    $CONFIG['db']['default']['options'] = array('replicaSet' => true, 'connect' => false);
+                </code>
+		<p>Jika koneksi ke server MongoDB lebih dari satu (misalnya pada penggunaan <strong>Replica Set</strong>), berikut adalah contohnya:</p>
+		<code>
+                    $CONFIG['db']['default']['host'] = 'localhost, 192.168.10.20, 192.168.10.21';
+                </code>
+            </div>
+            
+            <div class="main">
+                <h3 id="init">Inisialisasi</h3>
+                <p>Jika MongoDB digunakan sebagai database default, inisialisasinya sama seperti database yang lainnya.</p>
+                <code>
+                    $this->db = new Library_db();
+                </code>
+		<p>Atau jika MongoDB terletak pada <a href="index.html#config">setting koneksi</a> dengan nama koneksi <strong>mongodb</strong>, maka contoh inisalisasinya:</p>
+		<code>
+                    $this->mongodb = new Library_db('mongodb');
+                </code>
+		
+            </div>
+            
+            <div class="main">
+                <h3 id="connect">Connect</h3>
+                <p>Secara default, ketika Library MongoDB maka koneksi ke Mongo server akan dibuat. Namun feature ini bisa dinonaktifkan dengan menambahkan parameter <b>array('connect' => false); </b> seperti contoh di atas.</p>
+                <p>Jika setting ini dilakukan, maka setiap akan melakukan request data perlu diinisialisasi konkeksi baru, dengan method:</p>
+                <code>
+                    $this->mongodb-><b>connect</b>();
+                </code>
+            </div>
+            
+            <div class="main">
+                <h3 id="collection">Collection</h3>
+                <p>Untuk menentukan collection yang akan dipilih, gunakan method:</p>
+                <code>
+                    $this->mongodb-><b>collection</b>(string $collection);
+                </code>
+                <p>Sebagai contoh, untuk mendapatkan collection <b>users</b>, penggunaannya:</p>
+                <code>
+                    $this->mongodb->collection('users');
+                </code>
+            </div>
+	    
+	    <div class="main">
+                <h3 id="insert">Insert</h3>
+                <p>Untuk menambahkan data baru, gunakan method:</p>
+                <code>
+                    $this->mongodb->collection('collection_name')-><b>insert</b>( array | object $data );
+                </code>
+                <p><b>$data</b> bisa berupa array atau object.</p>
+                <p>Lebih lanjut mengenai insert di MongoDB, lihat di <a target="_blank" href="http://www.php.net/manual/en/mongo.writes.php">http://www.php.net/manual/en/mongo.writes.php</a> dan <a target="_blank" href="http://www.mongodb.org/display/DOCS/Inserting">http://www.mongodb.org/display/DOCS/Inserting</a></p>
+            </div>
+            
+            <div class="main">
+                <h3 id="find">Find</h3>
+                <p>Untuk mendapatkan data dengan jumlah lebih dari satu, gunakan method:</p>
+                <code>
+                    $this->mongodb->collection('collection_name')-><b>find</b>( array $criteria = array() );
+                </code>
+                
+                <p><b>$criteria</b> adalah item array untuk melakukan filter terhadap data yang ingin didapatkan.</p>
+		<p>Contoh penggunaan untuk "dapatkan user dengan id kurang dari atau sama dengan 20 dari collection/tabel users":</p>
+                <code>
+                    $criteria = array('id' => array('$lte' => 20) );<br />
+                    $cursor = $this->mongodb->collection('users')->find($criteria);
+                </code>
+                <p>Lebih lanjut mengenai query dan kriteria di MongoDB, lihat di <a target="_blank" href="http://www.mongodb.org/display/DOCS/Querying">http://www.mongodb.org/display/DOCS/Querying</a>
+            </div>
+	    
+	    <div class="main">
+                <h3 id="cursor_results">Cursor_results</h3>
+                <p>Secara default, output data yang diberikan oleh Mongo berformat array. Untuk menampilkan data yang diambil dari method <b>find</b> dengan format object, Panada menyediakan method <b>cursor_results</b>:</p>
+                <code>
+                    $cursor = $this->mongodb->collection('users')->find()->limit(3);<br />
+		    $data = $this->mongodb-><b>cursor_results</b>($cursor);
+                </code>
+                
+            </div>
+	    
+	    <div class="main">
+                <h3 id="findone">FindOne</h3>
+                <p>Sedangkan untuk mendapatkan data dengan jumlah satu, gunakan method:</p>
+                <code>
+                    $this->mongodb->collection('collection_name')-><b>findOne</b>( array $criteria = array() );
+                </code>
+                
+                <p>Contoh penggunaan untuk "dapatkan user dengan id 20 dari collection/tabel users":</p>
+                <code>
+                    $criteria = array('id' => (int) 20 );<br />
+                    $value = $this->mongodb->collection('users')->findOne($criteria);
+                </code>
+                
+            </div>
+            
+            <div class="main">
+                <h3 id="update">Update</h3>
+                <p>Untuk memperbaharui data gunakan method:</p>
+                <code>
+                    $this->mongodb->collection('collection_name')-><b>update</b>( array $criteria = array(), array('$set' => $data) );
+                </code>
+                <p>Informasi mengenai API update, silahkan lihat <a target="_blank" href="http://www.mongodb.org/display/DOCS/Updating">http://www.mongodb.org/display/DOCS/Updating</a></p>
+            </div>
+            
+            <div class="main">
+                <h3 id="remove">Remove</h3>
+                <p>Untuk penghapusan data, gunakan method:</p>
+                <code>
+                    $this->mongodb->collection('collection_name')-><b>remove</b>( array $criteria = array() );
+                </code>
+                <p>Informasi mengenai API remove, silahkan lihat <a target="_blank" href="http://www.mongodb.org/display/DOCS/Removing">http://www.mongodb.org/display/DOCS/Removing</a></p>
+            </div>
+	    
+	    <div class="main">
+		<h3 id="contoh">Contoh</h3>
+		<textarea rows="121" cols="50" class="textarea">
+&lt;?php
+
+class Model {
+    
+    public function __construct(){
+        
+        parent::__construct();
+        $this->mongodb = new Library_mongodb();
+    }
+    
+    public function insert_user(){
+	
+	// Insert new 4 records
+	$my_data = array(
+	    array(
+		'email' => 'jhon@domain.co.id',
+		'name' => 'Jhon Smith',
+		'city' => 'New York'
+	    ),
+	    array(
+		'email' => 'mark@foo.com',
+		'name' => 'Mark W',
+		'city' => ''
+	    ),
+	    array(
+		'email' => 'rossi@rossi.com',
+		'name' => 'V Rossi',
+		'country' => 'Italy'
+	    ),
+	    array(
+		'email' => 'simon@googlegmail.com',
+		'name' => 'Simon C',
+		'country' => 'Italy'
+	    )
+	);
+	
+	$collection = $this->mongodb->collection('users');
+	foreach($my_data as $data){
+	    $collection->insert($data);
+	}
+    }
+    
+    public function get_users(){
+	
+	$cursor = $this->mongodb->collection('users')->find()->limit(3);
+        
+	foreach ($cursor as $value){
+	    
+            print_r($value);
+	}
+	
+	/*
+	Output:
+	Array ( [_id] => MongoId Object ( ) [email] => jhon@domain.co.id [name] => Jhon Smith [city] => New York ) Array ( [_id] => MongoId Object ( ) [email] => mark@foo.com [name] => Mark W [city] => ) Array ( [_id] => MongoId Object ( ) [email] => rossi@rossi.com [name] => V Rossi [country] => Italy )
+	*/
+	
+	// Wrap results from mongo output into object
+	$obj_data = $this->mongodb->cursor_results($cursor);
+	
+	print_r($obj_data);
+	
+	/*
+	Output:
+	Array ( [0] => stdClass Object ( [_id] => MongoId Object ( ) [email] => jhon@domain.co.id [name] => Jhon Smith [city] => New York ) [1] => stdClass Object ( [_id] => MongoId Object ( ) [email] => mark@foo.com [name] => Mark W [city] => ) [2] => stdClass Object ( [_id] => MongoId Object ( ) [email] => rossi@rossi.com [name] => V Rossi [country] => Italy ) ) 
+	*/
+    }
+    
+    public function get_user(){
+	
+	$criteria = array('email' => 'rossi@rossi.com');
+	
+	$user = $this->mongodb->collection('users')->findOne($criteria);
+	print_r($user);
+	
+	/*
+	Output:
+	Array ( [_id] => MongoId Object ( ) [email] => rossi@rossi.com [name] => V Rossi [country] => Italy )
+	*/
+    }
+    
+    public function update_user(){
+	
+	$criteria = array('email' => 'jhon@domain.co.id');
+	$data = array('name' => 'Jhon Doo');
+	
+	$collection = $this->mongodb->collection('users');
+	
+	$collection->update($criteria, array('$set' => $data) );
+	
+	$user = $collection->findOne($criteria);
+	print_r($user);
+	
+	/*
+	Output:
+	Array ( [_id] => MongoId Object ( ) [city] => New York [email] => jhon@domain.co.id [name] => Jhon Doo ) 
+	*/
+    }
+    
+    public function remove_user(){
+	
+	$criteria = array('email' => 'mark@foo.com');
+	
+	$collection = $this->mongodb->collection('users');
+	
+	$collection->remove( $criteria );
+	
+	$user = $collection->findOne($criteria);
+	var_dump($user);
+	
+	/*
+	Output:
+	NULL
+	*/
+    }
+
+}
+</textarea>
+	    </div>
+	    <div id="discussion" class="main">
+		<h3>Diskusi</h3>
+		<div id="disqus_thread"></div>
+	    </div>
+	    
+        </div>
+        
+    </div>
+          
+    <div class="footer">
+        <span class="right">All Rights Reserved.</span>
+    </div>
+    <script type="text/javascript">
+	var disqus_shortname = 'panada';
+	var disqus_url = 'http://panadaframework.com/documentation/id/classes/database/mongodb.html';
+	var disqus_identifier = disqus_url;
+	(function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>

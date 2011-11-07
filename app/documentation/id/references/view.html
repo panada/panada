@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <title>Panada PHP Framework 0.3.1 Documentation - View</title>
+    <link rel="stylesheet" href="../../style.css" type="text/css" media="screen" />
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+	    <a target="_blank" href="http://panadaframework.com/"><img src="../../images/logo.png" height="21" border="0" /></a>
+	</div>
+        <div class="menu">
+            <form action="http://www.google.com/search" method="get">
+	    <input type="hidden" value="panadaframework.com/documentation/" id="as_sitesearch" name="as_sitesearch">
+            <input class="search-input" type="text" name="q" /><button class="search-button" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="subheader">
+        <h1>Panada Framework 0.3.1 Documentation</h1>
+    </div>
+    
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="navigation">
+                <ul>
+                    <li>
+                        <a href="../index.html">Umum</a>
+                        <ul>
+                            <li><a href="../index.html#about">Tentang Panada</a></li>
+                            <li><a href="../index.html#feature">Keunggulan (<em>Feature</em>)</a></li>
+                            <li><a href="../index.html#license">Lisensi</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="../config.html">Konfigurasi</a>
+                        <ul>
+                            <li><a href="../config.html#general">Dasar</a></li>
+                            <li><a href="../config.html#additional_config">Tambahan</a></li>
+                            <li><a href="../config.html#webserver">Webserver</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Referensi
+                        <ul>
+                            <li><a href="controller.html">Controller</a></li>
+                            <li><a href="model.html">Model</a></li>
+                            <li class="active"><a href="view.html">View</a></li>
+                            <li><a href="library.html">Library</a></li>
+                            <li><a href="autoloader.html">Auto Loader</a></li>
+                            <li><a href="global_method.html">Global Method dan Properties</a></li>
+			    <li><a href="module.html">Module</a></li>
+			    <li><a href="upgrade.html">Upgrade</a></li>
+                        </ul>
+                            
+                    </li>
+                    <li>
+                        <a href="../classes/index.html">Paket Library</a>
+                        <ul>
+                            <li><a href="../classes/database/index.html">Database</a></li>
+                            <li><a href="../classes/cache/index.html">Cache</a></li>
+                            <li><a href="../classes/session.html">Session</a></li>
+                            <li><a href="../classes/pagination.html">Pagination</a></li>
+                            <li><a href="../classes/email.html">Email</a></li>
+                            <li><a href="../classes/encryption.html">Encryption</a></li>
+                            <li><a href="../classes/upload.html">Upload</a></li>
+                            <li><a href="../classes/image.html">Image</a></li>
+                            <li><a href="../classes/request.html">Request</a></li>
+                            <li><a href="../classes/rest.html">RESTfull</a></li>
+                            <li><a href="../classes/apc.html">APC</a></li>
+			    <li><a href="../classes/tools.html">Tools</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../contribution.html">Kontribusi</a></li>
+                    <li><a href="../credit.html">Credit</a></li>
+                </ul>
+	    </div>
+            
+        </div>
+        
+        <div class="content">
+            <div class="lead">
+                <h2>View</h2>
+                <p>View adalah sebuah file yang bertugas untuk menampilkan <strong>output</strong> dari semua proses yang sudah dilakukan pada bagian <a href="controller.html">controller</a> dan <a href="model.html">model</a>.</p>
+            </div>
+            
+            <div class="main">
+                <h3>Membuat View</h3>
+                <p>Folder view terletak pada:</p>
+				<code>
+					apps/view/
+				</code>
+				<p>Untuk membuat file view, tambahkan file baru di dalama folder ini, misalnya <strong>helloworld.php</strong>.</p>
+<textarea rows="9" cols="50" class="textarea">
+&lt;html&gt;
+	&lt;head&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		Hello world!
+	&lt;/body&gt;
+&lt;/html&gt;
+</textarea>
+			<p>Untuk bisa digunakan di dalam aplikasi, file view harus di-load di dalam method controller. Berikut adalah contoh me-load file view di dalam method index pada controller home.</p>
+<textarea rows="14" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+    }
+    
+    public function index(){
+        
+        $this->view_helloworld();
+    }
+}
+</textarea>
+				
+				<p>Untuk me-load file view, panggil method dengan prefix <b>$this->view_</b> yang kemudian diikuti <b>nama_file()</b>. Anda tidak perlu lagi menyertakan ekstensi <b>.php</b> pada bagian ini.</p>
+				<code>
+				    $this->view_<b>nama_file</b>();
+				</code>
+				<p>Jika Anda membuat folder baru di dalam folder <b>view</b>, dimana file view akan Anda letakkan pada folder ini, maka cara penggunaan method view-nya adalah:</p>
+				<code>
+				    $this->view_<b>namafolder_</b>nama_file();
+				</code>
+				<p>Contohnya, jika path file Anda:</p>
+				<code>
+				    apps/view/sidebar/menu.php
+				</code>
+				<p>Maka memanggil method view-nya:</p>
+				<code>
+				    $this->view_sidebar_menu();
+				</code>
+				<div class="notice">
+				    <p><strong>Catatan</strong>: Penamaan file mengikuti aturan penamaan fungsi php (<a target="_blank" href="http://www.php.net/manual/en/functions.user-defined.php">http://www.php.net/manual/en/functions.user-defined.php</a>), yaitu hanya karakter <strong>[a-zA-Z0-9_]</strong> yang diperbolehkan. Untuk membedakan dengan nama file, nama folder tidak boleh ada karakter <em>underscore</em> (_).</p>
+				    <p>Namun demikian, jika menginginkan penggunaan nama file dan nama folder yang lebih fleksibel, Anda bisa menggunakan method <a href="#output">output()</a> untuk mem-<em>passing</em> data ke file view.</p>
+				</div>
+
+				<p>Untuk menampilkan data <strong>output</strong> dari controller ke view, maka masing-masing data tersebut harus di isikan ke sebuah variable array. Nilai yang diisikan bisa data apapun, array, object, string, integer, boolean dll.</p>
+				<p>Berikut adalah contoh untuk meneruskan data yang diproduksi di controller dan menampilkannya di view:</p>
+<textarea rows="19" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+    }
+    
+    public function index(){
+        
+	$data = array(
+            'title' => 'Hello World Page!',
+            'content' => 'Hello World!'
+        );
+	
+        $this->view_helloworld($data);
+    }
+}
+</textarea>
+				<p>Dan berikut adalah isi file <strong>apps/view/helloworld.php</strong>:</p>
+<textarea rows="9" cols="50" class="textarea">
+&lt;html&gt;
+	&lt;head&gt;
+		&lt;title>&lt;?php echo $title; ?&gt;&lt;/title&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;?php echo $content; ?&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+</textarea>
+		<h4 id="output">Method Output</h4>
+		<p>Selain cara di atas, untuk mengirimkan data dari controller ke file view juga bisa menggunakan method <strong>output</strong>.</p>
+		<code>
+		    <strong>void</strong> $this->output( <strong>string</strong> 'nama_file_view', <strong>array</strong> $data = array() );
+		</code>
+		<p>Berikut adalah contoh penggunaanya:</p>
+
+<textarea rows="19" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+    }
+    
+    public function index(){
+        
+	$data = array(
+            'title' => 'Hello World Page!',
+            'content' => 'Hello World!'
+        );
+	
+        $this->output( 'helloworld', $data );
+    }
+}
+</textarea>
+		<p>Dan jika filenya terletak di dalam folder:</p>
+		<code>
+		    $this->output( 'subfolder/helloworld', $data );
+		</code>
+            </div>
+	    <div id="discussion" class="main">
+		<h3>Diskusi</h3>
+		<div id="disqus_thread"></div>
+	    </div>
+            
+        
+        </div>
+        
+    </div>
+          
+    <div class="footer">
+        <span class="right">All Rights Reserved.</span>
+    </div>
+    <script type="text/javascript">
+	var disqus_shortname = 'panada';
+	var disqus_url = 'http://panadaframework.com/documentation/id/references/view.html';
+	var disqus_identifier = disqus_url;
+	(function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+    </script>
+</body>
+</html>

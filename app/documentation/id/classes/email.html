@@ -1,0 +1,356 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <title>Panada PHP Framework 0.3.1 Documentation - Email Library</title>
+    <link rel="stylesheet" href="../../style.css" type="text/css" media="screen" />
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+	    <a target="_blank" href="http://panadaframework.com/"><img src="../../images/logo.png" height="21" border="0" /></a>
+	</div>
+        <div class="menu">
+            <form action="http://www.google.com/search" method="get">
+	    <input type="hidden" value="panadaframework.com/documentation/" id="as_sitesearch" name="as_sitesearch">
+            <input class="search-input" type="text" name="q" /><button class="search-button" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="subheader">
+        <h1>Panada Framework 0.3.1 Documentation</h1>
+    </div>
+    
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="navigation">
+                <ul>
+                    <li>
+                        <a href="../index.html">Umum</a>
+                        <ul>
+                            <li><a href="../index.html#about">Tentang Panada</a></li>
+                            <li><a href="../index.html#feature">Keunggulan (<em>Feature</em>)</a></li>
+                            <li><a href="../index.html#license">Lisensi</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="../config.html">Konfigurasi</a>
+                        <ul>
+                            <li><a href="../config.html#general">Dasar</a></li>
+                            <li><a href="../config.html#additional_config">Tambahan</a></li>
+                            <li><a href="../config.html#webserver">Webserver</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Referensi
+                        <ul>
+                            <li><a href="../references/controller.html">Controller</a></li>
+                            <li><a href="../references/model.html">Model</a></li>
+                            <li><a href="../references/view.html">View</a></li>
+                            <li><a href="../references/library.html">Library</a></li>
+                            <li><a href="../references/autoloader.html">Auto Loader</a></li>
+                            <li><a href="../references/global_method.html">Global Method dan Properties</a></li>
+			    <li><a href="../references/module.html">Module</a></li>
+			    <li><a href="../references/upgrade.html">Upgrade</a></li>
+                        </ul>
+                            
+                    </li>
+                    <li>
+                        <a href="index.html">Paket Library</a>
+                        <ul>
+                            <li><a href="database/index.html">Database</a></li>
+			    <li><a href="cache/index.html">Cache</a></li>
+                            <li><a href="session.html">Session</a></li>
+                            <li><a href="pagination.html">Pagination</a></li>
+                            <li><a href="email.html">Email</a></li>
+                            <li><a href="encryption.html">Encryption</a></li>
+                            <li><a href="upload.html">Upload</a></li>
+                            <li><a href="image.html">Image</a></li>
+                            <li><a href="request.html">Request</a></li>
+                            <li><a href="rest.html">RESTfull</a></li>
+			    <li><a href="tools.html">Tools</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../contribution.html">Kontribusi</a></li>
+                    <li><a href="../credit.html">Credit</a></li>
+                </ul>
+	    </div>
+            
+        </div>
+        
+        <div class="content">
+            <div class="lead">
+                <h2>Email</h2>
+                <p>Library email Panada memungkinkan untuk pengiriman email melalui fungsi natif PHP <b>sendmail()</b>, maupun SMTP.</p>
+            </div>
+            
+	    <div class="main">
+                <h3>Inisialisasi</h3>
+                
+		<p>Sebelum digunakan, object library email harus dideklarasikan terlebih dahulu:</p>
+		<code>
+		    $this->email = new Library_email();
+		</code>
+		<p>Setelah itu gunakan method mail() untuk pengiriman email.
+		<code>
+		    $this->email->mail(to, subject, message, from_email, from_name);
+		</code>
+		
+		<p>Parameter yang harus diisikan adalah:</p>
+                
+		<ul>
+		    <li>
+			<h4>to</h4>
+			<p>Isikan dengan alamat email tujuan. Untuk mengisi parameter ini bisa dilakukan dengan tiga cara yaitu: <strong>string satu email</strong>, <strong>string multiple email</strong> dan <strong>array</strong>.</p>
+			
+			<ul>
+			    <li>
+				<p>string satu email, contohnya:</p>
+				<code>
+				    $this->email->mail('budi@example.com', 'the subject', 'email messages', 'my@test.com', 'my name');
+				</code>
+			    </li>
+			    <li>
+				<p>string multiple email harus dipisahkan dengan tanda koma (,) diantara email satu dengan lainnya, contohnya:</p>
+				<code>
+				    $this->email->mail('budi@test.com, ard@example.com, jhon@noone.com', 'the subject', 'email messages', 'my@test.com', 'my name');
+				</code>
+			    </li>
+			    <li>
+				<p>array, contohnya:</p>
+				<code>
+				    $this->email->mail(array('budi@test.com', 'ard@example.com', 'jhon@noone.com'), 'the subject', 'email messages', 'my@test.com', 'my name');
+				</code>
+			    </li>
+			</ul>
+		    </li>
+		    <li>
+			<h4>subject</h4>
+			<p>Isikan dengan subject email.</p>
+			
+		    </li>
+		    <li>
+			<h4>message</h4>
+			<p>Isikan dengan pesan email.</p>
+			
+		    </li>
+		    <li>
+			<h4>from_email</h4>
+			<p>Alamat email pengirim.</p>
+		    </li>
+		    <li>
+			<h4>from_name (<em>optional</em>)</h4>
+			<p>Nama pengirim.</p>
+		    </li>
+		</ul>
+            </div>
+
+            <div class="main">
+                <h3>Basic</h3>
+                
+		<p>Berikut contoh cara menggunakan library email di dalam sebuah controller:</p>
+		
+<textarea rows="21" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+        
+        $this->email = new Library_email();
+    }
+    
+    public function index(){
+        
+        $send = $this->email->mail('budi@example.com', 'the subject', 'email messages', 'my@test.com', 'my name');
+        
+        if( $send )
+            echo 'success';
+        else
+            echo 'failed';
+    }
+}
+</textarea>
+            </div>
+            
+	    <div class="main">
+                <h3>SMTP</h3>
+	
+		<p>Berikut adalah contoh untuk mengirimkan email via SMTP Server:</p>
+
+<textarea rows="24" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+	$this->email = new Library_email();
+    }
+    
+    public function index(){
+        
+        $this->email->smtp_host = 'smtphost';
+	$this->email->smtp_username = 'username';
+	$this->email->smtp_password = 'password';
+        
+        $send = $this->email->mail('budi@example.com', 'the subject', 'email messages', 'my@test.com', 'my name');
+        
+        if( $send )
+            echo 'success';
+        else
+            echo 'failed';
+    }
+}
+</textarea>
+		<p>Jika port <strong>SMTP</strong> yang digunakan bukan 25 (default), silahkan set di bagian:</p>
+		<code>
+		    $this->email->smtp_port = 25;
+		</code>
+		<p>Jika koneksi yang digunakan menggunakan <strong>SSL</strong> silahkan set bagian berikut:</p>
+		<code>
+		    $this->email->smtp_secure = 'ssl';
+		</code>
+		<p>Berikut adalah contoh penggunaan <strong>SSL</strong> dan <strong>port 465</strong> dengan menggunakan SMTP Gmail:</p>
+<textarea rows="26" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+	$this->email = new Library_email();
+    }
+    
+    public function index(){
+        
+	$this->email->smtp_host = 'smtp.gmail.com';
+	$this->email->smtp_username = 'USERNAMEANDA@gmail.com';
+	$this->email->smtp_password = 'PASSWORD GMAIL ANDA';
+	$this->email->smtp_port = 465;
+	$this->email->smtp_secure = 'ssl';
+        
+        $send = $this->email->mail('budi@example.com', 'the subject', 'email messages', 'my@test.com', 'my name');
+        
+        if( $send )
+            echo 'success';
+        else
+            echo 'failed';
+    }
+}
+</textarea>
+
+	    </div>
+	    
+	    <div class="main">
+                <h3>HTML Email</h3>
+		
+		<p>Berikut adalah contoh untuk mengirimkan email dengan format HTML:</p>
+
+<textarea rows="51" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+	$this->email = new Library_email();
+    }
+    
+    public function index(){
+        
+        $this->email->message_type = 'html';
+	
+	$message = '&lt;html&gt;
+            &lt;head&gt;
+	    &lt;title&gt;Birthday Reminders for August&lt;/title&gt;
+            &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;p&gt;Here are the birthdays upcoming in August!&lt;/p&gt;
+                    &lt;table&gt;
+                        &lt;tr&gt;
+			  &lt;th&gt;Person&lt;/th&gt;
+                          &lt;th&gt;Day&lt;/th&gt;
+                          &lt;th&gt;Month&lt;/th&gt;
+                          &lt;th&gt;Year&lt;/th&gt;
+                        &lt;/tr&gt;
+			&lt;tr&gt;
+                            &lt;td&gt;Joe&lt;/td&gt;
+                            &lt;td&gt;3rd&lt;/td&gt;
+                            &lt;td&gt;August&lt;/td&gt;
+                            &lt;td&gt;1970&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+                            &lt;td&gt;Sally&lt;/td&gt;
+                            &lt;td&gt;17th&lt;/td&gt;
+                            &lt;td&gt;August&lt;/td&gt;
+                            &lt;td&gt;1973&lt;/td&gt;
+			&lt;/tr&gt;
+		  &lt;/table&gt;
+		&lt;/body&gt;
+		&lt;/html&gt;';
+        
+        $send = $this->email->mail('budi@example.com', 'the subject', $message, 'my@test.com', 'my name');
+        
+        if( $send )
+            echo 'success';
+        else
+            echo 'failed';
+    }
+}
+</textarea>
+	    </div>
+	    
+	    <div class="main">
+                <h3>Debugger</h3>
+		
+		<p>Untuk melakukan <em>debugger</em> gunakan method berikut:</p>
+		<code>
+		    $this->email->print_debug();
+		</code>
+		<p>Berikut adalah contoh penggunaannya:</p>
+
+<textarea rows="16" cols="50" class="textarea">
+&lt;?php
+class Controller_home extends Panada {
+    
+    public function __construct(){
+        
+        parent::__construct();
+	$this->email = new Library_email();
+    }
+    
+    public function index(){
+        
+        $send = $this->email->mail('budi@example.com', 'the subject', 'email messages', 'my@test.com', 'my name');
+        $this->email->print_debug();
+    }
+}
+</textarea>
+	    </div>
+	    <div id="discussion" class="main">
+		<h3>Diskusi</h3>
+		<div id="disqus_thread"></div>
+	    </div>
+        
+        </div>
+        
+    </div>
+          
+    <div class="footer">
+        <span class="right">All Rights Reserved.</span>
+    </div>
+    <script type="text/javascript">
+	var disqus_shortname = 'panada';
+	var disqus_url = 'http://panadaframework.com/documentation/id/classes/email.html';
+	var disqus_identifier = disqus_url;
+	(function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>

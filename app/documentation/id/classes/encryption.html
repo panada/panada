@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+    <title>Panada PHP Framework 0.3.1 Documentation - Encryption Library</title>
+    <link rel="stylesheet" href="../../style.css" type="text/css" media="screen" />
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+	    <a target="_blank" href="http://panadaframework.com/"><img src="../../images/logo.png" height="21" border="0" /></a>
+	</div>
+        <div class="menu">
+            <form action="http://www.google.com/search" method="get">
+	    <input type="hidden" value="panadaframework.com/documentation/" id="as_sitesearch" name="as_sitesearch">
+            <input class="search-input" type="text" name="q" /><button class="search-button" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="subheader">
+        <h1>Panada Framework 0.3.1 Documentation</h1>
+    </div>
+    
+    <div class="wrapper">
+        <div class="sidebar">
+            <div class="navigation">
+                <ul>
+                    <li>
+                        <a href="../index.html">Umum</a>
+                        <ul>
+                            <li><a href="../index.html#about">Tentang Panada</a></li>
+                            <li><a href="../index.html#feature">Keunggulan (<em>Feature</em>)</a></li>
+                            <li><a href="../index.html#license">Lisensi</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="../config.html">Konfigurasi</a>
+                        <ul>
+                            <li><a href="../config.html#general">Dasar</a></li>
+                            <li><a href="../config.html#additional_config">Tambahan</a></li>
+                            <li><a href="../config.html#webserver">Webserver</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Referensi
+                        <ul>
+                            <li><a href="../references/controller.html">Controller</a></li>
+                            <li><a href="../references/model.html">Model</a></li>
+                            <li><a href="../references/view.html">View</a></li>
+                            <li><a href="../references/library.html">Library</a></li>
+                            <li><a href="../references/autoloader.html">Auto Loader</a></li>
+                            <li><a href="../references/global_method.html">Global Method dan Properties</a></li>
+			    <li><a href="../references/module.html">Module</a></li>
+			    <li><a href="../references/upgrade.html">Upgrade</a></li>
+                        </ul>
+                            
+                    </li>
+                    <li>
+                        <a href="index.html">Paket Library</a>
+                        <ul>
+                            <li><a href="database/index.html">Database</a></li>
+			    <li><a href="cache/index.html">Cache</a></li>
+                            <li><a href="session.html">Session</a></li>
+                            <li><a href="pagination.html">Pagination</a></li>
+                            <li><a href="email.html">Email</a></li>
+                            <li><a href="encryption.html">Encryption</a></li>
+                            <li><a href="upload.html">Upload</a></li>
+                            <li><a href="image.html">Image</a></li>
+                            <li><a href="request.html">Request</a></li>
+                            <li><a href="rest.html">RESTfull</a></li>
+			    <li><a href="tools.html">Tools</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="../contribution.html">Kontribusi</a></li>
+                    <li><a href="../credit.html">Credit</a></li>
+                </ul>
+	    </div>
+            
+        </div>
+        
+        <div class="content">
+            <div class="lead">
+                <h2>Encryption</h2>
+		<p>Untuk memudahkan Anda dalam melakukan pertukaran informasi yang sifatnya rahasia, Panada telah menyiapkan sebuah library enkripsi.</p>
+                
+            </div>
+            
+            <div class="main">
+                <h3>Inisialisasi</h3>
+                
+                <p>Sebelum digunakan, library encryption harus diinisialisasi terlebih dahulu. Inisialisasi bisa dilakukan pada konstruktor ataupun langsung di dalam method.</p>
+                
+		<code>
+			$this->crypt = new Library_encryption();
+		</code>
+		<p>Berikut adalah contoh penggunaan library encription:</p>
+<textarea rows="41" cols="50" class="textarea">
+&lt;?php
+
+class Controller_sample extends Panada {
+    
+    public function __construct(){
+        
+	parent::__construct();
+	$this->crypt = new Library_encryption();
+    }
+    
+    public function index(){
+        
+    }
+    
+    public function encryption(){
+	
+        // String yang akan dienkripsi
+        $string = 'Ini string rahasia.';
+        
+        // String rahasia yang diperlukan untuk mengenkripsi
+	$secrete_token = '12345';
+	
+        // Lakukan enkripsi untuk variable $string
+	$encrypted = $this->crypt->encrypt($string, $secrete_token);
+        
+        // Tampilkan string yang sudah terenkripsi.
+        echo $encrypted;
+	
+        echo '&lt;br /&gt;';
+        
+        // String setelah dienkripsi
+        $encrypted_string = 'fp+bU6epo5uhm1Wjk5uVqJqTYQ==';
+        
+        // Lakukan dekripsi
+        $decrypted = $this->crypt->decrypt($encrypted_string, $secrete_token);
+        
+        // Tampilkan hasil dekripsi
+        echo $decrypted;
+    }
+}
+</textarea>
+            </div>
+	    
+	    <div class="main">
+                <h3>Tipe Encode</h3>
+		<p>Secara default library encryption menggunakan base_64 untuk encoding. Anda juga bisa menggunakan tipe lainnya. Pilihannya adalah: <strong>none</strong>, <strong>base_64</strong> dan <strong>hexa_decimal</strong></p>
+		<code>
+		    $this->crypt = new Library_encryption();<br />
+		    $this->crypt->encode_type = 'hexa_decimal';
+		</code>
+	    </div>
+            <div id="discussion" class="main">
+		<h3>Diskusi</h3>
+		<div id="disqus_thread"></div>
+	    </div>
+        
+        </div>
+        
+    </div>
+          
+    <div class="footer">
+        <span class="right">All Rights Reserved.</span>
+    </div>
+    <script type="text/javascript">
+	var disqus_shortname = 'panada';
+	var disqus_url = 'http://panadaframework.com/documentation/id/classes/encryption.html';
+	var disqus_identifier = disqus_url;
+	(function() {
+	    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	    dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+	    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>

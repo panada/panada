@@ -1,0 +1,257 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font: 13px Arial, Helvetica, sans-serif;
+    color: #454545;
+    text-align: left;
+}
+
+a {
+    color: #1010CE; text-decoration: underline;
+}
+a:hover {
+    text-decoration: underline;
+}
+a:visited {
+    color: #1010CE; text-decoration: underline;
+}
+
+.header {
+    height: 45px;
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: 1280px;
+    min-width: 760px;
+}
+
+.header .logo {
+    float: left;
+    font: bold 20px/21px Helvetica, Arial, sans-serif;
+    line-height: 45px;
+    height:30px;
+    padding-top:2px;
+}
+
+.header .logo a {
+    color: #454545;
+    text-decoration: none;
+}
+
+.header .menu {
+    float: right;
+    line-height: 45px;
+}
+
+.header .menu a {
+    color: #fff;
+}
+
+.subheader {
+    height: 24px;
+    border-top:1px solid #AFAFAF;
+    background: #E8E8E8;
+    margin: 0 auto;
+    padding: 2px 0 1px 20px;
+}
+
+.search-input {
+    border:1px solid #AFAFAF;
+    height:20px;
+}
+
+.search-button {
+    margin-left: 5px;
+}
+.subheader h1{
+    font-size: 1.3em;
+    padding: 0;
+}
+
+.notice {
+    clear: both;
+    margin: 10px 0 20px;
+    padding: 0 10px;
+    background: #fffbcc;
+    border: 1px solid #e6db55;
+    line-height: 25px;
+    color: #222;
+}
+
+.wrapper {
+    margin: 0 auto;
+    padding: 1px 20px;
+    max-width: 1280px;
+    min-width: 760px;
+}
+
+.sidebar {
+    float: left;
+    width: 220px;
+    position: relative;
+}
+
+.navigation {
+    margin: 20px 0 20px;
+    background: #fff;
+}
+
+.navigation ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.navigation ul li {
+    margin: 0;
+    padding: 0 15px;
+    line-height: 22px;
+    height: 100%;
+    font-size: 14px;
+    font-weight:bold;
+}
+
+.navigation ul li a {
+    color: #454545;
+    height: 100%;
+    width: 100%;
+    display: block;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.navigation ul li a:hover {
+    text-decoration: underline;
+}
+
+.navigation ul li.active a {
+    color: #454545;
+    font-weight:bold;
+}
+
+.navigation ul li ul {
+    margin: 0 0 0 15px;
+}
+
+.navigation ul li ul li {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    border: none;
+    background: none;
+}
+
+.navigation ul li ul li a {
+    color: #454545;
+    font-weight:normal;
+}
+
+.navigation ul ul ul {
+    list-style-type: square;
+    margin-left:30px;
+}
+
+.content {
+    padding: 10px 5px 20px 30px;
+    margin-left:220px;
+    border-left: 1px solid #e8e8e8;
+    min-height: 600px;
+}
+
+.content p {
+    margin: 12px 20px 12px 0;
+}
+
+.content h2 {
+    font-size: 1.5em;
+    padding:10px 5px 5px 0;
+}
+
+.content h4 {
+    margin: 10px 0 10px;
+    font-size: 14px;
+}
+
+.content ul li{
+    margin-left:12px;
+    padding: 0 5px;
+}
+
+.main{
+    margin-top:20px;
+}
+.main h3 {
+    border-bottom: 1px dotted #d2d2d2;
+    padding-bottom:10px;
+    margin-bottom:10px;
+    font-size: 1.3em;
+}
+
+code {
+    background-color:#F9F9F9;
+    border:1px solid #D0D0D0;
+    color:#002166;
+    display:block;
+    font-family:Monaco,Verdana,Sans-serif;
+    font-size:12px;
+    margin:14px 0;
+    padding:12px 10px;
+}
+
+textarea {
+    background-color:#F9F9F9;
+    border:1px solid #B3B4BD;
+    color:#143270;
+    font-family:Lucida Grande,Verdana,Geneva,Sans-serif;
+    font-size:14px;
+    margin:5px 10px 10px 0;
+    padding:6px;
+    width:98.5%;
+}
+
+table {
+    width: 99%;
+    height: 100%;
+    margin: 0 0 15px;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+table thead,
+table tfoot {
+    height:24px;
+    background: #E6E6E6;
+    border-bottom: 2px solid #fff;
+}
+
+table th {
+    font-weight: bold;
+    padding: 5px 8px;
+    color: #444;
+}
+
+table td {
+    padding: 8px;
+    color: #444;
+    border-bottom: 1px solid #d2d2d2;
+}
+
+table td span.active { color: #55a34a;}
+table td span.pending { color: #c5a059;}
+table td span.closed { color: #a02b2b;}
+
+table .odd {
+    background: #f6f6f6; 
+}
+
+.footer {
+    border-top: 1px solid #e8e8e8;
+    padding: 15px;
+    height: 12px;
+    clear: both;
+}
+
+.footer .left { float: left;}
+.footer .right { float: right;}
