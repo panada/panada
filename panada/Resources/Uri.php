@@ -99,7 +99,7 @@ final class Uri {
 	
 	if( $uriString = $this->path(0) ){
 	    
-	    if( $this->stripUriCtring($uriString) )
+	    if( $this->stripUriString($uriString) )
 	    return $uriString;
 	    else
 	    return false;
@@ -121,7 +121,7 @@ final class Uri {
 
 	if( isset($uriString) && ! empty($uriString) ){
 
-	    if( $this->stripUriCtring($uriString) )
+	    if( $this->stripUriString($uriString) )
 		return $uriString;
 	    else
 		return '';
@@ -160,7 +160,7 @@ final class Uri {
      * @param string
      * @return boolean
      */
-    public function stripUriCtring($uri){
+    public function stripUriString($uri){
 
 	$uri = ( ! preg_match('/[^a-zA-Z0-9_.-]/', $uri) ) ? true : false;
 	return $uri;

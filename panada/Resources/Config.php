@@ -9,7 +9,7 @@ class Config {
         
         if( ! isset(self::$config[$name]) ) {
             require APP . 'config/'.$name.'.php';
-            self::$config['main'] = $$name;
+            self::$config[$name] = $$name;
             return $$name;
         }
         else {

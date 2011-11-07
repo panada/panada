@@ -1,6 +1,6 @@
 <?php
 namespace Controllers;
-use Resources;
+use Resources, Models;
 
 class Home extends Resources\Controller {
     

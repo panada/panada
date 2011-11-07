@@ -29,7 +29,8 @@ class ActiveRecord {
         $select = '*',
         $orderBy = null,
         $order = null,
-        $groupBy = array();
+        $groupBy = array(),
+        $modulPrefix = null;
     
     public $primaryKey = 'id';
     
@@ -56,8 +57,9 @@ class ActiveRecord {
                 $this->connection = $args[1];
         }
         
-        $childClassName = explode('\\', get_class($this));
-        $childClassName = end($childClassName);
+        $getClass           = get_class($this);
+        $splitedClassName   = explode('\\', $getClass);
+        $childClassName     = end($splitedClassName);
         
         // Get table name from model class name.
         $this->table    = strtolower( $childClassName );
@@ -73,9 +75,17 @@ class ActiveRecord {
         }
         
         if( $relations = $this->relations() ){
+            
+            $childClassName = 'Models\\'.$childClassName;
+            
+            if($splitedClassName[0] == 'Modules'){
+                $childClassName = $getClass;
+                $this->modulPrefix = $splitedClassName[0].'\\'.$splitedClassName[1].'\\';
+            }
+            
             foreach( $relations as $relations ){
                 if( $relations[0] == 1 || $relations[0] == 4 ){
-                    $this->setInstantiateClass = 'Models\\'.$childClassName;
+                    $this->setInstantiateClass = $childClassName;
                 }
             }
         }
@@ -477,7 +487,7 @@ class ActiveRecord {
         foreach($relations as $key => $relations){
             if( $name == $key ){
                 
-                $className = 'Models\\'.ucwords($relations[1]);
+                $className = $this->modulPrefix.'Models\\'.ucwords($relations[1]);
                 
                 $name = new $className;
                 $findBy = 'findBy'.$name->primaryKey;
