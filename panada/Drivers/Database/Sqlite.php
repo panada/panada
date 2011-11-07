@@ -535,6 +535,9 @@ class Sqlite implements Interfaces\Database {
                 $return[] = $row;
             }
         }
+	
+	if( ! isset($return) )
+	    return false;
         
         return $return;
     }

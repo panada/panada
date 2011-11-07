@@ -576,7 +576,7 @@ class Mysql implements Interfaces\Database {
 	
         $result = $this->query($query);
         
-        while ($row = @mysql_fetch_object($result, $this->instantiateClass)) {
+        while ($row = mysql_fetch_object($result, $this->instantiateClass)) {
             
             if($type == 'array')
                 $return[] = (array) $row;
@@ -584,9 +584,12 @@ class Mysql implements Interfaces\Database {
                 $return[] = $row;
         }
         
-        @mysql_free_result($result);
+        mysql_free_result($result);
         
-        return @$return;
+	if( ! isset($return) )
+	    return false;
+	
+        return $return;
     }
     
     /**

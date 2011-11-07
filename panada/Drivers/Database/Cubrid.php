@@ -550,6 +550,9 @@ class Cubrid implements Interfaces\Database {
         
         cubrid_close_request($result);
         
+        if( ! isset($return) )
+	    return false;
+        
         return $return;
     }
     

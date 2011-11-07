@@ -533,7 +533,7 @@ class Postgresql implements Interfaces\Database {
 	
         $result = $this->query($query);
         
-        while ($row = @pg_fetch_object($result, null, $this->instantiateClass)) {
+        while ($row = pg_fetch_object($result, null, $this->instantiateClass)) {
             
             if($type == 'array')
                 $return[] = (array) $row;
@@ -541,9 +541,12 @@ class Postgresql implements Interfaces\Database {
                 $return[] = $row;
         }
         
-        @pg_free_result($result);
+        pg_free_result($result);
+	
+	if( ! isset($return) )
+	    return false;
         
-        return @$return;
+        return $return;
     }
     
     /**
