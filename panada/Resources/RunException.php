@@ -26,6 +26,10 @@ class RunException extends \Exception {
     public function main($exception){
         
         $trace = $exception->getTrace();
+        
+        if( ! isset($trace[2]['file']) )
+            $trace[2]['file'] = $trace[2]['line'] = null;
+        
         self::outputError($exception->getMessage(), $trace[2]['file'], $trace[2]['line']);
     }
     
