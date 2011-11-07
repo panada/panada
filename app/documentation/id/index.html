@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-    <title>Panada PHP Framework 0.3.1 Documentation - About Panada</title>
+    <title>Panada PHP Framework 1.0.0 Documentation - About Panada</title>
     <link rel="stylesheet" href="../style.css" type="text/css" media="screen" />
 </head>
 <body>
@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="subheader">
-        <h1>Panada Framework 0.3.1 Documentation</h1>
+        <h1>Panada Framework 1.0.0 Documentation</h1>
     </div>
     <div class="wrapper">
         <div class="sidebar">
@@ -54,7 +54,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="classes/index.html">Paket Library</a>
+                        <a href="classes/index.html">Resources</a>
                         <ul>
                             <li><a href="classes/database/index.html">Database</a></li>
                             <li><a href="classes/cache/index.html">Cache</a></li>
@@ -118,14 +118,14 @@
     cukup melakukan sekali pendeklarasian sebagaimana umumnya dalam mendeklarasikan
     sebuah class. Contohnya:</p>
     <code>
-    $this->nama_instance = new Library_nama();
+    $this->namaInstance = new Libraries\NamaClass;
     </code>
     <p>Atau:</p>
     <code>
-    $this->nama_instance = new Model_nama();
+    $this->nama_instance = new Models\NamaClass;
     </code>
     <p>Baik dalam pengambilan library ataupun model cara yang dilakukan adalah sama.
-    Perbedaaanya hanya terletak pada prefix ('Library_' atau 'Model_') nama class
+    Perbedaaanya hanya terletak pada prefix <a target="_blank" href="http://php.net/manual/en/language.namespaces.php">Namespace</a> ('Libraries' atau 'Models') nama class
     yang menunjukan tugas dan lokasi folder.</p>
                     </li>
                     <li>

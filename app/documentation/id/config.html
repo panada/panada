@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-    <title>Panada PHP Framework 0.3.1 Documentation - Configuration</title>
+    <title>Panada PHP Framework 1.0.0 Documentation - Configuration</title>
     <link rel="stylesheet" href="../style.css" type="text/css" media="screen" />
 </head>
 <body>
@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="subheader">
-        <h1>Panada Framework 0.3.1 Documentation</h1>
+        <h1>Panada Framework 1.0.0 Documentation</h1>
     </div>
     <div class="wrapper">
         <div class="sidebar">
@@ -54,7 +54,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="classes/index.html">Paket Library</a>
+                        <a href="classes/index.html">Resources</a>
                         <ul>
                             <li><a href="classes/database/index.html">Database</a></li>
 			    <li><a href="classes/cache/index.html">Cache</a></li>
@@ -77,68 +77,19 @@
         <div class="content">
             <div class="lead">
                 <h2>Konfigurasi</h2>
-                <p>Semua setting pengaturan aplikasi dilakukan pada file konfigurasi. Pengaturan-pengaturan ini termasuk: <a href="#base_url">Base URL</a>, <a href="classes/database/index.html">Koneksi Database</a>, <a href="references/autoloader.html">Auto Load</a>, <a href="classes/session.html">Session</a>, <a href="references/controller.html#alias_controller">Alias Controller</a> dan <a href="references/controller.html#alias_method">Alias Method</a>, <a href="classes/request.html">Query filter</a>, <a href="classes/cache/index.html">Cache</a> dll.</p>
-                <p>Anda juga bisa menambahkan setting konfigurasi sesuai dengan kebutuhan aplikasi yang akan dibuat. Untuk melakukan hal ini lihat bagian <a href="#additional_config">Konfigurasi Tambahan</a></p>
+                <p>Semua setting pengaturan aplikasi dilakukan pada file konfigurasi. Pengaturan-pengaturan ini termasuk: <a href="classes/database/index.html">Koneksi Database</a>, <a href="classes/session.html">Session</a>, <a href="references/controller.html#alias_controller">Alias Controller</a> dan <a href="references/controller.html#alias_method">Alias Method</a>, <a href="classes/request.html">Query filter</a>, <a href="classes/cache/index.html">Cache</a> dll.</p>
+                <p>Anda juga bisa menambahkan setting konfigurasi sesuai dengan kebutuhan aplikasi yang akan dibuat.</p>
             </div>
             <div id="general" class="main">
                 <h3>Konfigurasi Dasar</h3>
                 <p>File konfigurasi Panada terletak pada direktori:</p>
                 <code>
-                    apps/config.php
+                    app/config/
                 </code>
-                <p id="base_url">Hal dasar yang harus dilengkapi pada bagian konfigurasi ini adalah URL dasar (<em>base URL</em>).
-                <p>Isikan lokasi url aplikasi pada parameter <strong>base_url</strong>, misalnya:</p>
-                <code>
-                    $CONFIG['base_url'] = 'http://localhost/panada/';
-                </code>
-                <p>Atau:</p>
-                <code>
-                    $CONFIG['base_url'] = 'http://www.mysite.com/';
-                </code>
-            </div>
-            
-            <div id="additional_config" class="main">
-                <h3>Konfigurasi Tambahan</h3>
-                <p>Untuk melakukan konfigurasi tambahan, buat sebuah key array baru dari variable <strong>$CONFIG</strong>, di mana nilai key-nya adalah nama config Anda.</p>
-                <code>
-                    $CONFIG['my_addition_config'] = 'my config value';<br />
-                    $CONFIG['my_array_config'] = array('setting_1' => 'foo');
-                </code>
-                <p>Jika nilai dari config Anda berupa array, maka secara otomatis akan dirubah menjadi object.</p>
-                <p>Berikut adalah contoh untuk mendapatkan nilai config Anda di dalam file controller ataupun view:</p>
-<textarea rows="15" cols="50" class="textarea">
-&lt;?php
-class Controller_home extends Panada {
-    
-    public function __construct(){
-        
-        parent::__construct();
-    }
-    
-    public function index(){
-        
-        echo $this->config->my_addition_config;
-        echo $this->config->my_array_config->setting_1;
-    }
-}
-</textarea>
-
             </div>
             
             <div id="webserver" class="main">
                 <h3>Webserver</h3>
-                <p>Secara <em>default</em> Panada menyertakan <strong>index.php</strong> di setiap url. Contohnya:</p>
-                <code>
-                    http://www.mysite.com/index.php/home
-                </code>
-                <p>Jika Anda ingin menghilangkannya, pertama-tama beri nilai kosong ('') pada parameter <strong>index_file</strong> yang ada di dalam file apps/config.php. Ubah array berikut:</p>
-                <code>
-                    $CONFIG['index_file'] = 'index.php/';
-                </code>
-                <p>Menjadi seperti berikut:</p>
-                <code>
-                    $CONFIG['index_file'] = '';
-                </code>
                 <p>Berikutnya Anda juga perlu melakukan konfigurasi pada sisi webserver. Berikut ini penjelasan pengaturannya untuk webserver <a href="http://httpd.apache.org/" target="_blank">Apache</a>, <a href="http://wiki.nginx.org/Main" target="_blank">Nginx</a> dan <a href="http://www.lighttpd.net/" target="_blank">Lighttpd</a>.
                 <ul>
                     <li>

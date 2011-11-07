@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-    <title>Panada PHP Framework 0.3.1 Documentation - Controller</title>
+    <title>Panada PHP Framework 1.0.0 Documentation - Controller</title>
     <link rel="stylesheet" href="../../style.css" type="text/css" media="screen" />
 </head>
 <body>
@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="subheader">
-        <h1>Panada Framework 0.3.1 Documentation</h1>
+        <h1>Panada Framework 1.0.0 Documentation</h1>
     </div>
     <div class="wrapper">
         <div class="sidebar">
@@ -68,7 +68,7 @@
                             
                     </li>
                     <li>
-                        <a href="../classes/index.html">Paket Library</a>
+                        <a href="../classes/index.html">Resources</a>
                         <ul>
                             <li><a href="../classes/database/index.html">Database</a></li>
 			    <li><a href="../classes/cache/index.html">Cache</a></li>
@@ -125,19 +125,17 @@
             
 	    <div id="create_controller" class="main">
                 <h3>Membuat Controller</h3>
-		<p>Untuk membuat controller tambahkan sebuah file baru di dalam folder <strong>apps/controller/</strong>
-dan beri nama sesuai dengan yang diinginkan, misalnya <strong>home.php</strong>.</p>
+		<p>Untuk membuat controller tambahkan sebuah file baru di dalam folder <strong>app/Controllers/</strong>
+dan beri nama sesuai dengan yang diinginkan, misalnya <strong>Home.php</strong>.</p>
                 <p>Buat sebuah class baru di dalam file ini di mana class tersebut menjadi <strong><em>subclass inherits</em></strong>
-dari class Panada, berikut adalah contohnya:</p>
+dari class Resources\Controllers, berikut adalah contohnya:</p>
 
-<textarea rows="14" cols="50" class="textarea">
+<textarea rows="12" cols="50" class="textarea">
 &lt;?php
-class Controller_home extends Panada {
-    
-    public function __construct(){
-        
-        parent::__construct();
-    }
+namespace Controllers;
+use Resources;
+
+class Home extends Resources\Controllers {
     
     public function index(){
         
@@ -147,15 +145,15 @@ class Controller_home extends Panada {
 </textarea>
 
                 <div id="notice">
-                    Yang harus diperhatikan adalah <strong>prefix</strong> nama class. Di mana prefix ini menunjukan lokasi folder class
-tersebut. Untuk controller, prefix-nya adalah <strong>"Controller_"</strong>. Hal yang sama juga berlaku pada class untuk library, dengan prefix <strong>"Library_"</strong>
-dan class untuk model dengan prefix <strong>"Model_"</strong>
+                    Yang harus diperhatikan adalah <strong>namespace</strong> nama class. Di mana namespace ini menunjukan lokasi folder class
+tersebut. Untuk controller, namespace-nya adalah <strong>"Controllers"</strong>. Hal yang sama juga berlaku pada class untuk library, dengan namespace <strong>"Libraries"</strong>
+dan class untuk model dengan namespace <strong>"Models"</strong>
 		</div>
             </div>
             
 	    <div id="controllers_method" class="main">
                 <h3>Controller Method</h3>
-                <p>Sebuah controller setidak-tidaknya harus memiliki method <strong>__construct</strong> dan <strong>index</strong>. Jika controller
+                <p>Sebuah controller setidak-tidaknya harus menggunakan namespace <strong>Resources</strong> yang akan digunakan untuk melakukan extend terhadap calsss Controllers. Jika controller
 ini dikases tanpa argumen apapun, maka method yang akan diakses adalah index.</p>
             
                 <p>Jika aplikasi diakses dengan alamat:</p>
@@ -166,18 +164,16 @@ ini dikases tanpa argumen apapun, maka method yang akan diakses adalah index.</p
                 <code>
                     http://www.mysite.com/home/index
                 </code>
-                <p>Untuk mengakses method di dalam class controller, tambahkan argumen "<strong>nama_method</strong>" setelah nama controllor pada alamat url.</p>
+                <p>Untuk mengakses method di dalam class controller, tambahkan argumen "<strong>namaMethod</strong>" setelah nama controllor pada alamat url.</p>
                 <code>
-                    http://www.mysite.com/home/nama_method
+                    http://www.mysite.com/home/namaMethod
                 </code>
 <textarea rows="21" cols="50" class="textarea">
 &lt;?php
-class Controller_home extends Panada {
-    
-    public function __construct(){
-        
-        parent::__construct();
-    }
+namespace Controllers;
+use Resources;
+
+class Home extends Resources\Controllers {
     
     public function index(){
         
@@ -204,12 +200,10 @@ class Controller_home extends Panada {
 		<p>Maka untuk mendapatkan nilai <strong>budi</strong> dan <strong>jakarta</strong> di dalam method <strong>user</strong>, berikut adalah contohnya:</p>
 <textarea rows="19" cols="50" class="textarea">
 &lt;?php
-class Controller_home extends Panada {
-    
-    public function __construct(){
-        
-        parent::__construct();
-    }
+namespace Controllers;
+use Resources;
+
+class Home extends Resources\Controllers {
     
     public function index(){
         
@@ -228,23 +222,26 @@ class Controller_home extends Panada {
                 <h3>Load Component</h3>
                 <p>Untuk me-load library ataupun model di dalam controller, berikut adalah contohnya:</p>
                             
-<textarea rows="19" cols="50" class="textarea">
+<textarea rows="22" cols="50" class="textarea">
 &lt;?php
-class Controller_home extends Panada {
+namespace Controllers;
+use Resources, Models, Libraries;
+
+class Home extends Resources\Controllers {
     
     public function __construct(){
         
-        parent::__construct();
-        
         // Load model
-        $this->users = new Model_users();
-        // Load library
-        $this->session = new Library_session();
+	$this->users = new Models\Users;
+	
+	// Load library
+        $this->test = new Libraries\test;
+        
     }
     
     public function index(){
         
-        print_r( $this->users->users() );
+        print_r( $this->users->name() );
     }
 }
 </textarea>
