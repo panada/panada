@@ -8,9 +8,9 @@ class Config {
     static private function _cache($name){
         
         if( ! isset(self::$config[$name]) ) {
-            require APP . 'config/'.$name.'.php';
-            self::$config[$name] = $$name;
-            return $$name;
+            $array = require APP . 'config/'.$name.'.php';
+            self::$config[$name] = $array;
+            return $array;
         }
         else {
             return self::$config[$name];

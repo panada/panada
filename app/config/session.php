@@ -1,6 +1,6 @@
 <?php
 
-$session = array(
+return array(
     
     'expiration' => 7200,
     'name' => 'PAN_SID',

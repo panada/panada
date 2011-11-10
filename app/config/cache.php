@@ -1,6 +1,6 @@
 <?php
 
-$cache = array(
+return array(
     
     'default' => array(
         'driver' => 'dummy',

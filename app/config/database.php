@@ -1,6 +1,6 @@
 <?php
 
-$database = array(
+return array(
     
     'default' => array(
         'driver' => 'mysql',
@@ -48,7 +48,6 @@ $database = array(
         'persistent' => false,
         'options' => array(),
     ),
-    */
     
     'cubrid' => array(
         'driver' => 'cubrid',
@@ -62,4 +61,6 @@ $database = array(
         'persistent' => false,
         'autoCommit' => true,
     ),
+    */
+    
 );

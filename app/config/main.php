@@ -1,6 +1,6 @@
 <?php
 
-$main = array(
+return array(
     
     'module' => array(
         'path' => GEAR,
