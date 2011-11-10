@@ -35,6 +35,9 @@ class RunException extends \Exception {
     
     public static function errorHandlerCallback($errno, $message, $file, $line){
         
+        if($errno == E_WARNING)
+            return;
+        
         self::outputError($message, $file, $line);
     }
     

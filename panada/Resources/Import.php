@@ -15,9 +15,6 @@ class Import {
             $className = end( $arr );
         }
         
-        if( empty($args) )
-            return new $className;
-        
         $reflector = new \ReflectionClass($className);
         return $reflector->newInstanceArgs($args);
     }
