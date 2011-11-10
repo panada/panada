@@ -32,4 +32,25 @@ class Config {
     static public function database(){
         return self::_cache('database');
     }
+    
+    /**
+     * Hendler for user defined config
+     */
+    public static function __callStatic( $name, $arguments = array() ){
+        
+        // Does cache for this config exists?
+        if( isset(self::$config[$name]) )
+            return self::$config[$name];
+        
+        // Does the config file exists?
+        try{
+            if( ! file_exists( $file = APP . 'config/'.$name.'.php' ) )
+                throw new RunException('Config file in '.$file.' does not exits');
+        }
+        catch(RunException $e){
+            RunException::outputError($e->getMessage());
+        }
+        
+        return self::_cache($name);
+    }
 }
