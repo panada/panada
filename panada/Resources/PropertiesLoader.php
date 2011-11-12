@@ -11,14 +11,15 @@ class PropertiesLoader {
         $this->classNamespace = $classNamespace;
     }
     
-    public function __get($name){
+    public function __call( $name, $arguments = array() ){
         
         $class = $this->classNamespace.'\\'.ucwords($name);
         
         if( $this->childNamespace[0] == 'Modules' )
             $class = $this->childNamespace[0].'\\'.$this->childNamespace[1].'\\'.$class;
         
-        $object = new $class;
+        $reflector = new \ReflectionClass($class);
+        $object = $reflector->newInstanceArgs($arguments);
         
         $object->library    = new PropertiesLoader( $this->childNamespace, 'Libraries' );
         $object->model      = new PropertiesLoader( $this->childNamespace, 'Models' );
@@ -30,5 +31,9 @@ class PropertiesLoader {
         $object->Models     = clone $object->model;
         
         return $object;
+    }
+    
+    public function __get($name){
+        return $this->__call($name);
     }
 }
