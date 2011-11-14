@@ -85,33 +85,33 @@ class Email {
     /**
      * @var integer Define SMTP connection.
      */
-    private $smtp_connection    = 0;
+    private $smtpConnection    = 0;
     
     /**
      * @var integer The SMTP connection timeout, in seconds.
      */
-    private $timeout_connection = 30;
+    private $timeoutConnection = 30;
     
     /**
      * @var string  String to say "helo/ehlo" to smtp server.
      */
-    public  $smtp_ehlo_host     = 'localhost';
+    public  $smtpEhloHost     = 'localhost';
     
     /**
      * @var string  Enter character.
      *              ID: Karakter enter.
      */
-    private $break_line         = "\r\n";
+    private $breakLine         = "\r\n";
     
     /**
      * @var array   Group of debug messages.
      */
-    private $debug_messages     = array();
+    private $debugMessages     = array();
     
     /**
      * @var string  Mailer useragent.
      */
-    private $panada_x_mailer    = 'Panada Mailer Version 0.3';
+    private $panadaXMailer    = 'Panada Mailer Version 0.3';
     
     
     /**
@@ -127,16 +127,16 @@ class Email {
     public function mail($rcptTo = '', $subject = '', $message = '', $fromEmail = '', $fromName = ''){
         
         if( is_array($rcptTo) ) {
-            $this->rcptTo  = $this->clean_email($rcptTo);
+            $this->rcptTo  = $this->cleanEmail($rcptTo);
         }
         else {
             
             $rcpt_break = explode(',', $rcptTo);
             
             if( count($rcpt_break) > 0 )
-                $this->rcptTo  = $this->clean_email($rcpt_break);
+                $this->rcptTo  = $this->cleanEmail($rcpt_break);
             else
-                $this->rcptTo  = $this->clean_email(array($rcptTo));
+                $this->rcptTo  = $this->cleanEmail(array($rcptTo));
         }
         
         $this->subject          = $subject;
@@ -148,10 +148,10 @@ class Email {
         if($this->smtpHost != '' || $this->mailerType == 'smtp') {
             
             $this->mailerType = 'smtp';
-            return $this->smtp_send();
+            return $this->smtpSend();
         }
         else {
-            return $this->mailer_native();
+            return $this->mailerNative();
         }
     }
     
@@ -160,9 +160,9 @@ class Email {
      *
      * @return string
      */
-    public function print_debug(){
+    public function printDebug(){
         
-        foreach($this->debug_messages as $message)
+        foreach($this->debugMessages as $message)
             echo $message.'<br />';
     }
     
@@ -172,7 +172,7 @@ class Email {
      * @param string
      * @return array
      */
-    private function clean_email($email){
+    private function cleanEmail($email){
         
         foreach($email as $email)
             $return[] = trim(strtolower($email));
@@ -185,14 +185,14 @@ class Email {
      *
      * @return booelan
      */
-    private function mailer_native(){
+    private function mailerNative(){
         
         if( ! mail($this->rcptToCtring, $this->subject, $this->message, $this->header()) ) {
-            $this->debug_messages[] = 'Error: Sending email failed';
+            $this->debugMessages[] = 'Error: Sending email failed';
             return false;
         }
         else {
-            $this->debug_messages[] = 'Success: Sending email succeeded';
+            $this->debugMessages[] = 'Success: Sending email succeeded';
             return true;
         }
     }
@@ -203,9 +203,9 @@ class Email {
      * @param string
      * @return void
      */
-    private function write_command($command){
+    private function writeCommand($command){
         
-        fwrite($this->smtp_connection, $command);
+        fwrite($this->smtpConnection, $command);
     }
     
     /**
@@ -213,13 +213,13 @@ class Email {
      *
      * @return string
      */
-    private function get_smtp_response() {
+    private function getSmtpResponse() {
         
         $return = '';
         
-        while($str = fgets($this->smtp_connection, 515)) {
+        while($str = fgets($this->smtpConnection, 515)) {
             
-            $this->debug_messages[] = 'Success: ' . $str;
+            $this->debugMessages[] = 'Success: ' . $str;
             
             $return .= $str;
             
@@ -236,29 +236,29 @@ class Email {
      *
      * @return boolean
      */
-    private function smtp_connect() {
+    private function smtpConnect() {
         
         //Connect to smtp server
-        $this->smtp_connection = fsockopen(
+        $this->smtpConnection = fsockopen(
                                     ($this->smtpSecure && $this->smtpSecure == 'ssl' ? 'ssl://' : '').$this->smtpHost,
                                     $this->smtpPort,
                                     $errno,
                                     $errstr,
-                                    $this->timeout_connection
+                                    $this->timeoutConnection
                                 );
        
-        if( empty($this->smtp_connection) ) {
+        if( empty($this->smtpConnection) ) {
             
-            $this->debug_messages[] = 'Error: Failed to connect to server! Error number: ' .$errno . ' (' . $errstr . ')';
+            $this->debugMessages[] = 'Error: Failed to connect to server! Error number: ' .$errno . ' (' . $errstr . ')';
             
             return false;
         }
         
         //Add extra time to get respnose from server.
-        socket_set_timeout($this->smtp_connection, $this->timeout_connection, 0);
+        socket_set_timeout($this->smtpConnection, $this->timeoutConnection, 0);
         
-        $response = $this->get_smtp_response();
-        $this->debug_messages[] = 'Success: ' . $response;
+        $response = $this->getSmtpResponse();
+        $this->debugMessages[] = 'Success: ' . $response;
         
         return true;
     }
@@ -268,43 +268,43 @@ class Email {
      *
      * @return boolean
      */
-    private function smtp_login() {
+    private function smtpLogin() {
         
         //SMTP authentication command
-        $this->write_command('AUTH LOGIN' . $this->break_line);
+        $this->writeCommand('AUTH LOGIN' . $this->breakLine);
         
-        $response = $this->get_smtp_response();
+        $response = $this->getSmtpResponse();
         $code = substr($response, 0, 3);
         
         if($code != 334) {
             
-            $this->debug_messages[] = 'Error: AUTH not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
+            $this->debugMessages[] = 'Error: AUTH not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
             
             return false;
         }
         
         // Send encoded username
-        $this->write_command( base64_encode($this->smtpUsername) . $this->break_line );
+        $this->writeCommand( base64_encode($this->smtpUsername) . $this->breakLine );
         
-        $response = $this->get_smtp_response();
+        $response = $this->getSmtpResponse();
         $code = substr($response, 0, 3);
         
         if($code != 334){
             
-            $this->debug_messages[] = 'Error: Username not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
+            $this->debugMessages[] = 'Error: Username not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
             
             return false;
         }
         
         // Send encoded password
-        $this->write_command( base64_encode($this->smtpPassword) . $this->break_line );
+        $this->writeCommand( base64_encode($this->smtpPassword) . $this->breakLine );
         
-        $response = $this->get_smtp_response();
+        $response = $this->getSmtpResponse();
         $code = substr($response, 0, 3);
         
         if($code != 235) {
             
-            $this->debug_messages[] = 'Error: Password not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
+            $this->debugMessages[] = 'Error: Password not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
            
             return false;
         }
@@ -317,11 +317,11 @@ class Email {
      *
      * @return void
      */
-    private function smtp_close() {
+    private function smtpClose() {
         
-        if( ! empty($this->smtp_connection) ) {
-            fclose($this->smtp_connection);
-            $this->smtp_connection = 0;
+        if( ! empty($this->smtpConnection) ) {
+            fclose($this->smtpConnection);
+            $this->smtpConnection = 0;
         }
     }
     
@@ -330,13 +330,13 @@ class Email {
      *
      * @return boolean
      */
-    private function make_ehlo() {  
+    private function makeEhlo() {  
         
         /**
          * IF smtp not accpeted EHLO then try HELO.
          */
-        if( ! $this->smtp_ehlo('EHLO') )
-            if( ! $this->smtp_ehlo('HELO') )
+        if( ! $this->smtpEhlo('EHLO') )
+            if( ! $this->smtpEhlo('HELO') )
                 return false;
         
         return true;
@@ -348,18 +348,18 @@ class Email {
      * @param string
      * @return boolean
      */
-    private function smtp_ehlo($hello) {
+    private function smtpEhlo($hello) {
         
-        $this->write_command( $hello . ' ' . $this->smtp_ehlo_host . $this->break_line);
+        $this->writeCommand( $hello . ' ' . $this->smtpEhloHost . $this->breakLine);
         
-        $response = $this->get_smtp_response();
+        $response = $this->getSmtpResponse();
         $code = substr($response, 0, 3);
         
-        $this->debug_messages[] = 'Success: helo reply from server is: ' . $response;
+        $this->debugMessages[] = 'Success: helo reply from server is: ' . $response;
         
         if($code != 250){
             
-            $this->debug_messages[] = 'Error: '.$hello.' not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
+            $this->debugMessages[] = 'Error: '.$hello.' not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
             
             return false;
         }
@@ -372,18 +372,18 @@ class Email {
      *
      * @return boolean
      */
-    private function smtp_from() {
+    private function smtpFrom() {
         
-        $this->write_command("MAIL FROM:<" . $this->fromEmail . ">" . $this->break_line);
+        $this->writeCommand("MAIL FROM:<" . $this->fromEmail . ">" . $this->breakLine);
         
-        $response = $this->get_smtp_response();
+        $response = $this->getSmtpResponse();
         $code = substr($response, 0, 3);
         
-        $this->debug_messages[] = 'Success: ' . $response;
+        $this->debugMessages[] = 'Success: ' . $response;
         
         if($code != 250) {
             
-            $this->debug_messages[] = 'Error: MAIL not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
+            $this->debugMessages[] = 'Error: MAIL not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
             
             return false;
         }
@@ -397,18 +397,18 @@ class Email {
      * @param string
      * @return boolean
      */
-    private function smtp_recipient($to) {
+    private function smtpRecipient($to) {
         
-        $this->write_command("RCPT TO:<" . $to . ">" . $this->break_line);
+        $this->writeCommand("RCPT TO:<" . $to . ">" . $this->breakLine);
         
-        $response = $this->get_smtp_response();
+        $response = $this->getSmtpResponse();
         $code = substr($response, 0, 3);
         
-        $this->debug_messages[] = 'Success: ' . $response;
+        $this->debugMessages[] = 'Success: ' . $response;
         
         if($code != 250 && $code != 251) {
             
-            $this->debug_messages[] = 'Error: RCPT not accepted from server! Error number: ' .$code . ' (' . substr($response,4) . ')';
+            $this->debugMessages[] = 'Error: RCPT not accepted from server! Error number: ' .$code . ' (' . substr($response,4) . ')';
             
             return false;
         }
@@ -425,11 +425,11 @@ class Email {
         
         $fromName  = ($this->fromName != '') ? $this->fromName : $this->fromEmail;
         
-        $headers['from']        = 'From: ' . $fromName . ' <' . $this->fromEmail . '>' . $this->break_line;
-        $headers['priority']    = 'X-Priority: '. $this->priority . $this->break_line;
-        $headers['mailer']      = 'X-Mailer: ' .$this->panada_x_mailer . $this->break_line;
-        $headers['mime']        = 'MIME-Version: 1.0' . $this->break_line;
-        $headers['cont_type']   = 'Content-type: text/'.$this->messageType.'; charset=iso-8859-1' . $this->break_line;
+        $headers['from']        = 'From: ' . $fromName . ' <' . $this->fromEmail . '>' . $this->breakLine;
+        $headers['priority']    = 'X-Priority: '. $this->priority . $this->breakLine;
+        $headers['mailer']      = 'X-Mailer: ' .$this->panadaXMailer . $this->breakLine;
+        $headers['mime']        = 'MIME-Version: 1.0' . $this->breakLine;
+        $headers['cont_type']   = 'Content-type: text/'.$this->messageType.'; charset=iso-8859-1' . $this->breakLine;
         
         if($this->mailerType == 'native') {
             $return = '';
@@ -441,15 +441,15 @@ class Email {
         else {
             
             // Additional headers needed by smtp.
-            $this->write_command('To: ' . $this->rcptToCtring . $this->break_line);
-            $this->write_command('Subject:' . $this->subject. $this->break_line);
+            $this->writeCommand('To: ' . $this->rcptToCtring . $this->breakLine);
+            $this->writeCommand('Subject:' . $this->subject. $this->breakLine);
             
             foreach($headers as $key => $val) {
                 
                 if($key == 'cont_type')
-                    $val = str_replace($this->break_line, "\n\n", $val);
+                    $val = str_replace($this->breakLine, "\n\n", $val);
                 
-                $this->write_command($val);
+                $this->writeCommand($val);
             }
         }
     }
@@ -459,37 +459,37 @@ class Email {
      *
      * @return boolean
      */
-    private function smtp_data() {
+    private function smtpData() {
         
-        $this->write_command('DATA' . $this->break_line);
+        $this->writeCommand('DATA' . $this->breakLine);
         
-        $response = $this->get_smtp_response();
+        $response = $this->getSmtpResponse();
         $code = substr($response, 0, 3);
         
-        $this->debug_messages[] = 'Success: ' . $response;
+        $this->debugMessages[] = 'Success: ' . $response;
         
         if($code != 354) {
             
-            $this->debug_messages[] = 'Error: DATA command not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
+            $this->debugMessages[] = 'Error: DATA command not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
             
             return false;
         }
         
         $this->header();
-        $this->write_command($this->message . $this->break_line);
+        $this->writeCommand($this->message . $this->breakLine);
         
         
         //All messages have sent
-        $this->write_command( $this->break_line . '.' . $this->break_line);
+        $this->writeCommand( $this->breakLine . '.' . $this->breakLine);
         
-        $response = $this->get_smtp_response();
+        $response = $this->getSmtpResponse();
         $code = substr($response, 0, 3);
         
-        $this->debug_messages[] = 'Success: ' . $response;
+        $this->debugMessages[] = 'Success: ' . $response;
         
         if($code != 250){
             
-            $this->debug_messages[] = 'Error: DATA command not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
+            $this->debugMessages[] = 'Error: DATA command not accepted from server! Error number: ' .$code . ' (' . substr($response, 4) . ')';
             
             return false;
         }
@@ -502,14 +502,14 @@ class Email {
      *
      * @return boolean
      */
-    private function do_connect() {
+    private function doConnect() {
         
-        if( $this->smtp_connect() ) {
+        if( $this->smtpConnect() ) {
             
-            $this->make_ehlo();
+            $this->makeEhlo();
             
             if( ! empty($this->smtpUsername) ){
-                if( ! $this->smtp_login() )
+                if( ! $this->smtpLogin() )
                     $connection = false;
             }
             
@@ -527,21 +527,21 @@ class Email {
      *
      * @return boolean
      */
-    private function smtp_send() {
+    private function smtpSend() {
        
-        if(!$this->do_connect())
+        if(!$this->doConnect())
             return false;
         
-        if( ! $this->smtp_from())
+        if( ! $this->smtpFrom())
             return false;
         
         foreach($this->rcptTo as $recipient)
-            $this->smtp_recipient($recipient);
+            $this->smtpRecipient($recipient);
         
-        if( ! $this->smtp_data() )
+        if( ! $this->smtpData() )
             return false;
         
-        $this->smtp_close();
+        $this->smtpClose();
         
         return true;
     }
