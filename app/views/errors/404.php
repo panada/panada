@@ -14,7 +14,6 @@ h1.logo{margin:7px 0 20px 0;border-bottom:none; text-align:center;}
 h2{font-size:16px;}p,li,dd,dt,td{padding-bottom:2px;font-size:12px;line-height:18px;}
 h3{font-size:14px;}
 ul,ol,dl{padding:5px 5px 5px 22px; }
-p{text-align: justify;}
 code{font:14px Consolas,Courier New,Verdana;background:#ddf;color:#c00;border:1px solid #D0D0D0;display:block;margin:14px 0;padding:10px;border-radius:8px;}
 #foot {text-align: left; margin-top: 1.8em; border-top: 1px solid #dadada; padding-top: 1em; font-size: 0.7em;}
 #foot span.right {float:right;}

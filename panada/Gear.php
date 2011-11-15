@@ -31,7 +31,7 @@ final class Gear {
         $this->firstUriPath     = ucwords( $this->uriObj->getClass() );
         $controllerNamespace    = 'Controllers\\' . $this->firstUriPath;
         
-        if( ! file_exists( APP . 'Controllers/' . $this->firstUriPath . '.php' ) ){
+        if( ! file_exists( $classFile = APP . 'Controllers/' . $this->firstUriPath . '.php' ) ){
             $this->controllerHandler();
             return;
         }
@@ -40,6 +40,9 @@ final class Gear {
         
         if( ! $request = $this->uriObj->getRequests() )
             $request = array();
+        
+        if( ! class_exists($controllerNamespace) )
+            throw new Resources\RunException('Class '.$controllerNamespace.'  not found in '.$classFile);
         
         $instance = new $controllerNamespace;
         $instance->uri = $this->uriObj;
@@ -149,12 +152,16 @@ final class Gear {
         
         $controllerClass    = ucwords( $this->uriObj->getMethod() );
         
-        if( ! file_exists( APP . 'Controllers/' . $this->firstUriPath . '/' . $controllerClass . '.php') ){
+        if( ! file_exists( $classFile = APP . 'Controllers/' . $this->firstUriPath . '/' . $controllerClass . '.php') ){
             $this->moduleHandler();
             return;
         }
         
         $controllerNamespace    = 'Controllers\\' . $this->firstUriPath . '\\' .$controllerClass;
+        
+        if( ! class_exists($controllerNamespace) )
+            throw new Resources\RunException('Class '.$controllerNamespace.'  not found in '.$classFile);
+            
         $instance               = new $controllerNamespace;
         $instance->uri          = $this->uriObj;
         $request                = array_slice( $this->uriObj->path(), 3);
@@ -184,10 +191,14 @@ final class Gear {
         $controllerClass = ucwords( $controllerClass );
         
         // Does this class's file exists?
-        if( ! file_exists( $file = $moduleFolder . 'Controllers/' . $controllerClass . '.php' ) )
-            throw new Resources\RunException('Resource '.$file.' not available!');
+        if( ! file_exists( $classFile = $moduleFolder . 'Controllers/' . $controllerClass . '.php' ) )
+            throw new Resources\RunException('Resource '.$classFile.' not available!');
         
         $controllerNamespace    = 'Modules\\'.$this->firstUriPath.'\Controllers\\'.$controllerClass;
+        
+        if( ! class_exists($controllerNamespace) )
+            throw new Resources\RunException('Class '.$controllerNamespace.'  not found in '.$classFile);
+            
         $instance               = new $controllerNamespace;
         $instance->uri          = $this->uriObj;
         $request                = array_slice( $this->uriObj->path(), 3);
