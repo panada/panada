@@ -178,11 +178,14 @@ final class Gear {
         if( ! $method = $this->uriObj->path(2) )
             $method = 'index';
         
-        if( ! method_exists($instance, $method) )
-            throw new Resources\HttpException('Method '.$method.' does not exists in controller /'.$this->firstUriPath.'/'.$controllerClass.'.');
-        
-        // This defined method doesn't exists, but we didn't
-        // implement alias method.
+        if( ! method_exists($instance, $method) ){
+            
+            $request = array_slice( $this->uriObj->path(), 2);
+            $method = $this->config['main']['alias']['method'];
+            
+            if( ! method_exists($instance, $method) )
+                throw new Resources\HttpException('Method '.$this->uriObj->path(2).' does not exists in controller /'.$this->firstUriPath.'/'.$controllerClass.'.');
+        }
         
         $this->run($instance, $method, $request);
     }
