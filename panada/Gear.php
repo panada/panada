@@ -150,12 +150,21 @@ final class Gear {
      */
     private function subControllerHandler(){
         
-        $controllerClass    = ucwords( $this->uriObj->getMethod() );
-        
-        if( ! file_exists( $classFile = APP . 'Controllers/' . $this->firstUriPath . '/' . $controllerClass . '.php') ){
+        if( ! is_dir( $subControllerFolder = APP . 'Controllers/' . $this->firstUriPath .'/') ){
             $this->moduleHandler();
             return;
         }
+        
+        $controllerClass = $this->uriObj->getMethod(null);
+        
+        // No argument? set to default controller: Home.
+        if( is_null($controllerClass) )
+            $controllerClass = 'Home';
+        
+        $controllerClass = ucwords( $controllerClass );
+        
+        if( ! file_exists( $classFile = $subControllerFolder . $controllerClass . '.php') )
+            throw new Resources\HttpException('Controller '.$controllerClass.' does not exists in sub-controller '.$this->firstUriPath.'.');
         
         $controllerNamespace    = 'Controllers\\' . $this->firstUriPath . '\\' .$controllerClass;
         
@@ -195,9 +204,9 @@ final class Gear {
         
         // Does this class's file exists?
         if( ! file_exists( $classFile = $moduleFolder . 'Controllers/' . $controllerClass . '.php' ) )
-            throw new Resources\RunException('Resource '.$classFile.' not available!');
+            throw new Resources\HttpException('Controller '.$controllerClass.' does not exists in module '.$this->firstUriPath);
         
-        $controllerNamespace    = 'Modules\\'.$this->firstUriPath.'\Controllers\\'.$controllerClass;
+        $controllerNamespace = 'Modules\\'.$this->firstUriPath.'\Controllers\\'.$controllerClass;
         
         if( ! class_exists($controllerNamespace) )
             throw new Resources\RunException('Class '.$controllerNamespace.'  not found in '.$classFile);
