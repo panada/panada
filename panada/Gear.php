@@ -183,7 +183,7 @@ final class Gear {
     private function moduleHandler(){
         
         if ( ! is_dir( $moduleFolder = $this->config['main']['module']['path'] . 'Modules/'. $this->firstUriPath . '/' ) )
-            throw new Resources\HttpException('The requested page does not exists.');
+            throw new Resources\HttpException('Controller, sub-controller or module '.$this->firstUriPath.' does not exists');
         
         if( ! $controllerClass = $this->uriObj->path(1) )
             $controllerClass = 'Home';
