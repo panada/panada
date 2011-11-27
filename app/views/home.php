@@ -24,7 +24,7 @@
     </p>
 </div>
 
-<div id="foot">Powered by <a href="http://panadaframework.com/">Panada</a> version 1.0.0-prototype
+<div id="foot">Powered by <a href="http://panadaframework.com/">Panada</a> version 1.0.0-nightly-build
 <!--<span class="right">Page rendered in seconds</span>--></div>
 <a href="http://github.com/k4ndar/Panada">
 <img src="<?php echo $this->uri->baseUri; ?>assets/img/forkgithub.png" style="position: absolute; top: 0; right: 0; border: 0;" alt="Fork me on GitHub"></a>	

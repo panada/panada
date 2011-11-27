@@ -1,24 +1,24 @@
 <?php
 /**
- * Hendler for request and mapped into, controller, metohd and requests.
+ * Handler for request and mapped into, controller, metohd and requests.
  *
- * @author Iskandar Soesman <k4ndar@yahoo.com>
- * @link http://panadaframework.com/
- * @license http://www.opensource.org/licenses/bsd-license.php
- * @since version 0.1.0
- * @package Resources
+ * @author	Iskandar Soesman <k4ndar@yahoo.com>
+ * @link	http://panadaframework.com/
+ * @license	http://www.opensource.org/licenses/bsd-license.php
+ * @since	version 0.1
+ * @package	Resources
  */
 namespace Resources;
 
 final class Uri {
     
     private $pathUri = array();
-    public $baseUri, $indexFile = null;
+    public $baseUri;
     
     /**
      * Class constructor
      *
-     * Difine the SPI mode, cli or web/http
+     * Difine the SAPI mode, cli or web/http
      *
      * @return void
      */
@@ -28,9 +28,6 @@ final class Uri {
 	    $this->pathUri = array_slice($_SERVER['argv'], 1);
 	    return;
 	}
-	
-	if( array_search(INDEX_FILE, explode('/', $_SERVER['REQUEST_URI'])) !== false )
-	    $this->indexFile = INDEX_FILE . '/';
 	
 	$selfArray      = explode('/', $_SERVER['PHP_SELF']);
 	$selfKey        = array_search(INDEX_FILE, $selfArray);
@@ -85,7 +82,7 @@ final class Uri {
     public function path($segment = false){
 	
 	if( $segment !== false )
-	    return isset( $this->pathUri[$segment] )? $this->pathUri[$segment]:false;
+	    return ( isset( $this->pathUri[$segment] ) && $this->pathUri[$segment] != INDEX_FILE ) ? $this->pathUri[$segment] : false;
 	else
 	    return $this->pathUri;
     }

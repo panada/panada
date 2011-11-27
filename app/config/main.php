@@ -2,6 +2,9 @@
 
 return array(
     
+    // Just put null value if you has enable .htaccess file
+    'indexFile' => INDEX_FILE . '/',
+    
     'module' => array(
         'path' => GEAR,
         'domainMapping' => array(),
