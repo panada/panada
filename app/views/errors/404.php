@@ -1,4 +1,3 @@
-<?php if ( ! error_reporting() ) exit(1); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +21,11 @@ code{font:14px Consolas,Courier New,Verdana;background:#ddf;color:#c00;border:1p
 <body>
     <div id="konten">
         <h1>Page not found!</h1>
+        <?php if( error_reporting() ): ?>
         <p>Message: <?php echo $message;?></p>
+        <?php else: ?>
+        <p>The requested URL <?php echo $_SERVER['REQUEST_URI'];?> was not found on this server.</p>
+        <?php endif; ?>
     </div>
     <div id="foot">&nbsp;</div>
 </body>
