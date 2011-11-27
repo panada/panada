@@ -172,6 +172,9 @@ final class Gear {
         if( ! method_exists($instance, $method) )
             throw new Resources\HttpException('Method '.$method.' does not exists in controller /'.$this->firstUriPath.'/'.$controllerClass.'.');
         
+        // This defined method doesn't exists, but we didn't
+        // implement alias method.
+        
         $this->run($instance, $method, $request);
     }
     
@@ -208,7 +211,9 @@ final class Gear {
         
         if( ! method_exists($instance, $method) )
             throw new Resources\HttpException('Method '.$method.' does not exists in controller '.$moduleFolder.$controllerClass);
-            
+        
+        // This defined method doesn't exists, but we didn't
+        // implement alias method.
         
         $this->run($instance, $method, $request );
     }
