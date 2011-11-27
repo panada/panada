@@ -53,7 +53,7 @@ final class Gear {
             $method = $this->config['main']['alias']['method'];
             
             if( ! method_exists($instance, $method) )
-                throw new Resources\HttpException('Method '.$method.' does not exists in controller '.$this->firstUriPath);
+                throw new Resources\HttpException('Method '.$this->uriObj->getMethod().' does not exists in controller '.$this->firstUriPath);
         }
         
         $this->run($instance, $method, $request);
