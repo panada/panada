@@ -1,4 +1,13 @@
 <?php
+/**
+ * Properties Loader.
+ *
+ * @author  Iskandar Soesman <k4ndar@yahoo.com>
+ * @link    http://panadaframework.com/
+ * @license http://www.opensource.org/licenses/bsd-license.php
+ * @since   version 1.0.0
+ * @package Resources
+ */
 namespace Resources;
 
 class PropertiesLoader {
@@ -19,7 +28,14 @@ class PropertiesLoader {
             $class = $this->childNamespace[0].'\\'.$this->childNamespace[1].'\\'.$class;
         
         $reflector = new \ReflectionClass($class);
-        $object = $reflector->newInstanceArgs($arguments);
+        
+        // Lets try this class's constructor.
+        try{
+            $object = $reflector->newInstanceArgs($arguments);
+        }
+        catch(\ReflectionException $e){
+            $object = new $class;
+        }
         
         $object->library    = new PropertiesLoader( $this->childNamespace, 'Libraries' );
         $object->model      = new PropertiesLoader( $this->childNamespace, 'Models' );
