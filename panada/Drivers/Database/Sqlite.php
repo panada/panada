@@ -2,8 +2,8 @@
 /**
  * Panada SQLite Database Driver.
  *
- * @package	Panada
- * @subpackage	Driver
+ * @package	Driver
+ * @subpackage	Database
  * @author	Iskandar Soesman.
  * @since	Version 0.3
  */

@@ -9,7 +9,7 @@
  */
 
 /**
- * EN: Makesure Memcache extension is enabled
+ * Makesure Memcache extension is enabled
  */
 namespace Drivers\Cache;
 use Resources\Interfaces as Interfaces;
@@ -19,7 +19,7 @@ class Memcache extends \Memcache implements Interfaces\Cache {
     private $port = 11211;
     
     /**
-     * EN: Load configuration from config file.
+     * Load configuration from config file.
      * @return void
      */
     
@@ -32,7 +32,7 @@ class Memcache extends \Memcache implements Interfaces\Cache {
 	    $this->addServer($server['host'], $server['port'], $server['persistent']);
 	
 	/**
-	 * EN: If you need compression Threshold, you can uncomment this
+	 * If you need compression Threshold, you can uncomment this
 	 */
 	//$this->setCompressThreshold(20000, 0.2);
     }

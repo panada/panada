@@ -1,19 +1,25 @@
 <?php
 /**
- * Hendler for controller process.
+ * Handler for controller process.
  *
- * @author Iskandar Soesman <k4ndar@yahoo.com>
- * @link http://panadaframework.com/
+ * @author  Iskandar Soesman <k4ndar@yahoo.com>
+ * @link    http://panadaframework.com/
  * @license http://www.opensource.org/licenses/bsd-license.php
- * @since version 0.1.0
+ * @since   version 1.0.0
  * @package Resources
  */
 namespace Resources;
 
 class Controller {
     
-    private $childNamespace, $viewCache, $viewFile;
-    public $config = array();
+    private
+        $childNamespace,
+        $viewCache,
+        $viewFile,
+        $configMain;
+    
+    public
+        $config = array();
     
     public function __construct(){
         
@@ -23,6 +29,8 @@ class Controller {
                             'namespaceArray' => explode( '\\', $child),
                             'namespaceString' => $child
                         );
+        
+        $this->configMain = Config::main();
         
     }
     
@@ -63,8 +71,7 @@ class Controller {
         $panadaFilePath = APP.'views/'.$panadaViewfile;
         
         if( $this->childClass['namespaceArray'][0] == 'Modules' ){
-            $configMain = Config::main();
-            $panadaFilePath = $configMain['module']['path'].$this->childClass['namespaceArray'][0].'/'.$this->childClass['namespaceArray'][1].'/views/'.$panadaViewfile;
+            $panadaFilePath = $this->configMain['module']['path'].$this->childClass['namespaceArray'][0].'/'.$this->childClass['namespaceArray'][1].'/views/'.$panadaViewfile;
         }
         
         try{
@@ -101,7 +108,7 @@ class Controller {
     }
     
     public function location($location = ''){
-	return $this->uri->baseUri . $this->uri->indexFile . $location;
+	return $this->uri->baseUri . $this->configMain['indexFile'] . $location;
     }
     
     public function redirect($location = '', $status = 302){

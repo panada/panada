@@ -1,4 +1,12 @@
 <?php
+/**
+ * Panada Cubrid API.
+ *
+ * @package	Driver
+ * @subpackage	Database
+ * @author	Iskandar Soesman
+ * @since	Version 1.0
+ */
 namespace Dirvers\Database;
 use Resources\Interfaces as Interfaces,
 Resources\RunException as RunException;

@@ -2,9 +2,10 @@
 /**
  * Panada Database API.
  *
- * @package	Panada
- * @subpackage	Library
- * @author	Iskandar Soesman.
+ * @package	Resources
+ * @link	http://panadaframework.com/
+ * @license     http://www.opensource.org/licenses/bsd-license.php
+ * @author	Iskandar Soesman <k4ndar@yahoo.com>
  * @since	Version 0.3
  */
 namespace Resources;

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Handler for configuration.
+ *
+ * @author  Iskandar Soesman <k4ndar@yahoo.com>
+ * @link    http://panadaframework.com/
+ * @license http://www.opensource.org/licenses/bsd-license.php
+ * @since   version 1.0.0
+ * @package Resources
+ */
 namespace Resources;
 
 class Config {
@@ -34,7 +43,7 @@ class Config {
     }
     
     /**
-     * Hendler for user defined config
+     * Handler for user defined config
      */
     public static function __callStatic( $name, $arguments = array() ){
         

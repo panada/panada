@@ -1,4 +1,13 @@
 <?php
+/**
+ * Importer class.
+ *
+ * @author  Iskandar Soesman <k4ndar@yahoo.com>
+ * @link    http://panadaframework.com/
+ * @license http://www.opensource.org/licenses/bsd-license.php
+ * @since   version 1.0.0
+ * @package Resources
+ */
 namespace Resources;
 
 class Import {

@@ -2,8 +2,8 @@
 /**
  * Panada MongoDB API.
  *
- * @package	Panada
- * @subpackage	Library
+ * @package	Driver
+ * @subpackage	Database
  * @author	Iskandar Soesman
  * @since	Version 0.2
  */
