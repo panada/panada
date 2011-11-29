@@ -1,6 +1,6 @@
 <?php
 /**
- * Panada Objet Cache session hendler.
+ * Panada Objet Cache session handler.
  *
  * @package	Driver
  * @subpackage	Session

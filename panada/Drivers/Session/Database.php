@@ -1,6 +1,6 @@
 <?php
 /**
- * Panada Database session hendler.
+ * Panada Database session handler.
  *
  * @package	Driver
  * @subpackage	Session

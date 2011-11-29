@@ -1,6 +1,6 @@
 <?php
 /**
- * Panada PHP native session hendler.
+ * Panada PHP native session handler.
  *
  * @package	Driver
  * @subpackage	Session
