@@ -20,7 +20,7 @@ class Mongodb extends \Mongo {
     public function __construct( $config, $connectionName ){
         
         /**
-        * Makesure Memcache extension is enabled
+        * Makesure Mongo extension is enabled
         */
        if( ! \extension_loaded('mongo') )
            die('Mongo extension that required by Mongodb Driver is not available.');
@@ -79,7 +79,7 @@ class Mongodb extends \Mongo {
      */
     public function date($str){
         
-        return new MongoDate(strtotime($str));
+        return new \MongoDate(strtotime($str));
     }
     
     /**
@@ -90,7 +90,7 @@ class Mongodb extends \Mongo {
      */
     public function _id($_id = null){
         
-        return new MongoId($_id);
+        return new \MongoId($_id);
     }
     
     /**
