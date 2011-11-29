@@ -7,7 +7,7 @@
  * @author	Iskandar Soesman
  * @since	Version 1.0
  */
-namespace Dirvers\Database;
+namespace Drivers\Database;
 use Resources\Interfaces as Interfaces,
 Resources\RunException as RunException;
 

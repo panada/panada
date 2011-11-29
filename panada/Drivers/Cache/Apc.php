@@ -21,7 +21,7 @@ class Apc implements Interfaces\Cache {
         * Makesure APC extension is enabled
         */
        if( ! extension_loaded('apc') )
-           die('APC extension that required by APC Deiver is not available.');
+           die('APC extension that required by APC Driver is not available.');
     }
     
     /**

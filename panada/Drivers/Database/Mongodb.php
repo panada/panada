@@ -7,7 +7,7 @@
  * @author	Iskandar Soesman
  * @since	Version 0.2
  */
-namespace Dirvers\Database;
+namespace Drivers\Database;
 use Resources\Tools as Tools;
 
 class Mongodb extends \Mongo {
