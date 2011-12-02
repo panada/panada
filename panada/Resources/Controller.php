@@ -99,12 +99,32 @@ class Controller {
         include_once $this->viewFile;
     }
     
-    public function outputJSON($data, $isReturnValue = false){
+    public function outputJSON($data, $headerCode = 200, $isReturnValue = false){
         
+        $output = $this->outputTransporter($data, 'json');
+        
+        if( $isReturnValue )
+            return $output;
+        
+        Tools::setStatusHeader($headerCode);
+        echo $output;
     }
     
-    public function outputXML($data, $isReturnValue = false){
+    public function outputXML($data, $headerCode = 200, $isReturnValue = false){
         
+        $output = $this->outputTransporter($data, 'xml');
+        
+        if( $isReturnValue )
+            return $output;
+        
+        Tools::setStatusHeader($headerCode);
+        echo $output;
+    }
+    
+    private function outputTransporter($data, $type){
+        
+        $rest = new Rest;
+        return $rest->wrapResponseOutput($data, $type);
     }
     
     public function location($location = ''){

@@ -8,22 +8,24 @@
  * @since	Version 0.2
  */
 namespace Drivers\Database;
-use Resources\Tools as Tools;
+use Resources\Tools as Tools,
+    Resources\RunException as RunException;
 
 class Mongodb extends \Mongo {
     
-    private $database;
-    private $config;
-    private $connection;
-    private $criteria = array();
+    private
+        $database,
+        $config,
+        $connection,
+        $criteria = array();
     
     public function __construct( $config, $connectionName ){
         
         /**
         * Makesure Mongo extension is enabled
         */
-       if( ! \extension_loaded('mongo') )
-           die('Mongo extension that required by Mongodb Driver is not available.');
+       if( ! extension_loaded('mongo') )
+           throw new RunException('Mongo extension that required by Mongodb Driver is not available.');
         
         $this->config = $config;
         $this->connection = $connectionName;
