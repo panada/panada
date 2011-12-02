@@ -30,8 +30,8 @@ class Controller {
                             'namespaceString' => $child
                         );
         
-        $this->configMain = Config::main();
-        
+        $this->configMain   = Config::main();
+        $this->uri          = new Uri;
     }
     
     public function __get($class){

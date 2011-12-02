@@ -45,7 +45,6 @@ final class Gear {
             throw new Resources\RunException('Class '.$controllerNamespace.'  not found in '.$classFile);
         
         $instance = new $controllerNamespace;
-        $instance->uri = $this->uriObj;
         
         if( ! method_exists($instance, $method) ){
             
@@ -133,7 +132,6 @@ final class Gear {
             $controller         = $this->config['main']['alias']['controller']['class'];
             $method             = $this->config['main']['alias']['controller']['method'];
             $instance           = new $controller;
-            $instance->uri      = $this->uriObj;
             $request            = $this->uriObj->path();
             
             $this->run($instance, $method, $request);
@@ -172,7 +170,6 @@ final class Gear {
             throw new Resources\RunException('Class '.$controllerNamespace.'  not found in '.$classFile);
             
         $instance               = new $controllerNamespace;
-        $instance->uri          = $this->uriObj;
         $request                = array_slice( $this->uriObj->path(), 3);
         
         if( ! $method = $this->uriObj->path(2) )
@@ -214,9 +211,8 @@ final class Gear {
         if( ! class_exists($controllerNamespace) )
             throw new Resources\RunException('Class '.$controllerNamespace.'  not found in '.$classFile);
             
-        $instance               = new $controllerNamespace;
-        $instance->uri          = $this->uriObj;
-        $request                = array_slice( $this->uriObj->path(), 3);
+        $instance   = new $controllerNamespace;
+        $request    = array_slice( $this->uriObj->path(), 3);
         
         if( ! $method = $this->uriObj->path(2) )
             $method = 'index';
