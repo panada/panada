@@ -32,8 +32,10 @@ class PropertiesLoader {
         if( $this->childNamespace[0] == 'Modules' )
             $class = $this->childNamespace[0].'\\'.$this->childNamespace[1].'\\'.$class;
         
+        $cacheKey = 'AutoLoaderClass_'.$class.json_encode($arguments);
+        
         // Are this class has ben called before?
-        if( $cachedObj = $this->cache->getValue($class) )
+        if( $cachedObj = $this->cache->getValue($cacheKey) )
             return $cachedObj;
         
         $reflector = new \ReflectionClass($class);
@@ -68,7 +70,7 @@ class PropertiesLoader {
         toReturn:
         
         // Save all defined object before returned.
-        $this->cache->setValue($class, $object);
+        $this->cache->setValue($cacheKey, $object);
         
         return $object;
     }
