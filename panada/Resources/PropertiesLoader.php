@@ -12,12 +12,17 @@ namespace Resources;
 
 class PropertiesLoader {
     
-    private $childNamespace, $classNamespace;
+    private
+        $childNamespace,
+        $classNamespace,
+        $cache;
     
     public function __construct($childNamespace, $classNamespace){
         
         $this->childNamespace = $childNamespace;
         $this->classNamespace = $classNamespace;
+        
+        $this->cache = new Cache('default', 'Dummy');
     }
     
     public function __call( $name, $arguments = array() ){
@@ -26,6 +31,10 @@ class PropertiesLoader {
         
         if( $this->childNamespace[0] == 'Modules' )
             $class = $this->childNamespace[0].'\\'.$this->childNamespace[1].'\\'.$class;
+        
+        // Are this class has ben called before?
+        if( $cachedObj = $this->cache->getValue($class) )
+            return $cachedObj;
         
         $reflector = new \ReflectionClass($class);
         
@@ -37,14 +46,29 @@ class PropertiesLoader {
             $object = new $class;
         }
         
+        // For Resources package, we dont need these following properties,
+        // since it never use it, just go to the return.
+        if( $this->classNamespace == 'Resources' )
+            goto toReturn;
+        
         $object->library    = new PropertiesLoader( $this->childNamespace, 'Libraries' );
         $object->model      = new PropertiesLoader( $this->childNamespace, 'Models' );
+        $object->resource   = new PropertiesLoader( $this->childNamespace, 'Resources' );
+        
         $object->Library    = clone $object->library;
         $object->libraries  = clone $object->library;
         $object->Libraries  = clone $object->library;
         $object->Model      = clone $object->model;
         $object->models     = clone $object->model;
         $object->Models     = clone $object->model;
+        $object->Resources  = clone $object->resource;
+        $object->resources  = clone $object->resource;
+        $object->Resource   = clone $object->resource;
+        
+        toReturn:
+        
+        // Save all defined object before returned.
+        $this->cache->setValue($class, $object);
         
         return $object;
     }

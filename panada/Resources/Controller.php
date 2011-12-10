@@ -45,6 +45,10 @@ class Controller {
             'Library' => 'Libraries',
             'libraries' => 'Libraries',
             'Libraries' => 'Libraries',
+            'Resources' => 'Resources',
+            'resources' => 'Resources',
+            'Resource' => 'Resources',
+            'resource' => 'Resources',
         );
         
         try{

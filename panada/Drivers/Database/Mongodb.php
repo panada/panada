@@ -36,6 +36,24 @@ class Mongodb extends \Mongo {
         parent::__construct($this->config['host'], $this->config['options']);
     }
     
+    /**
+     * Define the db name
+     *
+     * @param string $database
+     * @return object
+     */
+    public function database($database){
+        
+        $this->config['database'] = $database;
+        return $this;
+    }
+    
+    /**
+     * Define the collection name
+     *
+     * @param string $database
+     * @return object
+     */
     public function collection($collection){
         
         $database = $this->config['database'];
@@ -54,6 +72,8 @@ class Mongodb extends \Mongo {
         
         if( ! $cursor )
             return false;
+        
+        $return = false;
         
         /**
          * ID: Jika outputnya ingin berbentuk array, maka
@@ -79,9 +99,13 @@ class Mongodb extends \Mongo {
      *
      * @param string $str
      */
-    public function date($str){
+    public function date($str = null){
         
-        return new \MongoDate(strtotime($str));
+        if( is_null($str) )
+            return new \MongoDate();
+        
+        if( is_string($str) )
+            return new \MongoDate(strtotime($str));
     }
     
     /**

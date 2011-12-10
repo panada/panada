@@ -13,16 +13,19 @@ namespace Resources;
 class ActiveRecord {
     
     // Define the constants for db relations.
-    const BELONGS_TO = 1,
+    const
+        BELONGS_TO = 1,
         HAS_ONE = 2,
         HAS_MANY = 3,
         MANY_MANY = 4;
     
-    protected $table,
+    protected
+        $table,
         $connection = 'default',
         $setInstantiateClass = false;
     
-    private $db,
+    private
+        $db,
         $fields = array(),
         $condition = array(),
         $limit = null,
@@ -33,11 +36,12 @@ class ActiveRecord {
         $groupBy = array(),
         $modulPrefix = null;
     
-    public $primaryKey = 'id';
+    public
+        $primaryKey = 'id';
     
     public function __construct(){
         
-        $this->cache = new Cache('default', 'default');
+        $this->cache = new Cache('default', 'Dummy');
         
         // get passed arguments
         $args = func_get_args();

@@ -17,11 +17,10 @@ class Cache {
     public function __construct( $connection = 'default', $specifiedDriver = false ){
         
         $this->config = Config::cache();
+        $this->config = $this->config[$connection];
         
         if($specifiedDriver)
-            $connection = $specifiedDriver;
-        
-        $this->config = $this->config[$connection];
+            $this->config['driver'] = $specifiedDriver;
         
         $driverNamespace = 'Drivers\Cache\\'.ucwords($this->config['driver']);
         
