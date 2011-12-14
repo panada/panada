@@ -11,7 +11,7 @@ return array(
     ),
     
     'vendor' => array(
-        'path' => GEAR.'Vendors/'
+        'path' => GEAR.'vendors/'
     ),
     
     'alias' => array(

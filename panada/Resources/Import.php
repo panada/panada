@@ -14,7 +14,9 @@ class Import {
     
     public static function vendor($filePath, $className = false, $args = array()){
         
-        if( ! file_exists( $file = GEAR . 'vendors/'.$filePath.'.php' ) )
+        $config = Config::main();
+        
+        if( ! file_exists( $file = $config['vendor']['path'] . $filePath.'.php' ) )
             return false;
         
         include_once $file;
@@ -25,6 +27,14 @@ class Import {
         }
         
         $reflector = new \ReflectionClass($className);
-        return $reflector->newInstanceArgs($args);
+        
+        try{
+            $object = $reflector->newInstanceArgs($arguments);
+        }
+        catch(\ReflectionException $e){
+            $object = new $class;
+        }
+        
+        return $object;
     }
 }

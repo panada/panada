@@ -743,7 +743,7 @@ class Mysql implements Interfaces\Database {
      */
     public function version(){
 	
-	return $this->findVar("SELECT version() AS version");
+	return $this->getVar("SELECT version() AS version");
     }
     
     /**

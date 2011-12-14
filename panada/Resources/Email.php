@@ -12,107 +12,90 @@ namespace Resources;
 
 class Email {
     
-    /**
-     * @var array   Define the reception array variable.
-     */
-    public  $rcptTo            = array();
+    public
+        /**
+        * @var array   Define the reception array variable.
+        */
+        $rcptTo = array(),
+        /**
+        * @var string  Define email subject.
+        */
+        $subject = '',
+        /**
+        * @var string  Define email content.
+        */
+        $message = '',
+        /**
+        * @var string  Define email content type; plan or html.
+        */
+        $messageType = 'plain',
+        /**
+        * @var string  Define sender's email.
+        */
+        $fromEmail = '',
+        /**
+        * @var string  The sender name.
+        */
+        $fromName = '',
+        /**
+        * @var string  Mail application option. The option is: native (PHP mail function) or smtp.
+        */
+        $mailerType = 'native',
+        /**
+        * @var integer 1 = High, 3 = Normal, 5 = low.
+        */
+        $priority = 3,
+        /**
+        * @var string  SMTP server host.
+        */
+        $smtpHost = '',
+        /**
+        * @var integer SMTP server port.
+        */
+        $smtpPort = 25,
+        /**
+        * @var string | bool SMTP secure type.
+        */
+        $smtpSecure = false,
+        /**
+        * @var string  SMTP username.
+        */
+        $smtpUsername = '',
+        /**
+        * @var string  SMTP password.
+        */
+        $smtpPassword = '',
+        /**
+        * @var string  String to say "helo/ehlo" to smtp server.
+        */
+        $smtpEhloHost = 'localhost';
+        
     
-    /**
-     * @var string  Var for saving user email(s) that just converted from $rcptTo array.
-     */
-    private $rcptToCtring     = '';
-    
-    /**
-     * @var string  Define email subject.
-     */
-    public  $subject            = '';
-    
-    /**
-     * @var string  Define email content.
-     *              ID: Defenisikan isi email.
-     */
-    public  $message            = '';
-    
-    /**
-     * @var string  Define email content type; plan or html.
-     */
-    public  $messageType       = 'plain';
-    
-    /**
-     * @var string  Define sender's email.
-     */
-    public  $fromEmail         = '';
-    
-    /**
-     * @var string  The sender name.
-     */
-    public  $fromName          = '';
-    
-    /**
-     * @var string  Mail application option. The option is: native (PHP mail function) or smtp.
-     */
-    public  $mailerType        = 'native';
-    
-    /**
-     * @var integer 1 = High, 3 = Normal, 5 = low.
-     */
-    public  $priority           = 3;
-    
-    /**
-     * @var string  SMTP server host.
-     */
-    public  $smtpHost          = '';
-    
-    /**
-     * @var integer SMTP server port.
-     */
-    public  $smtpPort          = 25;
-    
-    /**
-     * @var string | bool SMTP secure type.
-     */
-    public  $smtpSecure        = false;
-    
-    /**
-     * @var string  SMTP username.
-     */
-    public  $smtpUsername      = '';
-    
-    /**
-     * @var string  SMTP password.
-     */
-    public  $smtpPassword      = '';
-    
-    /**
-     * @var integer Define SMTP connection.
-     */
-    private $smtpConnection    = 0;
-    
-    /**
-     * @var integer The SMTP connection timeout, in seconds.
-     */
-    private $timeoutConnection = 30;
-    
-    /**
-     * @var string  String to say "helo/ehlo" to smtp server.
-     */
-    public  $smtpEhloHost     = 'localhost';
-    
-    /**
-     * @var string  Enter character.
-     *              ID: Karakter enter.
-     */
-    private $breakLine         = "\r\n";
-    
-    /**
-     * @var array   Group of debug messages.
-     */
-    private $debugMessages     = array();
-    
-    /**
-     * @var string  Mailer useragent.
-     */
-    private $panadaXMailer    = 'Panada Mailer Version 0.3';
+    private
+        /**
+        * @var string  Var for saving user email(s) that just converted from $rcptTo array.
+        */
+        $rcptToCtring = '',
+        /**
+         * @var integer Define SMTP connection.
+         */
+        $smtpConnection = 0,
+        /**
+         * @var integer The SMTP connection timeout, in seconds.
+         */
+        $timeoutConnection = 30,
+        /**
+         * @var string  Enter character.
+         */
+        $breakLine = "\r\n",
+        /**
+         * @var array Group of debug messages.
+         */
+        $debugMessages = array(),
+        /**
+         * @var string  Mailer useragent.
+         */
+        $panadaXMailer = 'Panada Mailer Version 0.3';
     
     
     /**
