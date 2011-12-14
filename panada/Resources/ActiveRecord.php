@@ -123,7 +123,8 @@ class ActiveRecord {
                 $this->fields['db'],
                 $this->fields['primaryKey'],
                 $this->fields['setInstantiateClass'],
-                $this->fields['cache']
+                $this->fields['cache'],
+                $this->fields['modulPrefix']
             );
         }
         
