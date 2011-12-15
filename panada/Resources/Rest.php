@@ -75,6 +75,8 @@ class Rest {
 	
         if( ! empty($data) && $method != 'GET' ) {
 	    
+	    $data = http_build_query($data);
+	    
 	    if( $method == 'POST' )
 		curl_setopt($c, CURLOPT_POST, true);
 	    
@@ -82,8 +84,6 @@ class Rest {
 		$this->setRequestHeaders[] = 'Content-Length: ' . strlen($data);
 		curl_setopt($c, CURLOPT_CUSTOMREQUEST, $method);
 	    }
-	    
-	    $data = http_build_query($data);
 	    
 	    curl_setopt($c, CURLOPT_POSTFIELDS, $data);
         }
