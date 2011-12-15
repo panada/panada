@@ -176,7 +176,7 @@ class ActiveRecord {
      * @param int $limit
      * @return object if true else false
      */
-    public function find(){
+    public function get(){
         
         $args = func_get_args();
         $total = count($args);
@@ -420,13 +420,13 @@ class ActiveRecord {
             return $this->db->orderBy($this->primaryKey, 'DESC')->limit(1)->getOne();
         }
         
-        $splitedName = substr( $name, 6, strlen($name) );
+        $splitedName = substr( $name, 5, strlen($name) );
         
         if( $splitedName ){
             
             try{
                 if( empty($arguments) )
-                    throw new RunException('findBy<b>'.$splitedName.'</b>() in Active Record method expects 1 parameter and you dont given anything yet.');
+                    throw new RunException('getBy<b>'.$splitedName.'</b>() in Active Record method expects 1 parameter and you dont given anything yet.');
             }
             catch(RunException $e){
                 $arr = $e->getTrace();
@@ -496,7 +496,7 @@ class ActiveRecord {
                 $className = $this->modulPrefix.'Models\\'.ucwords($relations[1]);
                 
                 $name = new $className;
-                $findBy = 'findBy'.$name->primaryKey;
+                $findBy = 'getBy'.$name->primaryKey;
                 
                 if( $relations[0] == 1 ){
                     
@@ -505,7 +505,7 @@ class ActiveRecord {
                 }
                 elseif( $relations[0] == 2 ){
                     
-                    $findBy = 'findBy'.$relations[2];
+                    $findBy = 'getBy'.$relations[2];
                     $pk = $this->primaryKey;
                     
                     $name->limit(1);
