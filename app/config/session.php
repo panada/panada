@@ -8,7 +8,6 @@ return array(
     'cookiePath' => '/',
     'cookieSecure' => false,
     'cookieDomain' => '',
-    'cookieDomain' => '',
     'driver' => 'native', /* The option is 'native', 'cookie', cache or 'database' */
     'driverConnection' => 'default',
     'storageName' => 'sessions',

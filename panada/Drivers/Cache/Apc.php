@@ -11,7 +11,9 @@
  * pecl install apc
  */
 namespace Drivers\Cache;
-use Resources\Interfaces as Interfaces;
+use
+    Resources\Interfaces as Interfaces,
+    Resources\RunException as RunException;
     
 class Apc implements Interfaces\Cache {
     
@@ -21,7 +23,7 @@ class Apc implements Interfaces\Cache {
         * Makesure APC extension is enabled
         */
        if( ! extension_loaded('apc') )
-           die('APC extension that required by APC Driver is not available.');
+           throw new RunException('APC extension that required by APC Driver is not available.');
     }
     
     /**

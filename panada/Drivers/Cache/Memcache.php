@@ -12,7 +12,9 @@
  * Makesure Memcache extension is enabled
  */
 namespace Drivers\Cache;
-use Resources\Interfaces as Interfaces;
+use
+    Resources\Interfaces as Interfaces,
+    Resources\RunException as RunException;
 
 class Memcache extends \Memcache implements Interfaces\Cache {
     
@@ -26,7 +28,7 @@ class Memcache extends \Memcache implements Interfaces\Cache {
     public function __construct( $config ){
 	
 	if( ! extension_loaded('memcache') )
-	    die('Memcache extension that required by Memcache Driver is not available.');
+	    throw new RunException('Memcache extension that required by Memcache Driver is not available.');
         
         foreach($config['server'] as $server)
 	    $this->addServer($server['host'], $server['port'], $server['persistent']);

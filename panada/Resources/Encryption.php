@@ -10,12 +10,16 @@
  */
 namespace Resources;
 
+if( ! defined('PCRYPT_NONE') )
+    define('PCRYPT_NONE', 'none');
+
+if( ! defined('PCRYPT_BASE_64') )
+    define('PCRYPT_BASE_64', 'base_64');
+
+if( ! defined('PCRYPT_HEXA_DECIMAL') )
+    define('PCRYPT_HEXA_DECIMAL', 'hexa_decimal');
+
 class Encryption {
-    
-    const
-        NONE = 'none',
-        BASE_64 = 'base_64',
-        HEXA_DECIMAL = 'hexa_decimal';
     
     /**
      * @var string  Encoding type. none | base_64 | hexa_decimal
@@ -27,7 +31,7 @@ class Encryption {
      */
     public $key;
     
-    public function __construct($key = false, $encodeType = self::BASE_64){
+    public function __construct($key = false, $encodeType = PCRYPT_BASE_64){
         
         $this->encodeType = $encodeType;
         
