@@ -73,7 +73,7 @@ class Rest {
         if($this->responseOutputHeader)
             curl_setopt($c, CURLOPT_HEADER, true);
 	
-        if( ! empty($data) && $method != 'GET' ) {
+        if( $method != 'GET' ) {
 	    
 	    $data = http_build_query($data);
 	    
@@ -89,9 +89,11 @@ class Rest {
         }
 	
 	curl_setopt($c, CURLOPT_HTTPHEADER, $this->setRequestHeaders);
+	curl_setopt($c, CURLINFO_HEADER_OUT, true);
 	
         $contents = curl_exec($c);
 	$this->responseStatus = curl_getinfo($c, CURLINFO_HTTP_CODE);
+	$this->headerSent = curl_getinfo($c, CURLINFO_HEADER_OUT);
         
         curl_close($c);
 	
