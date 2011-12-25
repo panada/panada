@@ -17,15 +17,21 @@ class Mongodb extends \Mongo {
         $database,
         $config,
         $connection,
-        $criteria = array();
-    
+        $criteria = array(),
+        $documents = array();
+
+	protected
+        $limit = null,
+        $offset = null,
+        $order = array();
+            	
     public function __construct( $config, $connectionName ){
         
         /**
         * Makesure Mongo extension is enabled
         */
-       if( ! extension_loaded('mongo') )
-           throw new RunException('Mongo extension that required by Mongodb Driver is not available.');
+       if( ! class_exists('Mongo') )
+           throw new RunException('Mongo PECL extension that required by Mongodb Driver is not available.');
         
         $this->config = $config;
         $this->connection = $connectionName;
@@ -125,12 +131,15 @@ class Mongodb extends \Mongo {
      * @return object
      */
     public function select(){
-        
-	$this->documents = func_get_args();
-	
-        if( ! empty($this->documents) )
-	    $this->documents = array_fill_keys($this->documents, 1);
-        
+
+	$documents = func_get_args();
+		
+        if( ! empty($documents) )
+ 		$this->documents = $documents;
+ 
+ 	    if( is_array($documents[0]) )
+		$this->documents = $documents[0];
+
         return $this;
     }
     
@@ -187,7 +196,11 @@ class Mongodb extends \Mongo {
      */
     public function getAll(){
         
-	$value = $this->collection($this->collection_name)->find( $this->criteria, $this->documents );
+	$value = $this->collection($this->collection_name)->find( $this->criteria, $this->documents )->limit($this->limit)->skip($this->offset);
+	
+	if(count($this->order) > 0)
+		$value = $value->sort($this->order);
+		
 	$this->criteria = $this->documents = array();
 	
 	if( ! empty($value) )
@@ -258,6 +271,38 @@ class Mongodb extends \Mongo {
 	$this->criteria = array();
 	
 	return $value;
+    }   
+
+    /**
+     * Order By part when finding a document
+     *
+     * @param string $column, $order
+     * @return object
+     */
+    public function orderBy( $column, $order = 'asc' ){
+	
+	if( $order=='desc' ) 
+		$order = -1;
+	else
+		$order = 1;
+		
+	$this->order[$column] = $order;
+	
+	return $this;
+    }    
+
+    /**
+     * Limit and Offset part when finding a document
+     *
+     * @param string $limit, $offset
+     * @return object
+     */
+    public function limit( $limit, $offset = null ){
+	
+	$this->limit = $limit;
+	$this->offset = $offset;
+	
+	return $this;
     }
     
 }
