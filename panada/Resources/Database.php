@@ -14,11 +14,15 @@ class Database {
     
     private $driver, $config;
     
-    public function __construct( $connection = 'default' ){
+    public function __construct( $connection ){
         
         $config         = Config::database();
-        $this->config   = $config[$connection];
+        $main			= Config::main();
         
+        if ( !isset($connection) )
+			$connection = $main['database'];
+		
+		$this->config   = $config[$connection];	
         $driverNamespace = 'Drivers\Database\\'.ucwords($this->config['driver']);
         
         $this->driver = new $driverNamespace( $this->config, $connection );
