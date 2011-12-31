@@ -465,19 +465,11 @@ class Cubrid implements Interfaces\Database {
 	
 	$this->select($column)->from($table);
 	
-	if ( ! empty( $where ) ) {
-	    
-	    $separator = 'AND';
-            foreach($where as $key => $val){
-		
-		if( end($where) == $val)
-		    $separator = false;
-		
-		$this->where($key, '=', $val, $separator);
-            }
-        }
+	if ( ! empty( $where ) )
+	    foreach($where as $key => $val)
+		$this->where($key, '=', $val, 'AND');
 	
-        return $this->findAll();
+        return $this->getAll();
     }
     
     /**
@@ -513,7 +505,7 @@ class Cubrid implements Interfaces\Database {
 	    }
 	}
 	
-	return $this->findOne();
+	return $this->getOne();
 	
     }
     
