@@ -81,17 +81,8 @@ class Mongodb extends \Mongo {
         
         $return = false;
         
-        /**
-         * ID: Jika outputnya ingin berbentuk array, maka
-         *      lakukan proses di bawah. Jika tidak abaikan.
-         */
-        if( $output == 'array'){
-            
-            foreach ($cursor as $value)
-                $return[] = $value;
-            
-            return $return;
-        }
+        if( $output == 'array')
+	    return iterator_to_array($cursor);
         
         foreach ($cursor as $value)
             $return[] = (object) Tools::arrayToObject($value);
@@ -131,14 +122,14 @@ class Mongodb extends \Mongo {
      * @return object
      */
     public function select(){
-
+	
 	$documents = func_get_args();
-		
+	
         if( ! empty($documents) )
- 		$this->documents = $documents;
- 
- 	    if( is_array($documents[0]) )
-		$this->documents = $documents[0];
+ 	    $this->documents = $documents;
+	
+	if( is_array($documents[0]) )
+	    $this->documents = $documents[0];
 
         return $this;
     }
@@ -148,9 +139,9 @@ class Mongodb extends \Mongo {
      *
      * @return object
      */
-    public function from($collection_name){
+    public function from($collectionName){
 	
-	$this->collection_name = $collection_name;
+	$this->collectionName = $collectionName;
 	
 	return $this;
     }
@@ -194,9 +185,18 @@ class Mongodb extends \Mongo {
      *
      * @return mix
      */
-    public function getAll(){
+    public function getAll( $collection = false, $criteria = array(), $fields = array() ){
+	
+	if( $collection )
+	    $this->collectionName = $collection;
+	
+	if( ! empty($criteria) )
+	    $this->criteria = $criteria;
+	
+	if( ! empty($fields) )
+	    $this->documents = $fields;
         
-	$value = $this->collection($this->collection_name)->find( $this->criteria, $this->documents )->limit($this->limit)->skip($this->offset);
+	$value = $this->collection($this->collectionName)->find( $this->criteria, $this->documents )->limit($this->limit)->skip($this->offset);
 	
 	if(count($this->order) > 0)
 		$value = $value->sort($this->order);
@@ -214,9 +214,18 @@ class Mongodb extends \Mongo {
      *
      * @return mix
      */
-    public function getOne(){
+    public function getOne( $collection = false, $criteria = array(), $fields = array() ){
         
-	$value = $this->collection($this->collection_name)->findOne( $this->criteria, $this->documents );
+	if( $collection )
+	    $this->collectionName = $collection;
+	
+	if( ! empty($criteria) )
+	    $this->criteria = $criteria;
+	
+	if( ! empty($fields) )
+	    $this->documents = $fields;
+	    
+	$value = $this->collection($this->collectionName)->findOne( $this->criteria, $this->documents );
 	$this->criteria = $this->documents = array();
 	
 	if( ! empty($value) )
