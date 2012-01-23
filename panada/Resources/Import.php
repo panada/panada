@@ -12,7 +12,7 @@ namespace Resources;
 
 class Import {
     
-    public static function vendor($filePath, $className = false, $args = array()){
+    public static function vendor($filePath, $className = false, $arguments = array()){
         
         $config = Config::main();
         
