@@ -21,4 +21,4 @@ Documentation
 -------------
 
 We don't have complete documentation yet for Panada version 1.X. If you thinks you
-can help us to write some, it would be nice. Just fork this branch.
+can help us to write some, it would be nice. Just fork the documentation branch at https://github.com/panada/documentation
