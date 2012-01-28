@@ -23,12 +23,17 @@ class Rest {
     public function __construct(){
 	
 	/**
-	* EN: Makesure Curl extension is enabled
+	* Makesure Curl extension is enabled
 	*/
 	if( ! extension_loaded('curl') )
 	    throw new RunException('Curl extension that required by Rest Resource is not available.');
     }
     
+    /**
+     * Get clent request type.
+     *
+     * @return string
+     */
     public function getRequest(){
         
         $this->requestMethod = strtoupper($_SERVER['REQUEST_METHOD']);
@@ -41,18 +46,41 @@ class Rest {
                 $this->requestData = $_POST;
                 break;
             case 'PUT':
-                $this->requestData = $this->getPhpInput();
+                $this->requestData = $this->getPHPInput();
                 break;
 	    case 'DELETE':
-                $this->requestData = $this->getPhpInput();
+                $this->requestData = $this->getPHPInput();
                 break;
         }
         
         return $this->requestData;
     }
     
+    /**
+     * Get client request headers
+     *
+     * @return array
+     */
+    public function getClientHeaders(){
+	
+	$headers = array();
+	
+	foreach ($_SERVER as $key => $val){
+	    
+	    if (substr($key, 0, 5) == 'HTTP_'){
+		
+		$key = str_replace('_', ' ', substr($key, 5));
+		$key = str_replace(' ', '-', ucwords(strtolower($key)));
+		
+		$headers[$key] = $val;
+	    }
+	}
+	
+	return $headers;
+    }  
+    
     //EN: See this trick at http://www.php.net/manual/en/function.curl-setopt.php#96056
-    private function getPhpInput(){
+    private function getPHPInput(){
 	
 	parse_str(file_get_contents('php://input'), $put_vars);
         return $put_vars;
