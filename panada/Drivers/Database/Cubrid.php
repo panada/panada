@@ -59,7 +59,7 @@ class Cubrid implements Interfaces\Database {
      */
     private function establishConnection(){
         
-        $conn = cubrid_connect($this->config['host'], $this->port, $this->config['database'], $this->config['user'], $this->config['password']);
+        $conn = cubrid_connect($this->config['host'], $this->config['port'], $this->config['database'], $this->config['user'], $this->config['password']);
         
         if ($conn){
             if (isset($this->auto_commit) && !$this->auto_commit){

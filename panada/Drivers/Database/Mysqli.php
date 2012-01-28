@@ -56,7 +56,7 @@ class Mysql implements Interfaces\Database {
      */
     private function establishConnection(){
 	
-        return mysqli_connect($this->config['host'], $this->config['user'], $this->config['password'], $this->config['database'], $this->port);
+        return mysqli_connect($this->config['host'], $this->config['user'], $this->config['password'], $this->config['database'], $this->config['port']);
     }
     
     /**

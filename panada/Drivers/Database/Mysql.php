@@ -57,7 +57,7 @@ class Mysql implements Interfaces\Database {
     private function establishConnection(){
 	
 	$arguments = array(
-			$this->config['host'].':'.$this->port,
+			$this->config['host'].':'.$this->config['port'],
 			$this->config['user'],
 			$this->config['password'],
 			$this->newLink,
@@ -69,7 +69,7 @@ class Mysql implements Interfaces\Database {
 	if( $this->config['persistent'] ){
 	    
 	    $arguments = array(
-			$this->config['host'],
+			$this->config['host'].':'.$this->config['port'],
 			$this->config['user'],
 			$this->config['password'],
 			$this->clientFlags

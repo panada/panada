@@ -56,7 +56,7 @@ class Postgresql implements Interfaces\Database {
     private function establishConnection(){
         
         $arguments = 'host='.$this->config['host'].'
-                    port='.$this->port.'
+                    port='.$this->config['port'].'
                     dbname='.$this->config['database'].'
                     user='.$this->config['user'].'
                     password='.$this->config['password'].'
