@@ -15,8 +15,8 @@
         <li>To check your system minimum requirements, please click this <a href="check.php">Checking Tools</a>.</li>
         <li>To see Hello World page from a module sample, <a href="<?php echo $this->location('modSample'); ?>">click here.</a></li>
         <li>To get latest update, follow our twitter <a target="_blank" href="http://twitter.com/panadaframework">@panadaframework</a>.</li>
-        <li>To contribute the project, fork on github <a target="_blank" href="https://github.com/k4ndar/Panada">https://github.com/k4ndar/Panada</a>.</li>
-        <li>For help and bug report, submit to <a target="_blank" href="https://github.com/k4ndar/Panada/issues">issues</a> page.</li>
+        <li>To contribute the project, fork on github <a target="_blank" href="https://github.com/panada/Panada">https://github.com/k4ndar/Panada</a>.</li>
+        <li>For help and bug report, submit to <a target="_blank" href="https://github.com/panada/Panada/issues">issues</a> page.</li>
     </ul>
     <p>
         To get more hint how to use Panada, see this offline <a href="<?php echo $this->uri->baseUri; ?>documentation/id/">documentation</a> page.
