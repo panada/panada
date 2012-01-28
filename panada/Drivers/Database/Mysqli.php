@@ -11,7 +11,7 @@ namespace Drivers\Database;
 use Resources\Interfaces as Interfaces,
 Resources\RunException as RunException;
 
-class Mysql implements Interfaces\Database {
+class Mysqli implements Interfaces\Database {
     
     protected $port = 3306;
     protected $column = '*';
