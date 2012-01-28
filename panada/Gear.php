@@ -129,9 +129,16 @@ final class Gear {
         
         if( isset($this->config['main']['alias']['controller']['class']) ){
             
-            $controller         = $this->config['main']['alias']['controller']['class'];
+            $controllerClass    = $this->config['main']['alias']['controller']['class'];
+            
+            if( ! file_exists( APP . 'Controllers/' . $controllerClass . '.php') ){
+                $this->subControllerHandler();
+                return;
+            }
+            
+            $controllerNamespace= 'Controllers\\' .$controllerClass;
             $method             = $this->config['main']['alias']['controller']['method'];
-            $instance           = new $controller;
+            $instance           = new $controllerNamespace;
             $request            = $this->uriObj->path();
             
             $this->run($instance, $method, $request);
@@ -203,19 +210,34 @@ final class Gear {
         $controllerClass = ucwords( $controllerClass );
         
         // Does this class's file exists?
-        if( ! file_exists( $classFile = $moduleFolder . 'Controllers/' . $controllerClass . '.php' ) )
-            throw new Resources\HttpException('Controller '.$controllerClass.' does not exists in module '.$this->firstUriPath);
+        if( ! file_exists( $classFile = $moduleFolder . 'Controllers/' . $controllerClass . '.php' ) ){
+            
+            if( ! isset($this->config['main']['alias']['controller']['class']) )
+                throw new Resources\HttpException('Controller '.$controllerClass.' does not exists in module '.$this->firstUriPath);
+            
+            $controllerClass    = $this->config['main']['alias']['controller']['class'];
+            $method             = $this->config['main']['alias']['controller']['method'];
+            $request            = array_slice( $this->uriObj->path(), 1);
+            
+            // Does class for alias file exists?
+            if( ! file_exists( $classFile = $moduleFolder . 'Controllers/' . $controllerClass . '.php' ) )
+                throw new Resources\HttpException('Controller '.$controllerClass.' does not exists in module '.$this->firstUriPath);
+            
+            goto createNamespace;
+        }
         
+        $request    = array_slice( $this->uriObj->path(), 3);
+        
+        if( ! $method = $this->uriObj->path(2) )
+            $method = 'index';
+        
+        createNamespace:
         $controllerNamespace = 'Modules\\'.$this->firstUriPath.'\Controllers\\'.$controllerClass;
         
         if( ! class_exists($controllerNamespace) )
             throw new Resources\RunException('Class '.$controllerNamespace.'  not found in '.$classFile);
             
         $instance   = new $controllerNamespace;
-        $request    = array_slice( $this->uriObj->path(), 3);
-        
-        if( ! $method = $this->uriObj->path(2) )
-            $method = 'index';
         
         if( ! method_exists($instance, $method) ){
             
