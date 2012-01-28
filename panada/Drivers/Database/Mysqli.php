@@ -369,14 +369,13 @@ class Mysqli implements Interfaces\Database {
 	
 	if( ! is_null($this->limit) ){
 	    
-	    $query .= ' LIMIT';
+	    $query .= ' LIMIT '.$this->limit;
 	    
 	    if( ! is_null($this->offset) ){
-		$query .= ' '.$this->offset.' ,';
+		$query .= ' OFFSET '.$this->offset;
 		$this->offset = null;
 	    }
 	    
-	    $query .= ' '.$this->limit;
 	    $this->limit = null;
 	}
         
