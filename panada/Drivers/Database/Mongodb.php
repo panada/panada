@@ -103,6 +103,9 @@ class Mongodb extends \Mongo {
         
         if( is_string($str) )
             return new \MongoDate(strtotime($str));
+	
+	if( is_int($str) )
+	    return new \MongoDate($str);
     }
     
     /**
@@ -289,6 +292,8 @@ class Mongodb extends \Mongo {
      * @return object
      */
     public function orderBy( $column, $order = 'asc' ){
+	
+	$order = strtolower($order);
 	
 	if( $order=='desc' ) 
 		$order = -1;
