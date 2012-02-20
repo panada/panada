@@ -32,8 +32,8 @@ final class Uri {
 	$selfArray      = explode('/', rtrim($_SERVER['PHP_SELF'], '/'));
 	$selfKey        = array_search(INDEX_FILE, $selfArray);
 	$this->pathUri  = array_slice($selfArray, ($selfKey + 1));
-	$this->baseUri  = ( $this->isHttps() ) ? 'https://':'http://'. $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';  
-	
+	$this->baseUri  = $this->isHttps() ? 'https://':'http://';
+	$this->baseUri  .= $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';
     }
 
     /**
