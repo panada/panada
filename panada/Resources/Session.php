@@ -14,9 +14,10 @@ class Session {
     
     private $driver, $config;
     
-    public function __construct(){
+    public function __construct($connection = 'default'){
         
         $this->config = Config::session();
+	$this->config = $this->config[$connection];
 	$driverNamespace = 'Drivers\Session\\'.ucwords($this->config['driver']);
         $this->driver = new $driverNamespace($this->config);
     }
