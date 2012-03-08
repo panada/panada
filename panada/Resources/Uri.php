@@ -12,8 +12,11 @@ namespace Resources;
 
 final class Uri {
     
-    private $pathUri = array();
-    public $baseUri;
+    private
+	$pathUri = array();
+    public
+	$baseUri,
+	$defaultController = 'Home';
     
     /**
      * Class constructor
@@ -97,13 +100,13 @@ final class Uri {
 	if( $uriString = $this->path(0) ){
 	    
 	    if( $this->stripUriString($uriString) )
-	    return $uriString;
+		return $uriString;
 	    else
-	    return false;
+		return false;
 	}
 	else {
 	    
-	    return 'home';
+	    return $this->defaultController;
 	}
     }
 

@@ -26,10 +26,11 @@ final class Gear {
         
         $this->disableMagicQuotes();
         
-        $this->config['main']   = Resources\Config::main();
-        $this->uriObj           = new Resources\Uri;
-        $this->firstUriPath     = ucwords( $this->uriObj->getClass() );
-        $controllerNamespace    = 'Controllers\\' . $this->firstUriPath;
+        $this->config['main']               = Resources\Config::main();
+        $this->uriObj                       = new Resources\Uri;
+        $this->uriObj->defaultController    = $this->config['main']['defaultController'];
+        $this->firstUriPath                 = ucwords( $this->uriObj->getClass() );
+        $controllerNamespace                = 'Controllers\\' . $this->firstUriPath;
         
         if( ! file_exists( $classFile = APP . 'Controllers/' . $this->firstUriPath . '.php' ) ){
             $this->controllerHandler();
