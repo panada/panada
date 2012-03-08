@@ -30,13 +30,15 @@ class Rest {
     }
     
     /**
-     * Get clent request type.
+     * Get clent HTTP Request type.
      *
      * @return string
      */
     public function getRequest(){
         
         $this->requestMethod = strtoupper($_SERVER['REQUEST_METHOD']);
+	
+	// Use PHP Input to get request PUT, DELETE, HEAD, TRACE, OPTIONS, CONNECT and PATCH
         
         switch ($this->requestMethod){
             case 'GET':
@@ -45,12 +47,8 @@ class Rest {
             case 'POST':
                 $this->requestData = $_POST;
                 break;
-            case 'PUT':
+            default:
                 $this->requestData = $this->getPHPInput();
-                break;
-	    case 'DELETE':
-                $this->requestData = $this->getPHPInput();
-                break;
         }
         
         return $this->requestData;
@@ -79,14 +77,51 @@ class Rest {
 	return $headers;
     }  
     
-    //EN: See this trick at http://www.php.net/manual/en/function.curl-setopt.php#96056
+    /**
+     * See this trick at http://www.php.net/manual/en/function.curl-setopt.php#96056
+     *
+     * @return array
+     */
     private function getPHPInput(){
 	
 	parse_str(file_get_contents('php://input'), $put_vars);
         return $put_vars;
     }
     
-    public function sendRequest($uri, $method = 'GET', $data = array()){
+    /**
+     * Set additional HTTP Request headers
+     *
+     * @param array $options
+     * @return void
+     */
+    public function setRequestHeaders( $options = array() ){
+	
+	if( ! empty($options) )
+	    foreach($options as $key => $value)
+		$this->setRequestHeaders[] = $key.': '.$value;
+    }
+    
+    /**
+     * Set HTTP Headers Authorization
+     *
+     * @param string $signature Secret string to access the server
+     * @param string $type The Auth type eg: Basic, OAuth etc
+     * @return void
+     */
+    public function setRequestAuthorization($signature, $type = 'Basic'){
+	
+	$this->setRequestHeaders[] = 'Authorization: '.$type.' '.$signature;
+    }
+    
+    /**
+     * Send HTTP Request to server
+     *
+     * @param string $uri The server's URL
+     * @param string $method HTTP Request method type
+     * @param array $data The data that need to send to server
+     * @return booeal if false and string if true
+     */
+    public function sendRequest( $uri, $method = 'GET', $data = array() ){
 	
 	$this->setRequestHeaders[]	= 'User-Agent: Panada PHP Framework REST API/0.2';
 	$method				= strtoupper($method);
@@ -131,11 +166,24 @@ class Rest {
         return false;
     }
     
+    /**
+     * Set HTTP Response headers code
+     *
+     * @return void
+     */
     public function setResponseHeader($code = 200){
 	
 	Tools::setStatusHeader($code);
     }
     
+    /**
+     * The return data type
+     *
+     * @param array $data
+     * @param string $format
+     * @param string $ContentType
+     * @return string
+     */
     public function wrapResponseOutput($data, $format = 'json', $ContentType = 'application'){
         
         header('Content-type: '.$ContentType.'/' . $format);

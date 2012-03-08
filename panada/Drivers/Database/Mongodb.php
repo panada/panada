@@ -202,8 +202,8 @@ class Mongodb extends \Mongo {
 	$value = $this->collection($this->collectionName)->find( $this->criteria, $this->documents )->limit($this->limit)->skip($this->offset);
 	
 	if(count($this->order) > 0)
-		$value = $value->sort($this->order);
-		
+	    $value = $value->sort($this->order);
+	
 	$this->criteria = $this->documents = array();
 	
 	if( ! empty($value) )
