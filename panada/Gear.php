@@ -163,9 +163,9 @@ final class Gear {
         
         $controllerClass = $this->uriObj->getMethod(null);
         
-        // No argument? set to default controller: Home.
+        // No argument? set to default controller.
         if( is_null($controllerClass) )
-            $controllerClass = 'Home';
+            $controllerClass = $this->config['main']['defaultController'];
         
         $controllerClass = ucwords( $controllerClass );
         
@@ -206,7 +206,7 @@ final class Gear {
             throw new Resources\HttpException('Controller, sub-controller or module '.$this->firstUriPath.' does not exists');
         
         if( ! $controllerClass = $this->uriObj->path(1) )
-            $controllerClass = 'Home';
+            $controllerClass = $this->config['main']['defaultController'];
         
         $controllerClass = ucwords( $controllerClass );
         
