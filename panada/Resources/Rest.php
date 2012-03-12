@@ -27,6 +27,9 @@ class Rest {
 	*/
 	if( ! extension_loaded('curl') )
 	    throw new RunException('Curl extension that required by Rest Resource is not available.');
+	
+	// Get the client request method
+	$this->requestMethod = strtoupper($_SERVER['REQUEST_METHOD']);
     }
     
     /**
@@ -35,8 +38,6 @@ class Rest {
      * @return string
      */
     public function getRequest(){
-        
-        $this->requestMethod = strtoupper($_SERVER['REQUEST_METHOD']);
 	
 	// Use PHP Input to get request PUT, DELETE, HEAD, TRACE, OPTIONS, CONNECT and PATCH
         
