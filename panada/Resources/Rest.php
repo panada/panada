@@ -41,18 +41,7 @@ class Rest {
 	
 	// Use PHP Input to get request PUT, DELETE, HEAD, TRACE, OPTIONS, CONNECT and PATCH
         
-        switch ($this->requestMethod){
-            case 'GET':
-                $this->requestData = $_GET;
-                break;
-            case 'POST':
-                $this->requestData = $_POST;
-                break;
-            default:
-                $this->requestData = $this->getPHPInput();
-        }
-        
-        return $this->requestData;
+        return $_REQUEST;
     }
     
     /**
