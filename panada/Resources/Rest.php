@@ -35,13 +35,23 @@ class Rest {
     /**
      * Get clent HTTP Request type.
      *
-     * @return string
+     * @return array
      */
     public function getRequest(){
 	
 	// Use PHP Input to get request PUT, DELETE, HEAD, TRACE, OPTIONS, CONNECT and PATCH
         
         return $_REQUEST;
+    }
+    
+    /**
+     * Get clent file(s) submited by POST or PUT.
+     *
+     * @return array
+     */
+    public function getFiles(){
+	
+	return $_FILES;
     }
     
     /**
@@ -108,15 +118,15 @@ class Rest {
      *
      * @param string $uri The server's URL
      * @param string $method HTTP Request method type
-     * @param array $data The data that need to send to server
+     * @param array | string $data The data that need to send to server
      * @return booeal if false and string if true
      */
-    public function sendRequest( $uri, $method = 'GET', $data = array() ){
+    public function sendRequest( $uri, $method = 'GET', $data = null ){
 	
 	$this->setRequestHeaders[]	= 'User-Agent: Panada PHP Framework REST API/0.2';
 	$method				= strtoupper($method);
-        $url_separator			= ( parse_url( $uri, PHP_URL_QUERY ) ) ? '&' : '?';
-        $uri				= ( $method == 'GET' && ! empty($data) ) ? $uri . $url_separator . http_build_query($data) : $uri;
+        $urlSeparator			= ( parse_url( $uri, PHP_URL_QUERY ) ) ? '&' : '?';
+        $uri				= ( $method == 'GET' && ! empty($data) ) ? $uri . $urlSeparator . (is_array($data) ? http_build_query($data) : $data) : $uri;
         $c				= curl_init();
 	
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
@@ -128,7 +138,8 @@ class Rest {
 	
         if( $method != 'GET' ) {
 	    
-	    $data = http_build_query($data);
+	    if( is_array($data) )
+		$data = http_build_query($data);
 	    
 	    if( $method == 'POST' )
 		curl_setopt($c, CURLOPT_POST, true);
