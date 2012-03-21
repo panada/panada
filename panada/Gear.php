@@ -28,7 +28,7 @@ final class Gear {
         
         $this->config['main']               = Resources\Config::main();
         $this->uriObj                       = new Resources\Uri;
-        $this->uriObj->defaultController    = $this->config['main']['defaultController'];
+        $this->uriObj->setDefaultController($this->config['main']['defaultController']);
         $this->firstUriPath                 = ucwords( $this->uriObj->getClass() );
         $controllerNamespace                = 'Controllers\\' . $this->firstUriPath;
         
@@ -55,7 +55,6 @@ final class Gear {
             if( ! method_exists($instance, $method) )
                 throw new Resources\HttpException('Method '.$this->uriObj->getMethod().' does not exists in controller '.$this->firstUriPath);
         }
-        
         $this->run($instance, $method, $request);
     }
     
