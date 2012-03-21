@@ -16,7 +16,9 @@ final class Uri {
 	$pathUri = array();
     public
 	$baseUri,
-	$defaultController = 'Home';
+	$defaultController;
+	
+	public static $staticDefaultController = 'Home';
     
     /**
      * Class constructor
@@ -37,6 +39,7 @@ final class Uri {
 	$this->pathUri  = array_slice($selfArray, ($selfKey + 1));
 	$this->baseUri  = $this->isHttps() ? 'https://':'http://';
 	$this->baseUri  .= $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';
+	$this->defaultController = self::$staticDefaultController;
     }
 
     /**
@@ -165,4 +168,9 @@ final class Uri {
 	$uri = ( ! preg_match('/[^a-zA-Z0-9_.-]/', $uri) ) ? true : false;
 	return $uri;
     }
+	
+	public function setDefaultController($defaultController) {
+		self::$staticDefaultController = $defaultController;
+		$this->defaultController = $defaultController;
+	}
 }
