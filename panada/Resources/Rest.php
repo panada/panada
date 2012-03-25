@@ -33,6 +33,36 @@ class Rest {
     }
     
     /**
+     * Getter for requstMethod
+     *
+     * @return string
+     */
+    public function getRequestMethod(){
+	
+	return $this->requestMethod;
+    }
+    
+    /**
+     * Getter for responseStatus
+     *
+     * @return int
+     */
+    public function getResponseStatus(){
+	
+	return $this->responseStatus;
+    }
+    
+    /**
+     * Getter for requestData
+     *
+     * @return array
+     */
+    public function getRequestData(){
+	
+	return $this->requestData;
+    }
+    
+    /**
      * Get clent HTTP Request type.
      *
      * @return array

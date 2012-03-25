@@ -99,6 +99,23 @@ class Pagination {
     }
     
     /**
+     * Setter for option
+     *
+     * @param string | array $var
+     * @param mix $value
+     * @return void
+     */
+    public function setOption($var, $value = false){
+        
+        if( is_string($var) )
+            $this->$var = $value;
+        
+        if( is_array($var) )
+            foreach($var as $key => $value)
+                $this->$key = $value;
+    }
+    
+    /**
      * Create pagination.
      *
      * @return array

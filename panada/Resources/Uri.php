@@ -17,8 +17,8 @@ final class Uri {
     public
 	$baseUri,
 	$defaultController;
-	
-	public static $staticDefaultController = 'Home';
+    public static
+	$staticDefaultController = 'Home';
     
     /**
      * Class constructor
@@ -34,12 +34,12 @@ final class Uri {
 	    return;
 	}
 	
-	$selfArray      = explode('/', rtrim($_SERVER['PHP_SELF'], '/'));
-	$selfKey        = array_search(INDEX_FILE, $selfArray);
-	$this->pathUri  = array_slice($selfArray, ($selfKey + 1));
-	$this->baseUri  = $this->isHttps() ? 'https://':'http://';
-	$this->baseUri  .= $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';
-	$this->defaultController = self::$staticDefaultController;
+	$selfArray      		= explode('/', rtrim($_SERVER['PHP_SELF'], '/'));
+	$selfKey        		= array_search(INDEX_FILE, $selfArray);
+	$this->pathUri  		= array_slice($selfArray, ($selfKey + 1));
+	$this->baseUri  		= $this->isHttps() ? 'https://':'http://';
+	$this->baseUri			.= $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';
+	$this->defaultController	= self::$staticDefaultController;
     }
 
     /**
@@ -164,13 +164,38 @@ final class Uri {
      * @return boolean
      */
     public function stripUriString($uri){
-
+	
 	$uri = ( ! preg_match('/[^a-zA-Z0-9_.-]/', $uri) ) ? true : false;
 	return $uri;
     }
+    
+    /**
+     * Setter for default controller
+     *
+     * @param string $defaultController
+     * @return void
+     */
+    public function setDefaultController($defaultController) {
 	
-	public function setDefaultController($defaultController) {
-		self::$staticDefaultController = $defaultController;
-		$this->defaultController = $defaultController;
-	}
+	self::$staticDefaultController = $defaultController;
+	$this->defaultController = $defaultController;
+    }
+    
+    /**
+     * Getter for default controller
+     */
+    public function getDefaultController(){
+	
+	return $this->defaultController;
+    }
+    
+    /**
+     * Getter for baseUri
+     *
+     * @return string
+     */
+    public function getBaseUri(){
+	
+	return $this->baseUri;
+    }
 }
