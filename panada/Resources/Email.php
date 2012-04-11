@@ -113,40 +113,86 @@ class Email {
          */
         $panadaXMailer = 'Panada Mailer Version 0.3';
     
-    
+	/**
+	 * FROM part
+	 * 
+	 * @param string | array
+	 * @return void
+	 */
+	public function from($fromEmail = '', $fromName = ''){
+		
+        $this->fromEmail       = $fromEmail;
+        $this->fromName        = $fromName;
+	}
+	
+	/**
+	 * TO part
+	 * 
+	 * @param string | array
+	 * @return void
+	 */
+	public function to($rcptTo = ''){
+		
+		$this->rcptTo = $this->strToArray($rcptTo);
+		$this->rcptToCtring = implode(', ', $this->rcptTo);
+	}
+	
+	/**
+	 * CC part
+	 * 
+	 * @param string | array
+	 * @return void
+	 */
+	public function cc($rcptCc = ''){
+		
+		if (!empty($rcptCc)){
+			$this->rcptCc  = $this->strToArray($rcptCc);
+			$this->rcptCcString   = implode(', ', $this->rcptCc);
+		}
+	}
+	
+	/**
+	 * BCC part
+	 * 
+	 * @param string | array
+	 * @return void
+	 */
+	public function bcc($rcptBcc = ''){
+		
+		if (!empty($rcptBcc)){
+			$this->rcptBcc  = $this->strToArray($rcptBcc);
+			$this->rcptBccString   = implode(', ', $this->rcptBcc);
+		}
+	}
+	
+	/**
+	 * SUBJECT part
+	 * 
+	 * @param string | array
+	 * @return void
+	 */
+	public function subject($subject = ''){
+		
+		$this->subject = $subject;
+	}
+
+	/**
+	 * MESSAGE part
+	 * 
+	 * @param string | array
+	 * @return void
+	 */
+	public function message($message = ''){
+		
+		$this->message = $message;
+	}
+
     /**
      * Main Panada method to send the email.
      *
-     * @param string | array
-     * @param string | array
-     * @param string | array
-     * @param string
-     * @param string
-     * @param string
-     * @param string
      * @return boolean
      */
-    public function mail($rcptTo = '', $rcptCc = '', $rcptBcc = '', $subject = '', $message = '', $fromEmail = '', $fromName = ''){
-        
-        $this->rcptTo  = $this->strToArray($rcptTo);
-        
-        $this->subject          = $subject;
-        $this->message          = $message;
-        $this->fromEmail       = $fromEmail;
-        $this->fromName        = $fromName;
-        $this->rcptToCtring   = implode(', ', $this->rcptTo);
-        
-        if (!empty($rcptCc))
-        {
-	        $this->rcptCc  = $this->strToArray($rcptCc);
-	        $this->rcptCcString   = implode(', ', $this->rcptCc);
-        }
-
-        if (!empty($rcptBcc))
-        {
-	        $this->rcptBcc  = $this->strToArray($rcptBcc);
-	        $this->rcptBccString   = implode(', ', $this->rcptBcc);
-        }
+    public function mail(){
         
         if($this->smtpHost != '' || $this->mailerType == 'smtp') {
             
