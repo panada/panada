@@ -8,17 +8,22 @@
  * @since	Version 0.3
  */
 namespace Drivers\Session;
+use Resources;
 
 class Cookie {
     
-    public $sessionName = 'PAN_SID';
-    public $sessionCookieExpire = 0;
-    public $sessionCookiePath = '/';
-    public $sessionCookieSecure = false;
-    public $sessionCookieDomain = '';
-    public $cookieChekSumName = 'chs';
-    protected $hashKey = 'my_key';
-    protected $curentValues = array();
+    public
+	$sessionName = 'PAN_SID',
+	$sessionCookieExpire = 0,
+	$sessionCookiePath = '/',
+	$sessionCookieSecure = false,
+	$sessionCookieDomain = '',
+	$cookieChekSumName = 'chs';
+    
+    protected
+	$hashKey = 'my_key',
+	$curentValues = array(),
+	$isEncrypt = false;
     
     /**
      * Define all properties needed.
@@ -34,6 +39,17 @@ class Cookie {
         $this->sessionCookieSecure  = $config['cookieSecure'];
         $this->sessionCookieDomain  = $config['cookieDomain'];
 	$this->hashKey		    = $config['secretKey'];
+	$this->isEncrypt	    = $config['isEncrypt'];
+	
+	
+	// Decrypt the value before use it.
+	if( $this->isEncrypt ){
+	    
+	    $this->encryption = new Resources\Encryption($config['secretKey']);
+	    
+	    if( isset( $_COOKIE[$this->sessionName] ) )
+		$_COOKIE[$this->sessionName] = $this->encryption->decrypt( $_COOKIE[$this->sessionName] );
+	}
         
 	/**
 	 * If set, we have to make sure this value is valid.
@@ -104,6 +120,9 @@ class Cookie {
     private function setSessionValues(){
         
         $value = http_build_query($this->curentValues);
+	
+	if( $this->isEncrypt )
+	    $value = $this->encryption->encrypt($value);
 
         $this->setCookie($this->sessionName, $value);
         
