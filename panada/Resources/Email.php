@@ -18,6 +18,14 @@ class Email {
         */
         $rcptTo = array(),
         /**
+        * @var array   Define the reception (cc) array variable.
+        */
+        $rcptCc = array(),
+        /**
+        * @var array   Define the reception (bcc) array variable.
+        */
+        $rcptBcc = array(),
+        /**
         * @var string  Define email subject.
         */
         $subject = '',
@@ -77,6 +85,14 @@ class Email {
         */
         $rcptToCtring = '',
         /**
+        * @var string  Var for saving user email(s) that just converted from $rcptCc array.
+        */
+        $rcptCcString = '',
+        /**
+        * @var string  Var for saving user email(s) that just converted from $rcptBcc array.
+        */
+        $rcptBccString = '',
+        /**
          * @var integer Define SMTP connection.
          */
         $smtpConnection = 0,
@@ -95,14 +111,14 @@ class Email {
         /**
          * @var string  Mailer useragent.
          */
-        $panadaXMailer = 'Panada Mailer Version 0.3';
+        $panadaXMailer = 'Panada Mailer Version 0.4';
     
     /**
      * Setter for option
      *
      * @param string | array $var
      * @param mix $value
-     * @return void
+     * @return object
      */
     public function setOption($var, $value = false){
         
@@ -112,8 +128,96 @@ class Email {
         if( is_array($var) )
             foreach($var as $key => $value)
                 $this->$key = $value;
+        
+        return $this;
     }
     
+    /**
+     * FROM part
+     * 
+     * @param string | array
+     * @return object
+     */
+    public function from($fromEmail = '', $fromName = ''){
+        
+        $this->fromEmail    = $fromEmail;
+        $this->fromName     = $fromName;
+        
+        return $this;
+    }
+    
+    /**
+     * TO part
+     * 
+     * @param string | array
+     * @return object
+     */
+    public function to($rcptTo = ''){
+        
+        $this->rcptTo = $this->strToArray($rcptTo);
+        $this->rcptToCtring = implode(', ', $this->rcptTo);
+        
+        return $this;
+    }
+    
+    /**
+     * CC part
+     * 
+     * @param string | array
+     * @return object
+     */
+    public function cc($rcptCc = ''){
+        
+        if (!empty($rcptCc)){
+            $this->rcptCc  = $this->strToArray($rcptCc);
+            $this->rcptCcString   = implode(', ', $this->rcptCc);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * BCC part
+     * 
+     * @param string | array
+     * @return object
+     */
+    public function bcc($rcptBcc = ''){
+        
+        if (!empty($rcptBcc)){
+            $this->rcptBcc = $this->strToArray($rcptBcc);
+            $this->rcptBccString = implode(', ', $this->rcptBcc);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * SUBJECT part
+     * 
+     * @param string | array
+     * @return object
+     */
+    public function subject($subject = ''){
+        
+        $this->subject = $subject;
+        
+        return $this;
+    }
+
+    /**
+     * MESSAGE part
+     * 
+     * @param string | array
+     * @return object
+     */
+    public function message($message = ''){
+        
+        $this->message = $message;
+        
+        return $this;
+    }
+
     /**
      * Main Panada method to send the email.
      *
@@ -122,28 +226,38 @@ class Email {
      * @param string
      * @param string
      * @param string
+     * @param string | array
+     * @param string | array
      * @return boolean
      */
-    public function mail($rcptTo = '', $subject = '', $message = '', $fromEmail = '', $fromName = ''){
+    public function mail($rcptTo = '', $subject = '', $message = '', $fromEmail = '', $fromName = '', $rcptCc = '', $rcptBcc = ''){
         
-        if( is_array($rcptTo) ) {
-            $this->rcptTo  = $this->cleanEmail($rcptTo);
-        }
-        else {
-            
-            $rcpt_break = explode(',', $rcptTo);
-            
-            if( count($rcpt_break) > 0 )
-                $this->rcptTo  = $this->cleanEmail($rcpt_break);
-            else
-                $this->rcptTo  = $this->cleanEmail(array($rcptTo));
+        if( ! empty($rcptTo) ){
+            $this->rcptTo = $this->strToArray($rcptTo);
+            $this->rcptToCtring = implode(', ', $this->rcptTo);
         }
         
-        $this->subject          = $subject;
-        $this->message          = $message;
-        $this->fromEmail       = $fromEmail;
-        $this->fromName        = $fromName;
-        $this->rcptToCtring   = implode(', ', $this->rcptTo);
+        if( ! empty($subject) )
+            $this->subject = $subject;
+        
+        if( ! empty($message) )
+            $this->message = $message;
+        
+        if( ! empty($fromEmail) )
+            $this->fromEmail = $fromEmail;
+        
+        if( ! empty($fromName) )
+            $this->fromName = $fromName;
+        
+        if (! empty($rcptCc) ){
+            $this->rcptCc  = $this->strToArray($rcptCc);
+            $this->rcptCcString = implode(', ', $this->rcptCc);
+        }
+
+        if ( ! empty($rcptBcc) ){
+            $this->rcptBcc = $this->strToArray($rcptBcc);
+            $this->rcptBccString = implode(', ', $this->rcptBcc);
+        }
         
         if($this->smtpHost != '' || $this->mailerType == 'smtp') {
             
@@ -178,6 +292,28 @@ class Email {
             $return[] = trim(strtolower($email));
         
         return $return;
+    }
+    
+    /**
+     *  Convert the email address to array.
+     *
+     * @param string | array
+     * @return array
+     */
+    private function strToArray($email){
+
+        if( is_array($email) ) {
+            return $this->cleanEmail($email);
+        }
+        else {
+            
+            $rcpt_break = explode(',', $email);
+            
+            if( count($rcpt_break) > 0 )
+                return $this->cleanEmail($rcpt_break);
+            else
+                return $this->cleanEmail(array($email));
+        }
     }
     
     /**
@@ -424,13 +560,16 @@ class Email {
     private function header(){
         
         $fromName  = ($this->fromName != '') ? $this->fromName : $this->fromEmail;
-        
         $headers['from']        = 'From: ' . $fromName . ' <' . $this->fromEmail . '>' . $this->breakLine;
+		if (count($this->rcptCc) > 0)
+			$headers['cc']	= 'Cc: ' . $this->rcptCcString . $this->breakLine;
+		if (count($this->rcptBcc) > 0 && $this->mailerType == 'native')
+			$headers['bcc']	= 'Bcc: ' . $this->rcptBccString . $this->breakLine;
         $headers['priority']    = 'X-Priority: '. $this->priority . $this->breakLine;
         $headers['mailer']      = 'X-Mailer: ' .$this->panadaXMailer . $this->breakLine;
         $headers['mime']        = 'MIME-Version: 1.0' . $this->breakLine;
         $headers['cont_type']   = 'Content-type: text/'.$this->messageType.'; charset=iso-8859-1' . $this->breakLine;
-        
+			
         if($this->mailerType == 'native') {
             $return = '';
             foreach($headers as $headers)
@@ -443,9 +582,9 @@ class Email {
             // Additional headers needed by smtp.
             $this->writeCommand('To: ' . $this->rcptToCtring . $this->breakLine);
             $this->writeCommand('Subject:' . $this->subject. $this->breakLine);
-            
+
             foreach($headers as $key => $val) {
-                
+
                 if($key == 'cont_type')
                     $val = str_replace($this->breakLine, "\n\n", $val);
                 
@@ -537,7 +676,19 @@ class Email {
         
         foreach($this->rcptTo as $recipient)
             $this->smtpRecipient($recipient);
-        
+
+		if (count($this->rcptCc) > 0)
+		{
+        	foreach($this->rcptCc as $recipient)
+            	$this->smtpRecipient($recipient);
+		}
+		
+		if (count($this->rcptBcc) > 0)
+		{
+	        foreach($this->rcptBcc as $recipient)
+	            $this->smtpRecipient($recipient);
+		}
+
         if( ! $this->smtpData() )
             return false;
         

@@ -32,7 +32,7 @@ class Import {
             $object = $reflector->newInstanceArgs($arguments);
         }
         catch(\ReflectionException $e){
-            $object = new $class;
+            $object = new $className;
         }
         
         return $object;
