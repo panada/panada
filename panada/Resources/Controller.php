@@ -100,6 +100,14 @@ class Controller {
         if( ! empty($this->viewCache) && $this->viewCache['prefix'] == $this->childClass['namespaceString'] )
             extract( $this->viewCache['data'], EXTR_SKIP );
         
+        if($isReturnValue){
+            ob_start();
+            include_once $this->viewFile;
+            $return = ob_get_contents();
+            ob_end_clean();
+            return $return;
+        }
+        
         include_once $this->viewFile;
     }
     
