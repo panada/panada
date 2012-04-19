@@ -22,8 +22,18 @@ class Import {
         include_once $file;
         
         if( ! $className ){
+            
             $arr = explode('/', $filePath);
             $className = end( $arr );
+        }
+        else{
+            
+            // Are we try to call static method?
+            if( count( explode('::', $className) > 0) ){
+                
+                return call_user_func_array($className, $arguments);
+            }
+            
         }
         
         $reflector = new \ReflectionClass($className);
