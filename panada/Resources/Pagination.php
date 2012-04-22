@@ -113,6 +113,8 @@ class Pagination {
         if( is_array($var) )
             foreach($var as $key => $value)
                 $this->$key = $value;
+        
+        return $this;
     }
     
     /**
