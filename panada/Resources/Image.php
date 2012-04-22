@@ -126,6 +126,8 @@ class Image {
         if( is_array($var) )
             foreach($var as $key => $value)
                 $this->$key = $value;
+        
+        return $this;
     }
     
     private function preErrorChecker(){
@@ -305,6 +307,11 @@ class Image {
             if (! imagepng( $imageEdited, $new_filename ) )
                 $this->errorMessages[] = 'File path invalid.';
         }
+    }
+    
+    public function getErrorMessage(){
+        
+        return $this->errorMessages;
     }
     
 } // End Image Modifier Class
