@@ -29,7 +29,7 @@ class PropertiesLoader {
         
         $class = $this->classNamespace.'\\'.ucwords($name);
         
-        if( $this->childNamespace[0] == 'Modules' )
+        if( $this->childNamespace[0] == 'Modules' && $this->classNamespace != 'Resources' )
             $class = $this->childNamespace[0].'\\'.$this->childNamespace[1].'\\'.$class;
         
         $cacheKey = 'AutoLoaderClass_'.$class.json_encode($arguments);
