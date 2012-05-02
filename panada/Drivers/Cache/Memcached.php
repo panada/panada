@@ -107,19 +107,19 @@ class Memcached extends \Memcached implements Interfaces\Cache {
     /**
      * Namespace usefull when we need to wildcard deleting cache object.
      *
-     * @param string $namespace_key
+     * @param string $namespaceKey
      * @return int Unixtimestamp
      */
-    private function keyToNamespace( $key, $namespace_key = false ){
+    private function keyToNamespace( $key, $namespaceKey = false ){
 	
-	if( ! $namespace_key )
+	if( ! $namespaceKey )
 	    return $key;
 	
-	if( ! $namespace_value = $this->get($namespace_key) ){
-	    $namespace_value = time();
-	    $this->set($namespace_key, $namespace_value, 0);
+	if( ! $namespaceValue = $this->get($namespaceKey) ){
+	    $namespaceValue = time();
+	    $this->set($namespaceKey, $namespaceValue, 0);
 	}
 	
-	return $namespace_value.'_'.$key;
+	return $namespaceValue.'_'.$key;
     }
 }

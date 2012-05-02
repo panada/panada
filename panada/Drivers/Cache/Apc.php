@@ -123,19 +123,19 @@ class Apc implements Interfaces\Cache {
     /**
      * Namespace usefull when we need to wildcard deleting cache object.
      *
-     * @param string $namespace_key
+     * @param string $namespaceKey
      * @return int Unixtimestamp
      */
-    private function keyToNamespace( $key, $namespace_key = false ){
+    private function keyToNamespace( $key, $namespaceKey = false ){
 	
-	if( ! $namespace_key )
+	if( ! $namespaceKey )
 	    return $key;
 	
-	if( ! $namespace_value = apc_fetch($namespace_key) ){
-	    $namespace_value = time();
-	    apc_store($namespace_key, $namespace_value, 0);
+	if( ! $namespaceValue = apc_fetch($namespaceKey) ){
+	    $namespaceValue = time();
+	    apc_store($namespaceKey, $namespaceValue, 0);
 	}
 	
-	return $namespace_value.'_'.$key;
+	return $namespaceValue.'_'.$key;
     }
 }
