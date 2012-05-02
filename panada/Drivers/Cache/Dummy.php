@@ -121,4 +121,34 @@ class Dummy implements Interfaces\Cache {
         unset(self::$holder);
         return true;
     }
+    
+    /**
+     * Increment numeric item's value
+     *
+     * @param string $key The key of the item
+     * @param int $offset The amount by which to increment the item's value
+     */
+    public function incrementBy($key, $offset = 1){
+        
+        $incr = $this->getValue($key) + $offset;
+        
+        $this->updateValue($key, $incr);
+	
+	return $incr;
+    }
+    
+    /**
+     * Decrement numeric item's value
+     *
+     * @param string $key The key of the item
+     * @param int $offset The amount by which to decrement the item's value
+     */
+    public function decrementBy($key, $offset = 1){
+	
+        $decr = $this->getValue($key) - $offset;
+        
+        $this->updateValue($key, $decr);
+        
+	return $decr;
+    }
 }

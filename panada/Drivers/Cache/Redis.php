@@ -114,6 +114,28 @@ class Redis extends \Redis implements Interfaces\Cache {
     }
     
     /**
+     * Increment numeric item's value
+     *
+     * @param string $key The key of the item
+     * @param int $offset The amount by which to increment the item's value
+     */
+    public function incrementBy($key, $offset = 1){
+	
+	return $this->incr($key, $offset);
+    }
+    
+    /**
+     * Decrement numeric item's value
+     *
+     * @param string $key The key of the item
+     * @param int $offset The amount by which to decrement the item's value
+     */
+    public function decrementBy($key, $offset = 1){
+	
+	return $this->decr($key, $offset);
+    }
+    
+    /**
      * Namespace usefull when we need to wildcard deleting cache object.
      *
      * @param string $namespaceKey
