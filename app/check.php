@@ -8,6 +8,7 @@
  * @author	Mulia Arifandy Nasution <https://github.com/mul14>
  */
 
+define('INDEX_FILE', basename(__FILE__));
 define('GEAR', '../panada/');
 define('DS', DIRECTORY_SEPARATOR);
 define('THISPATH', dirname(__FILE__));
