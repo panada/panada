@@ -29,7 +29,7 @@ class Import {
         else{
             
             // Are we try to call static method?
-            if( count( explode('::', $className) > 0) ){
+            if( count(explode('::', $className)) > 1 ){
                 
                 return call_user_func_array($className, $arguments);
             }
