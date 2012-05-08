@@ -56,29 +56,15 @@ class Mysql implements Interfaces\Database {
      */
     private function establishConnection(){
 	
-	$arguments = array(
-			$this->config['host'].':'.$this->config['port'],
-			$this->config['user'],
-			$this->config['password'],
-			$this->newLink,
-			$this->clientFlags
-		    );
+	$function = ($this->config['persistent']) ? 'mysql_pconnect' : 'mysql_connect';
 	
-	$function = 'mysql_connect';
-	
-	if( $this->config['persistent'] ){
-	    
-	    $arguments = array(
-			$this->config['host'].':'.$this->config['port'],
-			$this->config['user'],
-			$this->config['password'],
-			$this->clientFlags
-		    );
-	    
-	    $function = 'mysql_pconnect';
-	}
-	
-	return call_user_func_array($function, $arguments);
+	return $function(
+		    $this->config['host'].':'.$this->config['port'],
+		    $this->config['user'],
+		    $this->config['password'],
+		    $this->newLink,
+		    $this->clientFlags
+		);
     }
     
     /**

@@ -1,32 +1,41 @@
 <?php
 /**
- * Panada Memcached API Driver.
+ * Panada Redis API Driver.
  *
  * @package	Driver
  * @subpackage	Cache
  * @author	Iskandar Soesman
- * @since	Version 0.1
+ * @since	Version 1.0
  */
 
 /**
- * EN: Makesure Memcache extension is enabled
+ * Makesure Memcache extension is enabled
  */
 namespace Drivers\Cache;
 use Resources\Interfaces as Interfaces;
 
-class Memcached extends \Memcached implements Interfaces\Cache {
+class Redis extends \Redis implements Interfaces\Cache {
     
-    private $port = 11211;
+    private $port = 6379;
     
     public function __construct( $config ){
 	
-	if( ! extension_loaded('memcached') )
-	    die('Memcached extension that required by Driver memcached is not available.');
+	if( ! extension_loaded('redis') )
+	    die('Redis extension that required by Driver Redis is not available.');
 	
         parent::__construct();
         
-        foreach($config['server'] as $server)
-	    $this->addServer($server['host'], $server['port'], $server['persistent']);
+        foreach($config['server'] as $server){
+            
+            if ( $server['persistent']) {
+                $this->pconnect($server['host'], $server['port'], $server['timeout']);
+            }
+            else {
+                $this->connect($server['host'], $server['port'], $server['timeout']);
+            }
+        }
+        
+        $this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
     }
     
     /**
@@ -55,7 +64,7 @@ class Memcached extends \Memcached implements Interfaces\Cache {
     public function addValue( $key, $value, $expire = 0, $namespace = false ){
         
 	$key = $this->keyToNamespace($key, $namespace);
-	return $this->add($key, $value, $expire); 
+	return $this->setnx($key, $value, $expire); 
     }
     
     /**
@@ -70,7 +79,7 @@ class Memcached extends \Memcached implements Interfaces\Cache {
     public function updateValue( $key, $value, $expire = 0, $namespace = false ){
         
 	$key = $this->keyToNamespace($key, $namespace);
-	return $this->replace($key, $value, $expire);
+	return $this->setValue($key, $value, $expire);
     }
     
     /**
@@ -101,7 +110,7 @@ class Memcached extends \Memcached implements Interfaces\Cache {
      */
     public function flushValues(){
         
-	return $this->flush();
+	return $this->flushDB();
     }
     
     /**
@@ -112,7 +121,7 @@ class Memcached extends \Memcached implements Interfaces\Cache {
      */
     public function incrementBy($key, $offset = 1){
 	
-	return $this->increment($key, $offset);
+	return $this->incr($key, $offset);
     }
     
     /**
@@ -123,7 +132,7 @@ class Memcached extends \Memcached implements Interfaces\Cache {
      */
     public function decrementBy($key, $offset = 1){
 	
-	return $this->decrement($key, $offset);
+	return $this->decr($key, $offset);
     }
     
     /**
@@ -144,4 +153,5 @@ class Memcached extends \Memcached implements Interfaces\Cache {
 	
 	return $namespaceValue.'_'.$key;
     }
+    
 }

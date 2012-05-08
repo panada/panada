@@ -56,6 +56,9 @@ class Mysqli implements Interfaces\Database {
      */
     private function establishConnection(){
 	
+	if($this->config['persistent'])
+	    $this->config['host'] = 'p:'.$this->config['host'];
+	
         return mysqli_connect($this->config['host'], $this->config['user'], $this->config['password'], $this->config['database'], $this->config['port']);
     }
     

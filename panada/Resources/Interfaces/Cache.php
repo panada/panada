@@ -18,4 +18,6 @@ interface Cache {
     public function getValue( $key, $namespace = false );
     public function deleteValue( $key, $namespace = false );
     public function flushValues();
+    public function incrementBy($key, $offset = 1);
+    public function decrementBy($key, $offset = 1);
 }

@@ -68,6 +68,17 @@ class Mongodb extends \Mongo {
     }
     
     /**
+     * Return the mongodb object after
+     * the db selected
+     *
+     * @return object
+     */
+    public function mongoObj(){
+	
+	return $this->selectDB($this->config['database']);
+    }
+    
+    /**
      * Wrap results from mongo output into object or array.
      *
      * @param array $cursor The array data given from Mongodb

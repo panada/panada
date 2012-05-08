@@ -54,24 +54,18 @@ class Postgresql implements Interfaces\Database {
      * @return string | boolean postgreSQL persistent link identifier on success, or FALSE on failure.
      */
     private function establishConnection(){
-        
-        $arguments = 'host='.$this->config['host'].'
-                    port='.$this->config['port'].'
-                    dbname='.$this->config['database'].'
-                    user='.$this->config['user'].'
-                    password='.$this->config['password'].'
-                    options=\'--client_encoding='.$this->config['charset'].'\'';
-        
-	$arguments = array(
-			$arguments,
-			false
-		    );
-	$function = 'pg_connect';
 	
-	if( $this->config['persistent'] )
-	    $function = 'pg_pconnect';
-	
-	return call_user_func_array($function, $arguments);
+	$function = ($this->config['persistent']) ? 'pg_pconnect' : 'pg_connect';
+        
+	return $function(
+	    'host='.$this->config['host'].
+	    'port='.$this->config['port'].
+	    'dbname='.$this->config['database'].
+	    'user='.$this->config['user'].
+	    'password='.$this->config['password'].
+	    'options=\'--client_encoding='.$this->config['charset'].'\'',
+	    false
+	);
     }
     
     /**

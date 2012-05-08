@@ -31,4 +31,16 @@ return array(
             ),
         )
     ),
+    
+    'redis' => array(
+        'driver' => 'redis',
+        'server' => array(
+            array(
+                'host' => 'localhost',
+                'port' => 6379,
+                'persistent' => false,
+                'timeout' => 2.5
+            ),
+        )
+    ),
 );

@@ -98,6 +98,25 @@ class Upload {
     }
     
     /**
+     * Setter for option
+     *
+     * @param string | array $var
+     * @param mix $value
+     * @return void
+     */
+    public function setOption($var, $value = false){
+        
+        if( is_string($var) )
+            $this->$var = $value;
+        
+        if( is_array($var) )
+            foreach($var as $key => $value)
+                $this->$key = $value;
+        
+        return $this;
+    }
+    
+    /**
      * Do the Processing upload.
      *
      * @param array $_FILES variable
@@ -127,7 +146,7 @@ class Upload {
                 $this->image->$key = $val;
             
             if( ! $this->image->edit($this->getFileInfo['name']) ) {
-               $this->setErrorMessage(14);
+               $this->_setErrorMessage(14);
                 return false;
             }
         }
@@ -167,7 +186,7 @@ class Upload {
      * @param integer
      * @return void
      */
-    private function setErrorMessage($code){
+    private function _setErrorMessage($code){
         
         $image_error        = ($code == 14 && isset($this->image->errorMessages)) ? implode(', ', $this->image->errorMessages) : null;
         $handler            = new \stdClass;
@@ -187,7 +206,7 @@ class Upload {
          * Check is folder destionation has set.
          */
         if( empty($this->folderLocation) ) {
-            $this->setErrorMessage(2);
+            $this->_setErrorMessage(2);
             return false;
         }
         
@@ -212,8 +231,8 @@ class Upload {
                 
                 if( ! is_dir($path) )
                     if( ! mkdir($path, 0777)) {
-                        $this->setErrorMessage(11);
-                        //$this->setErrorMessage(10);
+                        $this->_setErrorMessage(11);
+                        //$this->_setErrorMessage(10);
                         return false;
                     }
             }
@@ -223,7 +242,7 @@ class Upload {
          * Does it folder writable?
          */
         if( ! is_writable($this->folderLocation) ) {
-            $this->setErrorMessage(15);
+            $this->_setErrorMessage(15);
             return false;
         }
         
@@ -231,7 +250,7 @@ class Upload {
          * Make sure the file size not more then user defined.
          */
         if( $this->maximumSize > 0 && $this->file['size'] > $this->maximumSize) {
-            $this->setErrorMessage(13);
+            $this->_setErrorMessage(13);
             return false;
         }
         
@@ -243,28 +262,28 @@ class Upload {
             switch($this->file['error']){
                 
                 case UPLOAD_ERR_INI_SIZE:
-                    $this->setErrorMessage(3);
+                    $this->_setErrorMessage(3);
                     return false;
                 case UPLOAD_ERR_FORM_SIZE:
-                    $this->setErrorMessage(4);
+                    $this->_setErrorMessage(4);
                     return false;
                 case UPLOAD_ERR_PARTIAL:
-                    $this->setErrorMessage(5);
+                    $this->_setErrorMessage(5);
                     return false;
                 case UPLOAD_ERR_NO_FILE:
-                    $this->setErrorMessage(6);
+                    $this->_setErrorMessage(6);
                     return false;
                 case UPLOAD_ERR_NO_TMP_DIR:
-                    $this->setErrorMessage(7);
+                    $this->_setErrorMessage(7);
                     return false;
                 case UPLOAD_ERR_CANT_WRITE:
-                    $this->setErrorMessage(8);
+                    $this->_setErrorMessage(8);
                     return false;
                 case UPLOAD_ERR_EXTENSION:
-                    $this->setErrorMessage(9);
+                    $this->_setErrorMessage(9);
                     return false;
                 default:
-                    $this->setErrorMessage(1);
+                    $this->_setErrorMessage(1);
             }
         }
         
@@ -273,7 +292,7 @@ class Upload {
          */
         if( ! empty($this->permittedFileType) ) {
             if ( ! preg_match( '!\.(' . $this->permittedFileType . ')$!i', $this->file['name'] ) ) {
-                $this->setErrorMessage(12);
+                $this->_setErrorMessage(12);
                 return false;
             }
         }
@@ -321,7 +340,7 @@ class Upload {
             return true;
         }
         else {
-            $this->setErrorMessage(1);
+            $this->_setErrorMessage(1);
             return false;
         }
     }
@@ -411,6 +430,42 @@ class Upload {
 	}
         
         return $file;
+    }
+    
+    /**
+     * Getter for getFileInfo property
+     *
+     * @return array
+     */
+    public function getFileInfo(){
+        
+        return $this->getFileInfo;
+    }
+    
+    /**
+     * Getter for error property
+     *
+     * @return mix
+     */
+    public function getError($property = false){
+        
+        if( ! $property )
+            return $this->upload->error;
+        
+        return $this->upload->error->$property;
+    }
+    
+    /**
+     * Setter for error message
+     *
+     * @param array $messages
+     * @return object
+     */
+    public function setErrorMessage( $messages = array() ){
+        
+        $this->errorMessages = array_merge($this->errorMessages, $messages);
+        
+        return $this;
     }
     
 } //End Upload Class

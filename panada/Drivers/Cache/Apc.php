@@ -121,21 +121,43 @@ class Apc implements Interfaces\Cache {
     }
     
     /**
+     * Increment numeric item's value
+     *
+     * @param string $key The key of the item
+     * @param int $offset The amount by which to increment the item's value
+     */
+    public function incrementBy($key, $offset = 1){
+	
+	return apc_inc($key, $offset);
+    }
+    
+    /**
+     * Decrement numeric item's value
+     *
+     * @param string $key The key of the item
+     * @param int $offset The amount by which to decrement the item's value
+     */
+    public function decrementBy($key, $offset = 1){
+	
+	return apc_dec($key, $offset);
+    }
+    
+    /**
      * Namespace usefull when we need to wildcard deleting cache object.
      *
-     * @param string $namespace_key
+     * @param string $namespaceKey
      * @return int Unixtimestamp
      */
-    private function keyToNamespace( $key, $namespace_key = false ){
+    private function keyToNamespace( $key, $namespaceKey = false ){
 	
-	if( ! $namespace_key )
+	if( ! $namespaceKey )
 	    return $key;
 	
-	if( ! $namespace_value = apc_fetch($namespace_key) ){
-	    $namespace_value = time();
-	    apc_store($namespace_key, $namespace_value, 0);
+	if( ! $namespaceValue = apc_fetch($namespaceKey) ){
+	    $namespaceValue = time();
+	    apc_store($namespaceKey, $namespaceValue, 0);
 	}
 	
-	return $namespace_value.'_'.$key;
+	return $namespaceValue.'_'.$key;
     }
 }
