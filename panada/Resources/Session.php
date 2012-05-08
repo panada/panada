@@ -17,8 +17,8 @@ class Session {
     public function __construct($connection = 'default'){
         
         $this->config = Config::session();
-	$this->config = $this->config[$connection];
-	
+		$this->config = $this->config[$connection];
+		$this->init();
     }
     
     /**
@@ -29,8 +29,8 @@ class Session {
      * @since version 1.0
      */
     public function setOption( $option = array() ){
-	
-	$this->config = array_merge($this->config, $option);
+		$this->config = array_merge($this->config, $option);
+		$this->init();
     }
     
     /**
@@ -41,9 +41,7 @@ class Session {
      * @param array @arguments
      */
     public function __call($name, $arguments){
-	
-	$this->init();
-        
+		
         return call_user_func_array(array($this->driver, $name), $arguments);
     }
     
@@ -78,7 +76,7 @@ class Session {
      */
     private function init(){
 	
-	$driverNamespace = 'Drivers\Session\\'.ucwords($this->config['driver']);
+		$driverNamespace = 'Drivers\Session\\'.ucwords($this->config['driver']);
         $this->driver = new $driverNamespace($this->config);
     }
 }
