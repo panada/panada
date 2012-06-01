@@ -291,7 +291,7 @@ class Image {
         
         $file_extension = Upload::getFileExtension($this->fileName);
         $saveTo        = ( ! empty($this->saveTo) ) ? $this->saveTo : $this->folder;
-        $new_filename   = ( ! empty($this->newFileName) )? $saveTo . '/' . $this->newFileName . '.' . $file_extension : $this->filePath;
+        $new_filename   = ( ! empty($this->newFileName) )? $saveTo . '/' . $this->newFileName . '.' . $file_extension : $saveTo.'/'.$this->fileName;
         $new_filename   = ($this->stripSpaces) ? str_replace(' ', '_', $new_filename) : $new_filename;
         
         // move the new file
