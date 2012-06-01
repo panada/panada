@@ -240,7 +240,7 @@ class Image {
         if( $this->resizeHeight > 0 && $this->resizeWidth > 0 && $this->editType == 'resize' ) {
             
             $image_new_height   = $this->resizeHeight;
-            $image_new_height   = $this->resizeHeight;
+            $image_new_width  	= $this->resizeWidth;
         }
         
         //Resizing
