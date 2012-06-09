@@ -19,7 +19,10 @@ class Database {
         $config         = Config::database();
         $this->config   = $config[$connection];
         
-        $driverNamespace = 'Drivers\Database\\'.ucwords($this->config['driver']);
+        if ( isset($this->config['pdo']) AND $this->config['pdo'])
+            $driverNamespace = 'Drivers\Database\PanadaPDO';
+        else
+            $driverNamespace = 'Drivers\Database\\'.ucwords($this->config['driver']);
         
         $this->driver = new $driverNamespace( $this->config, $connection );
     }
