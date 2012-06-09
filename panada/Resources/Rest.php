@@ -15,10 +15,11 @@ class Rest {
     public
 	$requestMethod,
 	$responseStatus,
-	$requestData	    = array(),
-	$setRequestHeaders  = array(),
-	$responseOutputHeader= false,
-	$timeout	    = 30;
+	$requestData		= array(),
+	$setRequestHeaders	= array(),
+	$responseOutputHeader	= false,
+	$timeout		= 30,
+	$curlSSLVerifypeer	= true;
     
     public function __construct(){
 	
@@ -162,6 +163,7 @@ class Rest {
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($c, CURLOPT_URL, $uri);
 	curl_setopt($c, CURLOPT_TIMEOUT, $this->timeout);
+	curl_setopt($c, CURLOPT_SSL_VERIFYPEER, $this->curlSSLVerifypeer);
         
         if($this->responseOutputHeader)
             curl_setopt($c, CURLOPT_HEADER, true);
