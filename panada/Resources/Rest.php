@@ -10,8 +10,8 @@
  */
 namespace Resources;
 
-class Rest {
-    
+class Rest
+{    
     public
 	$requestMethod,
 	$responseStatus,
@@ -21,8 +21,8 @@ class Rest {
 	$timeout		= 30,
 	$curlSSLVerifypeer	= true;
     
-    public function __construct(){
-	
+    public function __construct()
+    {
 	/**
 	* Makesure Curl extension is enabled
 	*/
@@ -38,8 +38,8 @@ class Rest {
      *
      * @return string
      */
-    public function getRequestMethod(){
-	
+    public function getRequestMethod()
+    {
 	return $this->requestMethod;
     }
     
@@ -48,8 +48,8 @@ class Rest {
      *
      * @return int
      */
-    public function getResponseStatus(){
-	
+    public function getResponseStatus()
+    {
 	return $this->responseStatus;
     }
     
@@ -58,8 +58,8 @@ class Rest {
      *
      * @return array
      */
-    public function getRequestData(){
-	
+    public function getRequestData()
+    {
 	return $this->requestData;
     }
     
@@ -68,8 +68,8 @@ class Rest {
      *
      * @return array
      */
-    public function getRequest(){
-	
+    public function getRequest()
+    {
 	// Use PHP Input to get request PUT, DELETE, HEAD, TRACE, OPTIONS, CONNECT and PATCH
         
         return $_REQUEST;
@@ -80,8 +80,8 @@ class Rest {
      *
      * @return array
      */
-    public function getFiles(){
-	
+    public function getFiles()
+    {
 	return $_FILES;
     }
     
@@ -90,8 +90,8 @@ class Rest {
      *
      * @return array
      */
-    public function getClientHeaders(){
-	
+    public function getClientHeaders()
+    {
 	$headers = array();
 	
 	foreach ($_SERVER as $key => $val){
@@ -113,8 +113,8 @@ class Rest {
      *
      * @return array
      */
-    private function getPHPInput(){
-	
+    private function getPHPInput()
+    {
 	parse_str(file_get_contents('php://input'), $put_vars);
         return $put_vars;
     }
@@ -125,8 +125,8 @@ class Rest {
      * @param array $options
      * @return void
      */
-    public function setRequestHeaders( $options = array() ){
-	
+    public function setRequestHeaders( $options = array() )
+    {
 	if( ! empty($options) )
 	    foreach($options as $key => $value)
 		$this->setRequestHeaders[] = $key.': '.$value;
@@ -139,8 +139,8 @@ class Rest {
      * @param string $type The Auth type eg: Basic, OAuth etc
      * @return void
      */
-    public function setRequestAuthorization($signature, $type = 'Basic'){
-	
+    public function setRequestAuthorization($signature, $type = 'Basic')
+    {
 	$this->setRequestHeaders[] = 'Authorization: '.$type.' '.$signature;
     }
     
@@ -152,8 +152,8 @@ class Rest {
      * @param array | string $data The data that need to send to server
      * @return booeal if false and string if true
      */
-    public function sendRequest( $uri, $method = 'GET', $data = null ){
-	
+    public function sendRequest( $uri, $method = 'GET', $data = null )
+    {
 	$this->setRequestHeaders[]	= 'User-Agent: Panada PHP Framework REST API/0.2';
 	$method				= strtoupper($method);
         $urlSeparator			= ( parse_url( $uri, PHP_URL_QUERY ) ) ? '&' : '?';
@@ -204,8 +204,8 @@ class Rest {
      *
      * @return void
      */
-    public function setResponseHeader($code = 200){
-	
+    public function setResponseHeader($code = 200)
+    {
 	Tools::setStatusHeader($code);
     }
     
@@ -217,8 +217,8 @@ class Rest {
      * @param string $ContentType
      * @return string
      */
-    public function wrapResponseOutput($data, $format = 'json', $ContentType = 'application'){
-        
+    public function wrapResponseOutput($data, $format = 'json', $ContentType = 'application')
+    {    
         header('Content-type: '.$ContentType.'/' . $format);
 	
 	if($format == 'xml')
