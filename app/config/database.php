@@ -17,7 +17,7 @@ return array(
     
     /*
     'postgre' => array(
-        'driver' => 'postgresql',
+        'driver' => 'pgsql',
         'host' => 'localhost',
         'port' => 5432,
         'user' => 'postgres',
