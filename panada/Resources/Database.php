@@ -33,17 +33,28 @@ class Database
      *
      * @param string @name
      * @param array @arguments
+     * @return mix
      */
     public function __call($name, $arguments)
     {    
         return call_user_func_array(array($this->driver, $name), $arguments);
     }
     
+    /**
+     * @param string @name
+     * @return mix
+     */
     public function __get($name)
     {    
         return $this->driver->$name;
     }
     
+    /**
+     *
+     * @param string @name
+     * @param mix @$value
+     * @return void
+     */
     public function __set($name, $value)
     {    
         $this->driver->$name = $value;
