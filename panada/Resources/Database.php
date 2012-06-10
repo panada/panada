@@ -10,12 +10,12 @@
  */
 namespace Resources;
 
-class Database {
-    
+class Database
+{    
     private $driver, $config;
     
-    public function __construct( $connection = 'default' ){
-        
+    public function __construct( $connection = 'default' )
+    {    
         $config         = Config::database();
         $this->config   = $config[$connection];
         
@@ -34,18 +34,18 @@ class Database {
      * @param string @name
      * @param array @arguments
      */
-    public function __call($name, $arguments){
-        
+    public function __call($name, $arguments)
+    {    
         return call_user_func_array(array($this->driver, $name), $arguments);
     }
     
-    public function __get($name){
-        
+    public function __get($name)
+    {    
         return $this->driver->$name;
     }
     
-    public function __set($name, $value){
-        
+    public function __set($name, $value)
+    {    
         $this->driver->$name = $value;
     }
     
