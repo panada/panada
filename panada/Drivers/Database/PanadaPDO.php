@@ -65,10 +65,6 @@ class PanadaPDO implements Interfaces\Database {
 		// Persistent connection?
 		$options[PDO::ATTR_PERSISTENT] = $this->config['persistent'];
 		
-		// Postgresql?
-		if ($this->config['driver'] == 'postgresql')
-			$this->config['driver'] = 'pgsql';
-			
 		// Build DSN
 		$this->dsn = $this->config['driver'].":host=".$this->config['host'].
 					";port=".$this->config['port'].";dbname=".$this->config['database'];
