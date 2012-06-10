@@ -12,8 +12,8 @@ use Resources\Interfaces as Interfaces,
 Resources\RunException as RunException,
 PDO, PDOException;
 
-class PanadaPDO implements Interfaces\Database {
-
+class PanadaPDO implements Interfaces\Database
+{
 	protected $port = null;
 	protected $column = '*';
 	protected $distinct = false;
@@ -44,8 +44,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * 
 	 * @return void
 	 */
-	function __construct( $config, $connectionName ){
-	
+	function __construct( $config, $connectionName )
+	{
 		// Check for PDO
 		if (!extension_loaded('PDO')){
 			throw new RunException('PDO extension not installed.');
@@ -60,8 +60,8 @@ class PanadaPDO implements Interfaces\Database {
 	 *
 	 * @return string | boolean
 	 */
-	private function establishConnection(){
-	
+	private function establishConnection()
+	{
 		// Persistent connection?
 		$options[PDO::ATTR_PERSISTENT] = $this->config['persistent'];
 		
@@ -82,8 +82,8 @@ class PanadaPDO implements Interfaces\Database {
 	 *
 	 * @return void
 	 */
-	private function init(){
-
+	private function init()
+	{
 		if( is_null($this->link) )
 			$this->link = $this->establishConnection();
 			
@@ -102,8 +102,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param string $column1, $column2 etc ...
 	 * @return object
 	 */
-	public function select(){
-		
+	public function select()
+	{	
 		$column = func_get_args();
 		
 		if( ! empty($column) ){
@@ -120,8 +120,8 @@ class PanadaPDO implements Interfaces\Database {
 	 *
 	 * @return object
 	 */
-	public function distinct(){
-		
+	public function distinct()
+	{	
 		$this->distinct = true;
 		return $this;
 	}
@@ -132,8 +132,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param string $table1, $table2 etc ...
 	 * @return object
 	 */
-	public function from(){
-		
+	public function from()
+	{	
 		$tables = func_get_args();
 	
 		if( is_array($tables[0]) )
@@ -149,8 +149,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param string $table Table to join
 	 * @param string $type Type of join: LEFT, RIGHT, INNER
 	 */
-	public function join( $table, $type = null ){
-		
+	public function join( $table, $type = null )
+	{	
 		$this->joins = $table;
 		$this->joinsType = $type;
 		
@@ -165,8 +165,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param string $value
 	 * @param mix $separator
 	 */
-	protected function createCriteria($column, $operator, $value, $separator){
-	
+	protected function createCriteria($column, $operator, $value, $separator)
+	{
 		if( is_string($value) && $this->isQuotes ){
 			$value = $this->escape($value);
 			$value = " '$value'";
@@ -195,8 +195,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param string $value
 	 * @param mix $separator
 	 */
-	public function on( $column, $operator, $value, $separator = false ){
-		
+	public function on( $column, $operator, $value, $separator = false )
+	{	
 		$this->isQuotes = false;
 		$this->joinsOn[] = $this->createCriteria($column, $operator, $value, $separator);
 		$this->isQuotes = true;
@@ -213,8 +213,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param string $separator Such as: AND, OR
 	 * @return object
 	 */
-	public function where( $column, $operator, $value, $separator = false ){
-		
+	public function where( $column, $operator, $value, $separator = false )
+	{	
 		if( is_string($value) ){
 			
 			$value_arr = explode('.', $value);
@@ -235,8 +235,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param string $column1, $column2 etc ...
 	 * @return object
 	 */
-	public function groupBy(){
-		
+	public function groupBy()
+	{	
 		$this->groupBy = implode(', ', func_get_args());
 		return $this;
 	}
@@ -249,8 +249,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param string $value
 	 * @param mix $separator
 	 */
-	public function having( $column, $operator, $value, $separator = false ){
-		
+	public function having( $column, $operator, $value, $separator = false )
+	{	
 		$this->isHaving[] = $this->createCriteria($column, $operator, $value, $separator);
 	
 		return $this;
@@ -262,8 +262,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param string $column1, $column2 etc ...
 	 * @return object
 	 */
-	public function orderBy( $column, $order = null ){
-		
+	public function orderBy( $column, $order = null )
+	{	
 		$this->orderBy = $column;
 		$this->order = $order;
 		
@@ -277,8 +277,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param int Optional offset value
 	 * @return object
 	 */
-	public function limit( $limit, $offset = null ){
-		
+	public function limit( $limit, $offset = null )
+	{	
 		$this->limit = $limit;
 		$this->offset = $offset;
 		
@@ -290,8 +290,8 @@ class PanadaPDO implements Interfaces\Database {
 	 *
 	 * @return string The complited SQL statement
 	 */
-	public function command(){
-		
+	public function command()
+	{	
 		$query = 'SELECT ';
 
 		if($this->distinct){
@@ -372,8 +372,8 @@ class PanadaPDO implements Interfaces\Database {
 	 *
 	 * @return void
 	 */
-	public function begin(){
-		
+	public function begin()
+	{	
 		$this->link->beginTransaction();
 	}
 	
@@ -382,13 +382,13 @@ class PanadaPDO implements Interfaces\Database {
 	 *
 	 * @return void
 	 */
-	public function commit(){
-		
+	public function commit()
+	{	
 		$this->link->commit();
 	}
 	
-	public function rollback(){
-		
+	public function rollback()
+	{	
 		$this->link->rollBack();
 	}
 	
@@ -398,13 +398,13 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param string $string
 	 * @return void
 	 */
-	public function escape( $string ){
-		
+	public function escape( $string )
+	{	
 		return $string;
 	}
 	
-	public function query( $sql ){
-		
+	public function query( $sql )
+	{	
 		if( is_null($this->link) )
 			$this->init();
 		
@@ -429,8 +429,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param array $fields
 	 * @return object
 	 */
-	public function getAll( $table = false, $where = array(), $fields = array() ){
-		
+	public function getAll( $table = false, $where = array(), $fields = array() )
+	{	
 		if( ! $table )
 			return $this->results( $this->command() );
 		
@@ -456,8 +456,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param array $fields
 	 * @return object
 	 */
-	public function getOne( $table = false, $where = array(), $fields = array() ){
-		
+	public function getOne( $table = false, $where = array(), $fields = array() )
+	{	
 		if( ! $table )
 			return $this->row( $this->command() );
 		
@@ -489,8 +489,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param string @query
 	 * @return string|int Depen on it record value.
 	 */
-	public function getVar( $query = null ){
-		
+	public function getVar( $query = null )
+	{	
 		if( is_null($query) )
 			$query = $this->command();
 
@@ -506,8 +506,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param string $query The sql query
 	 * @param string $type return data type option. the default is "object"
 	 */
-	public function results( $query, $type = 'object' ){
-		
+	public function results( $query, $type = 'object' )
+	{	
 		if( is_null($query) )
 			$query = $this->command();
 			
@@ -533,8 +533,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param string $query The sql query
 	 * @param string $type return data type option. the default is "object"
 	 */
-	public function row( $query, $type = 'object' ){
-		
+	public function row( $query, $type = 'object' )
+	{		
 		if( is_null($query) )
 			$query = $this->command();
 
@@ -557,8 +557,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param array $data
 	 * @return boolean
 	 */
-	public function insert( $table, $data = array() ){
-		
+	public function insert( $table, $data = array() )
+	{	
 		$fields = array_keys($data);
 		
 		foreach($data as $key => $val)
@@ -572,8 +572,8 @@ class PanadaPDO implements Interfaces\Database {
 	 *
 	 * @return int
 	 */
-	public function insertId(){
-		
+	public function insertId()
+	{	
 		return $this->link->lastInsertId();
 	}
 	
@@ -585,8 +585,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param array $where
 	 * @return boolean
 	 */
-	public function update( $table, $dat, $where = null ){
-		
+	public function update( $table, $dat, $where = null )
+	{	
 		foreach($dat as $key => $val)
 			$data[$key] = $this->escape($val);
 		
@@ -618,8 +618,8 @@ class PanadaPDO implements Interfaces\Database {
 	 * @param array
 	 * @return boolean
 	 */
-	public function delete( $table, $where = null ){
-		
+	public function delete( $table, $where = null )
+	{	
 		if( ! empty($this->criteria) ){
 			$criteria = implode(' ', $this->criteria);
 			unset($this->criteria);
@@ -642,8 +642,8 @@ class PanadaPDO implements Interfaces\Database {
 	 *
 	 * @return void
 	 */
-	public function version(){
-		
+	public function version()
+	{	
 		return $this->link->getAttribute(constant("PDO::ATTR_SERVER_VERSION")) ;
 	}
 	
@@ -652,8 +652,8 @@ class PanadaPDO implements Interfaces\Database {
 	 *
 	 * @return void
 	 */
-	public function close(){
-		
+	public function close()
+	{	
 		$this->link = null;
 	}
 	
@@ -662,8 +662,8 @@ class PanadaPDO implements Interfaces\Database {
 	 *
 	 * @return string
 	 */
-	public function getLastQuery(){
-		
+	public function getLastQuery()
+	{	
 		return $this->lastQuery;
 	}
 	
@@ -672,8 +672,8 @@ class PanadaPDO implements Interfaces\Database {
 	 *
 	 * @return string
 	 */
-	private function printError() {
-	
+	private function printError()
+	{
 		if ( $caller = RunException::getErrorCaller(5) )
 			$error_str = sprintf('Database error %1$s for query %2$s made by %3$s', $this->lastError, $this->lastQuery, $caller);
 		else

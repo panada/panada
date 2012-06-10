@@ -11,8 +11,8 @@ namespace Drivers\Database;
 use Resources\Tools as Tools,
     Resources\RunException as RunException;
 
-class Mongodb extends \Mongo {
-    
+class Mongodb extends \Mongo
+{    
     private
         $database,
         $config,
@@ -25,8 +25,8 @@ class Mongodb extends \Mongo {
         $offset = null,
         $order = array();
             	
-    public function __construct( $config, $connectionName ){
-        
+    public function __construct( $config, $connectionName )
+    {    
         /**
         * Makesure Mongo extension is enabled
         */
@@ -48,8 +48,8 @@ class Mongodb extends \Mongo {
      * @param string $database
      * @return object
      */
-    public function database($database){
-        
+    public function database($database)
+    {    
         $this->config['database'] = $database;
         return $this;
     }
@@ -60,8 +60,8 @@ class Mongodb extends \Mongo {
      * @param string $database
      * @return object
      */
-    public function collection($collection){
-        
+    public function collection($collection)
+    {    
         $database = $this->config['database'];
         $db = $this->$database;
         return $db->$collection;
@@ -73,8 +73,8 @@ class Mongodb extends \Mongo {
      *
      * @return object
      */
-    public function mongoObj(){
-	
+    public function mongoObj()
+    {
 	return $this->selectDB($this->config['database']);
     }
     
@@ -85,8 +85,8 @@ class Mongodb extends \Mongo {
      * @param string $output The output type: object | array
      * @return boolean | object | array
      */
-    public function cursorResults($cursor, $output = 'object'){
-        
+    public function cursorResults($cursor, $output = 'object')
+    {    
         if( ! $cursor )
             return false;
         
@@ -107,8 +107,8 @@ class Mongodb extends \Mongo {
      *
      * @param string $str
      */
-    public function date($str = null){
-        
+    public function date($str = null)
+    {    
         if( is_null($str) )
             return new \MongoDate();
         
@@ -125,8 +125,8 @@ class Mongodb extends \Mongo {
      * @param string $_id Mongodb string id
      * @return object
      */
-    public function _id($_id = null){
-        
+    public function _id($_id = null)
+    {    
         return new \MongoId($_id);
     }
     
@@ -135,8 +135,8 @@ class Mongodb extends \Mongo {
      *
      * @return object
      */
-    public function select(){
-	
+    public function select()
+    {
 	$documents = func_get_args();
 	
         if( ! empty($documents) )
@@ -153,8 +153,8 @@ class Mongodb extends \Mongo {
      *
      * @return object
      */
-    public function from($collectionName){
-	
+    public function from($collectionName)
+    {
 	$this->collectionName = $collectionName;
 	
 	return $this;
@@ -170,8 +170,8 @@ class Mongodb extends \Mongo {
      * @param string Separator for more then one condition
      * @return object
      */
-    public function where($document, $operator = null, $value = null, $separator = false){
-	
+    public function where($document, $operator = null, $value = null, $separator = false)
+    {
         if( is_array($document) )
             $this->criteria = $document;
         
@@ -199,8 +199,8 @@ class Mongodb extends \Mongo {
      *
      * @return mix
      */
-    public function getAll( $collection = false, $criteria = array(), $fields = array() ){
-	
+    public function getAll( $collection = false, $criteria = array(), $fields = array() )
+    {
 	if( $collection )
 	    $this->collectionName = $collection;
 	
@@ -228,8 +228,8 @@ class Mongodb extends \Mongo {
      *
      * @return mix
      */
-    public function getOne( $collection = false, $criteria = array(), $fields = array() ){
-        
+    public function getOne( $collection = false, $criteria = array(), $fields = array() )
+    {    
 	if( $collection )
 	    $this->collectionName = $collection;
 	
@@ -255,8 +255,8 @@ class Mongodb extends \Mongo {
      * @param array Data to insert
      * @return bool
      */
-    public function insert($collection, $data = array()) {
-        
+    public function insert($collection, $data = array())
+    {    
         return $this->collection($collection)->insert($data); 
     }
     
@@ -269,8 +269,8 @@ class Mongodb extends \Mongo {
      * @param string SQL like criteria
      * @return bool
      */
-    public function update($collection, $data, $criteria = null){
-	
+    public function update($collection, $data, $criteria = null)
+    {
 	$this->where($criteria);
 	$value = $this->collection($collection)->update( $this->criteria, array('$set' => $data) );
 	$this->criteria = array();
@@ -285,8 +285,8 @@ class Mongodb extends \Mongo {
      * param string SQL like criteria
      * @return bool
      */
-    public function delete( $collection, $criteria = null ){
-        
+    public function delete( $collection, $criteria = null )
+    {    
 	if( ! empty($criteria) )
 	    $this->where($criteria);
 	
@@ -302,8 +302,8 @@ class Mongodb extends \Mongo {
      * @param string $column, $order
      * @return object
      */
-    public function orderBy( $column, $order = 'asc' ){
-	
+    public function orderBy( $column, $order = 'asc' )
+    {
 	$order = strtolower($order);
 	
 	if( $order=='desc' ) 
@@ -322,8 +322,8 @@ class Mongodb extends \Mongo {
      * @param string $limit, $offset
      * @return object
      */
-    public function limit( $limit, $offset = null ){
-	
+    public function limit( $limit, $offset = null )
+    {
 	$this->limit = $limit;
 	$this->offset = $offset;
 	
