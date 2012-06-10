@@ -9,8 +9,8 @@
  * @package Core System
  */
 
-final class Gear {
-    
+final class Gear
+{    
     private $uriObj, $config, $firstUriPath;
     
     /**
@@ -18,8 +18,8 @@ final class Gear {
      *
      * @return void
      */
-    public function __construct($errorReporting = E_ALL){
-        
+    public function __construct($errorReporting = E_ALL)
+    {    
         error_reporting( $errorReporting );
         spl_autoload_register( array($this, 'loader') );
         set_error_handler( 'Resources\RunException::errorHandlerCallback', error_reporting() );
@@ -64,8 +64,8 @@ final class Gear {
      * @param string $file Class namespace.
      * @return void
      */
-    private function loader($file){
-        
+    private function loader($file)
+    {    
         $prefix = explode('\\', $file);
         
         switch ( $prefix[0] ) {
@@ -94,8 +94,8 @@ final class Gear {
      *
      * @return void
      */
-    private function disableMagicQuotes(){
-        
+    private function disableMagicQuotes()
+    {    
         if ( get_magic_quotes_gpc() ) {
             array_walk_recursive($_GET,  array($this, 'stripslashesGpc') );
             array_walk_recursive($_POST, array($this, 'stripslashesGpc') );
@@ -110,7 +110,8 @@ final class Gear {
      * @param string $value
      * @return void
      */
-    private function stripslashesGpc(&$value){
+    private function stripslashesGpc(&$value)
+    {
         $value = stripslashes($value);
     }
     
@@ -125,8 +126,8 @@ final class Gear {
      *
      *  @return void
      */
-    private function controllerHandler(){
-        
+    private function controllerHandler()
+    {    
         if( isset($this->config['main']['alias']['controller']['class']) ){
             
             $controllerClass    = $this->config['main']['alias']['controller']['class'];
@@ -153,8 +154,8 @@ final class Gear {
      *
      * @return void
      */
-    private function subControllerHandler(){
-        
+    private function subControllerHandler()
+    {    
         if( ! is_dir( $subControllerFolder = APP . 'Controllers/' . $this->firstUriPath .'/') ){
             $this->moduleHandler();
             return;
@@ -199,8 +200,8 @@ final class Gear {
      *
      * @return void
      */
-    private function moduleHandler(){
-        
+    private function moduleHandler()
+    {    
         if ( ! is_dir( $moduleFolder = $this->config['main']['module']['path'] . 'Modules/'. $this->firstUriPath . '/' ) )
             throw new Resources\HttpException('Controller, sub-controller or module '.$this->firstUriPath.' does not exists');
         
@@ -259,8 +260,8 @@ final class Gear {
      * @param array $request
      * @return void
      */
-    private function run($instance, $method, $request){
-        
+    private function run($instance, $method, $request)
+    {    
         call_user_func_array(array($instance, $method), $request);
     }
 }
