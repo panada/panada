@@ -11,7 +11,7 @@ namespace Drivers\Database;
 use Resources\Interfaces as Interfaces,
 Resources\RunException as RunException;
 
-class Postgresql implements Interfaces\Database {
+class Pgsql implements Interfaces\Database {
     
     protected $port = 5432;
     protected $column = '*';
