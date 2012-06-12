@@ -25,12 +25,21 @@ class RunException extends \Exception {
     
     public function main($exception){
         
-        $trace = $exception->getTrace();
+        $message = $exception->getMessage();
+        $file = false;
+        $line = false;
         
-        if( ! isset($trace[2]['file']) )
-            $trace[2]['file'] = $trace[2]['line'] = null;
-        
-        self::outputError($exception->getMessage(), $trace[2]['file'], $trace[2]['line']);
+		foreach ($exception->getTrace() as $trace) {
+			if (isset($trace['file'])) {
+				$file = $trace['file'];
+				if (isset($trace['line'])) {
+					$line = $trace['line'];
+				}
+				break;
+			}
+		}
+		
+        self::outputError($message, $file, $line);
     }
     
     public static function errorHandlerCallback($errno, $message, $file, $line){
