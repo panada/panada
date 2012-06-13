@@ -15,6 +15,16 @@ h2{font-size:16px;}p,li,dd,dt,td{padding-bottom:2px;font-size:12px;line-height:1
 h3{font-size:14px;}
 ul,ol,dl{padding:5px 5px 5px 22px; }
 pre{font:14px Consolas,Courier New,Verdana;background:#ddf;/*color:#c00;*/border:1px solid #D0D0D0;display:block;margin:14px 0;padding:10px;border-radius:8px;}
+code {
+	font:14px Consolas,Courier New,Verdana;
+	background:#ddf;
+	border:1px solid #D0D0D0;
+	display:block;
+	margin:14px 0;
+	padding:10px;
+	border-radius:8px;
+	overflow: auto;
+}
 #foot {text-align: left; margin-top: 1.8em; border-top: 1px solid #dadada; padding-top: 1em; font-size: 0.7em;}
 #foot span.right {float:right;}
 </style>
@@ -25,11 +35,18 @@ pre{font:14px Consolas,Courier New,Verdana;background:#ddf;/*color:#c00;*/border
 <p><strong>Error message</strong>: <?php echo $message; ?></p>
 <?php if( $file ): ?>
 <p><strong>Error in file</strong>: <?php echo $file; ?> Line: <?php echo $line; ?></p>
+<p><strong>Source Code</strong></p>
 <pre>
 <?php foreach($code as $code): ?>
 <?php echo $code;?>
 <?php endforeach; ?>
 </pre>
+<?php endif; ?>
+<p><strong>Debug Trace</strong></p>
+<?php if ($trace): ?>
+<code>
+<?php echo nl2br($trace) ?>
+</code>
 <?php endif; ?>
 </div>
 <div id="foot">&nbsp;</div>

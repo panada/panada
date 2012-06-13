@@ -28,6 +28,7 @@ class RunException extends \Exception {
         $message = $exception->getMessage();
         $file = false;
         $line = false;
+        $traceAsString = $exception->getTraceAsString();
         
 		foreach ($exception->getTrace() as $trace) {
 			if (isset($trace['file'])) {
@@ -39,7 +40,7 @@ class RunException extends \Exception {
 			}
 		}
 		
-        self::outputError($message, $file, $line);
+        self::outputError($message, $file, $line, $traceAsString);
     }
     
     public static function errorHandlerCallback($errno, $message, $file, $line){
@@ -50,7 +51,12 @@ class RunException extends \Exception {
         self::outputError($message, $file, $line);
     }
     
-    public static function outputError($message = null, $file = false, $line = false){
+    public static function outputError(
+		  $message = null
+		, $file = false
+		, $line = false
+		, $trace = false
+		){
         
         // Message for log
         $errorMessage = 'Error '.$message.' in '.$file . ' line: ' . $line;
@@ -99,7 +105,8 @@ class RunException extends \Exception {
             'message' => $message,
             'file' => $file,
             'line' => $line,
-            'code' => $code
+            'code' => $code,
+            'trace' => $trace
         );
         
         header("HTTP/1.1 500 Internal Server Error", true, 500);
