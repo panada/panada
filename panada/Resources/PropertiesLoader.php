@@ -29,8 +29,14 @@ class PropertiesLoader {
         
         $class = $this->classNamespace.'\\'.ucwords($name);
         
-        if( $this->childNamespace[0] == 'Modules' && $this->classNamespace != 'Resources' )
-            $class = $this->childNamespace[0].'\\'.$this->childNamespace[1].'\\'.$class;
+        if( $this->childNamespace[0] == 'Modules' && $this->classNamespace != 'Resources' ) {
+            
+            $file = APP.$this->childNamespace[0].'/'.$this->childNamespace[1].'/'.str_replace('\\','/',$class).'.php';
+            
+            // if this module has this class, lets call it
+            if( file_exists($file) )
+                $class = $this->childNamespace[0].'\\'.$this->childNamespace[1].'\\'.$class;
+        }
         
         $cacheKey = 'AutoLoaderClass_'.$class.json_encode($arguments);
         
