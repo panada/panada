@@ -19,7 +19,7 @@ return array(
     'alias' => array(
         /*
         'controller' => array(
-            'class' => 'Controllers\Alias',
+            'class' => 'Alias',
             'method' => 'index'
         ),
         */

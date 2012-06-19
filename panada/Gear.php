@@ -30,32 +30,8 @@ final class Gear
         $this->uriObj                       = new Resources\Uri;
         $this->uriObj->setDefaultController($this->config['main']['defaultController']);
         $this->firstUriPath                 = ucwords( $this->uriObj->getClass() );
-        $controllerNamespace                = 'Controllers\\' . $this->firstUriPath;
         
-        if( ! file_exists( $classFile = APP . 'Controllers/' . $this->firstUriPath . '.php' ) ){
-            $this->controllerHandler();
-            return;
-        }
-        
-        $method = $this->uriObj->getMethod();
-        
-        if( ! $request = $this->uriObj->getRequests() )
-            $request = array();
-        
-        if( ! class_exists($controllerNamespace) )
-            throw new Resources\RunException('Class '.$controllerNamespace.'  not found in '.$classFile);
-        
-        $instance = new $controllerNamespace;
-        
-        if( ! method_exists($instance, $method) ){
-            
-            $request = array_slice( $this->uriObj->path(), 1);
-            $method = $this->config['main']['alias']['method'];
-            
-            if( ! method_exists($instance, $method) )
-                throw new Resources\HttpException('Method '.$this->uriObj->getMethod().' does not exists in controller '.$this->firstUriPath);
-        }
-        $this->run($instance, $method, $request);
+        $this->controllerHandler();
     }
     
     /**
@@ -127,26 +103,34 @@ final class Gear
      *  @return void
      */
     private function controllerHandler()
-    {    
-        if( isset($this->config['main']['alias']['controller']['class']) ){
-            
-            $controllerClass    = $this->config['main']['alias']['controller']['class'];
-            
-            if( ! file_exists( APP . 'Controllers/' . $controllerClass . '.php') ){
-                $this->subControllerHandler();
-                return;
-            }
-            
-            $controllerNamespace= 'Controllers\\' .$controllerClass;
-            $method             = $this->config['main']['alias']['controller']['method'];
-            $instance           = new $controllerNamespace;
-            $request            = $this->uriObj->path();
-            
-            $this->run($instance, $method, $request);
+    {
+        $controllerNamespace = 'Controllers\\' . $this->firstUriPath;
+        
+        if( ! file_exists( $classFile = APP . 'Controllers/' . $this->firstUriPath . '.php' ) ){
+            $this->subControllerHandler();
             return;
         }
         
-        $this->subControllerHandler();
+        $method = $this->uriObj->getMethod();
+        
+        if( ! $request = $this->uriObj->getRequests() )
+            $request = array();
+        
+        if( ! class_exists($controllerNamespace) )
+            throw new Resources\RunException('Class '.$controllerNamespace.'  not found in '.$classFile);
+        
+        $instance = new $controllerNamespace;
+        
+        if( ! method_exists($instance, $method) ){
+            
+            $request = array_slice( $this->uriObj->path(), 1);
+            $method = $this->config['main']['alias']['method'];
+            
+            if( ! method_exists($instance, $method) )
+                throw new Resources\HttpException('Method '.$this->uriObj->getMethod().' does not exists in controller '.$this->firstUriPath);
+        }
+        
+        $this->run($instance, $method, $request);
     }
     
     /**
@@ -201,9 +185,25 @@ final class Gear
      * @return void
      */
     private function moduleHandler()
-    {    
-        if ( ! is_dir( $moduleFolder = $this->config['main']['module']['path'] . 'Modules/'. $this->firstUriPath . '/' ) )
-            throw new Resources\HttpException('Controller, sub-controller or module '.$this->firstUriPath.' does not exists');
+    {   
+        if ( ! is_dir( $moduleFolder = $this->config['main']['module']['path'] . 'Modules/'. $this->firstUriPath . '/' ) ) {
+            
+            if( isset($this->config['main']['alias']['controller']['class']) ){
+                
+                $controllerClass    = $this->config['main']['alias']['controller']['class'];
+                
+                if( ! file_exists( APP . 'Controllers/' . $controllerClass . '.php') )
+                    throw new Resources\HttpException('Controller, sub-controller or module '.$this->firstUriPath.' does not exists');
+                
+                $controllerNamespace= 'Controllers\\' .$controllerClass;
+                $method             = $this->config['main']['alias']['controller']['method'];
+                $instance           = new $controllerNamespace;
+                $request            = $this->uriObj->path();
+                
+                $this->run($instance, $method, $request);
+                return;
+            }
+        }
         
         if( ! $controllerClass = $this->uriObj->path(1) )
             $controllerClass = $this->config['main']['defaultController'];
