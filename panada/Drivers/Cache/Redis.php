@@ -12,7 +12,9 @@
  * Makesure Memcache extension is enabled
  */
 namespace Drivers\Cache;
-use Resources\Interfaces as Interfaces;
+use
+    Resources,
+    Resources\Interfaces as Interfaces;
 
 class Redis extends \Redis implements Interfaces\Cache {
     
@@ -35,7 +37,12 @@ class Redis extends \Redis implements Interfaces\Cache {
             }
         }
         
-        $this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
+	try{
+	    $this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
+	}
+	catch(\RedisException $e) {
+	    Resources\RunException::outputError( $e->getMessage() );
+	}
     }
     
     /**

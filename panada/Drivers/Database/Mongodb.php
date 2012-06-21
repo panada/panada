@@ -39,7 +39,12 @@ class Mongodb extends \Mongo
         /**
          * $this->config['options'] is the mongodb connection option. Eg: array('replicaSet' => true, 'connect' => false)
          */
-        parent::__construct($this->config['host'], $this->config['options']);
+	try {
+	    parent::__construct($this->config['host'], $this->config['options']);
+	}
+	catch(\MongoConnectionException $e) {
+	    RunException::outputError( 'Unable connet to database in <strong>'.$connectionName.'</strong> connection.' );
+	}
     }
     
     /**
