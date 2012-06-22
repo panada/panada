@@ -283,28 +283,28 @@ class Sqlite implements Interfaces\Database
         
         if( is_array($this->column) ){
             $column = implode(', ', $this->column);
-	    unset($this->column);
+	    $this->column = '*';
         }
         
         $query .= $column;
         
         if( ! empty($this->tables) ){
             $query .= ' FROM '.implode(', ', $this->tables);
-	    unset($this->tables);
+	    $this->tables = array();
         }
 	
 	if( ! is_null($this->joins) ) {
 	    
 	    if( ! is_null($this->joinsType) ){
 		$query .= ' '.strtoupper($this->joinsType);
-		unset($this->joinsType);
+		$this->joinsType = null;
 	    }
 	    
 	    $query .= ' JOIN '.$this->joins;
 	    
 	    if( ! empty($this->joinsOn) ){
 		$query .= ' ON ('.implode(' ', $this->joinsOn).')';
-		unset($this->joinsOn);
+		$this->joinsOn = array();
 	    }
 	    
 	    $this->joins = null;
@@ -313,7 +313,7 @@ class Sqlite implements Interfaces\Database
 	if( ! empty($this->criteria) ){
 	    $cr = implode(' ', $this->criteria);
 	    $query .= ' WHERE ' . rtrim($cr, 'AND');
-	    unset($this->criteria);
+	    $this->criteria = array();
 	}
 	
 	if( ! is_null($this->groupBy) ){
@@ -323,7 +323,7 @@ class Sqlite implements Interfaces\Database
 	
 	if( ! empty($this->isHaving) ){
 	    $query .= ' HAVING '.implode(' ', $this->isHaving);
-	    unset($this->isHaving);
+	    $this->isHaving = array();
 	}
 	
 	if( ! is_null($this->orderBy) ){

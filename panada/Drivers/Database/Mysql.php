@@ -13,31 +13,36 @@ Resources\RunException as RunException;
 
 class Mysql implements Interfaces\Database
 {    
-    protected $port = 3306;
-    protected $column = '*';
-    protected $distinct = false;
-    protected $tables = array();
-    protected $joins = null;
-    protected $joinsType = null;
-    protected $joinsOn = array();
-    protected $criteria = array();
-    protected $groupBy = null;
-    protected $isHaving = array();
-    protected $limit = null;
-    protected $offset = null;
-    protected $orderBy = null;
-    protected $order = null;
-    protected $isQuotes = true;
-    private $link;
-    private $connection;
-    private $config;
-    private $lastQuery;
-    private $lastError;
-    public $insertId;
-    public $clientFlags = 0;
-    public $newLink = true;
-    public $persistentConnection = false;
-    public $instantiateClass = 'stdClass';
+    protected
+	$port = 3306,
+	$column = '*',
+	$distinct = false,
+	$tables = array(),
+	$joins = null,
+	$joinsType = null,
+	$joinsOn = array(),
+	$criteria = array(),
+	$groupBy = null,
+	$isHaving = array(),
+	$limit = null,
+	$offset = null,
+	$orderBy = null,
+	$order = null,
+	$isQuotes = true;
+    
+    private
+	$link,
+	$connection,
+	$config,
+	$lastQuery,
+	$lastError;
+    
+    public
+	$insertId,
+	$clientFlags = 0,
+	$newLink = true,
+	$persistentConnection = false,
+	$instantiateClass = 'stdClass';
     
     /**
      * Define all properties needed.
@@ -329,14 +334,14 @@ class Mysql implements Interfaces\Database
         
         if( is_array($this->column) ){
             $column = implode(', ', $this->column);
-	    unset($this->column);
+	    $this->column = '*';
         }
         
         $query .= $column;
         
         if( ! empty($this->tables) ){
             $query .= ' FROM '.implode(', ', $this->tables);
-	    unset($this->tables);
+	    $this->tables = array();
         }
 	
 	if( ! is_null($this->joins) ) {
@@ -350,7 +355,7 @@ class Mysql implements Interfaces\Database
 	    
 	    if( ! empty($this->joinsOn) ){
 		$query .= ' ON ('.implode(' ', $this->joinsOn).')';
-		unset($this->joinsOn);
+		$this->joinsOn = array();
 	    }
 	    
 	    $this->joins = null;
@@ -359,7 +364,7 @@ class Mysql implements Interfaces\Database
 	if( ! empty($this->criteria) ){
 	    $cr = implode(' ', $this->criteria);
 	    $query .= ' WHERE ' . rtrim($cr, 'AND');
-	    unset($this->criteria);
+	    $this->criteria = array();
 	}
 	
 	if( ! is_null($this->groupBy) ){
@@ -369,7 +374,7 @@ class Mysql implements Interfaces\Database
 	
 	if( ! empty($this->isHaving) ){
 	    $query .= ' HAVING '.implode(' ', $this->isHaving);
-	    unset($this->isHaving);
+	    $this->isHaving = array();
 	}
 	
 	if( ! is_null($this->orderBy) ){
