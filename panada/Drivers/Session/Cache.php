@@ -10,12 +10,12 @@
 namespace Drivers\Session;
 use Drivers\Session\Native, Resources;
 
-class Cache extends Native {
-    
+class Cache extends Native
+{    
     private $sessionStorageName = 'sessions_';
     
-    public function __construct( $config ){
-        
+    public function __construct( $config )
+    {    
 	$this->sessionStorageName   = $config['storageName'].'_';
         $this->cache		    = new Resources\Cache( $config['driverConnection'] );
         
@@ -38,7 +38,8 @@ class Cache extends Native {
      * @param string
      * @return void
      */
-    public function sessionStart($savePath, $sessionName){
+    public function sessionStart($savePath, $sessionName)
+    {
 	//We don't need anythings at this time.
     }
     
@@ -47,7 +48,8 @@ class Cache extends Native {
      *
      * @return void
      */
-    public function sessionEnd(){
+    public function sessionEnd()
+    {
 	//we also don't have do anythings too!
     }
     
@@ -57,8 +59,8 @@ class Cache extends Native {
      * @param string $id The session id
      * @return string|array|object|boolean
      */
-    public function sessionRead($id){
-        
+    public function sessionRead($id)
+    {    
         return $this->cache->getValue($this->sessionStorageName.$id);
     }
     
@@ -69,8 +71,8 @@ class Cache extends Native {
      * @param string
      * @return boolean
      */
-    public function sessionWrite($id, $sessData){
-	
+    public function sessionWrite($id, $sessData)
+    {
 	if( $this->sessionRead($id) )
             return $this->cache->updateValue($this->sessionStorageName.$id, $sessData, $this->sesionExpire);
 	else
@@ -83,8 +85,8 @@ class Cache extends Native {
      * @param string
      * @return boolean
      */
-    public function sessionDestroy($id){
-	
+    public function sessionDestroy($id)
+    {
 	return $this->cache->deleteValue($this->sessionStorageName.$id);
     }
     
@@ -95,7 +97,8 @@ class Cache extends Native {
      *
      * @return void
      */
-    public function sessionGc($maxlifetime = 0){
+    public function sessionGc($maxlifetime = 0)
+    {
 	//none
     }
 }

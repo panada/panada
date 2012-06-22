@@ -10,8 +10,8 @@
 namespace Drivers\Session;
 use Resources;
 
-class Cookie {
-    
+class Cookie
+{    
     public
 	$sessionName = 'PAN_SID',
 	$sessionCookieExpire = 0,
@@ -31,8 +31,8 @@ class Cookie {
      * @param object $config_instance
      * @return void
      */
-    public function __construct( $config ){
-	
+    public function __construct( $config )
+    {
         $this->sessionName          = $config['name'];
         $this->sessionCookieExpire  = $config['expiration'];
         $this->sessionCookiePath    = $config['cookiePath'];
@@ -79,8 +79,8 @@ class Cookie {
      * 
      * @return void
      */
-    protected function setCheckSum(){
-        
+    protected function setCheckSum()
+    {    
         $curentValues = $this->curentValues;
         
         $curentValues['agent'] = $_SERVER['HTTP_USER_AGENT'];
@@ -95,8 +95,8 @@ class Cookie {
      *
      * @return bool
      */
-    private function validatesCookieValues(){
-        
+    private function validatesCookieValues()
+    {    
         $curentValues = $this->curentValues;
         
         $curentValues['agent'] = $_SERVER['HTTP_USER_AGENT'];
@@ -117,8 +117,8 @@ class Cookie {
      *
      * @return void
      */
-    private function setSessionValues(){
-        
+    private function setSessionValues()
+    {    
         $value = http_build_query($this->curentValues);
 	
 	if( $this->isEncrypt )
@@ -136,8 +136,8 @@ class Cookie {
      * @param string $value
      * @return void
      */
-    private function setCookie($name, $value = ''){
-        
+    private function setCookie($name, $value = '')
+    {    
         setcookie(
             $name,
             $value,
@@ -155,8 +155,8 @@ class Cookie {
      * @param string $value
      * @return void
      */
-    public function setValue($name, $value = ''){
-        
+    public function setValue($name, $value = '')
+    {    
 	if( is_array($name) ) {
 	    foreach($name AS $key => $val)
 		$this->curentValues[$key] = $val;
@@ -174,8 +174,8 @@ class Cookie {
      * @param string $name
      * @return mix
      */
-    public function getValue( $name = null ){
-        
+    public function getValue( $name = null )
+    {    
         $curentValues = $this->curentValues;
         unset($curentValues['_d']);
         
@@ -197,8 +197,8 @@ class Cookie {
      * @param string $name
      * @return void
      */
-    public function deleteValue($name){
-        
+    public function deleteValue($name)
+    {    
         unset( $this->curentValues[$name] );
         $this->setSessionValues();
     }
@@ -208,8 +208,8 @@ class Cookie {
      *
      * @return void
      */
-    public function destroy( $setExpireHeader = false ){
-	
+    public function destroy( $setExpireHeader = false )
+    {
 	if( $setExpireHeader ){
 	    header('Expires: Mon, 1 Jul 1998 01:00:00 GMT');
 	    header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -229,7 +229,8 @@ class Cookie {
     /**
      * Regenerate the cookie id
      */
-    public function regenerateId(){
+    public function regenerateId()
+    {
         return;
     }   
 }

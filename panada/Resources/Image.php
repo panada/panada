@@ -19,8 +19,8 @@ if( ! defined('PIMG_CROP') )
 if( ! defined('PIMG_RESIZE_CROP') )
     define('PIMG_RESIZE_CROP', 'resize_crop');
 
-class Image {
-    
+class Image
+{    
     /**
      * @var string  Option for editng image the option is: resize | crop | resize_crop.
      */
@@ -105,8 +105,8 @@ class Image {
     /**
      * Class constructor
      */
-    public function __construct(){
-        
+    public function __construct()
+    {    
         if( ! function_exists('imagecopyresampled') )
             throw new RunException('Image resizing function that required by Image Class is not available.');
     }
@@ -118,8 +118,8 @@ class Image {
      * @param mix $value
      * @return void
      */
-    public function setOption($var, $value = false){
-        
+    public function setOption($var, $value = false)
+    {    
         if( is_string($var) )
             $this->$var = $value;
         
@@ -130,8 +130,8 @@ class Image {
         return $this;
     }
     
-    private function preErrorChecker(){
-        
+    private function preErrorChecker()
+    {    
         /**
          * Check is folder destionation has set.
          */
@@ -167,8 +167,8 @@ class Image {
         return true;
     }
     
-    private function errorHandler(){
-        
+    private function errorHandler()
+    {    
         if( ! $this->fileInfo || ! $this->fileInfo[0] || ! $this->fileInfo[1] ) {
             $this->errorMessages[] = 'Unable to get image dimensions.';
             return false;
@@ -182,14 +182,14 @@ class Image {
         return true;
     }
     
-    public function initFileInfo(){
-        
+    public function initFileInfo()
+    {    
         $this->fileInfo = @getimagesize($this->filePath);
         $this->imageType   = $this->fileInfo[2];
     }
     
-    public function edit($fileName){
-        
+    public function edit($fileName)
+    {    
 	$this->fileName    = $fileName;
         $this->filePath    = $this->folder . '/' . $fileName;
         
@@ -267,8 +267,8 @@ class Image {
 	return true;
     }
     
-    public function createImageFrom(){
-        
+    public function createImageFrom()
+    {    
         // create the initial copy from the original file
         switch($this->imageType) {
             
@@ -287,8 +287,8 @@ class Image {
         }
     }
     
-    public function createImage($imageEdited){
-        
+    public function createImage($imageEdited)
+    {    
         $file_extension = Upload::getFileExtension($this->fileName);
         $saveTo        = ( ! empty($this->saveTo) ) ? $this->saveTo : $this->folder;
         $new_filename   = ( ! empty($this->newFileName) )? $saveTo . '/' . $this->newFileName . '.' . $file_extension : $saveTo.'/'.$this->fileName;
@@ -309,8 +309,8 @@ class Image {
         }
     }
     
-    public function getErrorMessage(){
-        
+    public function getErrorMessage()
+    {    
         return $this->errorMessages;
     }
     

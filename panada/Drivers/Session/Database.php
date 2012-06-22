@@ -10,8 +10,8 @@
 namespace Drivers\Session;
 use Drivers\Session\Native, Resources;
 
-class Database extends Native {
-    
+class Database extends Native
+{    
     /**
      * @var string	Session table name.
      *			ID: Nama table session.
@@ -19,8 +19,8 @@ class Database extends Native {
     private $sessionDbName = 'sessions';
     private $sessionDbConn;
     
-    public function __construct( $config ){
-        
+    public function __construct( $config )
+    {    
 	$this->sessionDbName	= $config['storageName'];
         $this->sessionDbConn	= new Resources\Database( $config['driverConnection'] );
         
@@ -43,9 +43,9 @@ class Database extends Native {
      * @param string
      * @return void
      */
-    public function sessionStart($save_path, $session_name){
+    public function sessionStart($save_path, $session_name)
+    {
 	//We don't need anythings at this time.
-	
     }
     
     /**
@@ -53,7 +53,8 @@ class Database extends Native {
      *
      * @return void
      */
-    public function sessionEnd(){
+    public function sessionEnd()
+    {
 	//we also don't have do anythings too!
     }
     
@@ -63,9 +64,14 @@ class Database extends Native {
      * @param string $id The session id
      * @return string|array|object|boolean
      */
-    public function sessionRead($id){
-	
-	$session = $this->sessionDbConn->select('session_data')->from( $this->sessionDbName )->where('session_id', '=', $id, 'and')->where('session_expiration', '>', time())->getOne();
+    public function sessionRead($id)
+    {
+	$session = $this->sessionDbConn
+		    ->select('session_data')
+		    ->from( $this->sessionDbName )
+		    ->where('session_id', '=', $id, 'and')
+		    ->where('session_expiration', '>', time())
+		    ->getOne();
 	
 	if( $session )
 	    return $session->session_data;
@@ -79,9 +85,14 @@ class Database extends Native {
      * @param string
      * @return int
      */
-    private function sessionExist($id){
+    private function sessionExist($id)
+    {
+	$session = $this->sessionDbConn
+		    ->select('session_data', 'session_expiration')
+		    ->from( $this->sessionDbName )
+		    ->where('session_id', '=', $id)
+		    ->getOne();
 	
-	$session = $this->sessionDbConn->select('session_data', 'session_expiration')->from( $this->sessionDbName )->where('session_id', '=', $id)->getOne();
 	return $session;
     }
     
@@ -92,8 +103,8 @@ class Database extends Native {
      * @param string
      * @return boolean
      */
-    public function sessionWrite($id, $sess_data){
-	
+    public function sessionWrite($id, $sess_data)
+    {
 	$curent_session = $this->sessionExist($id);
 	$expiration	= $this->upcomingTime($this->sesionExpire);
 	
@@ -102,11 +113,28 @@ class Database extends Native {
 	    if( (md5($curent_session->session_data) == md5($sess_data)) && ($curent_session->session_expiration > time() + 10 ) )
 		return true;
 	   
-	    return $this->sessionDbConn->update($this->sessionDbName, array('session_id' => $id, 'session_data' => $sess_data, 'session_expiration' => $expiration), array('session_id' => $id) ); 
+	    return $this->sessionDbConn
+		    ->update(
+			    $this->sessionDbName,
+			    array(
+				'session_id' => $id,
+				'session_data' => $sess_data,
+				'session_expiration' => $expiration
+			    ),
+			    array('session_id' => $id)
+		    ); 
 	}
 	else{
 	    
-	    return $this->sessionDbConn->insert($this->sessionDbName, array('session_id' => $id, 'session_data' => $sess_data, 'session_expiration' => $expiration)); 
+	    return $this->sessionDbConn
+		    ->insert(
+			    $this->sessionDbName,
+			    array(
+				'session_id' => $id,
+				'session_data' => $sess_data,
+				'session_expiration' => $expiration
+			    )
+		    ); 
 	}
     }
     
@@ -116,8 +144,8 @@ class Database extends Native {
      * @param string
      * @return boolean
      */
-    public function sessionDestroy($id){
-	
+    public function sessionDestroy($id)
+    {
 	return $this->sessionDbConn->delete($this->sessionDbName, array('session_id' => $id));
     }
     
@@ -127,8 +155,8 @@ class Database extends Native {
      * @param date I don't think we still need this parameter since the expired date was store in db.
      * @return boolean
      */
-    public function sessionGc($maxlifetime = ''){
-	
+    public function sessionGc($maxlifetime = '')
+    {
 	return $this->sessionDbConn->where( 'session_expiration', '<', time() )->delete( $this->sessionDbName );
     }
     

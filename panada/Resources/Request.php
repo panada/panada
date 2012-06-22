@@ -10,8 +10,8 @@
  */
 namespace Resources;
 
-class Request {
-    
+class Request
+{    
     /**
      * Handler for HTTP GET request
      *
@@ -20,8 +20,8 @@ class Request {
      * @param int $flags
      * @return mix
      */
-    public function get($key = false, $filterType = false, $flags = false){
-        
+    public function get($key = false, $filterType = false, $flags = false)
+    {    
         if( ! $key )
             return filter_var_array($_GET, $filterType);
         
@@ -43,8 +43,8 @@ class Request {
      * @param int $flags
      * @return mix
      */
-    public function post($key = false, $filterType = false, $flags = false){
-        
+    public function post($key = false, $filterType = false, $flags = false)
+    {    
         if( ! $key )
             return filter_var_array($_POST, $filterType);
         
@@ -66,8 +66,8 @@ class Request {
      * @param int $flags
      * @return mix
      */
-    public function cookie($key, $filterType = false, $flags = false){
-        
+    public function cookie($key, $filterType = false, $flags = false)
+    {    
         if( ! $key )
             return filter_var_array($_COOKIE, $filterType);
         
@@ -88,8 +88,8 @@ class Request {
      * @param string | array $allowattributes
      * @return string
      */
-    public function stripTagsAttributes($str, $allowtags = null, $allowattributes = null){
-        
+    public function stripTagsAttributes($str, $allowtags = null, $allowattributes = null)
+    {    
         /**
          * ID:  Ada kemungkinan dimana string yang diinput diconvert dulu menjadi htmlentities.
          *      Untuk menghindari hal ini, maka semua format htmlentities dikembalikan (docode) dulu ke format aslinya.

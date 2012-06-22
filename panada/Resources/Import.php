@@ -10,10 +10,10 @@
  */
 namespace Resources;
 
-class Import {
-    
-    public static function vendor($filePath, $className = false, $arguments = array()){
-        
+class Import
+{    
+    public static function vendor($filePath, $className = false, $arguments = array())
+    {    
         $config = Config::main();
         
         if( ! file_exists( $file = $config['vendor']['path'] . $filePath.'.php' ) )

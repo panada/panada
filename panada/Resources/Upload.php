@@ -19,8 +19,8 @@ if( ! defined('PIMG_CROP') )
 if( ! defined('PIMG_RESIZE_CROP') )
     define('PIMG_RESIZE_CROP', 'resize_crop');
 
-class Upload {
-    
+class Upload
+{    
     /**
      * @var array   Define the $_FILES varible.
      */
@@ -92,8 +92,8 @@ class Upload {
      *
      * @return void
      */
-    function __construct(){
-        
+    function __construct()
+    {    
         $this->initErrorMessages();
     }
     
@@ -104,8 +104,8 @@ class Upload {
      * @param mix $value
      * @return void
      */
-    public function setOption($var, $value = false){
-        
+    public function setOption($var, $value = false)
+    {    
         if( is_string($var) )
             $this->$var = $value;
         
@@ -122,8 +122,8 @@ class Upload {
      * @param array $_FILES variable
      * @return boolean
      */
-    public function now($file){
-        
+    public function now($file)
+    {    
         $this->file = $file;
         
         $this->errorHandler();
@@ -159,8 +159,8 @@ class Upload {
      *
      * @return void
      */
-    private function initErrorMessages(){
-        
+    private function initErrorMessages()
+    {    
         $this->errorMessages = array (
             1 => 'File upload failed due to unknown error.',
             2 => 'No folder located. Please define the folder location.',
@@ -186,8 +186,8 @@ class Upload {
      * @param integer
      * @return void
      */
-    private function _setErrorMessage($code){
-        
+    private function _setErrorMessage($code)
+    {    
         $image_error        = ($code == 14 && isset($this->image->errorMessages)) ? implode(', ', $this->image->errorMessages) : null;
         $handler            = new \stdClass;
         $handler->code      = $code;
@@ -200,8 +200,8 @@ class Upload {
      *
      * @return void
      */
-    private function errorHandler(){
-        
+    private function errorHandler()
+    {    
         /**
          * Check is folder destionation has set.
          */
@@ -298,8 +298,8 @@ class Upload {
         }
     }
     
-    static function getFileExtension($file){
-        
+    static function getFileExtension($file)
+    {    
         return strtolower(end(explode('.', $file)));
     }
     
@@ -309,14 +309,14 @@ class Upload {
      *
      * @return void
      */
-    private function upload(){
-        
-        $file_extension = self::getFileExtension($this->file['name']);
+    private function upload()
+    {    
+        $fileExtension = self::getFileExtension($this->file['name']);
         
         if($this->autoRename)
-            $name = time() . rand() . '.' . $file_extension;
+            $name = time() . rand() . '.' . $fileExtension;
         elseif( ! empty($this->setFileName) )
-            $name = $this->setFileName . '.' .$file_extension;
+            $name = $this->setFileName . '.' .$fileExtension;
         else
             $name = $this->file['name'];
         
@@ -325,7 +325,7 @@ class Upload {
             $name = str_replace(' ', '_', $name);
         
         // Save file extension.
-        $this->getFileInfo['extension']   = $file_extension;
+        $this->getFileInfo['extension']   = $fileExtension;
         // Save file name.
         $this->getFileInfo['name']        = $name;
         // Save folder location.
@@ -351,8 +351,8 @@ class Upload {
      * @param string
      * @return boolean|array
      */
-    static function getMimeTypes($file_name = '') {
-        
+    static function getMimeTypes($file_name = '')
+    {    
         if( empty($file_name) )
             return false;
         
@@ -437,8 +437,8 @@ class Upload {
      *
      * @return array
      */
-    public function getFileInfo(){
-        
+    public function getFileInfo()
+    {    
         return $this->getFileInfo;
     }
     
@@ -447,8 +447,8 @@ class Upload {
      *
      * @return mix
      */
-    public function getError($property = false){
-        
+    public function getError($property = false)
+    {    
         if( ! $property )
             return $this->upload->error;
         
@@ -461,8 +461,8 @@ class Upload {
      * @param array $messages
      * @return object
      */
-    public function setErrorMessage( $messages = array() ){
-        
+    public function setErrorMessage( $messages = array() )
+    {    
         $this->errorMessages = array_merge($this->errorMessages, $messages);
         
         return $this;

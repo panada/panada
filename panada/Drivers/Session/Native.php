@@ -10,8 +10,8 @@
 namespace Drivers\Session;
 use Resources\Interfaces as Interfaces;
 
-class Native implements Interfaces\Session {
-    
+class Native implements Interfaces\Session
+{    
     /**
     * @var integer	This variable set the maximum life in seconds of a session file on the server since last activity.
     */
@@ -60,8 +60,8 @@ class Native implements Interfaces\Session {
      * @return void
      */
     
-    public function __construct( $config ){
-	
+    public function __construct( $config )
+    {
 	$this->sesionExpire	    = $config['expiration'];
 	$this->sessionName	    = $config['name'];
 	$this->sessionCookieExpire  = $config['cookieExpire'];
@@ -101,8 +101,8 @@ class Native implements Interfaces\Session {
      *
      * @return int
      */
-    protected function upcomingTime($s = 300){
-	
+    protected function upcomingTime($s = 300)
+    {
 	return \strtotime('+'.$s.' sec');
     }
     
@@ -116,8 +116,8 @@ class Native implements Interfaces\Session {
      *
      * @return void
      */
-    public function regenerateId(){
-	
+    public function regenerateId()
+    {
 	\session_regenerate_id(true);
 	$this->sessionId = \session_id();
     }
@@ -129,8 +129,8 @@ class Native implements Interfaces\Session {
      * @param string|array|object
      * @return void
      */
-    public function setValue($name, $value = ''){
-        
+    public function setValue($name, $value = '')
+    {    
 	if( \is_array($name) ) {
 	    foreach($name AS $key => $val)
 		$_SESSION[$key] = $val;
@@ -146,8 +146,8 @@ class Native implements Interfaces\Session {
      * @param string
      * @return string|array|object
      */
-    public function getValue($name){
-        
+    public function getValue($name)
+    {    
 	if(isset($_SESSION[$name]))
 	    return $_SESSION[$name];
 	else
@@ -160,8 +160,8 @@ class Native implements Interfaces\Session {
      * @param string
      * @return void
      */
-    public function deleteValue($name){
-        
+    public function deleteValue($name)
+    {    
 	unset($_SESSION[$name]);
     }
     
@@ -170,8 +170,8 @@ class Native implements Interfaces\Session {
      *
      * @return void
      */
-    public function destroy( $setExpireHeader = false ){
-	
+    public function destroy( $setExpireHeader = false )
+    {
 	if( $setExpireHeader ){
 	    header('Expires: Mon, 1 Jul 1998 01:00:00 GMT');
 	    header('Cache-Control: no-store, no-cache, must-revalidate');

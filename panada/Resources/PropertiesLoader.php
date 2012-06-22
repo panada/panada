@@ -10,23 +10,23 @@
  */
 namespace Resources;
 
-class PropertiesLoader {
-    
+class PropertiesLoader
+{    
     private
         $childNamespace,
         $classNamespace,
         $cache;
     
-    public function __construct($childNamespace, $classNamespace){
-        
+    public function __construct($childNamespace, $classNamespace)
+    {    
         $this->childNamespace = $childNamespace;
         $this->classNamespace = $classNamespace;
         
         $this->cache = new Cache('default', 'Dummy');
     }
     
-    public function __call( $name, $arguments = array() ){
-        
+    public function __call( $name, $arguments = array() )
+    {    
         $class = $this->classNamespace.'\\'.ucwords($name);
         
         if( $this->childNamespace[0] == 'Modules' && $this->classNamespace != 'Resources' ) {
@@ -81,7 +81,8 @@ class PropertiesLoader {
         return $object;
     }
     
-    public function __get($name){
+    public function __get($name)
+    {
         return $this->__call($name);
     }
 }

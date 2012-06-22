@@ -16,8 +16,8 @@ use
     Resources\Interfaces as Interfaces,
     Resources\RunException as RunException;
 
-class Memcache extends \Memcache implements Interfaces\Cache {
-    
+class Memcache extends \Memcache implements Interfaces\Cache
+{    
     private $port = 11211;
     
     /**
@@ -25,8 +25,8 @@ class Memcache extends \Memcache implements Interfaces\Cache {
      * @return void
      */
     
-    public function __construct( $config ){
-	
+    public function __construct( $config )
+    {
 	if( ! extension_loaded('memcache') )
 	    throw new RunException('Memcache extension that required by Memcache Driver is not available.');
         
@@ -46,8 +46,8 @@ class Memcache extends \Memcache implements Interfaces\Cache {
      * @param string $namespace
      * @return void
      */
-    public function setValue( $key, $value, $expire = 0, $namespace = false ){
-        
+    public function setValue( $key, $value, $expire = 0, $namespace = false )
+    {    
 	$key = $this->keyToNamespace($key, $namespace);
         return $this->set($key, $value, 0, $expire);
     }
@@ -62,8 +62,8 @@ class Memcache extends \Memcache implements Interfaces\Cache {
      * @param string $namespace
      * @return void
      */
-    public function addValue( $key, $value, $expire = 0, $namespace = false ){
-        
+    public function addValue( $key, $value, $expire = 0, $namespace = false )
+    {    
 	$key = $this->keyToNamespace($key, $namespace);
 	return $this->add($key, $value, 0, $expire); 
     }
@@ -77,8 +77,8 @@ class Memcache extends \Memcache implements Interfaces\Cache {
      * @param string $namespace
      * @return void
      */
-    public function updateValue( $key, $value, $expire = 0, $namespace = false ){
-        
+    public function updateValue( $key, $value, $expire = 0, $namespace = false )
+    {    
 	$key = $this->keyToNamespace($key, $namespace);
 	return $this->replace($key, $value, 0, $expire);
     }
@@ -88,8 +88,8 @@ class Memcache extends \Memcache implements Interfaces\Cache {
      * @param string $namespace
      * @return mix
      */
-    public function getValue( $key, $namespace = false ){
-        
+    public function getValue( $key, $namespace = false )
+    {    
 	$key = $this->keyToNamespace($key, $namespace);
         return $this->get($key);
     }
@@ -99,8 +99,8 @@ class Memcache extends \Memcache implements Interfaces\Cache {
      * @param string $namespace
      * @return void
      */
-    public function deleteValue( $key, $namespace = false ){
-        
+    public function deleteValue( $key, $namespace = false )
+    {    
 	$key = $this->keyToNamespace($key, $namespace);
         return $this->delete($key);
     }
@@ -109,8 +109,8 @@ class Memcache extends \Memcache implements Interfaces\Cache {
      * Flush all cached object.
      * @return bool
      */
-    public function flushValues(){
-        
+    public function flushValues()
+    {    
 	return $this->flush();
     }
     
@@ -120,8 +120,8 @@ class Memcache extends \Memcache implements Interfaces\Cache {
      * @param string $key The key of the item
      * @param int $offset The amount by which to increment the item's value
      */
-    public function incrementBy($key, $offset = 1){
-	
+    public function incrementBy($key, $offset = 1)
+    {
 	return $this->increment($key, $offset);
     }
     
@@ -131,8 +131,8 @@ class Memcache extends \Memcache implements Interfaces\Cache {
      * @param string $key The key of the item
      * @param int $offset The amount by which to decrement the item's value
      */
-    public function decrementBy($key, $offset = 1){
-	
+    public function decrementBy($key, $offset = 1)
+    {
 	return $this->decrement($key, $offset);
     }
     
@@ -142,8 +142,8 @@ class Memcache extends \Memcache implements Interfaces\Cache {
      * @param string $namespaceKey
      * @return int Unixtimestamp
      */
-    private function keyToNamespace( $key, $namespaceKey = false ){
-	
+    private function keyToNamespace( $key, $namespaceKey = false )
+    {
 	if( ! $namespaceKey )
 	    return $key;
 	

@@ -10,8 +10,8 @@
  */
 namespace Resources\Interfaces;
 
-interface Session {
-    
+interface Session
+{    
     public function setValue( $name, $value = '' );
     public function getValue( $name );
     public function deleteValue( $name );

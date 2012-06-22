@@ -10,15 +10,15 @@
  */
 namespace Resources;
 
-class Validation {
-    
-    public function trimLower($string){
-        
+class Validation
+{    
+    public function trimLower($string)
+    {    
         return trim(strtolower($string));
     }
     
-    public function isEmail($string) {
-	
+    public function isEmail($string)
+    {
 	$string = $this->trimLower($string);
         
 	$chars = "/^([a-z0-9+_]|\\-|\\.)+@(([a-z0-9_]|\\-)+\\.)+[a-z]{2,6}\$/i";
@@ -32,8 +32,8 @@ class Validation {
         return $string;
     }
     
-    public function isUrl($string){
-        
+    public function isUrl($string)
+    {    
         $string = $this->trimLower($string);
         return filter_var($string, FILTER_VALIDATE_URL);
         /*
@@ -46,26 +46,23 @@ class Validation {
         */
     }
     
-    public function stripNumeric($string){
-        
+    public function stripNumeric($string)
+    {    
         return filter_var($string, FILTER_SANITIZE_NUMBER_INT);
         //return preg_replace('/[^0-9]/', '', $string);
     }
     
-    public function isPositiveNumeric($string){
-	
+    public function isPositiveNumeric($string)
+    {
         return (bool) preg_match( '/^[0-9]*\.?[0-9]+$/', $string);
     }
     
     /**
-     * EN: Use this for validate user first name and last name.
-     * ID: Validasi nama baik itu nama depan ataupun belakang.
+     * Use this for validate user first name and last name.
      */
-    public function displayName($string){
-        
-        /*
-         EN: Only permit a-z, 0-9 and .,'" space this is enough for a name right?
-        */
+    public function displayName($string)
+    {    
+        //Only permit a-z, 0-9 and .,'" space this is enough for a name right?
         
         //'/[^a-zA-Z0-9s -_.,]/'
         $string = $this->trimLower($string);

@@ -10,8 +10,8 @@
  */
 namespace Resources;
 
-final class Uri {
-    
+final class Uri
+{    
     private
 	$pathUri = array();
     public
@@ -27,8 +27,8 @@ final class Uri {
      *
      * @return void
      */
-    public function __construct(){
-	
+    public function __construct()
+    {
 	if(PHP_SAPI == 'cli'){
 	    $this->pathUri = array_slice($_SERVER['argv'], 1);
 	    return;
@@ -47,8 +47,8 @@ final class Uri {
      *
      * @return boolean
      */
-    public function isHttps() {
-	
+    public function isHttps()
+    {
 	if ( isset($_SERVER['HTTPS']) ) {
 	    
 	    if ( 'on' == strtolower($_SERVER['HTTPS']) )
@@ -70,8 +70,8 @@ final class Uri {
      * @param string
      * @return string
      */
-    public function removeQuery($path){
-	
+    public function removeQuery($path)
+    {
 	$pathAr = explode('?', $path);
 	if(count($pathAr) > 0)
 	    $path = $pathAr[0];
@@ -85,8 +85,8 @@ final class Uri {
      * @param    integer
      * @return  string
      */
-    public function path($segment = false){
-	
+    public function path($segment = false)
+    {
 	if( $segment !== false )
 	    return ( isset( $this->pathUri[$segment] ) && $this->pathUri[$segment] != INDEX_FILE ) ? $this->pathUri[$segment] : false;
 	else
@@ -98,8 +98,8 @@ final class Uri {
      *
      * @return  string
      */
-    public function getClass(){
-	
+    public function getClass()
+    {
 	if( $uriString = $this->path(0) ){
 	    
 	    if( $this->stripUriString($uriString) )
@@ -118,8 +118,8 @@ final class Uri {
      *
      * @return  string
      */
-    public function getMethod($default = 'index'){
-	
+    public function getMethod($default = 'index')
+    {
 	$uriString = $this->path(1);
 
 	if( isset($uriString) && ! empty($uriString) ){
@@ -142,8 +142,8 @@ final class Uri {
      * @param    int
      * @return  array
      */
-    public function getRequests($segment = 2){
-
+    public function getRequests($segment = 2)
+    {
 	$uriString = $this->path($segment);
     
 	if( isset($uriString) && ! empty($uriString) ) {
@@ -163,8 +163,8 @@ final class Uri {
      * @param string
      * @return boolean
      */
-    public function stripUriString($uri){
-	
+    public function stripUriString($uri)
+    {
 	$uri = ( ! preg_match('/[^a-zA-Z0-9_.-]/', $uri) ) ? true : false;
 	return $uri;
     }
@@ -175,8 +175,8 @@ final class Uri {
      * @param string $defaultController
      * @return void
      */
-    public function setDefaultController($defaultController) {
-	
+    public function setDefaultController($defaultController)
+    {
 	self::$staticDefaultController = $defaultController;
 	$this->defaultController = $defaultController;
     }
@@ -184,8 +184,8 @@ final class Uri {
     /**
      * Getter for default controller
      */
-    public function getDefaultController(){
-	
+    public function getDefaultController()
+    {
 	return $this->defaultController;
     }
     
@@ -194,8 +194,8 @@ final class Uri {
      *
      * @return string
      */
-    public function getBaseUri(){
-	
+    public function getBaseUri()
+    {
 	return $this->baseUri;
     }
 }

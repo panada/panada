@@ -16,12 +16,12 @@ use
     Resources,
     Resources\Interfaces as Interfaces;
 
-class Redis extends \Redis implements Interfaces\Cache {
-    
+class Redis extends \Redis implements Interfaces\Cache
+{    
     private $port = 6379;
     
-    public function __construct( $config ){
-	
+    public function __construct( $config )
+    {
 	if( ! extension_loaded('redis') )
 	    die('Redis extension that required by Driver Redis is not available.');
 	
@@ -52,8 +52,8 @@ class Redis extends \Redis implements Interfaces\Cache {
      * @param string $namespace
      * @return void
      */
-    public function setValue( $key, $value, $expire = 0, $namespace = false ){
-        
+    public function setValue( $key, $value, $expire = 0, $namespace = false )
+    {    
 	$key = $this->keyToNamespace($key, $namespace);
         return $this->set($key, $value, $expire);
     }
@@ -68,8 +68,8 @@ class Redis extends \Redis implements Interfaces\Cache {
      * @param string $namespace
      * @return void
      */
-    public function addValue( $key, $value, $expire = 0, $namespace = false ){
-        
+    public function addValue( $key, $value, $expire = 0, $namespace = false )
+    {    
 	$key = $this->keyToNamespace($key, $namespace);
 	return $this->setnx($key, $value, $expire); 
     }
@@ -83,8 +83,8 @@ class Redis extends \Redis implements Interfaces\Cache {
      * @param string $namespace
      * @return void
      */
-    public function updateValue( $key, $value, $expire = 0, $namespace = false ){
-        
+    public function updateValue( $key, $value, $expire = 0, $namespace = false )
+    {    
 	$key = $this->keyToNamespace($key, $namespace);
 	return $this->setValue($key, $value, $expire);
     }
@@ -94,8 +94,8 @@ class Redis extends \Redis implements Interfaces\Cache {
      * @param string $namespace
      * @return mix
      */
-    public function getValue( $key, $namespace = false ){
-        
+    public function getValue( $key, $namespace = false )
+    {    
 	$key = $this->keyToNamespace($key, $namespace);
         return $this->get($key);
     }
@@ -105,8 +105,8 @@ class Redis extends \Redis implements Interfaces\Cache {
      * @param string $namespace
      * @return void
      */
-    public function deleteValue( $key, $namespace = false ){
-        
+    public function deleteValue( $key, $namespace = false )
+    {    
 	$key = $this->keyToNamespace($key, $namespace);
         return $this->delete($key);
     }
@@ -115,8 +115,8 @@ class Redis extends \Redis implements Interfaces\Cache {
      * Flush all cached object.
      * @return bool
      */
-    public function flushValues(){
-        
+    public function flushValues()
+    {    
 	return $this->flushDB();
     }
     
@@ -126,8 +126,8 @@ class Redis extends \Redis implements Interfaces\Cache {
      * @param string $key The key of the item
      * @param int $offset The amount by which to increment the item's value
      */
-    public function incrementBy($key, $offset = 1){
-	
+    public function incrementBy($key, $offset = 1)
+    {
 	return $this->incr($key, $offset);
     }
     
@@ -137,8 +137,8 @@ class Redis extends \Redis implements Interfaces\Cache {
      * @param string $key The key of the item
      * @param int $offset The amount by which to decrement the item's value
      */
-    public function decrementBy($key, $offset = 1){
-	
+    public function decrementBy($key, $offset = 1)
+    {
 	return $this->decr($key, $offset);
     }
     
@@ -148,8 +148,8 @@ class Redis extends \Redis implements Interfaces\Cache {
      * @param string $namespaceKey
      * @return int Unixtimestamp
      */
-    private function keyToNamespace( $key, $namespaceKey = false ){
-	
+    private function keyToNamespace( $key, $namespaceKey = false )
+    {
 	if( ! $namespaceKey )
 	    return $key;
 	

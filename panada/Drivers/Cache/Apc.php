@@ -15,10 +15,10 @@ use
     Resources\Interfaces as Interfaces,
     Resources\RunException as RunException;
     
-class Apc implements Interfaces\Cache {
-    
-    public function __construct(){
-        
+class Apc implements Interfaces\Cache
+{    
+    public function __construct()
+    {    
         /**
         * Makesure APC extension is enabled
         */
@@ -33,8 +33,8 @@ class Apc implements Interfaces\Cache {
      * @param mix $arguments
      * @return mix
      */
-    public function __call($name, $arguments){
-        
+    public function __call($name, $arguments)
+    {    
         return call_user_func_array($name, $arguments);
     }
     
@@ -45,8 +45,8 @@ class Apc implements Interfaces\Cache {
      * @param mix $arguments
      * @return mix
      */
-    public static function __callStatic($name, $arguments) {
-        
+    public static function __callStatic($name, $arguments)
+    {    
         return call_user_func_array($name, $arguments);
     }
     
@@ -56,8 +56,8 @@ class Apc implements Interfaces\Cache {
      * @param int $expire
      * @return void
      */
-    public function setValue( $key, $value, $expire = 0, $namespace = false ){
-        
+    public function setValue( $key, $value, $expire = 0, $namespace = false )
+    {    
         $key = $this->keyToNamespace($key, $namespace);
         return apc_store($key, $value, $expire); 
     }
@@ -71,8 +71,8 @@ class Apc implements Interfaces\Cache {
      * @param int $expire
      * @return void
      */
-    public function addValue( $key, $value, $expire = 0, $namespace = false ){
-        
+    public function addValue( $key, $value, $expire = 0, $namespace = false )
+    {    
         $key = $this->keyToNamespace($key, $namespace);
         return apc_add($key, $value, $expire);
     }
@@ -85,8 +85,8 @@ class Apc implements Interfaces\Cache {
      * @param int $expire
      * @return void
      */
-    public function updateValue( $key, $value, $expire = 0, $namespace = false ){
-        
+    public function updateValue( $key, $value, $expire = 0, $namespace = false )
+    {    
         $key = $this->keyToNamespace($key, $namespace);
         return $this->setValue($key, $value, $expire);
     }
@@ -95,8 +95,8 @@ class Apc implements Interfaces\Cache {
      * @param string $key
      * @return mix
      */
-    public function getValue( $key, $namespace = false ){
-        
+    public function getValue( $key, $namespace = false )
+    {    
         $key = $this->keyToNamespace($key, $namespace);
         return apc_fetch($key); 
     }
@@ -105,8 +105,8 @@ class Apc implements Interfaces\Cache {
      * @param string $key
      * @return void
      */
-    public function deleteValue( $key, $namespace = false ){
-        
+    public function deleteValue( $key, $namespace = false )
+    {    
         $key = $this->keyToNamespace($key, $namespace);
         return apc_delete($key);
     }
@@ -115,8 +115,8 @@ class Apc implements Interfaces\Cache {
      * Flush all cached object.
      * @return bool
      */
-    public function flushValues(){
-        
+    public function flushValues()
+    {    
         return apc_clear_cache('user');
     }
     
@@ -126,8 +126,8 @@ class Apc implements Interfaces\Cache {
      * @param string $key The key of the item
      * @param int $offset The amount by which to increment the item's value
      */
-    public function incrementBy($key, $offset = 1){
-	
+    public function incrementBy($key, $offset = 1)
+    {
 	return apc_inc($key, $offset);
     }
     
@@ -137,8 +137,8 @@ class Apc implements Interfaces\Cache {
      * @param string $key The key of the item
      * @param int $offset The amount by which to decrement the item's value
      */
-    public function decrementBy($key, $offset = 1){
-	
+    public function decrementBy($key, $offset = 1)
+    {
 	return apc_dec($key, $offset);
     }
     
@@ -148,8 +148,8 @@ class Apc implements Interfaces\Cache {
      * @param string $namespaceKey
      * @return int Unixtimestamp
      */
-    private function keyToNamespace( $key, $namespaceKey = false ){
-	
+    private function keyToNamespace( $key, $namespaceKey = false )
+    {
 	if( ! $namespaceKey )
 	    return $key;
 	

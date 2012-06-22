@@ -10,8 +10,8 @@
  */
 namespace Resources;
 
-class Email {
-    
+class Email
+{    
     public
         /**
         * @var array   Define the reception array variable.
@@ -120,8 +120,8 @@ class Email {
      * @param mix $value
      * @return object
      */
-    public function setOption($var, $value = false){
-        
+    public function setOption($var, $value = false)
+    {    
         if( is_string($var) )
             $this->$var = $value;
         
@@ -138,8 +138,8 @@ class Email {
      * @param string | array
      * @return object
      */
-    public function from($fromEmail = '', $fromName = ''){
-        
+    public function from($fromEmail = '', $fromName = '')
+    {    
         $this->fromEmail    = $fromEmail;
         $this->fromName     = $fromName;
         
@@ -152,8 +152,8 @@ class Email {
      * @param string | array
      * @return object
      */
-    public function to($rcptTo = ''){
-        
+    public function to($rcptTo = '')
+    {    
         $this->rcptTo = $this->strToArray($rcptTo);
         $this->rcptToCtring = implode(', ', $this->rcptTo);
         
@@ -166,8 +166,8 @@ class Email {
      * @param string | array
      * @return object
      */
-    public function cc($rcptCc = ''){
-        
+    public function cc($rcptCc = '')
+    {    
         if (!empty($rcptCc)){
             $this->rcptCc  = $this->strToArray($rcptCc);
             $this->rcptCcString   = implode(', ', $this->rcptCc);
@@ -182,8 +182,8 @@ class Email {
      * @param string | array
      * @return object
      */
-    public function bcc($rcptBcc = ''){
-        
+    public function bcc($rcptBcc = '')
+    {    
         if (!empty($rcptBcc)){
             $this->rcptBcc = $this->strToArray($rcptBcc);
             $this->rcptBccString = implode(', ', $this->rcptBcc);
@@ -198,8 +198,8 @@ class Email {
      * @param string | array
      * @return object
      */
-    public function subject($subject = ''){
-        
+    public function subject($subject = '')
+    {    
         $this->subject = $subject;
         
         return $this;
@@ -211,8 +211,8 @@ class Email {
      * @param string | array
      * @return object
      */
-    public function message($message = ''){
-        
+    public function message($message = '')
+    {    
         $this->message = $message;
         
         return $this;
@@ -230,8 +230,8 @@ class Email {
      * @param string | array
      * @return boolean
      */
-    public function mail($rcptTo = '', $subject = '', $message = '', $fromEmail = '', $fromName = '', $rcptCc = '', $rcptBcc = ''){
-        
+    public function mail($rcptTo = '', $subject = '', $message = '', $fromEmail = '', $fromName = '', $rcptCc = '', $rcptBcc = '')
+    {    
         if( ! empty($rcptTo) ){
             $this->rcptTo = $this->strToArray($rcptTo);
             $this->rcptToCtring = implode(', ', $this->rcptTo);
@@ -274,8 +274,8 @@ class Email {
      *
      * @return string
      */
-    public function printDebug(){
-        
+    public function printDebug()
+    {    
         foreach($this->debugMessages as $message)
             echo $message.'<br />';
     }
@@ -286,8 +286,8 @@ class Email {
      * @param string
      * @return array
      */
-    private function cleanEmail($email){
-        
+    private function cleanEmail($email)
+    {    
         foreach($email as $email)
             $return[] = trim(strtolower($email));
         
@@ -300,8 +300,8 @@ class Email {
      * @param string | array
      * @return array
      */
-    private function strToArray($email){
-
+    private function strToArray($email)
+    {
         if( is_array($email) ) {
             return $this->cleanEmail($email);
         }
@@ -321,9 +321,9 @@ class Email {
      *
      * @return booelan
      */
-    private function mailerNative(){
-        
-        if( ! mail($this->rcptToCtring, $this->subject, $this->message, $this->header()) ) {
+    private function mailerNative()
+    {    
+        if( ! mail($this->rcptToCtring, $this->subject, $this->message, $this->header()) ){
             $this->debugMessages[] = 'Error: Sending email failed';
             return false;
         }
@@ -339,8 +339,8 @@ class Email {
      * @param string
      * @return void
      */
-    private function writeCommand($command){
-        
+    private function writeCommand($command)
+    {    
         fwrite($this->smtpConnection, $command);
     }
     
@@ -349,8 +349,8 @@ class Email {
      *
      * @return string
      */
-    private function getSmtpResponse() {
-        
+    private function getSmtpResponse()
+    {
         $return = '';
         
         while($str = fgets($this->smtpConnection, 515)) {
@@ -372,8 +372,8 @@ class Email {
      *
      * @return boolean
      */
-    private function smtpConnect() {
-        
+    private function smtpConnect()
+    {   
         //Connect to smtp server
         $this->smtpConnection = fsockopen(
                                     ($this->smtpSecure && $this->smtpSecure == 'ssl' ? 'ssl://' : '').$this->smtpHost,
@@ -404,8 +404,8 @@ class Email {
      *
      * @return boolean
      */
-    private function smtpLogin() {
-        
+    private function smtpLogin()
+    {    
         //SMTP authentication command
         $this->writeCommand('AUTH LOGIN' . $this->breakLine);
         
@@ -453,8 +453,8 @@ class Email {
      *
      * @return void
      */
-    private function smtpClose() {
-        
+    private function smtpClose()
+    {    
         if( ! empty($this->smtpConnection) ) {
             fclose($this->smtpConnection);
             $this->smtpConnection = 0;
@@ -466,8 +466,8 @@ class Email {
      *
      * @return boolean
      */
-    private function makeEhlo() {  
-        
+    private function makeEhlo()
+    {    
         /**
          * IF smtp not accpeted EHLO then try HELO.
          */
@@ -484,8 +484,8 @@ class Email {
      * @param string
      * @return boolean
      */
-    private function smtpEhlo($hello) {
-        
+    private function smtpEhlo($hello)
+    {    
         $this->writeCommand( $hello . ' ' . $this->smtpEhloHost . $this->breakLine);
         
         $response = $this->getSmtpResponse();
@@ -508,8 +508,8 @@ class Email {
      *
      * @return boolean
      */
-    private function smtpFrom() {
-        
+    private function smtpFrom()
+    {    
         $this->writeCommand("MAIL FROM:<" . $this->fromEmail . ">" . $this->breakLine);
         
         $response = $this->getSmtpResponse();
@@ -533,8 +533,8 @@ class Email {
      * @param string
      * @return boolean
      */
-    private function smtpRecipient($to) {
-        
+    private function smtpRecipient($to)
+    {    
         $this->writeCommand("RCPT TO:<" . $to . ">" . $this->breakLine);
         
         $response = $this->getSmtpResponse();
@@ -557,8 +557,8 @@ class Email {
      *
      * @return string
      */
-    private function header(){
-        
+    private function header()
+    {    
         $fromName  = ($this->fromName != '') ? $this->fromName : $this->fromEmail;
         $headers['from']        = 'From: ' . $fromName . ' <' . $this->fromEmail . '>' . $this->breakLine;
 		if (count($this->rcptCc) > 0)
@@ -598,8 +598,8 @@ class Email {
      *
      * @return boolean
      */
-    private function smtpData() {
-        
+    private function smtpData()
+    {    
         $this->writeCommand('DATA' . $this->breakLine);
         
         $response = $this->getSmtpResponse();
@@ -641,8 +641,8 @@ class Email {
      *
      * @return boolean
      */
-    private function doConnect() {
-        
+    private function doConnect()
+    {    
         if( $this->smtpConnect() ) {
             
             $this->makeEhlo();
@@ -666,8 +666,8 @@ class Email {
      *
      * @return boolean
      */
-    private function smtpSend() {
-       
+    private function smtpSend()
+    {   
         if(!$this->doConnect())
             return false;
         

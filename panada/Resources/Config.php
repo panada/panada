@@ -10,12 +10,12 @@
  */
 namespace Resources;
 
-class Config {
-    
+class Config
+{    
     static private $config = array();
     
-    static private function _cache($name){
-        
+    static private function _cache($name)
+    {    
         if( ! isset(self::$config[$name]) ) {
             $array = require APP . 'config/'.$name.'.php';
             self::$config[$name] = $array;
@@ -26,27 +26,31 @@ class Config {
         }
     }
     
-    static public function main(){
+    static public function main()
+    {
         return self::_cache('main');
     }
     
-    static public function session(){
+    static public function session()
+    {
         return self::_cache('session');
     }
     
-    static public function cache(){
+    static public function cache()
+    {
         return self::_cache('cache');
     }
     
-    static public function database(){
+    static public function database()
+    {
         return self::_cache('database');
     }
     
     /**
      * Handler for user defined config
      */
-    public static function __callStatic( $name, $arguments = array() ){
-        
+    public static function __callStatic( $name, $arguments = array() )
+    {    
         // Does cache for this config exists?
         if( isset(self::$config[$name]) )
             return self::$config[$name];
