@@ -8,7 +8,7 @@ return array(
     'indexFile' => INDEX_FILE . '/',
     
     'module' => array(
-        'path' => GEAR,
+        'path' => APP,
         'domainMapping' => array(),
     ),
     
