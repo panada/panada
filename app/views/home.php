@@ -19,12 +19,14 @@
         <li>For help and bug report, submit to <a target="_blank" href="https://github.com/panada/Panada/issues">issues</a> page.</li>
     </ul>
     <p>
-        To get more hint how to use Panada, see this offline <a href="<?php echo $this->uri->baseUri; ?>documentation/id/">documentation</a> page.
-        Panada licensed under <a href="<?php echo $this->location('LICENSE'); ?>">BSD License</a>
+        To get more hint how to use Panada, download offline <a href="https://github.com/panada/documentation/zipball/master">documentation</a> page from Github.
+    </p>
+    <p>
+        Panada licensed under <a href="<?php echo $this->uri->baseUri; ?>LICENSE">BSD License</a>    
     </p>
 </div>
 
-<div id="foot">Powered by <a href="http://panadaframework.com/">Panada</a> version 1.0.0-nightly-build
+<div id="foot">Powered by <a href="http://panadaframework.com/">Panada</a> version 1.0.0-alfa
 </div>
 <a href="http://github.com/panada/Panada">
 <img src="<?php echo $this->uri->baseUri; ?>assets/img/forkgithub.png" style="position: absolute; top: 0; right: 0; border: 0;" alt="Fork me on GitHub"></a>	
