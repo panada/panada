@@ -35,7 +35,8 @@ class Mysql implements Interfaces\Database
 	$connection,
 	$config,
 	$lastQuery,
-	$lastError;
+	$lastError,
+	$throwError = false;
     
     public
 	$insertId,
@@ -52,6 +53,18 @@ class Mysql implements Interfaces\Database
     {
 	$this->config = $config;
 	$this->connection = $connectionName;
+    }
+    
+    /**
+     * Throw the error instead handle it automaticly.
+     * User should catch this error for there own purpose.
+     *
+     * @param bool $set
+     * @return void
+     */
+    public function setThrowError($set = false)
+    {
+	$this->throwError = $set;
     }
     
     /**
@@ -459,8 +472,14 @@ class Mysql implements Interfaces\Database
         $this->lastQuery = $sql;
         
         if ( $this->lastError = mysql_error($this->link) ) {
-            $this->printError();
-            return false;
+	    
+	    if( $this->throwError ) {
+		throw new \Exception($this->lastError);
+	    }
+	    else {
+		$this->printError();
+		return false;
+	    }
         }
         
         return $query;

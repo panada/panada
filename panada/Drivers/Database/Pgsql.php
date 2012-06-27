@@ -33,6 +33,7 @@ class Pgsql implements Interfaces\Database
     private $config;
     private $lastQuery;
     private $lastError;
+    private $throwError = false;
     public $insertId;
     public $persistentConnection = false;
     public $instantiateClass = 'stdClass';
@@ -46,6 +47,18 @@ class Pgsql implements Interfaces\Database
 	$this->config = $config;
 	$this->connection = $connectionName;
 	
+    }
+    
+    /**
+     * Throw the error instead handle it automaticly.
+     * User should catch this error for there own purpose.
+     *
+     * @param bool $set
+     * @return void
+     */
+    public function setThrowError($set = false)
+    {
+	$this->throwError = $set;
     }
     
     /**
