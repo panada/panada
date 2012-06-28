@@ -33,6 +33,7 @@ class Sqlite implements Interfaces\Database
     private $config;
     private $lastQuery;
     private $lastError;
+    private $throwError = false;
     public $insertId;
     public $instantiateClass = 'stdClass';
     
@@ -45,6 +46,18 @@ class Sqlite implements Interfaces\Database
 	$this->config = $config;
 	$this->connection = $connectionName;
 	
+    }
+    
+    /**
+     * Throw the error instead handle it automaticly.
+     * User should catch this error for there own purpose.
+     *
+     * @param bool $set
+     * @return void
+     */
+    public function setThrowError($set = false)
+    {
+	$this->throwError = $set;
     }
     
     /**
@@ -410,9 +423,16 @@ class Sqlite implements Interfaces\Database
         $this->lastQuery = $sql;
         
 	if($this->link->lastErrorMsg() != 'not an error' ){
+	    
 	    $this->lastError = $this->link->lastErrorMsg();
-            $this->print_error();
-            return false;
+	    
+	    if( $this->throwError ) {
+		throw new \Exception($this->lastError);
+	    }
+	    else {
+		$this->printError();
+		return false;
+	    }
         }
         
         return $query;

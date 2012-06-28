@@ -34,6 +34,7 @@ class PanadaPDO implements Interfaces\Database
 	private $config;
 	private $lastQuery;
 	private $lastError;
+	private $throwError = false;
 	private $dsn;
 	public $insertId;
 	public $persistentConnection = false;
@@ -53,6 +54,18 @@ class PanadaPDO implements Interfaces\Database
 		
 		$this->config = $config;
 		$this->connection = $connectionName;
+	}
+	
+	/**
+	* Throw the error instead handle it automaticly.
+	* User should catch this error for there own purpose.
+	*
+	* @param bool $set
+	* @return void
+	*/
+	public function setThrowError($set = false)
+	{
+		$this->throwError = $set;
 	}
 
 	/**
@@ -414,8 +427,14 @@ class PanadaPDO implements Interfaces\Database
 		if ( $this->link->errorCode() != 00000 ) {
 			
 			$this->lastError = implode(' ', $this->link->errorInfo());
-			$this->printError();
-			return false;
+			
+			if( $this->throwError ) {
+				throw new \Exception($this->lastError);
+			}
+			else {
+				$this->printError();
+				return false;
+			}
 		}
 		
 		return $query;
