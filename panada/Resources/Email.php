@@ -5,7 +5,7 @@
  * @package	Resources
  * @link	http://panadaframework.com/
  * @license     http://www.opensource.org/licenses/bsd-license.php
- * @author	Iskandar Soesman <k4ndar@yahoo.com>
+ * @author	Iskandar Soesman <k4ndar@yahoo.com>, Azhari Harahap <azhari@harahap.us>
  * @since	Version 0.1
  */
 namespace Resources;
@@ -123,11 +123,17 @@ class Email
         /**
          * @var string  Boundary
          */
-        $boundary = 'Panada-Mail-0123456789',
+        $boundary = 'Panada-Mail-',
         /**
          * @var string  Mailer useragent.
          */
         $panadaXMailer = 'Panada Mailer Version 0.4';
+    
+    
+    public function __construct()
+    {
+        $this->boundary = $this->boundary.md5(time());
+    }
     
     /**
      * Setter for option
