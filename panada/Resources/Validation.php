@@ -161,7 +161,7 @@ class Validation
 	    }
 	    
 	    // apply filter if any
-	    $value = $this->applyFilter($field, $value);
+	    $value = $this->applyFilter($field, $value, $rules);
 	    
 	    if( isset($rules[$field]) ) {
 		
