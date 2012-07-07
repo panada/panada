@@ -256,7 +256,7 @@ class Validation
 	if( isset($rules[$field]['filter']) ) {
 	    
 	    foreach($rules[$field]['filter'] as $filter)
-		$value = $filter($value);
+		$value = call_user_func_array($filter, array($value));
 	}
 	
 	return $value;
