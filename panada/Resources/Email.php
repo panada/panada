@@ -309,10 +309,13 @@ class Email
      *
      * @return string
      */
-    public function printDebug()
+    public function printDebug($isEcho = true)
     {    
-        foreach($this->debugMessages as $message)
-            echo $message.'<br />';
+        
+        if( ! $isEcho )
+            return $this->debugMessages;
+        
+        echo implode('<br>', $this->debugMessages);
     }
     
     /**
@@ -702,6 +705,8 @@ class Email
      */
     private function doConnect()
     {    
+        $connection = false;
+        
         if( $this->smtpConnect() ) {
             
             $this->makeEhlo();
