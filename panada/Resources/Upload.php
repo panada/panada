@@ -450,9 +450,9 @@ class Upload
     public function getError($property = false)
     {    
         if( ! $property )
-            return $this->upload->error;
+            return $this->error;
         
-        return $this->upload->error->$property;
+        return $this->error->$property;
     }
     
     /**
