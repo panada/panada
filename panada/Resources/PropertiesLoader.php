@@ -38,7 +38,7 @@ class PropertiesLoader
                 $class = $this->childNamespace[0].'\\'.$this->childNamespace[1].'\\'.$class;
         }
         
-        $cacheKey = 'AutoLoaderClass_'.$class.json_encode($arguments);
+        $cacheKey = 'AutoLoaderClass_'.$class.http_build_query($arguments);
         
         // Are this class has ben called before?
         if( $cachedObj = $this->cache->getValue($cacheKey) )
