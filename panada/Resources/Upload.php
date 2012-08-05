@@ -463,7 +463,7 @@ class Upload
      */
     public function setErrorMessage( $messages = array() )
     {    
-        $this->errorMessages = array_merge($this->errorMessages, $messages);
+        $this->errorMessages = array_replace($this->errorMessages, $messages);
         
         return $this;
     }
