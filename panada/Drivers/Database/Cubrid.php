@@ -32,6 +32,7 @@ class Cubrid implements Interfaces\Database
     private $connection;
     private $config;
     private $lastQuery;
+    private $throwError = false;
     private $lastError;
     public $insertId;
     public $clientFlags = 0;
@@ -50,6 +51,18 @@ class Cubrid implements Interfaces\Database
 	
 	$this->config = $config;
 	$this->connection = $connectionName;
+    }
+    
+    /**
+     * Throw the error instead handle it automaticly.
+     * User should catch this error for there own purpose.
+     *
+     * @param bool $set
+     * @return void
+     */
+    public function setThrowError($set = false)
+    {
+	$this->throwError = $set;
     }
     
     /**
@@ -441,8 +454,14 @@ class Cubrid implements Interfaces\Database
         $this->lastQuery = $sql;
         
         if ( $this->lastError = cubrid_error($this->link) ) {
-            $this->printError();
-            return false;
+            
+	    if( $this->throwError ) {
+		throw new \Exception($this->lastError);
+	    }
+	    else {
+		$this->printError();
+		return false;
+	    }
         }
         
         return $query;

@@ -185,7 +185,7 @@ class Tools
         if( is_object($object) )
             $object = get_object_vars($object);
         
-        return array_map(array('Tools', 'objectToArray'), $object);
+        return array_map('self::objectToArray', $object);
     }
     
     /**

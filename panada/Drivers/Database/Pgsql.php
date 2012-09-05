@@ -431,9 +431,15 @@ class Pgsql implements Interfaces\Database
         $query = pg_query($this->link, $sql);
         $this->lastQuery = $sql;
         
-        if ( $this->lastError = pg_last_error($this->link) ) {
-            $this->printError();
-            return false;
+        if ( $this->lastError = mysql_error($this->link) ) {
+	    
+	    if( $this->throwError ) {
+		throw new \Exception($this->lastError);
+	    }
+	    else {
+		$this->printError();
+		return false;
+	    }
         }
         
         return $query;

@@ -161,7 +161,7 @@ class Validation
 	    }
 	    
 	    // apply filter if any
-	    $value = $this->applyFilter($field, $value);
+	    $value = $this->applyFilter($field, $value, $rules);
 	    
 	    if( isset($rules[$field]) ) {
 		
@@ -256,7 +256,7 @@ class Validation
 	if( isset($rules[$field]['filter']) ) {
 	    
 	    foreach($rules[$field]['filter'] as $filter)
-		$value = $filter($value);
+		$value = call_user_func_array($filter, array($value));
 	}
 	
 	return $value;

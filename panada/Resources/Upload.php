@@ -450,9 +450,9 @@ class Upload
     public function getError($property = false)
     {    
         if( ! $property )
-            return $this->upload->error;
+            return $this->error;
         
-        return $this->upload->error->$property;
+        return $this->error->$property;
     }
     
     /**
@@ -463,7 +463,7 @@ class Upload
      */
     public function setErrorMessage( $messages = array() )
     {    
-        $this->errorMessages = array_merge($this->errorMessages, $messages);
+        $this->errorMessages = array_replace($this->errorMessages, $messages);
         
         return $this;
     }

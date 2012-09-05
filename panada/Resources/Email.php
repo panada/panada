@@ -5,7 +5,7 @@
  * @package	Resources
  * @link	http://panadaframework.com/
  * @license     http://www.opensource.org/licenses/bsd-license.php
- * @author	Iskandar Soesman <k4ndar@yahoo.com>
+ * @author	Iskandar Soesman <k4ndar@yahoo.com>, Azhari Harahap <azhari@harahap.us>
  * @since	Version 0.1
  */
 namespace Resources;
@@ -101,6 +101,14 @@ class Email
          */
         $timeoutConnection = 30,
         /**
+         * @var string Character set.
+         */
+        $charset = 'iso-8859-1',
+        /**
+         * @var string Character encoding.
+         */
+        $encoding = '8bit',
+        /**
          * @var string  Enter character.
          */
         $breakLine = "\r\n",
@@ -109,9 +117,23 @@ class Email
          */
         $debugMessages = array(),
         /**
+         * @var array  Attachment.
+         */
+        $attachment = array(),
+        /**
+         * @var string  Boundary
+         */
+        $boundary = 'Panada-Mail-',
+        /**
          * @var string  Mailer useragent.
          */
         $panadaXMailer = 'Panada Mailer Version 0.4';
+    
+    
+    public function __construct()
+    {
+        $this->boundary = $this->boundary.md5(time());
+    }
     
     /**
      * Setter for option
@@ -217,6 +239,19 @@ class Email
         
         return $this;
     }
+    
+    /**
+     * ATTACH part
+     * 
+     * @param string | array
+     * @return object
+     */
+    public function attach($filename = '')
+    {    
+        $this->attachment[] = $filename;
+        $this->messageType = 'attach';
+        return $this;
+    }
 
     /**
      * Main Panada method to send the email.
@@ -274,10 +309,13 @@ class Email
      *
      * @return string
      */
-    public function printDebug()
+    public function printDebug($isEcho = true)
     {    
-        foreach($this->debugMessages as $message)
-            echo $message.'<br />';
+        
+        if( ! $isEcho )
+            return $this->debugMessages;
+        
+        echo implode('<br>', $this->debugMessages);
     }
     
     /**
@@ -568,8 +606,19 @@ class Email
         $headers['priority']    = 'X-Priority: '. $this->priority . $this->breakLine;
         $headers['mailer']      = 'X-Mailer: ' .$this->panadaXMailer . $this->breakLine;
         $headers['mime']        = 'MIME-Version: 1.0' . $this->breakLine;
-        $headers['cont_type']   = 'Content-type: text/'.$this->messageType.'; charset=iso-8859-1' . $this->breakLine;
+		
+		switch($this->messageType)
+		{
+			case 'plain':
+			case 'html':
+				$headers['cont_type']   = 'Content-type: text/'.$this->messageType.'; charset='.$this->charset.$this->breakLine;
+			break;
 			
+			case 'attach':
+				$headers['cont_type']   = 'Content-type: multipart/mixed; boundary='.$this->boundary . $this->breakLine;
+			break;
+		}
+		
         if($this->mailerType == 'native') {
             $return = '';
             foreach($headers as $headers)
@@ -615,9 +664,22 @@ class Email
         }
         
         $this->header();
-        $this->writeCommand($this->message . $this->breakLine);
         
-        
+        // Attachment?
+		if (count($this->attachment) > 0)
+		{
+			$body = '--'.$this->boundary.$this->breakLine
+				.'Content-type: text/plain; charset='.$this->charset.$this->breakLine
+				.'Content-Transfer-Encoding: '.$this->encoding.$this->breakLine.$this->breakLine
+				.$this->message.$this->breakLine.$this->breakLine;
+			$this->writeCommand($body . $this->breakLine);
+            if(!$this->smtpAttach()) return false;
+		}
+		else
+		{
+			$this->writeCommand($this->message . $this->breakLine);
+		}
+		
         //All messages have sent
         $this->writeCommand( $this->breakLine . '.' . $this->breakLine);
         
@@ -643,6 +705,8 @@ class Email
      */
     private function doConnect()
     {    
+        $connection = false;
+        
         if( $this->smtpConnect() ) {
             
             $this->makeEhlo();
@@ -695,6 +759,43 @@ class Email
         $this->smtpClose();
         
         return true;
+    }
+    
+    /**
+     * Sending attachment to smtp
+     *
+     * @return boolean
+     */
+    private function smtpAttach()
+    {
+		$attachment = array();
+		$attachmentCount = count($this->attachment);
+		for ($i = 0; $i < $attachmentCount; $i++)
+		{
+			$filename = $this->attachment[$i];
+
+			// Not exist?
+			if (!file_exists($filename))
+			{
+				$this->debugMessages[] = 'Error: Attachment '.$filename.' not found' ;
+				return false;
+			}
+			
+			$fileContent = '';
+			$fp = fopen($filename, "r");
+			$fileContent = fread($fp, filesize($filename));
+			fclose($fp);
+			
+			$attachment[$i] = '--'.$this->boundary.$this->breakLine
+				.'Content-type: '.mime_content_type($filename).'; name='.basename($filename).$this->breakLine
+				.'Content-Disposition: attachment; filename='.basename($filename).$this->breakLine
+				.'Content-Transfer-Encoding: base64'.$this->breakLine.$this->breakLine;
+			$attachment[$i] .= chunk_split(base64_encode($fileContent));
+		}
+		
+		$attachmentBody = implode($this->breakLine, $attachment).$this->breakLine.'--'.$this->boundary.'--';
+		$this->writeCommand($attachmentBody . $this->breakLine);
+		return true;
     }
     
 }
