@@ -146,7 +146,7 @@ final class Uri
     {
 	$uriString = $this->path($segment);
     
-	if( isset($uriString) && ! empty($uriString) ) {
+	if( isset($uriString) ) {
     
 	    $requests = array_slice($this->path(), $segment);
     
