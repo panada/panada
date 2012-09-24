@@ -108,7 +108,7 @@ class Controller
             return $return;
         }
         
-        include_once $this->viewFile;
+        include $this->viewFile;
     }
     
     public function outputJSON($data, $headerCode = 200, $isReturnValue = false)
