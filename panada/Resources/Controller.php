@@ -102,13 +102,13 @@ class Controller
         
         if($isReturnValue){
             ob_start();
-            include_once $this->viewFile;
+            include $this->viewFile;
             $return = ob_get_contents();
             ob_end_clean();
             return $return;
         }
         
-        include_once $this->viewFile;
+        include $this->viewFile;
     }
     
     public function outputJSON($data, $headerCode = 200, $isReturnValue = false)
