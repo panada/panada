@@ -198,7 +198,7 @@ final class Gear
                 $controllerNamespace= 'Controllers\\' .$controllerClass;
                 $method             = $this->config['main']['alias']['controller']['method'];
                 $instance           = new $controllerNamespace;
-                $request            = $this->uriObj->path();
+                $request            = array_slice( $this->uriObj->path(), 0);
                 
                 $this->run($instance, $method, $request);
                 return;
