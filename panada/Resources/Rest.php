@@ -19,7 +19,8 @@ class Rest
 	$setRequestHeaders	= array(),
 	$responseOutputHeader	= false,
 	$timeout		= 30,
-	$curlSSLVerifypeer	= true;
+	$curlSSLVerifypeer	= true,
+	$requestHeaders		= array('User-Agent' => 'Panada PHP Framework REST API/0.3');
     
     public function __construct()
     {
@@ -127,9 +128,7 @@ class Rest
      */
     public function setRequestHeaders( $options = array() )
     {
-	if( ! empty($options) )
-	    foreach($options as $key => $value)
-		$this->setRequestHeaders[] = $key.': '.$value;
+	$this->requestHeaders = array_merge($this->requestHeaders, $options);
     }
     
     /**
@@ -141,7 +140,7 @@ class Rest
      */
     public function setRequestAuthorization($signature, $type = 'Basic')
     {
-	$this->setRequestHeaders[] = 'Authorization: '.$type.' '.$signature;
+	$this->requestHeaders = array_merge($this->requestHeaders, array('Authorization' => $type.' '.$signature) );
     }
     
     /**
@@ -154,7 +153,9 @@ class Rest
      */
     public function sendRequest( $uri, $method = 'GET', $data = null )
     {
-	$this->setRequestHeaders[]	= 'User-Agent: Panada PHP Framework REST API/0.2';
+	foreach($this->requestHeaders as $key => $value)
+	    $this->setRequestHeaders[] = $key.': '.$value;
+	
 	$method				= strtoupper($method);
         $urlSeparator			= ( parse_url( $uri, PHP_URL_QUERY ) ) ? '&' : '?';
         $uri				= ( $method == 'GET' && ! empty($data) ) ? $uri . $urlSeparator . (is_array($data) ? http_build_query($data) : $data) : $uri;

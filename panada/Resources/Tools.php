@@ -179,38 +179,16 @@ class Tools
      */
     public static function objectToArray($object)
     {
-        if( ! is_object($object) && ! is_array($object) )
-            return $object;
-        
-        if( is_object($object) )
-            $object = get_object_vars($object);
-        
-        return array_map('self::objectToArray', $object);
+        return json_decode(json_encode($object), true);
     }
     
     /**
      * Convert an array into object
      *
      * @param array $var
-     * @param string $class
-     * @param boolean $isRecursive
      */
-    public static function arrayToObject($var, $class = 'stdClass', $isRecursive = true, $subClass = 'stdClass')
+    public static function arrayToObject($var)
     {    
-        if( is_array($var) ) {
-            
-            $object = new $class();
-	    
-	    if($isRecursive)
-		foreach($var as $key => $val)
-		    $object->$key = self::arrayToObject($val, $subClass);
-	    else
-		foreach($var as $key => $val)
-		    $object->$key = $val;
-            
-            return $object;
-        }
-        
-        return $var;
+        return json_decode(json_encode($var));
     }
 }
