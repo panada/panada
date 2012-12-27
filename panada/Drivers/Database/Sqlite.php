@@ -68,7 +68,7 @@ class Sqlite implements Interfaces\Database
     {
 	try{
 	    if( ! $this->link = new SQLite3( $this->config['database'], SQLITE3_OPEN_READWRITE ) )
-		throw new RunException('Unable connet to database in <strong>'.$this->connection.'</strong> connection.');
+		throw new RunException('Unable connect to database in <strong>'.$this->connection.'</strong> connection.');
 	}
 	catch(RunException $e){
 	    RunException::outputError( $e->getMessage() );

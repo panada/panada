@@ -43,7 +43,7 @@ class Mongodb extends \Mongo
 	    parent::__construct($this->config['host'], $this->config['options']);
 	}
 	catch(\MongoConnectionException $e) {
-	    RunException::outputError( 'Unable connet to database in <strong>'.$connectionName.'</strong> connection.' );
+	    RunException::outputError( 'Unable connect to database in <strong>'.$connectionName.'</strong> connection.' );
 	}
     }
     

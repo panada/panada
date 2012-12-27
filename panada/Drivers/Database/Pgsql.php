@@ -93,7 +93,7 @@ class Pgsql implements Interfaces\Database
         
         try{
 	    if ( ! $this->link )
-		throw new RunException('Unable connet to database in <strong>'.$this->connection.'</strong> connection.');
+		throw new RunException('Unable connect to database in <strong>'.$this->connection.'</strong> connection.');
 	}
 	catch(RunException $e){
 	    RunException::outputError( $e->getMessage() );
