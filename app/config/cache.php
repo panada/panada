@@ -1,15 +1,15 @@
 <?php
 
 return array(
-    
+
     'default' => array(
         'driver' => 'dummy',
     ),
-    
+
     'apc' => array(
         'driver' => 'apc',
     ),
-    
+
     'memcached' => array(
         'driver' => 'memcached',
         'server' => array(
@@ -20,7 +20,7 @@ return array(
             ),
         )
     ),
-    
+
     'memcache' => array(
         'driver' => 'memcache',
         'server' => array(
@@ -31,7 +31,7 @@ return array(
             ),
         )
     ),
-    
+
     'redis' => array(
         'driver' => 'redis',
         'server' => array(

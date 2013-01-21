@@ -8,7 +8,7 @@ class Home extends Resources\Controller
     {
         parent::__construct();
     }
-    
+
     public function index()
     {
         echo 'Hello world!';

@@ -22,13 +22,13 @@
         To get more hint how to use Panada, download offline <a href="https://github.com/panada/documentation/zipball/master">documentation</a> page from Github.
     </p>
     <p>
-        Panada licensed under <a href="<?php echo $this->uri->baseUri; ?>LICENSE">BSD License</a>    
+        Panada licensed under <a href="<?php echo $this->uri->baseUri; ?>LICENSE">BSD License</a>
     </p>
 </div>
 
 <div id="foot">Powered by <a href="http://panadaframework.com/">Panada</a> version 1.0.0-alfa
 </div>
 <a href="http://github.com/panada/Panada">
-<img src="<?php echo $this->uri->baseUri; ?>assets/img/forkgithub.png" style="position: absolute; top: 0; right: 0; border: 0;" alt="Fork me on GitHub"></a>	
+<img src="<?php echo $this->uri->baseUri; ?>assets/img/forkgithub.png" style="position: absolute; top: 0; right: 0; border: 0;" alt="Fork me on GitHub"></a>
 </body>
 </html>

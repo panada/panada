@@ -11,7 +11,7 @@
 namespace Resources\Interfaces;
 
 interface Cache
-{    
+{
     public function setValue( $key, $value, $expire = 0, $namespace = false );
     public function addValue( $key, $value, $expire = 0, $namespace = false );
     public function updateValue( $key, $value, $expire = 0, $namespace = false );
