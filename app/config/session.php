@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    
+
     'default' => array(
         'expiration' => 7200,
         'name' => 'PAN_SID',

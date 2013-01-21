@@ -51,13 +51,13 @@ require_once THISPATH . DS . 'config/main.php';
         padding: 4px 8px;
         font-we
     }
-    td { 
-        width: 25%; 
+    td {
+        width: 25%;
     }
-    td+td{ 
+    td+td{
         width: 65%;
     }
-    td+td+td{ 
+    td+td+td{
         width: 10%;
     }
     .monospace {
@@ -75,7 +75,7 @@ require_once THISPATH . DS . 'config/main.php';
 
 </head>
 <body>
-    <h1 class="logo"><img alt="Logo" src="assets/img/logo.png" /></h1> 
+    <h1 class="logo"><img alt="Logo" src="assets/img/logo.png" /></h1>
     <h1>Installation Check</h1>
     <h2>Minimum Requirements</h2>
     <?php $failed = FALSE ?>
@@ -96,12 +96,12 @@ require_once THISPATH . DS . 'config/main.php';
                 <?php endif ?>
             </td>
         </tr>
-        
+
         <tr>
             <td>
                 System Directory
             </td>
-            
+
             <?php if (is_dir(THISPATH . DS . '../panada') AND is_file(THISPATH . DS . '../panada' . DS . 'Gear.php')): ?>
                 <td><span class="monospace"><?php echo THISPATH . DS . 'panada' ?></span></td>
                 <td><span class="pass">PASS</span></td>
@@ -109,9 +109,9 @@ require_once THISPATH . DS . 'config/main.php';
                 <td>&nbsp;</td>
                 <td><span class="fail">FAIL</span></td>
             <?php endif ?>
-            
+
         </tr>
-        
+
         <tr>
             <td>
                 Application Directory
@@ -125,17 +125,17 @@ require_once THISPATH . DS . 'config/main.php';
             <?php endif ?>
         </tr>
     </table>
-	
+
     <?php if ($failed === TRUE): ?>
         <p class="box fail">Panada may not work correctly with your environment</p>
     <?php else: ?>
         <p class="box pass">Your environment passed all requirements</p>
     <?php endif ?>
-    
+
     <h2>Optional</h2>
-    
+
     <h3>Database</h3>
-    
+
     <table>
         <tr>
             <td>
@@ -149,7 +149,7 @@ require_once THISPATH . DS . 'config/main.php';
                 <td><span class="fail">FAIL</span></td>
             <?php endif ?>
         </tr>
-        
+
         <tr>
             <td>
                 PostgreSQL
@@ -162,7 +162,7 @@ require_once THISPATH . DS . 'config/main.php';
                 <td><span class="fail">FAIL</span></td>
             <?php endif ?>
         </tr>
-        
+
         <tr>
             <td>SQLite</td>
             <?php if (function_exists('sqlite_open')): ?>
@@ -173,7 +173,7 @@ require_once THISPATH . DS . 'config/main.php';
                 <td><span class="fail">FAIL</span></td>
             <?php endif ?>
         </tr>
-        
+
         <tr>
             <td>MongoDB</td>
             <?php if (class_exists('Mongo')): ?>
@@ -185,9 +185,9 @@ require_once THISPATH . DS . 'config/main.php';
             <?php endif ?>
         </tr>
     </table>
-    
+
     <h3>Cache</h3>
-    
+
     <table>
         <tr>
             <td>APC</td>
@@ -199,7 +199,7 @@ require_once THISPATH . DS . 'config/main.php';
                 <td><span class="fail">FAIL</span></td>
             <?php endif ?>
         </tr>
-        
+
         <tr>
             <td>Memcache</td>
             <?php if (extension_loaded('memcache')): ?>
@@ -210,7 +210,7 @@ require_once THISPATH . DS . 'config/main.php';
                 <td><span class="fail">FAIL</span></td>
             <?php endif ?>
         </tr>
-        
+
         <tr>
             <td>Memcached</td>
             <?php if (extension_loaded('memcached')): ?>
