@@ -11,7 +11,7 @@
 namespace Resources\Interfaces;
 
 interface Database
-{    
+{
     public function select();
     public function distinct();
     public function from();
