@@ -1,6 +1,4 @@
 <?php
-// Sets the default timezone used by all date/time. Adjust to your location
-date_default_timezone_set('Asia/Jakarta');
 
 // You can adjust this following constants if necessary.
 
