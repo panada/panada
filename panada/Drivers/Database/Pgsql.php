@@ -70,15 +70,17 @@ class Pgsql implements Interfaces\Database
     {
 	$function = ($this->config['persistent']) ? 'pg_pconnect' : 'pg_connect';
         
-	return $function(
-	    'host='.$this->config['host'].
-	    ' port='.$this->config['port'].
-	    ' dbname='.$this->config['database'].
-	    ' user='.$this->config['user'].
-	    ' password='.$this->config['password'].
-	    ' options=\'--client_encoding='.$this->config['charset'].'\'',
-	    false
-	);
+	$connection = $function(
+			'host='.$this->config['host'].
+			' port='.$this->config['port'].
+			' dbname='.$this->config['database'].
+			' user='.$this->config['user'].
+			' password='.$this->config['password'],
+			false);
+
+		pg_set_client_encoding($connection, $this->config['charset']);
+		
+		return $connection;
     }
     
     /**
