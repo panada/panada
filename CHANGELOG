@@ -1,0 +1,9 @@
+Version 1.1.0 work in progress
+-------------------------------
+- Bug 5e88f2278a: Fix typo for "connect" word
+- Bug d096fcaec3: Fix indentation
+- Bug b026cd1e93: Fix PGDriver for encoding option
+
+Version 1.0.0 Dec 20, 2012
+----------------------------
+Initial release
