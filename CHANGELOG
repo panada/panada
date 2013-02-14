@@ -8,6 +8,7 @@ Version 1.1.0 work in progress
 - New cc5cc53: Add composer.json file
 - New 85ef534: Add default exception handler for global uncaught exception
 - Enh 9b4c67d: Remove try catch in Drivers\Cache\Redis and throw it to default exception handler
+- Bug 76cc343: Fix bug getFileExtension in PHP 5.4.6 ref #55
 
 Version 1.0.0 Dec 20, 2012
 ----------------------------
