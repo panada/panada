@@ -7,6 +7,7 @@ Version 1.1.0 work in progress
 - New ca43ad3: Add default time zone setter
 - New cc5cc53: Add composer.json file
 - New 85ef534: Add default exception handler for global uncaught exception
+- Enh 9b4c67d: Remove try catch in Drivers\Cache\Redis and throw it to default exception handler
 
 Version 1.0.0 Dec 20, 2012
 ----------------------------
