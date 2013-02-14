@@ -1,11 +1,12 @@
 Version 1.1.0 work in progress
 -------------------------------
-- Bug 5e88f2278a: Fix typo for "connect" word
-- Bug d096fcaec3: Fix indentation
-- Bug b026cd1e93: Fix PGDriver for encoding option
+- Bug 5e88f22: Fix typo for "connect" word
+- Bug d096fca: Fix indentation
+- Bug b026cd1: Fix PGDriver for encoding option
 - New 844e393: Add this CHANGELOG file
 - New ca43ad3: Add default time zone setter
 - New cc5cc53: Add composer.json file
+- New 85ef534: Add default exception handler for global uncaught exception
 
 Version 1.0.0 Dec 20, 2012
 ----------------------------

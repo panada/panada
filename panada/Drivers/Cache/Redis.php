@@ -37,12 +37,7 @@ class Redis extends \Redis implements Interfaces\Cache
             }
         }
         
-	try{
-	    $this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
-	}
-	catch(\RedisException $e) {
-	    Resources\RunException::outputError( $e->getMessage() );
-	}
+	$this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
     }
     
     /**
