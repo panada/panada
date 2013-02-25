@@ -40,6 +40,7 @@ class Cookie
         $this->sessionCookieDomain  = $config['cookieDomain'];
 	$this->hashKey		    = $config['secretKey'];
 	$this->isEncrypt	    = $config['isEncrypt'];
+	$this->cookieChekSumName    = $config['storageName'];
 	
 	
 	// Decrypt the value before use it.
