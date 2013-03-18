@@ -22,6 +22,7 @@ final class Gear
     {
         error_reporting( $errorReporting );
         spl_autoload_register( array($this, 'loader') );
+        set_exception_handler( 'Resources\RunException::main' );
         set_error_handler( 'Resources\RunException::errorHandlerCallback', error_reporting() );
 
         $this->disableMagicQuotes();

@@ -1,0 +1,23 @@
+{
+    "name": "panada/Panada",
+    "description": "High Performance PHP Framework",
+    "keywords": ["php", "panada", "framework"],
+    "homepage": "http://panadaframework.com/",
+    "type": "library",
+    "license": "BSD license",
+    "authors": [
+        {
+            "name": "Iskandar Soesman",
+            "email": "k4ndar@yahoo.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/panada/Panada/issues?state=open",
+        "forum": "https://github.com/panada/Panada/issues/",
+        "wiki": "http://panadaframework.com/documentation/id/",
+        "source": "https://github.com/panada/Panada/"
+    },
+    "require": {
+        "php": ">=5.3.0"
+    }
+}

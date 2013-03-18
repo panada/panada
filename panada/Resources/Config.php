@@ -11,59 +11,59 @@
 namespace Resources;
 
 class Config
-{
-    private static $config = array();
-
-    private static function _cache($name)
-    {
-        if ( ! isset(self::$config[$name]) ) {
+{    
+    static private $config = array();
+    
+    static private function _cache($name)
+    {    
+        if( ! isset(self::$config[$name]) ) {
             $array = require APP . 'config/'.$name.'.php';
             self::$config[$name] = $array;
-
             return $array;
-        } else {
+        }
+        else {
             return self::$config[$name];
         }
     }
-
-    public static function main()
+    
+    static public function main()
     {
         return self::_cache('main');
     }
-
-    public static function session()
+    
+    static public function session()
     {
         return self::_cache('session');
     }
-
-    public static function cache()
+    
+    static public function cache()
     {
         return self::_cache('cache');
     }
-
-    public static function database()
+    
+    static public function database()
     {
         return self::_cache('database');
     }
-
+    
     /**
      * Handler for user defined config
      */
     public static function __callStatic( $name, $arguments = array() )
-    {
+    {    
         // Does cache for this config exists?
         if( isset(self::$config[$name]) )
-
             return self::$config[$name];
-
+        
         // Does the config file exists?
-        try {
+        try{
             if( ! file_exists( $file = APP . 'config/'.$name.'.php' ) )
                 throw new RunException('Config file in '.$file.' does not exits');
-        } catch (RunException $e) {
+        }
+        catch(RunException $e){
             RunException::outputError($e->getMessage());
         }
-
+        
         return self::_cache($name);
     }
 }
