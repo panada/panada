@@ -301,9 +301,8 @@ class Upload
     static function getFileExtension($file)
     {
         $arr = explode('.', $file);
-        $lastkey = array_pop(array_keys($arr));
         
-        return $arr[$lastkey];
+        return strtolower(end($arr));
     }
     
     /**
