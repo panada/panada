@@ -213,8 +213,12 @@ class Upload
         /**
          * Does it folder exist?
          */
-        if( ! is_dir($this->folderLocation) )
-            mkdir($this->folderLocation, 0777, true);
+        if( ! is_dir($this->folderLocation) ) {
+            if( ! mkdir($this->folderLocation, 0777, true) ) {
+                $this->_setErrorMessage(11);
+                return false;
+            }
+        }
         
         /**
          * Does it folder writable?
