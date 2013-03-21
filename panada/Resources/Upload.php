@@ -213,30 +213,8 @@ class Upload
         /**
          * Does it folder exist?
          */
-        if( ! is_dir($this->folderLocation) ) {
-            
-            // Create a folder if not exits
-            $arr = explode('/', $this->folderLocation);
-            
-            $path = '';
-            if( substr($this->folderLocation, 0, 1) == '/' )
-                $path = '/';
-            
-            foreach($arr as $name){
-                
-                if( empty($name) )
-                    continue;
-                
-                $path .= $name.'/';
-                
-                if( ! is_dir($path) )
-                    if( ! mkdir($path, 0777)) {
-                        $this->_setErrorMessage(11);
-                        //$this->_setErrorMessage(10);
-                        return false;
-                    }
-            }
-        }
+        if( ! is_dir($this->folderLocation) )
+            mkdir($this->folderLocation, 0777, true);
         
         /**
          * Does it folder writable?
