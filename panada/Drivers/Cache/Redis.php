@@ -36,6 +36,11 @@ class Redis extends \Redis implements Interfaces\Cache
                 $this->connect($server['host'], $server['port'], $server['timeout']);
             }
         }
+
+		if(isset($config['password']) && $config['password'])
+		{
+			$this->auth($config['password']);
+		}
         
 	$this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
     }
