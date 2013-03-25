@@ -10,7 +10,8 @@ Version 1.1.0 work in progress
 - Enh 9b4c67d: Remove try catch in Drivers\Cache\Redis and throw it to default exception handler
 - Bug 76cc343: Fix bug getFileExtension in PHP 5.4.6 ref #55
 - New d6b652e: Add storageName in session config file as cookieChekSumName value so it more configable
-
+- Enh 7ce0be9: Enhance process for creation of nested directories in Resource\Upload::errorHandler() method
+ 
 Version 1.0.0 Dec 20, 2012
 ----------------------------
 Initial release

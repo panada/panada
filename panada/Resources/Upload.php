@@ -214,27 +214,9 @@ class Upload
          * Does it folder exist?
          */
         if( ! is_dir($this->folderLocation) ) {
-            
-            // Create a folder if not exits
-            $arr = explode('/', $this->folderLocation);
-            
-            $path = '';
-            if( substr($this->folderLocation, 0, 1) == '/' )
-                $path = '/';
-            
-            foreach($arr as $name){
-                
-                if( empty($name) )
-                    continue;
-                
-                $path .= $name.'/';
-                
-                if( ! is_dir($path) )
-                    if( ! mkdir($path, 0777)) {
-                        $this->_setErrorMessage(11);
-                        //$this->_setErrorMessage(10);
-                        return false;
-                    }
+            if( ! mkdir($this->folderLocation, 0777, true) ) {
+                $this->_setErrorMessage(11);
+                return false;
             }
         }
         
@@ -301,9 +283,8 @@ class Upload
     static function getFileExtension($file)
     {
         $arr = explode('.', $file);
-        $lastkey = array_pop(array_keys($arr));
         
-        return $arr[$lastkey];
+        return strtolower(end($arr));
     }
     
     /**
