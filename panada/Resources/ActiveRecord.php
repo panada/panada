@@ -231,7 +231,11 @@ class ActiveRecord {
         // Its time for user defined condition implementation.
         if( ! empty($this->condition) ){
             foreach($this->condition as $condition){
-                $cacheKey .= $condition[0].$condition[1].$condition[2].$condition[3];
+                if(is_array($condition[2]))
+                    $cacheKey .= $condition[0].$condition[1].http_build_query($condition[2]).$condition[3];
+                else
+                    $cacheKey .= $condition[0].$condition[1].$condition[2].$condition[3];
+                
                 $this->db->where($condition[0], $condition[1], $condition[2], $condition[3]);
             }
             
