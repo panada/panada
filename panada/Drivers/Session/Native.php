@@ -154,6 +154,21 @@ class Native implements Interfaces\Session
 	    return false;
     }
     
+	 /**
+     * Get all session value.
+     *
+     * @return array|object
+     */
+	 public function getAllValue() 
+	 {
+	 	if(isset($_SESSION)) {
+			return $_SESSION;
+		} else {
+			return false;
+		}
+	 }
+
+
     /**
      * Remove/unset the session value.
      *
