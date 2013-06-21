@@ -10,8 +10,8 @@
  */
 namespace Resources;
 
-class Pagination {
-    
+class Pagination
+{    
     /**
      * @var boolean Show the number. If you set it to false, so it would return next and previous only.
      */
@@ -86,8 +86,8 @@ class Pagination {
     /**
      * Class contructor
      */
-    public function __construct(){
-        
+    public function __construct()
+    {    
         /**
          * Make sure the argument type only integer.
          */
@@ -99,12 +99,31 @@ class Pagination {
     }
     
     /**
+     * Setter for option
+     *
+     * @param string | array $var
+     * @param mix $value
+     * @return void
+     */
+    public function setOption($var, $value = false)
+    {    
+        if( is_string($var) )
+            $this->$var = $value;
+        
+        if( is_array($var) )
+            foreach($var as $key => $value)
+                $this->$key = $value;
+        
+        return $this;
+    }
+    
+    /**
      * Create pagination.
      *
      * @return array
      */
-    public function getUrl(){
-	
+    public function getUrl()
+    {
         $total    = ceil($this->total / $this->limit);
         if ( $total < 2 )
             return;

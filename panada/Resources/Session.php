@@ -10,15 +10,28 @@
  */
 namespace Resources;
 
-class Session {
-    
+class Session
+{    
     private $driver, $config;
     
-    public function __construct(){
-        
+    public function __construct($connection = 'default')
+    {    
         $this->config = Config::session();
-	$driverNamespace = 'Drivers\Session\\'.ucwords($this->config['driver']);
-        $this->driver = new $driverNamespace($this->config);
+	$this->config = $this->config[$connection];
+	$this->init();
+    }
+    
+    /**
+     * Overrider for session config option located at file app/config/session.php
+     *
+     * @param array $option The new option.
+     * @return void
+     * @since version 1.0
+     */
+    public function setOption( $option = array() )
+    {
+	$this->config = array_merge($this->config, $option);
+	$this->init();
     }
     
     /**
@@ -28,18 +41,43 @@ class Session {
      * @param string @name
      * @param array @arguments
      */
-    public function __call($name, $arguments){
-        
+    public function __call($name, $arguments)
+    {
         return call_user_func_array(array($this->driver, $name), $arguments);
     }
     
-    public function __get($name){
-        
+    /**
+     * Magic getter for properties
+     *
+     * @param string
+     * @return mix
+     */
+    public function __get($name)
+    {    
         return $this->driver->$name;
     }
     
-    public function __set($name, $value){
-        
+    /**
+     * Magic setter for properties
+     *
+     * @param string
+     * @param mix
+     * @return mix
+     */
+    public function __set($name, $value)
+    {    
         $this->driver->$name = $value;
+    }
+    
+    /**
+     * Instantiate the driver class
+     *
+     * @return void
+     * @since version 1.0
+     */
+    private function init()
+    {
+	$driverNamespace = 'Drivers\Session\\'.ucwords($this->config['driver']);
+        $this->driver = new $driverNamespace($this->config);
     }
 }

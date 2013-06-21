@@ -10,53 +10,86 @@
  */
 namespace Resources;
 
-class Request {
-    
-    public function get($key, $filter_type = false, $flags = false){
+class Request
+{    
+    /**
+     * Handler for HTTP GET request
+     *
+     * @param mix $key
+     * @param int $filterType
+     * @param int $flags
+     * @return mix
+     */
+    public function get($key = false, $filterType = false, $flags = false)
+    {    
+        if( ! $key )
+            return filter_var_array($_GET, $filterType);
         
-        if( isset($_GET[$key]) ) {
-            
-            if( $filter_type != false)
-               return filter_input(INPUT_GET, $key, $filter_type, $flags);
-            else
-                return $_GET[$key];
-        }
-        else {
+        if( ! isset($_GET[$key]) )
             return false;
-        }
+        
+        if( $filterType )
+           return filter_input(INPUT_GET, $key, $filterType, $flags);
+        else
+            return $_GET[$key];
+        
     }
     
-    public function post($key, $filter_type = false, $flags = false){
+    /**
+     * Handler for HTTP POST request
+     *
+     * @param mix $key
+     * @param int $filterType
+     * @param int $flags
+     * @return mix
+     */
+    public function post($key = false, $filterType = false, $flags = false)
+    {    
+        if( ! $key )
+            return filter_var_array($_POST, $filterType);
         
-        if( isset($_POST[$key]) ) {
-            
-            if( $filter_type != false)
-               return filter_input(INPUT_POST, $key, $filter_type, $flags);
-            else
-                return $_POST[$key];
-        }
-        else {
+        if( ! isset($_POST[$key]) )
             return false;
-        }
+        
+        if( $filterType )
+           return filter_input(INPUT_POST, $key, $filterType, $flags);
+        else
+            return $_POST[$key];
+        
     }
     
-    public function cookie($key, $filter_type = false, $flags = false){
+    /**
+     * Handler for HTTP POST request
+     *
+     * @param mix $key
+     * @param int $filterType
+     * @param int $flags
+     * @return mix
+     */
+    public function cookie($key, $filterType = false, $flags = false)
+    {    
+        if( ! $key )
+            return filter_var_array($_COOKIE, $filterType);
         
-        if( isset($_COOKIE[$key]) ) {
-            
-            if( $filter_type != false)
-               return filter_input(INPUT_COOKIE, $key, $filter_type, $flags);
-            else
-                return $_COOKIE[$key];
-        }
-        else {
+        if( ! isset($_COOKIE[$key]) )
             return false;
-        }
+        
+        if( $filterType )
+           return filter_input(INPUT_COOKIE, $key, $filterType, $flags);
+        else
+            return $_COOKIE[$key];
     }
     
-    
-    public function stripTagsAttributes($str, $allowtags = null, $allowattributes = null){
-        
+    /**
+     * Strip any html tags and attributes defined by user
+     *
+     * @param string $str
+     * @param string | array $allowtags
+     * @param string | array $allowattributes
+     * @return string
+     */
+    public function stripTagsAttributes($str, $allowtags = null, $allowattributes = null)
+    {    
         /**
          * ID:  Ada kemungkinan dimana string yang diinput diconvert dulu menjadi htmlentities.
          *      Untuk menghindari hal ini, maka semua format htmlentities dikembalikan (docode) dulu ke format aslinya.
@@ -82,7 +115,7 @@ class Request {
         $str = str_replace('&lt;', '<', $str);
         
         /**
-         * EN:  See original function at http://php.net/manual/en/function.strip-tags.php#91498
+         * See original function at http://php.net/manual/en/function.strip-tags.php#91498
          */
         if ( ! is_null($allowattributes) ) {
             

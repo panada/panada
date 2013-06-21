@@ -10,12 +10,12 @@
  */
 namespace Resources;
 
-class Cache {
-    
+class Cache
+{    
     private $driver, $config;
     
-    public function __construct( $connection = 'default', $specifiedDriver = false ){
-        
+    public function __construct( $connection = 'default', $specifiedDriver = false )
+    {    
         $this->config = Config::cache();
         $this->config = $this->config[$connection];
         
@@ -34,8 +34,8 @@ class Cache {
      * @param string @name
      * @param array @arguments
      */
-    public function __call($name, $arguments){
-        
+    public function __call($name, $arguments)
+    {    
         return call_user_func_array(array($this->driver, $name), $arguments);
     }
     
@@ -45,8 +45,8 @@ class Cache {
      * @param string $name
      * @return mix
      */
-    public function __get($name){
-        
+    public function __get($name)
+    {    
         return $this->driver->$name;
     }
     
@@ -57,8 +57,8 @@ class Cache {
      * @param mix $value
      * @return void
      */
-    public function __set($name, $value){
-        
+    public function __set($name, $value)
+    {    
         $this->driver->$name = $value;
     }
     

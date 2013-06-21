@@ -12,8 +12,8 @@ use Resources\Interfaces as Interfaces,
 Resources\RunException as RunException,
 Resources\Tools as Tools;
 
-class Sqlite implements Interfaces\Database {
-    
+class Sqlite implements Interfaces\Database
+{    
     protected $column = '*';
     protected $distinct = false;
     protected $tables = array();
@@ -33,6 +33,7 @@ class Sqlite implements Interfaces\Database {
     private $config;
     private $lastQuery;
     private $lastError;
+    private $throwError = false;
     public $insertId;
     public $instantiateClass = 'stdClass';
     
@@ -40,22 +41,34 @@ class Sqlite implements Interfaces\Database {
      * EN: Define all properties needed.
      * @return void
      */
-    function __construct( $config, $connectionName ){
-	
+    function __construct( $config, $connectionName )
+    {
 	$this->config = $config;
 	$this->connection = $connectionName;
 	
     }
     
     /**
+     * Throw the error instead handle it automaticly.
+     * User should catch this error for there own purpose.
+     *
+     * @param bool $set
+     * @return void
+     */
+    public function setThrowError($set = false)
+    {
+	$this->throwError = $set;
+    }
+    
+    /**
      * Establish a new connection to SQLite server
      *
      */
-    private function establishConnection(){
-	
+    private function establishConnection()
+    {
 	try{
 	    if( ! $this->link = new SQLite3( $this->config['database'], SQLITE3_OPEN_READWRITE ) )
-		throw new RunException('Unable connet to database in <strong>'.$this->connection.'</strong> connection.');
+		throw new RunException('Unable connect to database in <strong>'.$this->connection.'</strong> connection.');
 	}
 	catch(RunException $e){
 	    RunException::outputError( $e->getMessage() );
@@ -68,8 +81,8 @@ class Sqlite implements Interfaces\Database {
      *
      * @return void
      */
-    private function init(){
-	
+    private function init()
+    {
 	if( is_null($this->link) )
 	    $this->establishConnection();
     }
@@ -80,8 +93,8 @@ class Sqlite implements Interfaces\Database {
      * @param string $column1, $column2 etc ...
      * @return object
      */
-    public function select(){
-        
+    public function select()
+    {    
 	$column = func_get_args();
 	
         if( ! empty($column) ){
@@ -99,8 +112,8 @@ class Sqlite implements Interfaces\Database {
      *
      * @return object
      */
-    public function distinct(){
-	
+    public function distinct()
+    {
 	$this->distinct = true;
 	return $this;
     }
@@ -111,8 +124,8 @@ class Sqlite implements Interfaces\Database {
      * @param string $table1, $table2 etc ...
      * @return object
      */
-    public function from(){
-	
+    public function from()
+    {
 	$tables = func_get_args();
 	
 	if( is_array($tables[0]) )
@@ -129,8 +142,8 @@ class Sqlite implements Interfaces\Database {
      * @param string $table Table to join
      * @param string $type Type of join: LEFT, RIGHT, INNER
      */
-    public function join($table, $type = null){
-	
+    public function join($table, $type = null)
+    {
 	$this->joins = $table;
 	$this->joinsType = $type;
 	
@@ -145,8 +158,8 @@ class Sqlite implements Interfaces\Database {
      * @param string $value
      * @param mix $separator
      */
-    protected function createCriteria($column, $operator, $value, $separator){
-	
+    protected function createCriteria($column, $operator, $value, $separator)
+    {
 	if( is_string($value) && $this->isQuotes ){
 	    $value = $this->escape($value);
 	    $value = " '$value'";
@@ -175,8 +188,8 @@ class Sqlite implements Interfaces\Database {
      * @param string $value
      * @param mix $separator
      */
-    public function on($column, $operator, $value, $separator = false){
-	
+    public function on($column, $operator, $value, $separator = false)
+    {
 	$this->isQuotes = false;
 	$this->joinsOn[] = $this->createCriteria($column, $operator, $value, $separator);
 	$this->isQuotes = true;
@@ -193,8 +206,8 @@ class Sqlite implements Interfaces\Database {
      * @param string $separator Such as: AND, OR
      * @return object
      */
-    public function where($column, $operator, $value, $separator = false){
-        
+    public function where($column, $operator, $value, $separator = false)
+    {    
 	if( is_string($value) ){
 	    
 	    $value_arr = explode('.', $value);
@@ -215,8 +228,8 @@ class Sqlite implements Interfaces\Database {
      * @param string $column1, $column2 etc ...
      * @return object
      */
-    public function groupBy(){
-	
+    public function groupBy()
+    {
 	$this->groupBy = implode(', ', func_get_args());
 	return $this;
     }
@@ -229,8 +242,8 @@ class Sqlite implements Interfaces\Database {
      * @param string $value
      * @param mix $separator
      */
-    public function having($column, $operator, $value, $separator = false){
-	
+    public function having($column, $operator, $value, $separator = false)
+    {
 	$this->isHaving[] = $this->createCriteria($column, $operator, $value, $separator);
 	
         return $this;
@@ -242,8 +255,8 @@ class Sqlite implements Interfaces\Database {
      * @param string $column1, $column2 etc ...
      * @return object
      */
-    public function orderBy($column, $order = null){
-	
+    public function orderBy($column, $order = null)
+    {
 	$this->orderBy = $column;
 	$this->order = $order;
 	
@@ -257,8 +270,8 @@ class Sqlite implements Interfaces\Database {
      * @param int Optional offset value
      * @return object
      */
-    public function limit($limit, $offset = null){
-	
+    public function limit($limit, $offset = null)
+    {
 	$this->limit = $limit;
 	$this->offset = $offset;
 	
@@ -270,8 +283,8 @@ class Sqlite implements Interfaces\Database {
      *
      * @return string The complited SQL statement
      */
-    public function command(){
-        
+    public function command()
+    {    
         $query = 'SELECT ';
 	
 	if($this->distinct){
@@ -283,28 +296,28 @@ class Sqlite implements Interfaces\Database {
         
         if( is_array($this->column) ){
             $column = implode(', ', $this->column);
-	    unset($this->column);
+	    $this->column = '*';
         }
         
         $query .= $column;
         
         if( ! empty($this->tables) ){
             $query .= ' FROM '.implode(', ', $this->tables);
-	    unset($this->tables);
+	    $this->tables = array();
         }
 	
 	if( ! is_null($this->joins) ) {
 	    
 	    if( ! is_null($this->joinsType) ){
 		$query .= ' '.strtoupper($this->joinsType);
-		unset($this->joinsType);
+		$this->joinsType = null;
 	    }
 	    
 	    $query .= ' JOIN '.$this->joins;
 	    
 	    if( ! empty($this->joinsOn) ){
 		$query .= ' ON ('.implode(' ', $this->joinsOn).')';
-		unset($this->joinsOn);
+		$this->joinsOn = array();
 	    }
 	    
 	    $this->joins = null;
@@ -313,7 +326,7 @@ class Sqlite implements Interfaces\Database {
 	if( ! empty($this->criteria) ){
 	    $cr = implode(' ', $this->criteria);
 	    $query .= ' WHERE ' . rtrim($cr, 'AND');
-	    unset($this->criteria);
+	    $this->criteria = array();
 	}
 	
 	if( ! is_null($this->groupBy) ){
@@ -323,7 +336,7 @@ class Sqlite implements Interfaces\Database {
 	
 	if( ! empty($this->isHaving) ){
 	    $query .= ' HAVING '.implode(' ', $this->isHaving);
-	    unset($this->isHaving);
+	    $this->isHaving = array();
 	}
 	
 	if( ! is_null($this->orderBy) ){
@@ -352,7 +365,8 @@ class Sqlite implements Interfaces\Database {
      *
      * @return void
      */
-    public function begin(){
+    public function begin()
+    {
 	$this->query("BEGIN TRANSACTION");
     }
     
@@ -361,7 +375,8 @@ class Sqlite implements Interfaces\Database {
      *
      * @return void
      */
-    public function commit(){
+    public function commit()
+    {
 	$this->query("COMMIT");
     }
     
@@ -370,7 +385,8 @@ class Sqlite implements Interfaces\Database {
      *
      * @return void
      */
-    public function rollback(){
+    public function rollback()
+    {
 	$this->query("ROLLBACK");
     }
     
@@ -380,8 +396,8 @@ class Sqlite implements Interfaces\Database {
      * @param string $string
      * @return void
      */
-    public function escape($string){
-        
+    public function escape($string)
+    {    
 	if( is_null($this->link) )
 	    $this->init();
 	
@@ -394,8 +410,8 @@ class Sqlite implements Interfaces\Database {
      * @param $query The SQL querey statement
      * @return string|objet Return the resource id of query
      */
-    public function query($sql){
-	
+    public function query($sql)
+    {
 	if( is_null($this->link) )
 	    $this->init();
 	
@@ -407,9 +423,16 @@ class Sqlite implements Interfaces\Database {
         $this->lastQuery = $sql;
         
 	if($this->link->lastErrorMsg() != 'not an error' ){
+	    
 	    $this->lastError = $this->link->lastErrorMsg();
-            $this->print_error();
-            return false;
+	    
+	    if( $this->throwError ) {
+		throw new \Exception($this->lastError);
+	    }
+	    else {
+		$this->printError();
+		return false;
+	    }
         }
         
         return $query;
@@ -424,8 +447,8 @@ class Sqlite implements Interfaces\Database {
      * @param array
      * @return object
      */
-    public function getAll( $table = false, $where = array(), $fields = array() ){
-	
+    public function getAll( $table = false, $where = array(), $fields = array() )
+    {
 	if( ! $table )
 	    return $this->results( $this->command() );
 	
@@ -452,8 +475,8 @@ class Sqlite implements Interfaces\Database {
      * @param array
      * @return object
      */
-    public function getOne( $table = false, $where = array(), $fields = array() ){
-	
+    public function getOne( $table = false, $where = array(), $fields = array() )
+    {
 	if( ! $table )
 	    return $this->row( $this->command() );
 	
@@ -487,8 +510,8 @@ class Sqlite implements Interfaces\Database {
      * @param string @query
      * @return string|int Depen on it record value.
      */
-    public function getVar( $query = null ){
-	
+    public function getVar( $query = null )
+    {
 	if( is_null($query) )
 	    $query = $this->command();
 	
@@ -504,8 +527,8 @@ class Sqlite implements Interfaces\Database {
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
      */
-    public function results($query = null, $type = 'object'){
-        
+    public function results($query = null, $type = 'object')
+    {    
 	if( is_null($query) )
 	    $query = $this->command();
 	
@@ -540,8 +563,8 @@ class Sqlite implements Interfaces\Database {
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
      */
-    public function row($query = null, $type = 'object'){
-	
+    public function row($query = null, $type = 'object')
+    {
 	if( is_null($query) )
 	    $query = $this->command();
 	
@@ -569,8 +592,8 @@ class Sqlite implements Interfaces\Database {
      * @param array $data
      * @return boolean
      */
-    public function insert($table, $data = array()) {
-        
+    public function insert($table, $data = array())
+    {    
         $fields = array_keys($data);
         
         foreach($data as $key => $val)
@@ -584,8 +607,8 @@ class Sqlite implements Interfaces\Database {
      *
      * @return int
      */
-    public function insertId(){
-	
+    public function insertId()
+    {
 	if( is_null($this->link) )
 	    $this->init();
 	
@@ -600,8 +623,8 @@ class Sqlite implements Interfaces\Database {
      * @param array $where
      * @return boolean
      */
-    public function update($table, $dat, $where = null){
-        
+    public function update($table, $dat, $where = null)
+    {    
         foreach($dat as $key => $val)
             $data[$key] = $this->escape($val);
         
@@ -633,8 +656,8 @@ class Sqlite implements Interfaces\Database {
      * @param array
      * @return boolean
      */
-    public function delete($table, $where = null){
-        
+    public function delete($table, $where = null)
+    {    
 	if( ! empty($this->criteria) ){
 	    $criteria = implode(' ', $this->criteria);
 	    unset($this->criteria);
@@ -659,8 +682,8 @@ class Sqlite implements Interfaces\Database {
      *
      * @return string
      */
-    private function printError() {
-	
+    private function printError()
+    {
         if ( $caller = RunException::getErrorCaller(5) )
             $error_str = sprintf('Database error %1$s for query %2$s made by %3$s', $this->lastError, $this->lastQuery, $caller);
         else
@@ -674,8 +697,8 @@ class Sqlite implements Interfaces\Database {
      *
      * @return void
      */
-    public function version(){
-	
+    public function version()
+    {
 	$version = $this->link->version();
 	return $version['versionString'];
     }
@@ -685,8 +708,8 @@ class Sqlite implements Interfaces\Database {
      *
      * @return void
      */
-    public function close(){
-	
+    public function close()
+    {
 	unset($this->link);
     }
     

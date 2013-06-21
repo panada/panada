@@ -26,6 +26,8 @@ can help us to write some, it would be nice. Just fork the documentation branch 
 Samples
 -------
 
-You can see some simple applications on this https://github.com/panada/samples repo.
+Twlike, a twitter like simple app http://twlike.phpfogapp.com/
+
+You can download more simple applications on this https://github.com/panada/samples repo.
 But remember, Panada core system are not included. You need to download it by your
-self at this repo https://github.com/panada/Panada/tree/1.X-nightly-build
+self at this repo https://github.com/panada/Panada/tree/master

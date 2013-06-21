@@ -10,39 +10,48 @@
  */
 namespace Resources;
 
-class RunException extends \Exception {
-    
-    public function __construct($message = null, $code = 0, Exception $previous = null) {
-        
-        set_exception_handler( array($this, 'main') );
+class RunException extends \Exception
+{    
+    public function __construct($message = null, $code = 0, Exception $previous = null)
+    {
         parent::__construct($message, $code, $previous);
     }
     
-    public function __toString() {
-        
+    public function __toString()
+    {    
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }
     
-    public function main($exception){
+    public static function main($exception)
+    {    
+        $message = $exception->getMessage();
+        $file = false;
+        $line = false;
+        $traceAsString = $exception->getTraceAsString();
         
-        $trace = $exception->getTrace();
-        
-        if( ! isset($trace[2]['file']) )
-            $trace[2]['file'] = $trace[2]['line'] = null;
-        
-        self::outputError($exception->getMessage(), $trace[2]['file'], $trace[2]['line']);
+	foreach ($exception->getTrace() as $trace) {
+	    if (isset($trace['file'])) {
+		$file = $trace['file'];
+		if (isset($trace['line'])) {
+		    $line = $trace['line'];
+		}
+		break;
+	    }
+	}
+	
+        self::outputError($message, $file, $line, $traceAsString);
     }
     
-    public static function errorHandlerCallback($errno, $message, $file, $line){
-        
+    public static function errorHandlerCallback($errno, $message, $file, $line)
+    {    
         if($errno == E_WARNING)
             return;
         
         self::outputError($message, $file, $line);
     }
     
-    public static function outputError($message = null, $file = false, $line = false){
-        
+    public static function outputError($message = null, $file = false, $line = false, $trace = false)
+    {    
         // Message for log
         $errorMessage = 'Error '.$message.' in '.$file . ' line: ' . $line;
         
@@ -90,7 +99,8 @@ class RunException extends \Exception {
             'message' => $message,
             'file' => $file,
             'line' => $line,
-            'code' => $code
+            'code' => $code,
+            'trace' => $trace
         );
         
         header("HTTP/1.1 500 Internal Server Error", true, 500);
@@ -104,8 +114,8 @@ class RunException extends \Exception {
      * @param integer
      * @return array
      */
-    public static function getErrorCaller($offset = 1) {
-        
+    public static function getErrorCaller($offset = 1)
+    {    
 	$caller = array();
         $bt = debug_backtrace(false);
 	$bt = array_slice($bt, $offset);

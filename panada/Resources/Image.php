@@ -19,8 +19,8 @@ if( ! defined('PIMG_CROP') )
 if( ! defined('PIMG_RESIZE_CROP') )
     define('PIMG_RESIZE_CROP', 'resize_crop');
 
-class Image {
-    
+class Image
+{    
     /**
      * @var string  Option for editng image the option is: resize | crop | resize_crop.
      */
@@ -105,14 +105,33 @@ class Image {
     /**
      * Class constructor
      */
-    public function __construct(){
-        
+    public function __construct()
+    {    
         if( ! function_exists('imagecopyresampled') )
             throw new RunException('Image resizing function that required by Image Class is not available.');
     }
     
-    private function preErrorChecker(){
+    /**
+     * Setter for option
+     *
+     * @param string | array $var
+     * @param mix $value
+     * @return void
+     */
+    public function setOption($var, $value = false)
+    {    
+        if( is_string($var) )
+            $this->$var = $value;
         
+        if( is_array($var) )
+            foreach($var as $key => $value)
+                $this->$key = $value;
+        
+        return $this;
+    }
+    
+    private function preErrorChecker()
+    {    
         /**
          * Check is folder destionation has set.
          */
@@ -148,8 +167,8 @@ class Image {
         return true;
     }
     
-    private function errorHandler(){
-        
+    private function errorHandler()
+    {    
         if( ! $this->fileInfo || ! $this->fileInfo[0] || ! $this->fileInfo[1] ) {
             $this->errorMessages[] = 'Unable to get image dimensions.';
             return false;
@@ -163,14 +182,14 @@ class Image {
         return true;
     }
     
-    public function initFileInfo(){
-        
+    public function initFileInfo()
+    {    
         $this->fileInfo = @getimagesize($this->filePath);
         $this->imageType   = $this->fileInfo[2];
     }
     
-    public function edit($fileName){
-        
+    public function edit($fileName)
+    {    
 	$this->fileName    = $fileName;
         $this->filePath    = $this->folder . '/' . $fileName;
         
@@ -221,7 +240,7 @@ class Image {
         if( $this->resizeHeight > 0 && $this->resizeWidth > 0 && $this->editType == 'resize' ) {
             
             $image_new_height   = $this->resizeHeight;
-            $image_new_height   = $this->resizeHeight;
+            $image_new_width  	= $this->resizeWidth;
         }
         
         //Resizing
@@ -248,8 +267,8 @@ class Image {
 	return true;
     }
     
-    public function createImageFrom(){
-        
+    public function createImageFrom()
+    {    
         // create the initial copy from the original file
         switch($this->imageType) {
             
@@ -268,11 +287,11 @@ class Image {
         }
     }
     
-    public function createImage($imageEdited){
-        
+    public function createImage($imageEdited)
+    {    
         $file_extension = Upload::getFileExtension($this->fileName);
         $saveTo        = ( ! empty($this->saveTo) ) ? $this->saveTo : $this->folder;
-        $new_filename   = ( ! empty($this->newFileName) )? $saveTo . '/' . $this->newFileName . '.' . $file_extension : $this->filePath;
+        $new_filename   = ( ! empty($this->newFileName) )? $saveTo . '/' . $this->newFileName . '.' . $file_extension : $saveTo.'/'.$this->fileName;
         $new_filename   = ($this->stripSpaces) ? str_replace(' ', '_', $new_filename) : $new_filename;
         
         // move the new file
@@ -288,6 +307,11 @@ class Image {
             if (! imagepng( $imageEdited, $new_filename ) )
                 $this->errorMessages[] = 'File path invalid.';
         }
+    }
+    
+    public function getErrorMessage()
+    {    
+        return $this->errorMessages;
     }
     
 } // End Image Modifier Class

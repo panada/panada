@@ -10,29 +10,35 @@
  */
 namespace Resources;
 
-class PropertiesLoader {
-    
+class PropertiesLoader
+{    
     private
         $childNamespace,
         $classNamespace,
         $cache;
     
-    public function __construct($childNamespace, $classNamespace){
-        
+    public function __construct($childNamespace, $classNamespace)
+    {    
         $this->childNamespace = $childNamespace;
         $this->classNamespace = $classNamespace;
         
         $this->cache = new Cache('default', 'Dummy');
     }
     
-    public function __call( $name, $arguments = array() ){
-        
+    public function __call( $name, $arguments = array() )
+    {    
         $class = $this->classNamespace.'\\'.ucwords($name);
         
-        if( $this->childNamespace[0] == 'Modules' )
-            $class = $this->childNamespace[0].'\\'.$this->childNamespace[1].'\\'.$class;
+        if( $this->childNamespace[0] == 'Modules' && $this->classNamespace != 'Resources' ) {
+            
+            $file = APP.$this->childNamespace[0].'/'.$this->childNamespace[1].'/'.str_replace('\\','/',$class).'.php';
+            
+            // if this module has this class, lets call it
+            if( file_exists($file) )
+                $class = $this->childNamespace[0].'\\'.$this->childNamespace[1].'\\'.$class;
+        }
         
-        $cacheKey = 'AutoLoaderClass_'.$class.json_encode($arguments);
+        $cacheKey = 'AutoLoaderClass_'.$class.http_build_query($arguments);
         
         // Are this class has ben called before?
         if( $cachedObj = $this->cache->getValue($cacheKey) )
@@ -75,7 +81,8 @@ class PropertiesLoader {
         return $object;
     }
     
-    public function __get($name){
+    public function __get($name)
+    {
         return $this->__call($name);
     }
 }

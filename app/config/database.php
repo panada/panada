@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    
+
     'default' => array(
         'driver' => 'mysql',
         'host' => 'localhost',
@@ -14,10 +14,10 @@ return array(
         'collate' => 'utf8_general_ci',
         'persistent' => false,
     ),
-    
+
     /*
     'postgre' => array(
-        'driver' => 'postgresql',
+        'driver' => 'pgsql',
         'host' => 'localhost',
         'port' => 5432,
         'user' => 'postgres',
@@ -28,7 +28,7 @@ return array(
         'collate' => 'utf8_general_ci',
         'persistent' => false,
     ),
-    
+
     'sqlite' => array(
         'driver' => 'sqlite',
         'host' => '',
@@ -39,7 +39,7 @@ return array(
         'collate' => '',
         'persistent' => false,
     ),
-    
+
     'mongodb' => array(
         'driver' => 'mongodb',
         'host' => 'localhost',
@@ -53,7 +53,7 @@ return array(
         'persistent' => false,
         'options' => array(),
     ),
-    
+
     'cubrid' => array(
         'driver' => 'cubrid',
         'host' => 'localhost',
@@ -68,5 +68,5 @@ return array(
         'autoCommit' => true,
     ),
     */
-    
+
 );

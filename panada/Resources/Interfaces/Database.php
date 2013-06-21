@@ -10,8 +10,8 @@
  */
 namespace Resources\Interfaces;
 
-interface Database {
-    
+interface Database
+{    
     public function select();
     public function distinct();
     public function from();

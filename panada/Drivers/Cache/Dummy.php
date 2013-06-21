@@ -12,12 +12,13 @@
 namespace Drivers\Cache;
 use Resources\Interfaces as Interfaces;
 
-class Dummy implements Interfaces\Cache {
-    
+class Dummy implements Interfaces\Cache
+{    
     static private $holder = array();
     
-    public function __construct(){
-        // none
+    public function __construct()
+    {
+       // none
     }
     
     /**
@@ -26,8 +27,8 @@ class Dummy implements Interfaces\Cache {
      * @param int $expire
      * @return void
      */
-    public function setValue($key, $value, $expire = 0, $namespace = false){
-        
+    public function setValue($key, $value, $expire = 0, $namespace = false)
+    {    
         return self::_set($key, $value);
     }
     
@@ -40,8 +41,8 @@ class Dummy implements Interfaces\Cache {
      * @param int $expire
      * @return void
      */
-    public function addValue( $key, $value, $expire = 0, $namespace = false ){
-        
+    public function addValue( $key, $value, $expire = 0, $namespace = false )
+    {    
         return self::_get($key) ? false : self::_set($key, $value);
     }
     
@@ -53,8 +54,8 @@ class Dummy implements Interfaces\Cache {
      * @param int $expire
      * @return void
      */
-    public function updateValue( $key, $value, $expire = 0, $namespace = false ){
-        
+    public function updateValue( $key, $value, $expire = 0, $namespace = false )
+    {    
         return self::_set($key, $value);
     }
     
@@ -62,8 +63,8 @@ class Dummy implements Interfaces\Cache {
      * @param string $key
      * @return mix
      */
-    public function getValue($key, $namespace = false){
-        
+    public function getValue($key, $namespace = false)
+    {    
         return self::_get($key);
     }
     
@@ -71,8 +72,8 @@ class Dummy implements Interfaces\Cache {
      * @param string $key
      * @return void
      */
-    public function deleteValue($key, $namespace = false){
-        
+    public function deleteValue($key, $namespace = false)
+    {    
         return self::_delete($key);
     }
     
@@ -80,8 +81,8 @@ class Dummy implements Interfaces\Cache {
      * Flush all cached object.
      * @return bool
      */
-    public function flushValues(){
-        
+    public function flushValues()
+    {    
         return self::_flush();
     }
     
@@ -89,8 +90,8 @@ class Dummy implements Interfaces\Cache {
      * @param string $key
      * @return mix
      */
-    public static function _get($key = false){
-        
+    public static function _get($key = false)
+    {    
         if( isset(self::$holder[$key]) )
             return self::$holder[$key];
         
@@ -102,8 +103,8 @@ class Dummy implements Interfaces\Cache {
      * @param mix
      * @return void
      */
-    public static function _set($key, $value){
-        
+    public static function _set($key, $value)
+    {    
         self::$holder[$key] = $value;
     }
     
@@ -111,14 +112,44 @@ class Dummy implements Interfaces\Cache {
      * @param string $key
      * @return void
      */
-    public static function _delete($key){
-        
+    public static function _delete($key)
+    {    
         unset(self::$holder[$key]);
     }
     
-    public static function _flush(){
-        
+    public static function _flush()
+    {    
         unset(self::$holder);
         return true;
+    }
+    
+    /**
+     * Increment numeric item's value
+     *
+     * @param string $key The key of the item
+     * @param int $offset The amount by which to increment the item's value
+     */
+    public function incrementBy($key, $offset = 1)
+    {    
+        $incr = $this->getValue($key) + $offset;
+        
+        $this->updateValue($key, $incr);
+	
+	return $incr;
+    }
+    
+    /**
+     * Decrement numeric item's value
+     *
+     * @param string $key The key of the item
+     * @param int $offset The amount by which to decrement the item's value
+     */
+    public function decrementBy($key, $offset = 1)
+    {
+        $decr = $this->getValue($key) - $offset;
+        
+        $this->updateValue($key, $decr);
+        
+	return $decr;
     }
 }

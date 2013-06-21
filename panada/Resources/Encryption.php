@@ -19,8 +19,8 @@ if( ! defined('PCRYPT_BASE_64') )
 if( ! defined('PCRYPT_HEXA_DECIMAL') )
     define('PCRYPT_HEXA_DECIMAL', 'hexa_decimal');
 
-class Encryption {
-    
+class Encryption
+{    
     /**
      * @var string  Encoding type. none | base_64 | hexa_decimal
      */
@@ -31,8 +31,8 @@ class Encryption {
      */
     public $key;
     
-    public function __construct($key = false, $encodeType = PCRYPT_BASE_64){
-        
+    public function __construct($key = false, $encodeType = PCRYPT_BASE_64)
+    {    
         $this->encodeType = $encodeType;
         
         if($key)
@@ -45,8 +45,8 @@ class Encryption {
      * @var string
      * @var string
     */
-    public function encrypt($string){
-        
+    public function encrypt($string)
+    {    
         return $this->simpleEncrypt($string);
     }
     
@@ -58,8 +58,8 @@ class Encryption {
      * @return string
      * @access public
     */
-    public function decrypt($string){
-        
+    public function decrypt($string)
+    {    
         return $this->simpleDecrypt($string);
     }
     
@@ -70,8 +70,8 @@ class Encryption {
      * @return string
      * @access public
      */
-    private function simpleEncrypt($string){
-        
+    private function simpleEncrypt($string)
+    {    
         $return = '';
         
         for($i=0; $i < strlen($string); $i++) {
@@ -90,8 +90,8 @@ class Encryption {
      * @return string
      * @access public
      */
-    private function simpleDecrypt($string){
-        
+    private function simpleDecrypt($string)
+    {    
         $return = '';
         
         $string = $this->decode($string);
@@ -112,8 +112,8 @@ class Encryption {
      * @return string
      * @access private
      */
-    private function encode($string){
-        
+    private function encode($string)
+    {    
         if($this->encodeType == 'base_64')
             return base64_encode($string);
         elseif($this->encodeType == 'hexa_decimal')
@@ -129,8 +129,8 @@ class Encryption {
      * @return string
      * @access private
      */
-    private function decode($string){
-        
+    private function decode($string)
+    {    
         if($this->encodeType == 'base_64')
             return base64_decode($string);
         elseif($this->encodeType == 'hexa_decimal')
@@ -146,8 +146,8 @@ class Encryption {
      * @return string
      * @access private
      */
-    private function hexaEncode($string){
-        
+    private function hexaEncode($string)
+    {    
         $string = (string) $string;
         return preg_replace("'(.)'e", "dechex(ord('\\1'))", $string);
     }
@@ -159,8 +159,8 @@ class Encryption {
      * @return string
      * @access private
      */
-    private function hexaDecode($string){
-        
+    private function hexaDecode($string)
+    {    
         $string = (string) $string;
         return preg_replace("'([\S,\d]{2})'e", "chr(hexdec('\\1'))", $string);
     }

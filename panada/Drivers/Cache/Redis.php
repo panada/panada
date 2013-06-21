@@ -1,65 +1,56 @@
 <?php
 /**
- * Panada APC API Driver.
+ * Panada Redis API Driver.
  *
  * @package	Driver
  * @subpackage	Cache
  * @author	Iskandar Soesman
- * @since	Version 0.2
- *
- * Install APC on Ubuntu: aptitude install libpcre3-dev;
- * pecl install apc
+ * @since	Version 1.0
+ */
+
+/**
+ * Makesure Memcache extension is enabled
  */
 namespace Drivers\Cache;
 use
-    Resources\Interfaces as Interfaces,
-    Resources\RunException as RunException;
-    
-class Apc implements Interfaces\Cache
+    Resources,
+    Resources\Interfaces as Interfaces;
+
+class Redis extends \Redis implements Interfaces\Cache
 {    
-    public function __construct()
-    {    
-        /**
-        * Makesure APC extension is enabled
-        */
-       if( ! extension_loaded('apc') )
-           throw new RunException('APC extension that required by APC Driver is not available.');
-    }
+    private $port = 6379;
     
-    /**
-     * PHP Magic method for calling a method dinamicly
-     * 
-     * @param string $name
-     * @param mix $arguments
-     * @return mix
-     */
-    public function __call($name, $arguments)
-    {    
-        return call_user_func_array($name, $arguments);
-    }
-    
-    /**
-     * PHP Magic method for calling a static method dinamicly
-     * 
-     * @param string $name
-     * @param mix $arguments
-     * @return mix
-     */
-    public static function __callStatic($name, $arguments)
-    {    
-        return call_user_func_array($name, $arguments);
+    public function __construct( $config )
+    {
+	if( ! extension_loaded('redis') )
+	    die('Redis extension that required by Driver Redis is not available.');
+	
+        parent::__construct();
+        
+        foreach($config['server'] as $server){
+            
+            if ( $server['persistent']) {
+                $this->pconnect($server['host'], $server['port'], $server['timeout']);
+            }
+            else {
+                $this->connect($server['host'], $server['port'], $server['timeout']);
+            }
+        }
+        
+	$this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
     }
     
     /**
      * @param string $key
      * @param mix $value
      * @param int $expire
+     * @param string $namespace
      * @return void
      */
     public function setValue( $key, $value, $expire = 0, $namespace = false )
     {    
-        $key = $this->keyToNamespace($key, $namespace);
-        return apc_store($key, $value, $expire); 
+	$key = $this->keyToNamespace($key, $namespace);
+        return $this->set($key, $value, $expire);
     }
     
     /**
@@ -69,12 +60,13 @@ class Apc implements Interfaces\Cache
      * @param string $key
      * @param mix $value
      * @param int $expire
+     * @param string $namespace
      * @return void
      */
     public function addValue( $key, $value, $expire = 0, $namespace = false )
     {    
-        $key = $this->keyToNamespace($key, $namespace);
-        return apc_add($key, $value, $expire);
+	$key = $this->keyToNamespace($key, $namespace);
+	return $this->setnx($key, $value, $expire); 
     }
     
     /**
@@ -83,32 +75,35 @@ class Apc implements Interfaces\Cache
      * @param string $key
      * @param mix $value
      * @param int $expire
+     * @param string $namespace
      * @return void
      */
     public function updateValue( $key, $value, $expire = 0, $namespace = false )
     {    
-        $key = $this->keyToNamespace($key, $namespace);
-        return $this->setValue($key, $value, $expire);
+	$key = $this->keyToNamespace($key, $namespace);
+	return $this->setValue($key, $value, $expire);
     }
     
     /**
      * @param string $key
+     * @param string $namespace
      * @return mix
      */
     public function getValue( $key, $namespace = false )
     {    
-        $key = $this->keyToNamespace($key, $namespace);
-        return apc_fetch($key); 
+	$key = $this->keyToNamespace($key, $namespace);
+        return $this->get($key);
     }
     
     /**
      * @param string $key
+     * @param string $namespace
      * @return void
      */
     public function deleteValue( $key, $namespace = false )
     {    
-        $key = $this->keyToNamespace($key, $namespace);
-        return apc_delete($key);
+	$key = $this->keyToNamespace($key, $namespace);
+        return $this->delete($key);
     }
     
     /**
@@ -117,7 +112,7 @@ class Apc implements Interfaces\Cache
      */
     public function flushValues()
     {    
-        return apc_clear_cache('user');
+	return $this->flushDB();
     }
     
     /**
@@ -128,7 +123,7 @@ class Apc implements Interfaces\Cache
      */
     public function incrementBy($key, $offset = 1)
     {
-	return apc_inc($key, $offset);
+	return $this->incr($key, $offset);
     }
     
     /**
@@ -139,7 +134,7 @@ class Apc implements Interfaces\Cache
      */
     public function decrementBy($key, $offset = 1)
     {
-	return apc_dec($key, $offset);
+	return $this->decr($key, $offset);
     }
     
     /**
@@ -153,11 +148,12 @@ class Apc implements Interfaces\Cache
 	if( ! $namespaceKey )
 	    return $key;
 	
-	if( ! $namespaceValue = apc_fetch($namespaceKey) ){
+	if( ! $namespaceValue = $this->get($namespaceKey) ){
 	    $namespaceValue = time();
-	    apc_store($namespaceKey, $namespaceValue, 0);
+	    $this->set($namespaceKey, $namespaceValue, 0);
 	}
 	
 	return $namespaceValue.'_'.$key;
     }
+    
 }

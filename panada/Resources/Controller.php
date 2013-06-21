@@ -10,8 +10,8 @@
  */
 namespace Resources;
 
-class Controller {
-    
+class Controller
+{    
     private
         $childNamespace,
         $viewCache,
@@ -21,8 +21,8 @@ class Controller {
     public
         $config = array();
     
-    public function __construct(){
-        
+    public function __construct()
+    {    
         $child = get_class($this);
         
         $this->childClass = array(
@@ -34,8 +34,8 @@ class Controller {
         $this->uri          = new Uri;
     }
     
-    public function __get($class){
-        
+    public function __get($class)
+    {    
         $classNamespace = array(
             'model' => 'Models',
             'Model' => 'Models',
@@ -64,14 +64,14 @@ class Controller {
         return new PropertiesLoader($this->childClass['namespaceArray'], $classNamespace[$class]);
     }
     
-    public static function outputError($file, $data = array(), $isReturnValue = false){
-        
+    public static function outputError($file, $data = array(), $isReturnValue = false)
+    {    
         $controller = new Controller;
         $controller->output($file, $data, $isReturnValue);
     }
     
-    public function output( $panadaViewfile, $data = array(), $isReturnValue = false ){
-        
+    public function output( $panadaViewfile, $data = array(), $isReturnValue = false )
+    {    
         $panadaFilePath = APP.'views/'.$panadaViewfile;
         
         if( $this->childClass['namespaceArray'][0] == 'Modules' ){
@@ -100,11 +100,19 @@ class Controller {
         if( ! empty($this->viewCache) && $this->viewCache['prefix'] == $this->childClass['namespaceString'] )
             extract( $this->viewCache['data'], EXTR_SKIP );
         
-        include_once $this->viewFile;
+        if($isReturnValue){
+            ob_start();
+            include $this->viewFile;
+            $return = ob_get_contents();
+            ob_end_clean();
+            return $return;
+        }
+        
+        include $this->viewFile;
     }
     
-    public function outputJSON($data, $headerCode = 200, $isReturnValue = false){
-        
+    public function outputJSON($data, $headerCode = 200, $isReturnValue = false)
+    {    
         $output = $this->outputTransporter($data, 'json');
         
         if( $isReturnValue )
@@ -114,8 +122,8 @@ class Controller {
         echo $output;
     }
     
-    public function outputXML($data, $headerCode = 200, $isReturnValue = false){
-        
+    public function outputXML($data, $headerCode = 200, $isReturnValue = false)
+    {    
         $output = $this->outputTransporter($data, 'xml');
         
         if( $isReturnValue )
@@ -125,18 +133,19 @@ class Controller {
         echo $output;
     }
     
-    private function outputTransporter($data, $type){
-        
+    private function outputTransporter($data, $type)
+    {    
         $rest = new Rest;
         return $rest->wrapResponseOutput($data, $type);
     }
     
-    public function location($location = ''){
+    public function location($location = '')
+    {
 	return $this->uri->baseUri . $this->configMain['indexFile'] . $location;
     }
     
-    public function redirect($location = '', $status = 302){
-        
+    public function redirect($location = '', $status = 302)
+    {    
         $location = ( empty($location) ) ? $this->location() : $location;
         
         if ( substr($location,0,4) != 'http' )

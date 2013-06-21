@@ -10,8 +10,8 @@
  */
 namespace Resources;
 
-class Tools {
-    
+class Tools
+{    
     /**
      * Set the header response status.
      *
@@ -19,8 +19,8 @@ class Tools {
      * @param string
      * @return void
      */
-    public static function setStatusHeader($code = 200, $text = ''){
-        
+    public static function setStatusHeader($code = 200, $text = '')
+    {    
 	$status = array(
                 200	=> 'OK',
                 201	=> 'Created',
@@ -79,8 +79,8 @@ class Tools {
      * @param integer
      * @param boolean
      */
-    public static function getRandomString($length = 12, $specialChars = true) {
-        
+    public static function getRandomString($length = 12, $specialChars = true)
+    {    
 	$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         
 	if ( $specialChars )
@@ -101,8 +101,8 @@ class Tools {
      * @param string
      * @param string
      */
-    public static function xmlEncode($data, $rootNodeName = 'data', $xml = null){
-	
+    public static function xmlEncode($data, $rootNodeName = 'data', $xml = null)
+    {
 	// Turn off compatibility mode as simple xml throws a wobbly if you don't.
 	if (ini_get('zend.ze1_compatibility_mode') == 1){
 	    ini_set ('zend.ze1_compatibility_mode', 0);
@@ -146,8 +146,8 @@ class Tools {
      * @param string
      * @param string $type Flag for data type option: object | array
      */
-    public static function xmlDecode($xml, $type = 'object'){
-	
+    public static function xmlDecode($xml, $type = 'object')
+    {
 	// Does it local file?
 	if( is_file($xml) ) {
 	    $xml = simplexml_load_file($xml);
@@ -177,40 +177,18 @@ class Tools {
      * 
      * @param object
      */
-    public static function objectToArray($object){
-	
-        if( ! is_object($object) && ! is_array($object) )
-            return $object;
-        
-        if( is_object($object) )
-            $object = get_object_vars($object);
-        
-        return array_map(array('Tools', 'objectToArray'), $object);
+    public static function objectToArray($object)
+    {
+        return json_decode(json_encode($object), true);
     }
     
     /**
      * Convert an array into object
      *
      * @param array $var
-     * @param string $class
-     * @param boolean $isRecursive
      */
-    public static function arrayToObject($var, $class = 'stdClass', $isRecursive = true, $subClass = 'stdClass') {
-        
-        if( is_array($var) ) {
-            
-            $object = new $class();
-	    
-	    if($isRecursive)
-		foreach($var as $key => $val)
-		    $object->$key = self::arrayToObject($val, $subClass);
-	    else
-		foreach($var as $key => $val)
-		    $object->$key = $val;
-            
-            return $object;
-        }
-        
-        return $var;
+    public static function arrayToObject($var)
+    {    
+        return json_decode(json_encode($var));
     }
 }

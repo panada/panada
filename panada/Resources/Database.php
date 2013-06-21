@@ -10,16 +10,20 @@
  */
 namespace Resources;
 
-class Database {
-    
+class Database
+{    
     private $driver, $config;
     
-    public function __construct( $connection = 'default' ){
-        
+    public function __construct( $connection = 'default' )
+    {    
         $config         = Config::database();
         $this->config   = $config[$connection];
         
         $driverNamespace = 'Drivers\Database\\'.ucwords($this->config['driver']);
+        
+        if ( isset($this->config['pdo']) )
+            if( $this->config['pdo'] )
+                $driverNamespace = 'Drivers\Database\PanadaPDO';
         
         $this->driver = new $driverNamespace( $this->config, $connection );
     }
@@ -30,19 +34,30 @@ class Database {
      *
      * @param string @name
      * @param array @arguments
+     * @return mix
      */
-    public function __call($name, $arguments){
-        
+    public function __call($name, $arguments)
+    {    
         return call_user_func_array(array($this->driver, $name), $arguments);
     }
     
-    public function __get($name){
-        
+    /**
+     * @param string @name
+     * @return mix
+     */
+    public function __get($name)
+    {    
         return $this->driver->$name;
     }
     
-    public function __set($name, $value){
-        
+    /**
+     *
+     * @param string @name
+     * @param mix @$value
+     * @return void
+     */
+    public function __set($name, $value)
+    {    
         $this->driver->$name = $value;
     }
     
