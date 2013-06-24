@@ -1,5 +1,6 @@
 Version 1.1.0 work in progress
 -------------------------------
+- New 418b0bf: New redis auth method ref #56
 - New 86fab29: New getAllValue() method in Session Driver
 - Bug 1ad1359: Fix undefined APP constant in check.php file
 - New 4f5c3b6: Add image multiple processing in one upload process
