@@ -27,20 +27,14 @@ class Redis extends \Redis implements Interfaces\Cache
 	
         parent::__construct();
         
-        foreach($config['server'] as $server){
-            
-            if ( $server['persistent']) {
+        foreach($config['server'] as $server)
+            if ( $server['persistent'])
                 $this->pconnect($server['host'], $server['port'], $server['timeout']);
-            }
-            else {
+            else
                 $this->connect($server['host'], $server['port'], $server['timeout']);
-            }
-        }
 
-		if(isset($config['password']) && $config['password'])
-		{
-			$this->auth($config['password']);
-		}
+	if(isset($config['password']) && $config['password'])
+	    $this->auth($config['password']);
         
 	$this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
     }

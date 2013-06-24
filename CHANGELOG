@@ -1,5 +1,8 @@
 Version 1.1.0 work in progress
 -------------------------------
+- New 86fab29: New getAllValue() method in Session Driver
+- Bug 1ad1359: Fix undefined APP constant in check.php file
+- New 4f5c3b6: Add image multiple processing in one upload process
 - Bug 58327fd: Fix for issue #58
 - Bug 67ae4b4: Fix error when generate $cacheKey for array value in Resource\ActiveRecord::get() method
 - Bug 5e88f22: Fix typo for "connect" word
