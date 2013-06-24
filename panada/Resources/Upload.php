@@ -84,7 +84,7 @@ class Upload
     /**
      * @var string  Option to edit image base on Library_image class. The option is resize | crop | resize_crop
      */
-    public $editImage = '';
+    public $editImage = array();
     
     
     /**
@@ -136,19 +136,24 @@ class Upload
         
         if( ! empty($this->editImage) ) {
             
-            // Initiate Image class
-            $this->image            = new Image;
-            // See Image class line 65
-            $this->image->folder    = $this->folderLocation;
-            
-            // Assign each config for Image class
-            foreach($this->editImage as $key => $val)
-                $this->image->$key = $val;
-            
-            if( ! $this->image->edit($this->getFileInfo['name']) ) {
-               $this->_setErrorMessage(14);
-                return false;
-            }
+			foreach($this->editImage as $editImage){
+			
+				// Initiate Image class
+				$this->image            = new Image;
+				// See Image class line 65
+				$this->image->folder    = $this->folderLocation;
+				
+				// Assign each config for Image class
+				foreach($editImage as $key => $val)
+					$this->image->$key = $val;
+				
+				if( ! $this->image->edit($this->getFileInfo['name']) ) {
+				   $this->_setErrorMessage(14);
+					return false;
+				}
+			
+			}
+			
         }
         
         return true;
@@ -214,9 +219,27 @@ class Upload
          * Does it folder exist?
          */
         if( ! is_dir($this->folderLocation) ) {
-            if( ! mkdir($this->folderLocation, 0777, true) ) {
-                $this->_setErrorMessage(11);
-                return false;
+            
+            // Create a folder if not exits
+            $arr = explode('/', $this->folderLocation);
+            
+            $path = '';
+            if( substr($this->folderLocation, 0, 1) == '/' )
+                $path = '/';
+            
+            foreach($arr as $name){
+                
+                if( empty($name) )
+                    continue;
+                
+                $path .= $name.'/';
+                
+                if( ! is_dir($path) )
+                    if( ! mkdir($path, 0777)) {
+                        $this->_setErrorMessage(11);
+                        //$this->_setErrorMessage(10);
+                        return false;
+                    }
             }
         }
         
@@ -282,9 +305,9 @@ class Upload
     
     static function getFileExtension($file)
     {
-        $arr = explode('.', $file);
+        $ext = explode('.', $file);
         
-        return strtolower(end($arr));
+        return end($ext);
     }
     
     /**
