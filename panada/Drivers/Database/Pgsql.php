@@ -2,10 +2,10 @@
 /**
  * Panada PostgreSQL Database Driver.
  *
- * @package	Driver
- * @subpackage	Database
- * @author	Iskandar Soesman.
- * @since	Version 0.3
+ * @package Driver
+ * @subpackage  Database
+ * @author  Iskandar Soesman.
+ * @since   Version 0.3
  */
 namespace Drivers\Database;
 use Resources\Interfaces as Interfaces,
@@ -44,9 +44,9 @@ class Pgsql implements Interfaces\Database
      */
     function __construct( $config, $connectionName )
     {
-	$this->config = $config;
-	$this->connection = $connectionName;
-	
+    $this->config = $config;
+    $this->connection = $connectionName;
+    
     }
     
     /**
@@ -58,7 +58,7 @@ class Pgsql implements Interfaces\Database
      */
     public function setThrowError($set = false)
     {
-	$this->throwError = $set;
+    $this->throwError = $set;
     }
     
     /**
@@ -68,19 +68,19 @@ class Pgsql implements Interfaces\Database
      */
     private function establishConnection()
     {
-	$function = ($this->config['persistent']) ? 'pg_pconnect' : 'pg_connect';
+    $function = ($this->config['persistent']) ? 'pg_pconnect' : 'pg_connect';
         
-	$connection = $function(
-			'host='.$this->config['host'].
-			' port='.$this->config['port'].
-			' dbname='.$this->config['database'].
-			' user='.$this->config['user'].
-			' password='.$this->config['password'],
-			false);
+    $connection = $function(
+            'host='.$this->config['host'].
+            ' port='.$this->config['port'].
+            ' dbname='.$this->config['database'].
+            ' user='.$this->config['user'].
+            ' password='.$this->config['password'],
+            false);
 
-		pg_set_client_encoding($connection, $this->config['charset']);
-		
-		return $connection;
+        pg_set_client_encoding($connection, $this->config['charset']);
+        
+        return $connection;
     }
     
     /**
@@ -90,16 +90,16 @@ class Pgsql implements Interfaces\Database
      */
     private function init()
     {
-	if( is_null($this->link) )
-	    $this->link = $this->establishConnection();
+    if( is_null($this->link) )
+        $this->link = $this->establishConnection();
         
         try{
-	    if ( ! $this->link )
-		throw new RunException('Unable connect to database in <strong>'.$this->connection.'</strong> connection.');
-	}
-	catch(RunException $e){
-	    RunException::outputError( $e->getMessage() );
-	}
+        if ( ! $this->link )
+        throw new RunException('Unable connect to database in <strong>'.$this->connection.'</strong> connection.');
+    }
+    catch(RunException $e){
+        RunException::outputError( $e->getMessage() );
+    }
     }
     
     /**
@@ -110,13 +110,13 @@ class Pgsql implements Interfaces\Database
      */
     public function select()
     {    
-	$column = func_get_args();
-	
+    $column = func_get_args();
+    
         if( ! empty($column) ){
-	    $this->column = $column;
-	    
-	    if( is_array($column[0]) )
-		$this->column = $column[0];
+        $this->column = $column;
+        
+        if( is_array($column[0]) )
+        $this->column = $column[0];
         }
         
         return $this;
@@ -129,8 +129,8 @@ class Pgsql implements Interfaces\Database
      */
     public function distinct()
     {
-	$this->distinct = true;
-	return $this;
+    $this->distinct = true;
+    return $this;
     }
     
     /**
@@ -141,14 +141,14 @@ class Pgsql implements Interfaces\Database
      */
     public function from()
     {
-	$tables = func_get_args();
-	
-	if( is_array($tables[0]) )
-	    $tables = $tables[0];
-	
-	$this->tables = $tables;
-	
-	return $this;
+    $tables = func_get_args();
+    
+    if( is_array($tables[0]) )
+        $tables = $tables[0];
+    
+    $this->tables = $tables;
+    
+    return $this;
     }
     
     /**
@@ -159,10 +159,10 @@ class Pgsql implements Interfaces\Database
      */
     public function join($table, $type = null)
     {
-	$this->joins = $table;
-	$this->joinsType = $type;
-	
-	return $this;
+    $this->joins = $table;
+    $this->joinsType = $type;
+    
+    return $this;
     }
     
     /**
@@ -175,24 +175,24 @@ class Pgsql implements Interfaces\Database
      */
     protected function createCriteria($column, $operator, $value, $separator)
     {
-	if( is_string($value) && $this->isQuotes ){
-	    $value = $this->escape($value);
-	    $value = " '$value'";
-	}
-	
-	if( $operator == 'IN' )
-	    if( is_array($value) )
-		$value = "('".implode("', '", $value)."')";
-	
-	if( $operator == 'BETWEEN' )
-	    $value = $value[0].' AND '.$value[1];
-	
-	$return = $column.' '.$operator.' '.$value;
-	
-	if($separator)
-	    $return .= ' '.strtoupper($separator);
-	
-	return $return;
+    if( is_string($value) && $this->isQuotes ){
+        $value = $this->escape($value);
+        $value = " '$value'";
+    }
+    
+    if( $operator == 'IN' )
+        if( is_array($value) )
+        $value = "('".implode("', '", $value)."')";
+    
+    if( $operator == 'BETWEEN' )
+        $value = $value[0].' AND '.$value[1];
+    
+    $return = $column.' '.$operator.' '.$value;
+    
+    if($separator)
+        $return .= ' '.strtoupper($separator);
+    
+    return $return;
     }
     
     /**
@@ -205,10 +205,10 @@ class Pgsql implements Interfaces\Database
      */
     public function on($column, $operator, $value, $separator = false)
     {
-	$this->isQuotes = false;
-	$this->joinsOn[] = $this->createCriteria($column, $operator, $value, $separator);
-	$this->isQuotes = true;
-	
+    $this->isQuotes = false;
+    $this->joinsOn[] = $this->createCriteria($column, $operator, $value, $separator);
+    $this->isQuotes = true;
+    
         return $this;
     }
     
@@ -223,17 +223,17 @@ class Pgsql implements Interfaces\Database
      */
     public function where($column, $operator, $value, $separator = false)
     {    
-	if( is_string($value) ){
-	    
-	    $value_arr = explode('.', $value);
-	    if( count($value_arr) > 1)
-		if( array_search($value_arr[0], $this->tables) !== false )
-		    $this->isQuotes = false;
-	}
-	
-	$this->criteria[] = $this->createCriteria($column, $operator, $value, $separator);
-	$this->isQuotes = true;
-	
+    if( is_string($value) ){
+        
+        $value_arr = explode('.', $value);
+        if( count($value_arr) > 1)
+        if( array_search($value_arr[0], $this->tables) !== false )
+            $this->isQuotes = false;
+    }
+    
+    $this->criteria[] = $this->createCriteria($column, $operator, $value, $separator);
+    $this->isQuotes = true;
+    
         return $this;
     }
     
@@ -245,8 +245,8 @@ class Pgsql implements Interfaces\Database
      */
     public function groupBy()
     {
-	$this->groupBy = implode(', ', func_get_args());
-	return $this;
+    $this->groupBy = implode(', ', func_get_args());
+    return $this;
     }
     
     /**
@@ -259,8 +259,8 @@ class Pgsql implements Interfaces\Database
      */
     public function having($column, $operator, $value, $separator = false)
     {
-	$this->isHaving[] = $this->createCriteria($column, $operator, $value, $separator);
-	
+    $this->isHaving[] = $this->createCriteria($column, $operator, $value, $separator);
+    
         return $this;
     }
     
@@ -272,10 +272,10 @@ class Pgsql implements Interfaces\Database
      */
     public function orderBy($column, $order = null)
     {
-	$this->orderBy = $column;
-	$this->order = $order;
-	
-	return $this;
+    $this->orderBy = $column;
+    $this->order = $order;
+    
+    return $this;
     }
     
     /**
@@ -287,10 +287,10 @@ class Pgsql implements Interfaces\Database
      */
     public function limit($limit, $offset = null)
     {
-	$this->limit = $limit;
-	$this->offset = $offset;
-	
-	return $this;
+    $this->limit = $limit;
+    $this->offset = $offset;
+    
+    return $this;
     }
     
     /**
@@ -301,76 +301,76 @@ class Pgsql implements Interfaces\Database
     public function command()
     {    
         $query = 'SELECT ';
-	
-	if($this->distinct){
-	    $query .= 'DISTINCT ';
-	    $this->distinct = false;
-	}
+    
+    if($this->distinct){
+        $query .= 'DISTINCT ';
+        $this->distinct = false;
+    }
         
         $column = '*';
         
         if( is_array($this->column) ){
             $column = implode(', ', $this->column);
-	    $this->column = '*';
+        $this->column = '*';
         }
         
         $query .= $column;
         
         if( ! empty($this->tables) ){
             $query .= ' FROM '.implode(', ', $this->tables);
-	    $this->tables = array();
+        $this->tables = array();
         }
-	
-	if( ! is_null($this->joins) ) {
-	    
-	    if( ! is_null($this->joinsType) ){
-		$query .= ' '.strtoupper($this->joinsType);
-		$this->joinsType = null;
-	    }
-	    
-	    $query .= ' JOIN '.$this->joins;
-	    
-	    if( ! empty($this->joinsOn) ){
-		$query .= ' ON ('.implode(' ', $this->joinsOn).')';
-		$this->joinsOn = array();
-	    }
-	    
-	    $this->joins = null;
-	}
-	
-	if( ! empty($this->criteria) ){
-	    $cr = implode(' ', $this->criteria);
-	    $query .= ' WHERE ' . rtrim($cr, 'AND');
-	    $this->criteria = array();
-	}
-	
-	if( ! is_null($this->groupBy) ){
-	    $query .= ' GROUP BY '.$this->groupBy;
-	    $this->groupBy = null;
-	}
-	
-	if( ! empty($this->isHaving) ){
-	    $query .= ' HAVING '.implode(' ', $this->isHaving);
-	    $this->isHaving = array();
-	}
-	
-	if( ! is_null($this->orderBy) ){
-	    $query .= ' ORDER BY '.$this->orderBy.' '.strtoupper($this->order);
-	    $this->orderBy = null;
-	}
-	
-	
-	if( ! is_null($this->limit) ){
-	    
-	    $query .= ' LIMIT '.$this->limit;
-	    
-	    if( ! is_null($this->offset) ){
-		$query .= ' OFFSET '.$this->offset;
-		$this->offset = null;
-	    }
-	    
-	    $this->limit = null;
-	}
+    
+    if( ! is_null($this->joins) ) {
+        
+        if( ! is_null($this->joinsType) ){
+        $query .= ' '.strtoupper($this->joinsType);
+        $this->joinsType = null;
+        }
+        
+        $query .= ' JOIN '.$this->joins;
+        
+        if( ! empty($this->joinsOn) ){
+        $query .= ' ON ('.implode(' ', $this->joinsOn).')';
+        $this->joinsOn = array();
+        }
+        
+        $this->joins = null;
+    }
+    
+    if( ! empty($this->criteria) ){
+        $cr = implode(' ', $this->criteria);
+        $query .= ' WHERE ' . rtrim($cr, 'AND');
+        $this->criteria = array();
+    }
+    
+    if( ! is_null($this->groupBy) ){
+        $query .= ' GROUP BY '.$this->groupBy;
+        $this->groupBy = null;
+    }
+    
+    if( ! empty($this->isHaving) ){
+        $query .= ' HAVING '.implode(' ', $this->isHaving);
+        $this->isHaving = array();
+    }
+    
+    if( ! is_null($this->orderBy) ){
+        $query .= ' ORDER BY '.$this->orderBy.' '.strtoupper($this->order);
+        $this->orderBy = null;
+    }
+    
+    
+    if( ! is_null($this->limit) ){
+        
+        $query .= ' LIMIT '.$this->limit;
+        
+        if( ! is_null($this->offset) ){
+        $query .= ' OFFSET '.$this->offset;
+        $this->offset = null;
+        }
+        
+        $this->limit = null;
+    }
         
         return $query;
     }
@@ -382,7 +382,7 @@ class Pgsql implements Interfaces\Database
      */
     public function begin()
     {
-	pg_exec($this->link, "begin");
+    pg_exec($this->link, "begin");
     }
     
     /**
@@ -392,7 +392,7 @@ class Pgsql implements Interfaces\Database
      */
     public function commit()
     {
-	pg_exec($this->link, "commit");
+    pg_exec($this->link, "commit");
     }
     
     /**
@@ -402,7 +402,7 @@ class Pgsql implements Interfaces\Database
      */
     public function rollback()
     {
-	pg_exec($this->link, "rollback");
+    pg_exec($this->link, "rollback");
     }
     
     /**
@@ -413,9 +413,9 @@ class Pgsql implements Interfaces\Database
      */
     public function escape($string)
     {    
-	if( is_null($this->link) )
-	    $this->init();
-	
+    if( is_null($this->link) )
+        $this->init();
+    
         return pg_escape_string($this->link, $string);
     }
     
@@ -427,21 +427,21 @@ class Pgsql implements Interfaces\Database
      */
     public function query($sql)
     {
-	if( is_null($this->link) )
-	    $this->init();
+    if( is_null($this->link) )
+        $this->init();
         
         $query = pg_query($this->link, $sql);
         $this->lastQuery = $sql;
         
         if ( $this->lastError = pg_last_error($this->link) ) {
-	    
-	    if( $this->throwError ) {
-		throw new \Exception($this->lastError);
-	    }
-	    else {
-		$this->printError();
-		return false;
-	    }
+        
+        if( $this->throwError ) {
+        throw new \Exception($this->lastError);
+        }
+        else {
+        $this->printError();
+        return false;
+        }
         }
         
         return $query;
@@ -458,20 +458,20 @@ class Pgsql implements Interfaces\Database
      */
     public function getAll( $table = false, $where = array(), $fields = array() )
     {
-	if( ! $table )
-	    return $this->results( $this->command() );
-	
-	$column = '*';
-	
-	if( ! empty($fields) )
-	    $column = $fields;
-	
-	$this->select($column)->from($table);
-	
-	if ( ! empty( $where ) )
-	    foreach($where as $key => $val)
-		$this->where($key, '=', $val, 'AND');
-	
+    if( ! $table )
+        return $this->results( $this->command() );
+    
+    $column = '*';
+    
+    if( ! empty($fields) )
+        $column = $fields;
+    
+    $this->select($column)->from($table);
+    
+    if ( ! empty( $where ) )
+        foreach($where as $key => $val)
+        $this->where($key, '=', $val, 'AND');
+    
         return $this->getAll();
     }
     
@@ -486,30 +486,30 @@ class Pgsql implements Interfaces\Database
      */
     public function getOne( $table = false, $where = array(), $fields = array() )
     {
-	if( ! $table )
-	    return $this->row( $this->command() );
-	
-	$column = '*';
-	
-	if( ! empty($fields) )
-	    $column = $fields;
-	
-	$this->select($column)->from($table);
-	
-	if ( ! empty( $where ) ) {
-	    
-	    $separator = 'AND';
-	    foreach($where as $key => $val){
-		
-		if( end($where) == $val)
-		    $separator = false;
-		
-		$this->where($key, '=', $val, $separator);
-	    }
-	}
-	
-	return $this->getOne();
-	
+    if( ! $table )
+        return $this->row( $this->command() );
+    
+    $column = '*';
+    
+    if( ! empty($fields) )
+        $column = $fields;
+    
+    $this->select($column)->from($table);
+    
+    if ( ! empty( $where ) ) {
+        
+        $separator = 'AND';
+        foreach($where as $key => $val){
+        
+        if( end($where) == $val)
+            $separator = false;
+        
+        $this->where($key, '=', $val, $separator);
+        }
+    }
+    
+    return $this->getOne();
+    
     }
     
     /**
@@ -521,9 +521,9 @@ class Pgsql implements Interfaces\Database
      */
     public function getVar( $query = null )
     {
-	if( is_null($query) )
-	    $query = $this->command();
-	
+    if( is_null($query) )
+        $query = $this->command();
+    
         $result = $this->row($query);
         $key = array_keys(get_object_vars($result));
         
@@ -538,9 +538,9 @@ class Pgsql implements Interfaces\Database
      */
     public function results($query, $type = 'object')
     {    
-	if( is_null($query) )
-	    $query = $this->command();
-	
+    if( is_null($query) )
+        $query = $this->command();
+    
         $result = $this->query($query);
         
         while ($row = pg_fetch_object($result, null, $this->instantiateClass)) {
@@ -552,9 +552,9 @@ class Pgsql implements Interfaces\Database
         }
         
         pg_free_result($result);
-	
-	if( ! isset($return) )
-	    return false;
+    
+    if( ! isset($return) )
+        return false;
         
         return $return;
     }
@@ -567,11 +567,11 @@ class Pgsql implements Interfaces\Database
      */
     public function row($query, $type = 'object')
     {
-	if( is_null($query) )
-	    $query = $this->command();
-	
-	if( is_null($this->link) )
-	    $this->init();
+    if( is_null($query) )
+        $query = $this->command();
+    
+    if( is_null($this->link) )
+        $this->init();
         
         $result = $this->query($query);
         $return = pg_fetch_object($result, null, $this->instantiateClass);
@@ -606,7 +606,7 @@ class Pgsql implements Interfaces\Database
      */
     public function insertId()
     {
-	return $this->getVar("SELECT LASTVAL() as ins_id");
+    return $this->getVar("SELECT LASTVAL() as ins_id");
     }
     
     /**
@@ -626,16 +626,16 @@ class Pgsql implements Interfaces\Database
         foreach ( (array) array_keys($data) as $k )
             $bits[] = "$k = '$data[$k]'";
         
-	if( ! empty($this->criteria) ){
-	    $criteria = implode(' ', $this->criteria);
-	    unset($this->criteria);
-	}
+    if( ! empty($this->criteria) ){
+        $criteria = implode(' ', $this->criteria);
+        unset($this->criteria);
+    }
         else if ( is_array( $where ) ){
             foreach ( $where as $c => $v )
                 $wheres[] = "$c = '" . $this->escape( $v ) . "'";
-	    
-	    $criteria =  implode( ' AND ', $wheres );
-	}
+        
+        $criteria =  implode( ' AND ', $wheres );
+    }
         else{
             return false;
         }
@@ -652,18 +652,18 @@ class Pgsql implements Interfaces\Database
      */
     public function delete($table, $where = null)
     {    
-	if( ! empty($this->criteria) ){
-	    $criteria = implode(' ', $this->criteria);
-	    unset($this->criteria);
-	}
-	
+    if( ! empty($this->criteria) ){
+        $criteria = implode(' ', $this->criteria);
+        unset($this->criteria);
+    }
+    
         elseif ( is_array( $where ) ){
             foreach ( $where as $c => $v )
                 $wheres[] = "$c = '" . $this->escape( $v ) . "'";
-	    
-	    $criteria = implode( ' AND ', $wheres );
-	}
-	
+        
+        $criteria = implode( ' AND ', $wheres );
+    }
+    
         else {
             return false;
         }
@@ -682,8 +682,8 @@ class Pgsql implements Interfaces\Database
             $error_str = sprintf('Database error %1$s for query %2$s made by %3$s', $this->lastError, $this->lastQuery, $caller);
         else
             $error_str = sprintf('Database error %1$s for query %2$s', $this->lastError, $this->lastQuery);
-	
-	RunException::outputError( $error_str );
+    
+    RunException::outputError( $error_str );
     }
     
     /**
@@ -693,7 +693,7 @@ class Pgsql implements Interfaces\Database
      */
     public function version()
     {
-	return $this->getVar("SELECT version() AS version");
+    return $this->getVar("SELECT version() AS version");
     }
     
     /**
@@ -703,7 +703,7 @@ class Pgsql implements Interfaces\Database
      */
     public function close()
     {
-	pg_close($this->link);
+    pg_close($this->link);
     }
     
 }
