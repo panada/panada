@@ -1,5 +1,6 @@
 Version 1.1.0 work in progress
 -------------------------------
+- New a475aba: Bug fix for "IN" database query with lowercase string
 - New 418b0bf: New redis auth method ref #56
 - New 86fab29: New getAllValue() method in Session Driver
 - Bug 1ad1359: Fix undefined APP constant in check.php file
