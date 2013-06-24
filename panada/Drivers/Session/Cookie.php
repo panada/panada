@@ -191,6 +191,23 @@ class Cookie
 	
 	return false;
     }
+
+    /**
+     * Get all session value.
+     *
+     * @return mix
+     */
+	 public function getAllValue() 
+	 {
+        $curentValues = $this->curentValues;
+        unset($curentValues['_d']);
+        
+       	if(empty($curentValues)) {
+            return false;
+			} else {
+				return $curentValues;
+			}
+	 }
     
     /**
      * Remove certain session value.
