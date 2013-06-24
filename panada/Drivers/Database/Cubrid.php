@@ -186,6 +186,8 @@ class Cubrid implements Interfaces\Database
 	    $value = " '$value'";
 	}
 	
+	$operator = strtoupper($operator);
+	
 	if( $operator == 'IN' )
 	    if( is_array($value) )
 		$value = "('".implode("', '", $value)."')";
