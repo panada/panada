@@ -453,7 +453,9 @@ class ActiveRecord {
             if( $cached = $this->cache->getValue( $cacheKey ) )
                 return $cached;
         
-            $results = $this->db->getAll();
+            if( ! $results = $this->db->getAll() )
+                return false;
+            
             $this->setInstantiateClass = false;
             
             if( count($results) == 1 ){
