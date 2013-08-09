@@ -1,5 +1,8 @@
 Version 1.1.0 work in progress
 -------------------------------
+- New 66c9631: Upate json composer type from library to project
+- New 48aecc4: Embrace composer autoloader by adding new method "composer" in Import class
+- Bug d2354be: Bug fix if no data return in method getAll within AR call
 - New a475aba: Bug fix for "IN" database query with lowercase string
 - New 418b0bf: New redis auth method ref #56
 - New 86fab29: New getAllValue() method in Session Driver
