@@ -47,4 +47,17 @@ class Import
         
         return $object;
     }
+    
+    /**
+     * Method to embrace composer native autoloader
+     */
+    public static function composer()
+    {
+        $config = Config::main();
+        
+        if( ! $file = $config['vendor']['path'].'autoload.php')
+            throw new RunException('Composer autoloader not exists in your vendor folder '.$config['vendor']['path']);
+        
+        require_once $file;
+    }
 }
