@@ -3,7 +3,7 @@
     "description": "High Performance PHP Framework",
     "keywords": ["php", "panada", "framework"],
     "homepage": "http://panadaframework.com/",
-    "type": "library",
+    "type": "project",
     "license": "BSD license",
     "authors": [
         {
