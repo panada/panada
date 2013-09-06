@@ -156,10 +156,10 @@ class Rest
 	foreach($this->requestHeaders as $key => $value)
 	    $this->setRequestHeaders[] = $key.': '.$value;
 	
-	$method				= strtoupper($method);
-        $urlSeparator			= ( parse_url( $uri, PHP_URL_QUERY ) ) ? '&' : '?';
-        $uri				= ( $method == 'GET' && ! empty($data) ) ? $uri . $urlSeparator . (is_array($data) ? http_build_query($data) : $data) : $uri;
-        $c				= curl_init();
+	$method		= strtoupper($method);
+        $urlSeparator	= ( parse_url( $uri, PHP_URL_QUERY ) ) ? '&' : '?';
+        $uri		= ( $method == 'GET' && ! empty($data) ) ? $uri . $urlSeparator . (is_array($data) ? http_build_query($data) : $data) : $uri;
+        $c		= curl_init();
 	
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($c, CURLOPT_URL, $uri);

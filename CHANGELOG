@@ -1,6 +1,7 @@
 Version 1.1.0 work in progress
 -------------------------------
-- New 66c9631: Upate json composer type from library to project
+- New 2e2251e: Update vendor method so it can call method constant from vendor class as refer to #61 issue
+- New 66c9631: Update json composer type from library to project
 - New 48aecc4: Embrace composer autoloader by adding new method "composer" in Import class
 - Bug d2354be: Bug fix if no data return in method getAll within AR call
 - New a475aba: Bug fix for "IN" database query with lowercase string

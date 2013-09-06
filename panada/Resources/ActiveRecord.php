@@ -52,10 +52,19 @@ class ActiveRecord {
         // If first argument is set, it could be string or array data type.
         if( isset($args[0]) && ! empty($args[0]) ){
             
-            if( is_array($args[0]) )
+            if( is_array($args[0]) ) {
+                
                 $newData = $args[0];
-            else
+                
+                // we got a primaryKey with value, si it should be update operation
+                if( isset($newData[$this->primaryKey]) ) {
+                    $primaryKey = $this->primaryKey;
+                    $this->$primaryKey = $newData[$this->primaryKey];
+                }
+            }
+            else {
                 $this->connection = $args[0];
+            }
             
             // If second argument are set, its a db connection name.
             if( isset($args[1]) )
