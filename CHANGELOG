@@ -1,5 +1,8 @@
 Version 1.1.0 work in progress
 -------------------------------
+- Enh 30a34bd: Enhance validation class for displaying a name
+- Enh be5d5ae: Enhance $db property so inheritance class can use the db resource
+- New f63e03f: Automatic detect for insert or update operation in instantiate for AR model class
 - New 2e2251e: Update vendor method so it can call method constant from vendor class as refer to #61 issue
 - New 66c9631: Update json composer type from library to project
 - New 48aecc4: Embrace composer autoloader by adding new method "composer" in Import class
