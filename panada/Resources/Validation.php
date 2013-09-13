@@ -15,11 +15,11 @@ class Validation
     private
 	$errorMessages = array(),
 	$rules = array(),
-	$validValues = array(),
 	$unsetValue = false;
     
     protected
-	$ruleErrorMessages = array();
+	$ruleErrorMessages = array(),
+	$validValues = array();
 	
     public function __construct()
     {
