@@ -20,12 +20,12 @@ class ActiveRecord {
         MANY_MANY = 4;
     
     protected
+        $db,
         $table,
         $connection = 'default',
         $setInstantiateClass = false;
     
     private
-        $db,
         $fields = array(),
         $condition = array(),
         $limit = null,
