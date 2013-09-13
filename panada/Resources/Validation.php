@@ -113,12 +113,12 @@ class Validation
         //Only permit a-z, 0-9 and .,'" space this is enough for a name right?
         
         //'/[^a-zA-Z0-9s -_.,]/'
-        $string = $this->trimLower($string);
+        $string = trim($string);
         $string = strip_tags($string);
         $string = stripslashes($string);
         $string = preg_replace( '/[^a-zA-Z0-9s .,"\']/', '', $string);
         
-        return ucwords($string);
+        return $string;
     }
     
     /**
