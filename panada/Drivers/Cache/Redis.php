@@ -35,8 +35,6 @@ class Redis extends \Redis implements Interfaces\Cache
 
 	if(isset($config['password']) && $config['password'])
 	    $this->auth($config['password']);
-        
-	$this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
     }
     
     /**
@@ -47,9 +45,15 @@ class Redis extends \Redis implements Interfaces\Cache
      * @return void
      */
     public function setValue( $key, $value, $expire = 0, $namespace = false )
-    {    
+    {
+	$this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
+	
 	$key = $this->keyToNamespace($key, $namespace);
-        return $this->set($key, $value, $expire);
+        $return = $this->set($key, $value, $expire);
+	
+	$this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_NONE);
+	
+	return $return;
     }
     
     /**
@@ -63,9 +67,15 @@ class Redis extends \Redis implements Interfaces\Cache
      * @return void
      */
     public function addValue( $key, $value, $expire = 0, $namespace = false )
-    {    
+    {
+	$this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
+	
 	$key = $this->keyToNamespace($key, $namespace);
-	return $this->setnx($key, $value, $expire); 
+	$return = $this->setnx($key, $value, $expire);
+	
+	$this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_NONE);
+	
+	return $return;
     }
     
     /**
@@ -78,9 +88,15 @@ class Redis extends \Redis implements Interfaces\Cache
      * @return void
      */
     public function updateValue( $key, $value, $expire = 0, $namespace = false )
-    {    
+    {
+	$this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
+	
 	$key = $this->keyToNamespace($key, $namespace);
-	return $this->setValue($key, $value, $expire);
+	$return = $this->setValue($key, $value, $expire);
+    
+	$this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_NONE);
+	
+	return $return;
     }
     
     /**
@@ -89,9 +105,15 @@ class Redis extends \Redis implements Interfaces\Cache
      * @return mix
      */
     public function getValue( $key, $namespace = false )
-    {    
+    {
+	$this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
+	
 	$key = $this->keyToNamespace($key, $namespace);
-        return $this->get($key);
+        $return = $this->get($key);
+	
+	$this->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_NONE);
+	
+	return $return;
     }
     
     /**
