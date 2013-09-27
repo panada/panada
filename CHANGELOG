@@ -1,5 +1,6 @@
 Version 1.1.0 work in progress
 -------------------------------
+- Enh 8300481: Use serialize option only for native Panada cache method only. This is for consistency with other Redis client driver
 - Enh db7c039: Add pagination page status
 - Enh 30a34bd: Enhance validation class for displaying a name
 - Enh be5d5ae: Enhance $db property so inheritance class can use the db resource
