@@ -340,6 +340,9 @@ class Upload
         // Save mime type.
         $mime = self::getMimeTypes($name);
         $this->getFileInfo['mime']        = $mime['type'];
+        // Save file size.
+        $this->getFileInfo['size']        = $this->file['size'];
+        
         
 	$file_path  = $this->folderLocation . '/' . $name;
         
