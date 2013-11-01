@@ -159,7 +159,10 @@ class ActiveRecord {
      *
      * @return booelan
      */
-    public function save(){
+    public function save( $data = false ) {
+        
+        if( $data && is_array($data) )
+            $this->fields = $data;
         
         $primaryKey = $this->primaryKey;
         
