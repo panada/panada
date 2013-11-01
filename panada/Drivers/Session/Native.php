@@ -48,6 +48,11 @@ class Native implements Interfaces\Session
     public $sessionCookieDomain = '';
     
     /**
+     * @var string	When true the cookie will be made accessible only through the HTTP protocol.
+     */
+    public $sessionCookieHTTTPOnly = true;
+    
+    /**
      * @var string	Where we store the session? file (PHP native) or db.
      */
     public $sessionStore = 'native';
@@ -76,7 +81,8 @@ class Native implements Interfaces\Session
 	    $this->sessionCookieExpire,
 	    $this->sessionCookiePath,
 	    $this->sessionCookieDomain,
-	    $this->sessionCookieSecure
+	    $this->sessionCookieSecure,
+	    $this->sessionCookieHTTTPOnly
 	);
 	
         \session_name($this->sessionName);

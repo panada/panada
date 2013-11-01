@@ -18,7 +18,8 @@ class Cookie
 	$sessionCookiePath = '/',
 	$sessionCookieSecure = false,
 	$sessionCookieDomain = '',
-	$cookieChekSumName = 'chs';
+	$cookieChekSumName = 'chs',
+	$sessionCookieHTTTPOnly = true;
     
     protected
 	$hashKey = 'my_key',
@@ -145,7 +146,8 @@ class Cookie
             time() + $this->sessionCookieExpire,
             $this->sessionCookiePath,
             $this->sessionCookieDomain,
-            $this->sessionCookieSecure
+            $this->sessionCookieSecure,
+	    $this->sessionCookieHTTTPOnly
         );
     }
     
