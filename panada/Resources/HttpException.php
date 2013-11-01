@@ -29,7 +29,10 @@ class HttpException extends \Exception
     }
     
     public static function outputError($message = null)
-    {    
+    {
+	if(PHP_SAPI == 'cli')
+	    exit($message."\n");
+	
         // Write the error to log file
 	@error_log('Error 404 Page Not Found: '.$_SERVER['REQUEST_URI']);
         
