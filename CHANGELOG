@@ -1,5 +1,8 @@
 Version 1.1.0 work in progress
 -------------------------------
+- Bug 3af46ac: Fix error message in CLI mode
+- Enh f251e39: Enhance save method to except array data as an argument
+- Enh 600ce35: Enhance session cookie only work in http protocol only
 - Enh 8300481: Use serialize option only for native Panada cache method only. This is for consistency with other Redis client driver
 - Enh db7c039: Add pagination page status
 - Enh 30a34bd: Enhance validation class for displaying a name
