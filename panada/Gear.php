@@ -46,6 +46,15 @@ final class Gear
         $prefix = explode('\\', $file);
 
         switch ($prefix[0]) {
+            case 'Models':
+                $folder = APP;
+                break;
+            case 'Libraries':
+                $folder = APP;
+                break;
+            case 'Controllers':
+                $folder = APP;
+                break;
             case 'Resources':
                 $folder = GEAR;
                 break;
@@ -56,7 +65,14 @@ final class Gear
                 $folder = $this->config['main']['module']['path'];
                 break;
             default:
-                $folder = APP;
+                if( ! isset($this->config['main']['namespace']) )
+                    throw new Resources\RunException('Resource '.$file.' not available!');
+                
+                if( ! isset($this->config['main']['namespace'][$prefix[0]]) )
+                    throw new Resources\RunException('Resource '.$file.' not available!');
+                
+                $folder = $this->config['main']['namespace'][$prefix[0]];
+                
                 break;
         }
 

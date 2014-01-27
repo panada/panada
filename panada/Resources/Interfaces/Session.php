@@ -14,6 +14,7 @@ interface Session
 {    
     public function setValue( $name, $value = '' );
     public function getValue( $name );
+    public function getAllValue();
     public function deleteValue( $name );
     public function regenerateId();
     public function destroy();

@@ -1,5 +1,25 @@
 Version 1.1.0 work in progress
 -------------------------------
+- New 34983a0; Add defined namespace config to load external libs
+- Bug 3af46ac: Fix error message in CLI mode
+- Enh f251e39: Enhance save method to except array data as an argument
+- Enh 600ce35: Enhance session cookie only work in http protocol only
+- Enh 8300481: Use serialize option only for native Panada cache method only. This is for consistency with other Redis client driver
+- Enh db7c039: Add pagination page status
+- Enh 30a34bd: Enhance validation class for displaying a name
+- Enh be5d5ae: Enhance $db property so inheritance class can use the db resource
+- New f63e03f: Automatic detect for insert or update operation in instantiate for AR model class
+- New 2e2251e: Update vendor method so it can call method constant from vendor class as refer to #61 issue
+- New 66c9631: Update json composer type from library to project
+- New 48aecc4: Embrace composer autoloader by adding new method "composer" in Import class
+- Bug d2354be: Bug fix if no data return in method getAll within AR call
+- New a475aba: Bug fix for "IN" database query with lowercase string
+- New 418b0bf: New redis auth method ref #56
+- New 86fab29: New getAllValue() method in Session Driver
+- Bug 1ad1359: Fix undefined APP constant in check.php file
+- New 4f5c3b6: Add image multiple processing in one upload process
+- Bug 58327fd: Fix for issue #58
+- Bug 67ae4b4: Fix error when generate $cacheKey for array value in Resource\ActiveRecord::get() method
 - Bug 5e88f22: Fix typo for "connect" word
 - Bug d096fca: Fix indentation
 - Bug b026cd1: Fix PGDriver for encoding option

@@ -20,12 +20,12 @@ class ActiveRecord {
         MANY_MANY = 4;
     
     protected
+        $db,
         $table,
         $connection = 'default',
         $setInstantiateClass = false;
     
     private
-        $db,
         $fields = array(),
         $condition = array(),
         $limit = null,
@@ -52,10 +52,19 @@ class ActiveRecord {
         // If first argument is set, it could be string or array data type.
         if( isset($args[0]) && ! empty($args[0]) ){
             
-            if( is_array($args[0]) )
+            if( is_array($args[0]) ) {
+                
                 $newData = $args[0];
-            else
+                
+                // we got a primaryKey with value, si it should be update operation
+                if( isset($newData[$this->primaryKey]) ) {
+                    $primaryKey = $this->primaryKey;
+                    $this->$primaryKey = $newData[$this->primaryKey];
+                }
+            }
+            else {
                 $this->connection = $args[0];
+            }
             
             // If second argument are set, its a db connection name.
             if( isset($args[1]) )
@@ -150,7 +159,10 @@ class ActiveRecord {
      *
      * @return booelan
      */
-    public function save(){
+    public function save( $data = false ) {
+        
+        if( $data && is_array($data) )
+            $this->fields = $data;
         
         $primaryKey = $this->primaryKey;
         
@@ -231,7 +243,11 @@ class ActiveRecord {
         // Its time for user defined condition implementation.
         if( ! empty($this->condition) ){
             foreach($this->condition as $condition){
-                $cacheKey .= $condition[0].$condition[1].$condition[2].$condition[3];
+                if(is_array($condition[2]))
+                    $cacheKey .= $condition[0].$condition[1].http_build_query($condition[2]).$condition[3];
+                else
+                    $cacheKey .= $condition[0].$condition[1].$condition[2].$condition[3];
+                
                 $this->db->where($condition[0], $condition[1], $condition[2], $condition[3]);
             }
             
@@ -449,7 +465,9 @@ class ActiveRecord {
             if( $cached = $this->cache->getValue( $cacheKey ) )
                 return $cached;
         
-            $results = $this->db->getAll();
+            if( ! $results = $this->db->getAll() )
+                return false;
+            
             $this->setInstantiateClass = false;
             
             if( count($results) == 1 ){

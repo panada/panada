@@ -216,6 +216,8 @@ class Mysql implements Interfaces\Database
 	    $value = " '$value'";
 	}
 	
+	$operator = strtoupper($operator);
+	
 	if( $operator == 'IN' )
 	    if( is_array($value) )
 		$value = "('".implode("', '", $value)."')";
@@ -534,17 +536,9 @@ class Mysql implements Interfaces\Database
 	
 	$this->select($column)->from($table);
 	
-	if ( ! empty( $where ) ) {
-	    
-	    $separator = 'AND';
-	    foreach($where as $key => $val){
-		
-		if( end($where) == $val)
-		    $separator = false;
-		
-		$this->where($key, '=', $val, $separator);
-	    }
-	}
+	if ( ! empty( $where ) )
+	    foreach($where as $key => $val)
+		$this->where($key, '=', $val, 'AND');
 	
 	return $this->getOne();
 	

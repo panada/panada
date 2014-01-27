@@ -9,6 +9,7 @@
  */
 
 define('INDEX_FILE', basename(__FILE__));
+define('APP', dirname(__FILE__) . '/');
 define('GEAR', '../panada/');
 define('DS', DIRECTORY_SEPARATOR);
 define('THISPATH', dirname(__FILE__));

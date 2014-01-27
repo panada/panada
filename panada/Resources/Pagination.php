@@ -139,7 +139,7 @@ class Pagination
         if ( $this->prevNext && $this->current && 1 < $this->current ) {
            
             $link         = str_replace('%#%', $this->current - 1, $this->base);
-            $paging_url[] = ( $this->noHref )? array('link' => $link, 'value' => $this->prevText) : '<a href="'.$link.'">'.$this->prevText.'</a>';
+            $paging_url[] = ( $this->noHref )? array('link' => $link, 'value' => $this->prevText, 'active' => false) : '<a href="'.$link.'">'.$this->prevText.'</a>';
             
         }
         
@@ -149,7 +149,7 @@ class Pagination
                 
                 if($this->showNumber){
                     
-                    $paging_url[] = ( $this->noHref )? array('link' => '', 'value' => $n) : '<span>'.$n.'</span>';
+                    $paging_url[] = ( $this->noHref )? array('link' => '', 'value' => $n, 'active' => true) : '<span>'.$n.'</span>';
                     $dots = true;
                 }
             }
@@ -162,13 +162,13 @@ class Pagination
                     
                     if($this->showNumber){
                         
-                        $paging_url[] = ( $this->noHref )? array('link' => $link, 'value' => $n) : '<a href="'.$link.'">'.$n.'</a>';
+                        $paging_url[] = ( $this->noHref )? array('link' => $link, 'value' => $n, 'active' => false) : '<a href="'.$link.'">'.$n.'</a>';
                         $dots = true;
                     }
                 }
                 elseif ( $dots && !$this->showAll ) {
                     
-                    $paging_url[] = ( $this->noHref )? array('link' => '', 'value' => $this->groupSeparator) : '<span>'.$this->groupSeparator.'</span>';
+                    $paging_url[] = ( $this->noHref )? array('link' => '', 'value' => $this->groupSeparator, 'active' => false) : '<span>'.$this->groupSeparator.'</span>';
                     $dots = false;
                 }
             }
@@ -180,7 +180,7 @@ class Pagination
             $link           = str_replace('%_%', $this->format, $this->base);
             $link           = str_replace('%#%', $this->current + 1, $link);
             
-            $paging_url[]   = ( $this->noHref )? array('link' => $link, 'value' => $this->nextText) : '<a href="'.$link.'">'.$this->nextText.'</a>';
+            $paging_url[]   = ( $this->noHref )? array('link' => $link, 'value' => $this->nextText, 'active' => false) : '<a href="'.$link.'">'.$this->nextText.'</a>';
         }
         
         return $paging_url;

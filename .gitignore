@@ -1,0 +1,6 @@
+*.sw*
+.gitignore
+featuresTestter/*
+panada/vendors/*
+documentation/*
+.DS_Store
