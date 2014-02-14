@@ -378,7 +378,7 @@ class Mysql implements Interfaces\Database
 	
 	if( ! empty($this->criteria) ){
 	    $cr = implode(' ', $this->criteria);
-	    $query .= ' WHERE ' . rtrim($cr, 'AND');
+	    $query .= ' WHERE ' . rtrim(rtrim($cr, 'AND'), 'OR');
 	    $this->criteria = array();
 	}
 	
