@@ -1,5 +1,6 @@
 Version 1.1.0 work in progress
 -------------------------------
+- Bug 14ba1a3: Bug fix for URI routing in numbers cPanel base apache
 - Bug 66f50b6: Bug fix for query builder for "OR" operator in criteria string
 - Enh 30d04af: exit with an error code in cli mode and re-format error message
 - New 34983a0: Add defined namespace config to load external libs
