@@ -1,6 +1,7 @@
 Version 1.1.0 work in progress
 -------------------------------
-- New 34983a0; Add defined namespace config to load external libs
+- Bug 66f50b6: Bug fix for query builder for "OR" operator in criteria string
+- New 34983a0: Add defined namespace config to load external libs
 - Bug 3af46ac: Fix error message in CLI mode
 - Enh f251e39: Enhance save method to except array data as an argument
 - Enh 600ce35: Enhance session cookie only work in http protocol only
