@@ -34,12 +34,13 @@ final class Uri
 	    return;
 	}
 	
-	$selfArray      		= explode('/', rtrim($_SERVER['PHP_SELF'], '/'));
-	$selfKey        		= array_search(INDEX_FILE, $selfArray);
-	$this->pathUri  		= array_slice($selfArray, ($selfKey + 1));
-	$this->baseUri  		= $this->isHttps() ? 'https://':'http://';
-	$this->baseUri			.= $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';
-	$this->defaultController	= self::$staticDefaultController;
+	$pathInfo		= isset($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO']:'';
+	$selfArray      	= explode('/', rtrim($_SERVER['PHP_SELF'].$pathInfo, '/'));
+	$selfKey        	= array_search(INDEX_FILE, $selfArray);
+	$this->pathUri  	= array_slice($selfArray, ($selfKey + 1));
+	$this->baseUri  	= $this->isHttps() ? 'https://':'http://';
+	$this->baseUri		.= $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';
+	$this->defaultController= self::$staticDefaultController;
     }
 
     /**
