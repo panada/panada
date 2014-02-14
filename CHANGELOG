@@ -1,4 +1,4 @@
-Version 1.1.0 work in progress
+Version 1.1.0-alfa Feb 14, 2014
 -------------------------------
 - Bug 14ba1a3: Bug fix for URI routing in numbers cPanel base apache
 - Bug 66f50b6: Bug fix for query builder for "OR" operator in criteria string
