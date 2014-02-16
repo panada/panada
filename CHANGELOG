@@ -1,3 +1,8 @@
+Version 1.1.0-beta work in progress
+-----------------------------------
+- Enh 62c6227: Centralized repeated method and store it in abstract class
+- Enh aa29c25: Add new abstraction for all sql db driver
+
 Version 1.1.0-alfa Feb 14, 2014
 -------------------------------
 - Bug 14ba1a3: Bug fix for URI routing in numbers cPanel base apache
