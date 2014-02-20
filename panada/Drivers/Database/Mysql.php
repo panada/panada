@@ -174,25 +174,40 @@ class Mysql extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\Da
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
      */
-    public function results($query, $type = 'object')
-    {    
+    public function results($query, $returnType = false)
+    {
+	$return = false;
+	
+	if($returnType)
+	    $this->returnType = $returnType;
+	
 	if( is_null($query) )
 	    $query = $this->command();
 	
         $result = $this->query($query);
-        
-        while ($row = mysql_fetch_object($result, $this->instantiateClass)) {
-            
-            if($type == 'array')
-                $return[] = (array) $row;
-            else
-                $return[] = $row;
-        }
-        
-        mysql_free_result($result);
-        
-	if( ! isset($return) )
-	    return false;
+	
+	if($returnType == 'object') {
+	    
+	    while ($row = mysql_fetch_object($result, $this->instantiateClass))
+		$return[] = $row;
+	    
+	    mysql_free_result($result);
+	    
+	    return $return;
+	}
+	
+	if($returnType == 'iterator')
+	    return $result;
+	
+	if($returnType == 'array') {
+	    
+	    while ($row = mysql_fetch_assoc($result))
+		$return[] = $row;
+	    
+	    mysql_free_result($result);
+	    
+	    return $return;
+	}
 	
         return $return;
     }
@@ -203,8 +218,11 @@ class Mysql extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\Da
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
      */
-    public function row($query, $type = 'object')
+    public function row($query, $returnType = false)
     {
+	if($returnType)
+	    $this->returnType = $returnType;
+	
 	if( is_null($query) )
 	    $query = $this->command();
 	
@@ -214,10 +232,10 @@ class Mysql extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\Da
         $result = $this->query($query);
         $return = mysql_fetch_object($result, $this->instantiateClass);
         
-        if($type == 'array')
-            return (array) $return;
-        else
+        if($this->returnType == 'object')
             return $return;
+	
+	return (array) $return;
     }
     
     /**

@@ -166,27 +166,42 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      * Get multiple records
      *
      * @param string $query The sql query
-     * @param string $type return data type option. the default is "object"
+     * @param string $returnType return data type option: object, array and iterator (pointer)
      */
-    public function results($query, $type = 'object')
-    {    
+    public function results($query, $returnType = false)
+    {
+	$return = false;
+	
+	if($returnType)
+	    $this->returnType = $returnType;
+	
 	if( is_null($query) )
 	    $query = $this->command();
 	
         $result = $this->query($query);
-        
-        while ($row = mysqli_fetch_object($result, $this->instantiateClass)) {
-            
-            if($type == 'array')
-                $return[] = (array) $row;
-            else
-                $return[] = $row;
-        }
-        
-        mysqli_free_result($result);
-        
-	if( ! isset($return) )
-	    return false;
+	
+	if($this->returnType == 'object') {
+	    
+	    while ($row = mysqli_fetch_object($result, $this->instantiateClass))
+		$return[] = $row;
+	    
+	    mysqli_free_result($result);
+	    
+	    return $return;
+	}
+	
+	if($this->returnType == 'iterator')
+	    return $result;
+	
+	if($this->returnType == 'array') {
+	    
+	    while ($row = mysqli_fetch_assoc($result))
+		$return[] = $row;
+	    
+	    mysqli_free_result($result);
+	    
+	    return $return;
+	}
 	
         return $return;
     }
@@ -197,8 +212,11 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
      */
-    public function row($query, $type = 'object')
+    public function row($query, $returnType = false)
     {
+	if($returnType)
+	    $this->returnType = $returnType;
+	
 	if( is_null($query) )
 	    $query = $this->command();
 	
@@ -208,10 +226,10 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
         $result = $this->query($query);
         $return = mysqli_fetch_object($result, $this->instantiateClass);
         
-        if($type == 'array')
-            return (array) $return;
-        else
+        if($this->returnType == 'object')
             return $return;
+	
+	return (array) $return;
     }
     
     /**

@@ -161,26 +161,41 @@ class Cubrid extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
      */
-    public function results($query, $type = 'object')
-    {    
+    public function results($query, $returnType = false)
+    {
+	$return = false;
+	
+	if($returnType)
+	    $this->returnType = $returnType;
+	
 	if( is_null($query) )
 	    $query = $this->command();
 	
         $result = $this->query($query);
-        
-        while ($row = cubrid_fetch_object($result, $this->instantiateClass)) {
-            
-            if($type == 'array')
-                $return[] = (array) $row;
-            else
-                $return[] = $row;
-        }
-        
-        cubrid_close_request($result);
-        
-        if( ! isset($return) )
-	    return false;
-        
+	
+	if($returnType == 'object') {
+	    
+	    while ($row = cubrid_fetch_object($result, $this->instantiateClass))
+		$return[] = $row;
+	    
+	    cubrid_close_request($result);
+	    
+	    return $return;
+	}
+	
+	if($returnType == 'iterator')
+	    return $result;
+	
+	if($returnType == 'array') {
+	    
+	    while ($row = cubrid_fetch_assoc($result))
+		$return[] = $row;
+	    
+	    cubrid_close_request($result);
+	    
+	    return $return;
+	}
+	
         return $return;
     }
     
@@ -190,8 +205,11 @@ class Cubrid extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
      */
-    public function row($query, $type = 'object')
+    public function row($query, $returnType = false)
     {
+	if($returnType)
+	    $this->returnType = $returnType;
+	
 	if( is_null($query) )
 	    $query = $this->command();
 	
@@ -201,10 +219,10 @@ class Cubrid extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
         $result = $this->query($query);
         $return = cubrid_fetch_object($result, $this->instantiateClass);
         
-        if($type == 'array')
-            return (array) $return;
-        else
+        if($this->returnType == 'object')
             return $return;
+	
+	return (array) $return;
     }
     
     /**

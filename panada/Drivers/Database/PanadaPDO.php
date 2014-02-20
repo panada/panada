@@ -141,24 +141,31 @@ class PanadaPDO extends \Drivers\Abstraction\Sql implements \Resources\Interface
 	 * @param string $query The sql query
 	 * @param string $type return data type option. the default is "object"
 	 */
-	public function results( $query, $type = 'object' )
-	{	
+	public function results( $query, $returnType = false )
+	{
+		$return = false;
+		
+		if($returnType)
+			$this->returnType = $returnType;
+	    
 		if( is_null($query) )
 			$query = $this->command();
 			
 		$result = $this->query($query);
 		
-		while ($row = $result->fetch(PDO::FETCH_OBJ)) {
+		if($this->returnType == 'object' || $this->returnType == 'array' ) {
 			
-			if($type == 'array')
-				$return[] = (array) $row;
-			else
+			$fetch = $this->returnType == 'object' ? PDO::FETCH_OBJ : PDO::FETCH_ASSOC;
+			
+			while ( $row = $result->fetch($fetch) )
 				$return[] = $row;
+			
+			return $return;
 		}
 		
-		if( ! isset($return) )
-			return false;
-	
+		if($returnType == 'iterator')
+			return $result;
+		
 		return $return;
 	}
 	
@@ -168,8 +175,11 @@ class PanadaPDO extends \Drivers\Abstraction\Sql implements \Resources\Interface
 	 * @param string $query The sql query
 	 * @param string $type return data type option. the default is "object"
 	 */
-	public function row( $query, $type = 'object' )
-	{		
+	public function row( $query, $returnType = false )
+	{
+		if($returnType)
+			$this->returnType = $returnType;
+		
 		if( is_null($query) )
 			$query = $this->command();
 
@@ -177,12 +187,8 @@ class PanadaPDO extends \Drivers\Abstraction\Sql implements \Resources\Interface
 			$this->init();
 		
 		$result = $this->query($query);
-		$return = $result->fetch(PDO::FETCH_OBJ);
 		
-		if($type == 'array')
-			return (array) $return;
-		else
-			return $return;
+		return $result->fetch( $this->returnType == 'object' ? PDO::FETCH_OBJ : PDO::FETCH_ASSOC );
 	}
 	
 	/**

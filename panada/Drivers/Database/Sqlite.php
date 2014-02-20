@@ -135,8 +135,11 @@ class Sqlite extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
      */
-    public function results($query = null, $type = 'object')
-    {    
+    public function results($query = null, $returnType = false)
+    {
+	if($returnType)
+	    $this->returnType = $returnType;
+	
 	if( is_null($query) )
 	    $query = $this->command();
 	
@@ -145,24 +148,19 @@ class Sqlite extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
 	if( $result->numColumns() < 1 )
 	    return false;
 	
-        while ( $row = $result->fetchArray(SQLITE3_ASSOC) ) {
-            
-            if($type == 'object'){
-		
-		if($this->instantiateClass == 'stdClass' )
-		    $return[] = (object) $row;
-		else 
-		    $return[] = Tools::arrayToObject($row, $this->instantiateClass, false);
-            }
-            else{
-                $return[] = $row;
-            }
-        }
+	while ( $row = $result->fetchArray(SQLITE3_ASSOC) )
+	    $return[] = $row;
 	
-	if( ! isset($return) )
-	    return false;
-        
-        return $return;
+	if($returnType == 'object')
+	    return Tools::arrayToObject($return, $this->instantiateClass, false);
+	
+	if($returnType == 'iterator')
+	    return $result;
+	
+	if($returnType == 'array')
+	    return $return;
+	
+        return false;
     }
     
     /**
@@ -171,8 +169,11 @@ class Sqlite extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      * @param string $query The sql query
      * @param string $type return data type option. the default is "object"
      */
-    public function row($query = null, $type = 'object')
+    public function row($query = null, $returnType = false)
     {
+	if($returnType)
+	    $this->returnType = $returnType;
+	
 	if( is_null($query) )
 	    $query = $this->command();
 	
@@ -184,13 +185,10 @@ class Sqlite extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
         if( ! $return = $result->fetchArray(SQLITE3_ASSOC) )
 	    return false;
         
-        if($type == 'object')
-	    if($this->instantiateClass == 'stdClass')
-		return (object) $return;
-	    else
-		return Tools::arrayToObject($return, $this->instantiateClass, false);
-        else
-            return $return;
+        if($this->returnType == 'object')
+	    return Tools::arrayToObject($return, $this->instantiateClass, false);
+        
+        return $return;
     }
     
     /**
