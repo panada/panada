@@ -31,6 +31,7 @@ abstract class Sql
     protected $lastQuery;
     protected $lastError;
     protected $throwError = false;
+    protected $returnType = 'object'; // return data type option: object, array and iterator (pointer)
     public $insertId;
     public $clientFlags = 0;
     public $newLink = true;
@@ -325,6 +326,18 @@ abstract class Sql
     }
     
     /**
+     * Flag to get return type. The options is: object, array and iterator
+     *
+     * @param string $returnType
+     * @return object
+     */
+    public function fetchAs($returnType = 'object')
+    {
+	$this->returnType = $returnType;
+	return $this;
+    }
+    
+    /**
      * Previously called get_results.
      * 
      * @since Version 0.3.1
@@ -333,10 +346,13 @@ abstract class Sql
      * @param array
      * @return object
      */
-    public function getAll( $table = false, $where = array(), $fields = array() )
+    public function getAll( $table = false, $where = array(), $fields = array(), $returnType = false )
     {
 	if( ! $table )
 	    return $this->results( $this->command() );
+	
+	if($returnType)
+	    $this->returnType = $returnType;
 	
 	$column = '*';
 	
@@ -361,10 +377,13 @@ abstract class Sql
      * @param array
      * @return object
      */
-    public function getOne( $table = false, $where = array(), $fields = array() )
+    public function getOne( $table = false, $where = array(), $fields = array(), $returnType = false )
     {
 	if( ! $table )
 	    return $this->row( $this->command() );
+	
+	if($returnType)
+	    $this->returnType = $returnType;
 	
 	$column = '*';
 	
