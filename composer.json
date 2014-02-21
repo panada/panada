@@ -1,7 +1,7 @@
 {
-    "name": "panada/Panada",
+    "name": "panada/panada",
     "description": "High Performance PHP Framework",
-    "keywords": ["php", "panada", "framework"],
+    "keywords": ["php", "panada", "framework", "High Performance", "simple"],
     "homepage": "http://panadaframework.com/",
     "type": "project",
     "license": "BSD license",

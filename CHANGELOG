@@ -1,5 +1,7 @@
 Version 1.1.0-beta work in progress
 -----------------------------------
+- Enh dbfc219: Optimize db query and add iterator option support
+- New 94aa9fe: Add fetchAs type support. The options is: array, object or iterator
 - Enh 62c6227: Centralized repeated method and store it in abstract class
 - Enh aa29c25: Add new abstraction for all sql db driver
 
