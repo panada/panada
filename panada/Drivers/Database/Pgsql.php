@@ -85,7 +85,7 @@ class Pgsql extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\Da
      */
     public function begin()
     {
-	pg_exec($this->link, "begin");
+	pg_query($this->link, 'begin');
     }
     
     /**
@@ -95,7 +95,7 @@ class Pgsql extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\Da
      */
     public function commit()
     {
-	pg_exec($this->link, "commit");
+	pg_query($this->link, 'commit');
     }
     
     /**
@@ -105,7 +105,7 @@ class Pgsql extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\Da
      */
     public function rollback()
     {
-	pg_exec($this->link, "rollback");
+	pg_query($this->link, 'rollback');
     }
     
     /**
@@ -227,7 +227,7 @@ class Pgsql extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\Da
      */
     public function insertId()
     {
-	return $this->getVar("SELECT LASTVAL() as ins_id");
+	return $this->getVar('SELECT LASTVAL() as ins_id');
     }
     
     /**
@@ -237,7 +237,7 @@ class Pgsql extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\Da
      */
     public function version()
     {
-	return $this->getVar("SELECT version() AS version");
+	return $this->getVar('SELECT version() AS version');
     }
     
     /**
