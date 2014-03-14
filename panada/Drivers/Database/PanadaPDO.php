@@ -220,14 +220,4 @@ class PanadaPDO extends \Drivers\Abstraction\Sql implements \Resources\Interface
     {	
 	$this->link = null;
     }
-    
-    /**
-     * Get last query
-     *
-     * @return string
-     */
-    public function getLastQuery()
-    {	
-	return $this->lastQuery;
-    }
 }

@@ -511,4 +511,14 @@ abstract class Sql
 	
 	\Resources\RunException::outputError( $error_str );
     }
+    
+    /**
+     * Get last query
+     *
+     * @return string
+     */
+    public function getLastQuery()
+    {	
+	return $this->lastQuery;
+    }
 }
