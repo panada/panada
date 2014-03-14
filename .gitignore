@@ -4,3 +4,5 @@ featuresTestter/*
 panada/vendors/*
 documentation/*
 .DS_Store
+composer.phar
+composer.lock
