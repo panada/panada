@@ -1,5 +1,8 @@
-Version 1.1.0-beta work in progress
+Version 1.1.0-beta
 -----------------------------------
+- Bug 0b15dad: Bugfix for pg db driver
+- Enh 3c5c45d: Move getLastQuery Method to abstract class
+- Bug f48de0e: Bugfix: no data returned in DB results method
 - Enh dbfc219: Optimize db query and add iterator option support
 - New 94aa9fe: Add fetchAs type support. The options is: array, object or iterator
 - Enh 62c6227: Centralized repeated method and store it in abstract class
