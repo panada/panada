@@ -173,7 +173,7 @@ class Cubrid extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
 	
         $result = $this->query($query);
 	
-	if($returnType == 'object') {
+	if($this->returnType == 'object') {
 	    
 	    while ($row = cubrid_fetch_object($result, $this->instantiateClass))
 		$return[] = $row;
@@ -183,10 +183,10 @@ class Cubrid extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
 	    return $return;
 	}
 	
-	if($returnType == 'iterator')
+	if($this->returnType == 'iterator')
 	    return $result;
 	
-	if($returnType == 'array') {
+	if($this->returnType == 'array') {
 	    
 	    while ($row = cubrid_fetch_assoc($result))
 		$return[] = $row;

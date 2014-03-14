@@ -168,7 +168,7 @@ class Pgsql extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\Da
 	
         $result = $this->query($query);
 	
-	if($returnType == 'object') {
+	if($this->returnType == 'object') {
 	    
 	    while ($row = pg_fetch_object($result, null, $this->instantiateClass))
 		$return[] = $row;
@@ -178,10 +178,10 @@ class Pgsql extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\Da
 	    return $return;
 	}
 	
-	if($returnType == 'iterator')
+	if($this->returnType == 'iterator')
 	    return $result;
 	
-	if($returnType == 'array') {
+	if($this->returnType == 'array') {
 	    
 	    while ($row = pg_fetch_assoc($result))
 		$return[] = $row;

@@ -151,13 +151,13 @@ class Sqlite extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
 	while ( $row = $result->fetchArray(SQLITE3_ASSOC) )
 	    $return[] = $row;
 	
-	if($returnType == 'object')
+	if($this->returnType == 'object')
 	    return Tools::arrayToObject($return, $this->instantiateClass, false);
 	
-	if($returnType == 'iterator')
+	if($this->returnType == 'iterator')
 	    return $result;
 	
-	if($returnType == 'array')
+	if($this->returnType == 'array')
 	    return $return;
 	
         return false;
