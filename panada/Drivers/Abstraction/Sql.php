@@ -432,7 +432,7 @@ abstract class Sql
         foreach($data as $key => $val)
             $escaped_date[$key] = $this->escape($val);
         
-        return $this->query("INSERT INTO `$table` (`" . implode('`,`',$fields) . "`) VALUES ('".implode("','",$escaped_date)."')");
+        return $this->query("INSERT INTO $table (" . implode(',',$fields) . ") VALUES ('".implode("','",$escaped_date)."')");
     }
     
     /**
@@ -450,7 +450,7 @@ abstract class Sql
         
         $bits = $wheres = array();
         foreach ( (array) array_keys($data) as $k )
-            $bits[] = "`$k` = '$data[$k]'";
+            $bits[] = "$k = '$data[$k]'";
         
 	if( ! empty($this->criteria) ){
 	    $criteria = implode(' ', $this->criteria);
@@ -466,7 +466,7 @@ abstract class Sql
             return false;
         }
 	
-        return $this->query( "UPDATE `$table` SET " . implode( ', ', $bits ) . ' WHERE ' . $criteria );
+        return $this->query( "UPDATE $table SET " . implode( ', ', $bits ) . ' WHERE ' . $criteria );
     }
     
     /**
@@ -494,7 +494,7 @@ abstract class Sql
             return false;
         }
         
-        return $this->query( "DELETE FROM `$table` WHERE " . $criteria );
+        return $this->query( "DELETE FROM $table WHERE " . $criteria );
     }
     
     /**
