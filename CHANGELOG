@@ -1,5 +1,8 @@
 Version 1.1.0-beta
 -----------------------------------
+- Enh 8aa4222: Update error page become more responsive
+- Enh a5748d5: Change default MySQL driver to Mysqli
+- Bug de4216c: Fix read error flag type
 - Bug 0b15dad: Bugfix for pg db driver
 - Enh 3c5c45d: Move getLastQuery Method to abstract class
 - Bug f48de0e: Bugfix: no data returned in DB results method
