@@ -105,13 +105,12 @@ final class Uri
 	    
 	    if( $this->stripUriString($uriString) )
 		return $uriString;
-	    else
-		return false;
-	}
-	else {
 	    
-	    return $this->defaultController;
+	    throw new RunException('Invalid controller name: '.htmlentities($uriString));
 	}
+	
+	return $this->defaultController;
+	
     }
 
     /**
@@ -127,14 +126,12 @@ final class Uri
 
 	    if( $this->stripUriString($uriString) )
 		return $uriString;
-	    else
-		return '';
+	    
+	    return '';
     
-	    }
-	    else {
-    
-	    return $default;
 	}
+	
+	return $default;
     }
 
     /**
