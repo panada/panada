@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Error 404 - Page Not Found!</title>
 <style type="text/css">
 html{background:#ddd;;}
-body{background:#fff;color:#333;font-family:"Lucida Grande",Verdana,Arial,sans-serif;margin:1em auto;width:700px;padding:1em 2em;border-radius:11px;border:1px solid #999;}
+body{background:#fff;color:#333;font-family:"Lucida Grande",Verdana,Arial,sans-serif;margin:1em auto;width:70%;padding:1em 2em;border-radius:11px;border:1px solid #999;}
 a{color:#2583ad;text-decoration:none;}
 a:hover{color:#d54e21;}
 a img{border:0;}
