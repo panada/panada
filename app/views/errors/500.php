@@ -47,9 +47,9 @@ pre {
 <?php endif; ?>
 <p><strong>Debug Trace</strong></p>
 <?php if ($trace): ?>
-<code>
-<?php echo nl2br($trace) ?>
-</code>
+<pre>
+<?php echo str_replace(array('<pre>', '</pre>'), '',$trace) ?>
+</pre>
 <?php endif; ?>
 </div>
 <div id="foot">&nbsp;</div>
