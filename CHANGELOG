@@ -1,5 +1,7 @@
 Version 1.1.0-beta
 -----------------------------------
+- Enh 42db3c6: Enhance Uri class
+- Bug 7ab433c: Bug fix for empty controller name
 - Enh 8aa4222: Update error page become more responsive
 - Enh a5748d5: Change default MySQL driver to Mysqli
 - Bug de4216c: Fix read error flag type
