@@ -26,6 +26,10 @@ class Email
         */
         $rcptBcc = array(),
         /**
+        * @var string Define the Reply-To address.
+        */
+        $replyTo = null,
+        /**
         * @var string  Define email subject.
         */
         $subject = '',
@@ -127,7 +131,7 @@ class Email
         /**
          * @var string  Mailer useragent.
          */
-        $panadaXMailer = 'Panada Mailer Version 0.4';
+        $panadaXMailer = 'Panada Mailer Version 0.5';
     
     
     public function __construct()
@@ -210,6 +214,19 @@ class Email
             $this->rcptBcc = $this->strToArray($rcptBcc);
             $this->rcptBccString = implode(', ', $this->rcptBcc);
         }
+        
+        return $this;
+    }
+    
+    /**
+     * Reply-To
+     * 
+     * @param string
+     * @return object
+     */
+    public function replyTo($replyTo = null)
+    {    
+        $this->replyTo = $replyTo;
         
         return $this;
     }
@@ -599,26 +616,31 @@ class Email
     {    
         $fromName  = ($this->fromName != '') ? $this->fromName : $this->fromEmail;
         $headers['from']        = 'From: ' . $fromName . ' <' . $this->fromEmail . '>' . $this->breakLine;
-		if (count($this->rcptCc) > 0)
-			$headers['cc']	= 'Cc: ' . $this->rcptCcString . $this->breakLine;
-		if (count($this->rcptBcc) > 0 && $this->mailerType == 'native')
-			$headers['bcc']	= 'Bcc: ' . $this->rcptBccString . $this->breakLine;
+	
+        if (count($this->rcptCc) > 0)
+	    $headers['cc']	= 'Cc: ' . $this->rcptCcString . $this->breakLine;
+        
+        if (count($this->rcptBcc) > 0 && $this->mailerType == 'native')
+            $headers['bcc']	= 'Bcc: ' . $this->rcptBccString . $this->breakLine;
+        
+        if($this->replyTo)
+            $headers['replyTo']	= 'Reply-To: ' . $this->replyTo . $this->breakLine;
+        
         $headers['priority']    = 'X-Priority: '. $this->priority . $this->breakLine;
         $headers['mailer']      = 'X-Mailer: ' .$this->panadaXMailer . $this->breakLine;
         $headers['mime']        = 'MIME-Version: 1.0' . $this->breakLine;
-		
-		switch($this->messageType)
-		{
-			case 'plain':
-			case 'html':
-				$headers['cont_type']   = 'Content-type: text/'.$this->messageType.'; charset='.$this->charset.$this->breakLine;
-			break;
-			
-			case 'attach':
-				$headers['cont_type']   = 'Content-type: multipart/mixed; boundary='.$this->boundary . $this->breakLine;
-			break;
-		}
-		
+        
+        switch($this->messageType)
+        {
+            case 'plain':
+            case 'html':
+                $headers['cont_type']   = 'Content-type: text/'.$this->messageType.'; charset='.$this->charset.$this->breakLine;
+                break;
+            case 'attach':
+                $headers['cont_type']   = 'Content-type: multipart/mixed; boundary='.$this->boundary . $this->breakLine;
+                break;
+        }
+	
         if($this->mailerType == 'native') {
             $return = '';
             foreach($headers as $headers)
@@ -768,34 +790,34 @@ class Email
      */
     private function smtpAttach()
     {
-		$attachment = array();
-		$attachmentCount = count($this->attachment);
-		for ($i = 0; $i < $attachmentCount; $i++)
-		{
-			$filename = $this->attachment[$i];
+        $attachment = array();
+        $attachmentCount = count($this->attachment);
+        for ($i = 0; $i < $attachmentCount; $i++)
+        {
+            $filename = $this->attachment[$i];
 
-			// Not exist?
-			if (!file_exists($filename))
-			{
-				$this->debugMessages[] = 'Error: Attachment '.$filename.' not found' ;
-				return false;
-			}
-			
-			$fileContent = '';
-			$fp = fopen($filename, "r");
-			$fileContent = fread($fp, filesize($filename));
-			fclose($fp);
-			
-			$attachment[$i] = '--'.$this->boundary.$this->breakLine
-				.'Content-type: '.mime_content_type($filename).'; name='.basename($filename).$this->breakLine
-				.'Content-Disposition: attachment; filename='.basename($filename).$this->breakLine
-				.'Content-Transfer-Encoding: base64'.$this->breakLine.$this->breakLine;
-			$attachment[$i] .= chunk_split(base64_encode($fileContent));
-		}
-		
-		$attachmentBody = implode($this->breakLine, $attachment).$this->breakLine.'--'.$this->boundary.'--';
-		$this->writeCommand($attachmentBody . $this->breakLine);
-		return true;
+            // Not exist?
+            if (!file_exists($filename))
+            {
+                $this->debugMessages[] = 'Error: Attachment '.$filename.' not found' ;
+                return false;
+            }
+            
+            $fileContent = '';
+            $fp = fopen($filename, "r");
+            $fileContent = fread($fp, filesize($filename));
+            fclose($fp);
+            
+            $attachment[$i] = '--'.$this->boundary.$this->breakLine
+                    .'Content-type: '.mime_content_type($filename).'; name='.basename($filename).$this->breakLine
+                    .'Content-Disposition: attachment; filename='.basename($filename).$this->breakLine
+                    .'Content-Transfer-Encoding: base64'.$this->breakLine.$this->breakLine;
+            $attachment[$i] .= chunk_split(base64_encode($fileContent));
+        }
+        
+        $attachmentBody = implode($this->breakLine, $attachment).$this->breakLine.'--'.$this->boundary.'--';
+        $this->writeCommand($attachmentBody . $this->breakLine);
+        return true;
     }
     
 }

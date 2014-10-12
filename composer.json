@@ -1,6 +1,6 @@
 {
     "name": "panada/panada",
-    "description": "High Performance PHP Framework",
+    "description": "A PHP Framework for those who love simplicity and performance at the same time",
     "keywords": ["php", "panada", "framework", "High Performance", "simple"],
     "homepage": "http://panadaframework.com/",
     "type": "project",
