@@ -38,9 +38,13 @@ class Email
         */
         $message = '',
         /**
-        * @var string  Define email content type; plan or html.
+        * @var string  Define email content type; plain or html.
         */
         $messageType = 'plain',
+        /**
+        * @var string  Define alternative email content.
+        */
+        $altMessage = '',
         /**
         * @var string  Define sender's email.
         */
@@ -256,6 +260,19 @@ class Email
         
         return $this;
     }
+
+    /**
+     * ALTERNATIVE MESSAGE part
+     * 
+     * @param string | array
+     * @return object
+     */
+    public function altMessage($altMessage = '')
+    {    
+        $this->altMessage = $altMessage;
+        
+        return $this;
+    }
     
     /**
      * ATTACH part
@@ -311,6 +328,15 @@ class Email
             $this->rcptBccString = implode(', ', $this->rcptBcc);
         }
         
+        if($this->messageType == 'html') {
+            $this->formatMessage();
+            
+            if ( !$this->altMessageExist() ){
+                $this->altMessage = 'Your mail client does not support HTML email.';
+            }
+            
+        }
+
         if($this->smtpHost != '' || $this->mailerType == 'smtp') {
             
             $this->mailerType = 'smtp';
@@ -369,6 +395,34 @@ class Email
             else
                 return $this->cleanEmail(array($email));
         }
+    }
+    
+    /**
+     *  Check if alternative message is not empty.
+     *
+     * @return boolean
+     */
+    private function altMessageExist()
+    {    
+        return !empty($this->altMessage);
+    }
+
+    /**
+     *  Format message body based on content type
+     *
+     * @return void
+     */
+    private function formatMessage()
+    {    
+        $body = '--' . $this->boundary . $this->breakLine .
+            'Content-type: text/plain; charset=' . $this->charset . $this->breakLine .
+            'Content-Transfer-Encoding: ' . $this->encoding . $this->breakLine . $this->breakLine .
+            $this->altMessage . $this->breakLine . $this->breakLine;
+        $body .= '--' . $this->boundary . $this->breakLine .
+            'Content-type: text/html; charset=' . $this->charset . $this->breakLine .
+            'Content-Transfer-Encoding: ' . $this->encoding . $this->breakLine . $this->breakLine .
+            $this->message . $this->breakLine . $this->breakLine;
+        $this->message = $body;
     }
     
     /**
@@ -633,8 +687,10 @@ class Email
         switch($this->messageType)
         {
             case 'plain':
+                $headers['cont_type']   = 'Content-type: text/plain; charset='.$this->charset.$this->breakLine;
+                break;
             case 'html':
-                $headers['cont_type']   = 'Content-type: text/'.$this->messageType.'; charset='.$this->charset.$this->breakLine;
+                $headers['cont_type']   = 'Content-type: multipart/alternative; boundary='.$this->boundary . $this->breakLine;
                 break;
             case 'attach':
                 $headers['cont_type']   = 'Content-type: multipart/mixed; boundary='.$this->boundary . $this->breakLine;
