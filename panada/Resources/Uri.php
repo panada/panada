@@ -2,21 +2,21 @@
 /**
  * Handler for request and mapped into, controller, metohd and requests.
  *
- * @author	Iskandar Soesman <k4ndar@yahoo.com>
- * @link	http://panadaframework.com/
- * @license	http://www.opensource.org/licenses/bsd-license.php
- * @since	version 0.1
- * @package	Resources
+ * @package  Resources
+ * @link     http://panadaframework.com/
+ * @license  http://www.opensource.org/licenses/bsd-license.php
+ * @author   Iskandar Soesman <k4ndar@yahoo.com>
+ * @since    Version 0.1
  */
 namespace Resources;
 
 final class Uri
-{    
+{
     private $pathUri = array();
     public $baseUri;
     public $defaultController;
     public static $staticDefaultController = 'Home';
-    
+
     /**
      * Class constructor
      *
@@ -26,18 +26,18 @@ final class Uri
      */
     public function __construct()
     {
-	if(PHP_SAPI == 'cli'){
-	    $this->pathUri = array_slice($_SERVER['argv'], 1);
-	    return;
-	}
-	
-	$pathInfo		= isset($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO']:'';
-	$selfArray      	= explode('/', rtrim($_SERVER['PHP_SELF'].$pathInfo, '/'));
-	$selfKey        	= array_search(INDEX_FILE, $selfArray);
-	$this->pathUri  	= array_slice($selfArray, ($selfKey + 1));
-	$this->baseUri  	= $this->isHttps() ? 'https://':'http://';
-	$this->baseUri		.= $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';
-	$this->defaultController= self::$staticDefaultController;
+        if (PHP_SAPI == 'cli') {
+            $this->pathUri = array_slice($_SERVER['argv'], 1);
+            return;
+        }
+
+        $pathInfo = isset($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO'] : '';
+        $selfArray = explode('/', rtrim($_SERVER['PHP_SELF'] . $pathInfo, '/'));
+        $selfKey = array_search(INDEX_FILE, $selfArray);
+        $this->pathUri = array_slice($selfArray, ($selfKey + 1));
+        $this->baseUri = $this->isHttps() ? 'https://' : 'http://';
+        $this->baseUri .= $_SERVER['HTTP_HOST'] . implode('/', array_slice($selfArray, 0, $selfKey)) . '/';
+        $this->defaultController = self::$staticDefaultController;
     }
 
     /**
@@ -47,19 +47,19 @@ final class Uri
      */
     public function isHttps()
     {
-	if ( isset($_SERVER['HTTPS']) ) {
-	    
-	    if ( 'on' == strtolower($_SERVER['HTTPS']) )
-		return true;
-	    if ( '1' == $_SERVER['HTTPS'] )
-		return true;
-	}
-	elseif ( isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] ) ) {
-	    
-	    return true;
-	}
+        if (isset($_SERVER['HTTPS'])) {
+            if ('on' == strtolower($_SERVER['HTTPS'])) {
+                return true;
+            }
 
-	return false;
+            if ('1' == $_SERVER['HTTPS']) {
+                return true;
+            }
+        } elseif (isset($_SERVER['SERVER_PORT']) && ('443' == $_SERVER['SERVER_PORT'])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -70,11 +70,12 @@ final class Uri
      */
     public function removeQuery($path)
     {
-	$pathAr = explode('?', $path);
-	if(count($pathAr) > 0)
-	    $path = $pathAr[0];
-	
-	return $path;
+        $pathAr = explode('?', $path);
+        if (count($pathAr) > 0) {
+            $path = $pathAr[0];
+        }
+
+        return $path;
     }
 
     /**
@@ -85,10 +86,11 @@ final class Uri
      */
     public function path($segment = false)
     {
-	if( $segment !== false )
-	    return ( isset( $this->pathUri[$segment] ) && $this->pathUri[$segment] != INDEX_FILE ) ? $this->pathUri[$segment] : false;
-	
-	return $this->pathUri;
+        if ($segment !== false) {
+            return (isset($this->pathUri[$segment]) && $this->pathUri[$segment] != INDEX_FILE) ? $this->pathUri[$segment] : false;
+        }
+
+        return $this->pathUri;
     }
 
     /**
@@ -98,16 +100,16 @@ final class Uri
      */
     public function getClass()
     {
-	if( $uriString = $this->path(0) ){
-	    
-	    if( $this->stripUriString($uriString) )
-		return $uriString;
-	    
-	    throw new RunException('Invalid controller name: '.htmlentities($uriString));
-	}
-	
-	return $this->defaultController;
-	
+        if ($uriString = $this->path(0)) {
+            if ($this->stripUriString($uriString)) {
+                return $uriString;
+            }
+
+            throw new RunException('Invalid controller name: ' . htmlentities($uriString));
+        }
+
+        return $this->defaultController;
+
     }
 
     /**
@@ -117,18 +119,17 @@ final class Uri
      */
     public function getMethod($default = 'index')
     {
-	$uriString = $this->path(1);
-	
-	if( isset($uriString) && ! empty($uriString) ){
-	    
-	    if( $this->stripUriString($uriString) )
-		return $uriString;
-	    
-	    return '';
-	
-	}
-	
-	return $default;
+        $uriString = $this->path(1);
+
+        if (isset($uriString) && !empty($uriString)) {
+            if ($this->stripUriString($uriString)) {
+                return $uriString;
+            }
+
+            return '';
+        }
+
+        return $default;
     }
 
     /**
@@ -139,13 +140,14 @@ final class Uri
      */
     public function getRequests($segment = 2)
     {
-	$uriString = $this->path($segment);
-	
-	if( isset($uriString) )
-	    return array_slice($this->path(), $segment);
-	
-	return false;
-	
+        $uriString = $this->path($segment);
+
+        if (isset($uriString)) {
+            return array_slice($this->path(), $segment);
+        }
+
+        return false;
+
     }
 
     /**
@@ -156,9 +158,9 @@ final class Uri
      */
     public function stripUriString($uri)
     {
-	return ( ! preg_match('/[^a-zA-Z0-9_.-]/', $uri) ) ? true : false;
+        return (!preg_match('/[^a-zA-Z0-9_.-]/', $uri)) ? true : false;
     }
-    
+
     /**
      * Setter for default controller
      *
@@ -167,17 +169,17 @@ final class Uri
      */
     public function setDefaultController($defaultController)
     {
-	$this->defaultController = self::$staticDefaultController = $defaultController;
+        $this->defaultController = self::$staticDefaultController = $defaultController;
     }
-    
+
     /**
      * Getter for default controller
      */
     public function getDefaultController()
     {
-	return $this->defaultController;
+        return $this->defaultController;
     }
-    
+
     /**
      * Getter for baseUri
      *
@@ -185,6 +187,6 @@ final class Uri
      */
     public function getBaseUri()
     {
-	return $this->baseUri;
+        return $this->baseUri;
     }
 }

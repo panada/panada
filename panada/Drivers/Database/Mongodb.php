@@ -2,51 +2,50 @@
 /**
  * Panada MongoDB API.
  *
- * @package	Driver
- * @subpackage	Database
- * @author	Iskandar Soesman
- * @since	Version 0.2
+ * @package     Driver
+ * @subpackage  Database
+ * @author      Iskandar Soesman
+ * @since       Version 0.2
  */
 namespace Drivers\Database;
-use Resources\Tools as Tools,
-    Resources\RunException as RunException;
+
+use Resources\RunException as RunException;
+use Resources\Tools as Tools;
 
 class Mongodb extends \Mongo
-{    
-    private
-        $database,
-        $config,
-        $connection,
-        $criteria = array(),
-        $documents = array();
+{
+    private $database;
+    private $config;
+    private $connection;
+    private $criteria = array();
+    private $documents = array();
 
-    protected
-        $limit = null,
-        $offset = null,
-        $order = array();
-            	
-    public function __construct( $config, $connectionName )
-    {    
+    protected $limit = null;
+    protected $offset = null;
+    protected $order = array();
+
+    public function __construct($config, $connectionName)
+    {
         /**
-        * Makesure Mongo extension is enabled
-        */
-       if( ! class_exists('Mongo') )
-           throw new RunException('Mongo PECL extension that required by Mongodb Driver is not available.');
-        
+         * Makesure Mongo extension is enabled
+         */
+        if (!class_exists('Mongo')) {
+            throw new RunException('Mongo PECL extension that required by Mongodb Driver is not available.');
+        }
+
         $this->config = $config;
         $this->connection = $connectionName;
-        
+
         /**
          * $this->config['options'] is the mongodb connection option. Eg: array('replicaSet' => true, 'connect' => false)
          */
-	try {
-	    parent::__construct($this->config['host'], $this->config['options']);
-	}
-	catch(\MongoConnectionException $e) {
-	    RunException::outputError( 'Unable connect to database in <strong>'.$connectionName.'</strong> connection.' );
-	}
+        try {
+            parent::__construct($this->config['host'], $this->config['options']);
+        } catch (\MongoConnectionException $e) {
+            RunException::outputError('Unable connect to database in <strong>' . $connectionName . '</strong> connection.');
+        }
     }
-    
+
     /**
      * Define the db name
      *
@@ -54,11 +53,11 @@ class Mongodb extends \Mongo
      * @return object
      */
     public function database($database)
-    {    
+    {
         $this->config['database'] = $database;
         return $this;
     }
-    
+
     /**
      * Define the collection name
      *
@@ -66,12 +65,12 @@ class Mongodb extends \Mongo
      * @return object
      */
     public function collection($collection)
-    {    
+    {
         $database = $this->config['database'];
         $db = $this->$database;
         return $db->$collection;
     }
-    
+
     /**
      * Return the mongodb object after
      * the db selected
@@ -80,9 +79,9 @@ class Mongodb extends \Mongo
      */
     public function mongoObj()
     {
-	return $this->selectDB($this->config['database']);
+        return $this->selectDB($this->config['database']);
     }
-    
+
     /**
      * Wrap results from mongo output into object or array.
      *
@@ -91,39 +90,46 @@ class Mongodb extends \Mongo
      * @return boolean | object | array
      */
     public function cursorResults($cursor, $output = 'object')
-    {    
-        if( ! $cursor )
+    {
+        if (!$cursor) {
             return false;
-        
+        }
+
         $return = false;
-        
-        if( $output == 'array')
-	    return iterator_to_array($cursor);
-        
-        foreach ($cursor as $value)
+
+        if ($output == 'array') {
+            return iterator_to_array($cursor);
+        }
+
+        foreach ($cursor as $value) {
             $return[] = (object) Tools::arrayToObject($value);
-            
+        }
+
         return $return;
-        
+
     }
-    
+
     /**
      * Convert string time into mongo date
      *
      * @param string $str
      */
     public function date($str = null)
-    {    
-        if( is_null($str) )
+    {
+        if (is_null($str)) {
             return new \MongoDate();
-        
-        if( is_string($str) )
+        }
+
+        if (is_string($str)) {
             return new \MongoDate(strtotime($str));
-	
-	if( is_int($str) )
-	    return new \MongoDate($str);
+        }
+
+        if (is_int($str)) {
+            return new \MongoDate($str);
+        }
+
     }
-    
+
     /**
      * Convert a string unique identifier into MongoId object.
      *
@@ -131,10 +137,10 @@ class Mongodb extends \Mongo
      * @return object
      */
     public function _id($_id = null)
-    {    
+    {
         return new \MongoId($_id);
     }
-    
+
     /**
      * Method for select field(s) in a collection.
      *
@@ -142,17 +148,19 @@ class Mongodb extends \Mongo
      */
     public function select()
     {
-	$documents = func_get_args();
-	
-        if( ! empty($documents) )
- 	    $this->documents = $documents;
-	
-	if( is_array($documents[0]) )
-	    $this->documents = $documents[0];
+        $documents = func_get_args();
+
+        if (!empty($documents)) {
+            $this->documents = $documents;
+        }
+
+        if (is_array($documents[0])) {
+            $this->documents = $documents[0];
+        }
 
         return $this;
     }
-    
+
     /**
      * Get the collection name.
      *
@@ -160,11 +168,11 @@ class Mongodb extends \Mongo
      */
     public function from($collectionName)
     {
-	$this->collectionName = $collectionName;
-	
-	return $this;
+        $this->collectionName = $collectionName;
+
+        return $this;
     }
-    
+
     /**
      * Build criteria condition.
      * Translate SQL like operator into mongo string operator.
@@ -177,82 +185,96 @@ class Mongodb extends \Mongo
      */
     public function where($document, $operator = null, $value = null, $separator = false)
     {
-        if( is_array($document) )
+        if (is_array($document)) {
             $this->criteria = $document;
-        
-        if($operator == '=')
+        }
+
+        if ($operator == '=') {
             $this->criteria[$document] = $value;
-	
-	if($operator == '>')
+        }
+
+        if ($operator == '>') {
             $this->criteria[$document]['$gt'] = $value;
-	
-	if($operator == '<')
+        }
+
+        if ($operator == '<') {
             $this->criteria[$document]['$lt'] = $value;
-	
-	if($operator == '>=')
+        }
+
+        if ($operator == '>=') {
             $this->criteria[$document]['$gte'] = $value;
-	
-	if($operator == '<=')
+        }
+
+        if ($operator == '<=') {
             $this->criteria[$document]['$lte'] = $value;
-        
-	
+        }
+
         return $this;
     }
-    
+
     /**
      * Find more then one document
      *
      * @return mix
      */
-    public function getAll( $collection = false, $criteria = array(), $fields = array() )
+    public function getAll($collection = false, $criteria = array(), $fields = array())
     {
-	if( $collection )
-	    $this->collectionName = $collection;
-	
-	if( ! empty($criteria) )
-	    $this->criteria = $criteria;
-	
-	if( ! empty($fields) )
-	    $this->documents = $fields;
-        
-	$value = $this->collection($this->collectionName)->find( $this->criteria, $this->documents )->limit($this->limit)->skip($this->offset);
-	
-	if(count($this->order) > 0)
-	    $value = $value->sort($this->order);
-	
-	$this->criteria = $this->documents = array();
-	
-	if( ! empty($value) )
-	    return $this->cursorResults($value);
-	
-	return false;
+        if ($collection) {
+            $this->collectionName = $collection;
+        }
+
+        if (!empty($criteria)) {
+            $this->criteria = $criteria;
+        }
+
+        if (!empty($fields)) {
+            $this->documents = $fields;
+        }
+
+        $value = $this->collection($this->collectionName)->find($this->criteria, $this->documents)->limit($this->limit)->skip($this->offset);
+
+        if (count($this->order) > 0) {
+            $value = $value->sort($this->order);
+        }
+
+        $this->criteria = $this->documents = array();
+
+        if (!empty($value)) {
+            return $this->cursorResults($value);
+        }
+
+        return false;
     }
-    
+
     /**
      * Find a document
      *
      * @return mix
      */
-    public function getOne( $collection = false, $criteria = array(), $fields = array() )
-    {    
-	if( $collection )
-	    $this->collectionName = $collection;
-	
-	if( ! empty($criteria) )
-	    $this->criteria = $criteria;
-	
-	if( ! empty($fields) )
-	    $this->documents = $fields;
-	    
-	$value = $this->collection($this->collectionName)->findOne( $this->criteria, $this->documents );
-	$this->criteria = $this->documents = array();
-	
-	if( ! empty($value) )
-	    return Tools::arrayToObject($value);
-	
-	return false;
+    public function getOne($collection = false, $criteria = array(), $fields = array())
+    {
+        if ($collection) {
+            $this->collectionName = $collection;
+        }
+
+        if (!empty($criteria)) {
+            $this->criteria = $criteria;
+        }
+
+        if (!empty($fields)) {
+            $this->documents = $fields;
+        }
+
+        $value = $this->collection($this->collectionName)->findOne($this->criteria, $this->documents);
+        $this->criteria = $this->documents = array();
+
+        if (!empty($value)) {
+            return Tools::arrayToObject($value);
+        }
+
+        return false;
     }
-    
+
     /**
      * Insert new document
      *
@@ -261,11 +283,10 @@ class Mongodb extends \Mongo
      * @return bool
      */
     public function insert($collection, $data = array())
-    {    
-        return $this->collection($collection)->insert($data); 
+    {
+        return $this->collection($collection)->insert($data);
     }
-    
-    
+
     /**
      * Update document
      *
@@ -276,13 +297,13 @@ class Mongodb extends \Mongo
      */
     public function update($collection, $data, $criteria = null)
     {
-	$this->where($criteria);
-	$value = $this->collection($collection)->update( $this->criteria, array('$set' => $data) );
-	$this->criteria = array();
-	
-	return $value;
+        $this->where($criteria);
+        $value = $this->collection($collection)->update($this->criteria, array('$set' => $data));
+        $this->criteria = array();
+
+        return $value;
     }
-    
+
     /**
      * Delete a document
      *
@@ -290,16 +311,17 @@ class Mongodb extends \Mongo
      * param string SQL like criteria
      * @return bool
      */
-    public function delete( $collection, $criteria = null )
-    {    
-	if( ! empty($criteria) )
-	    $this->where($criteria);
-	
-	$value = $this->collection($collection)->remove( $this->criteria );
-	$this->criteria = array();
-	
-	return $value;
-    }   
+    public function delete($collection, $criteria = null)
+    {
+        if (!empty($criteria)) {
+            $this->where($criteria);
+        }
+
+        $value = $this->collection($collection)->remove($this->criteria);
+        $this->criteria = array();
+
+        return $value;
+    }
 
     /**
      * Order By part when finding a document
@@ -307,19 +329,20 @@ class Mongodb extends \Mongo
      * @param string $column, $order
      * @return object
      */
-    public function orderBy( $column, $order = 'asc' )
+    public function orderBy($column, $order = 'asc')
     {
-	$order = strtolower($order);
-	
-	if( $order=='desc' ) 
-		$order = -1;
-	else
-		$order = 1;
-		
-	$this->order[$column] = $order;
-	
-	return $this;
-    }    
+        $order = strtolower($order);
+
+        if ($order == 'desc') {
+            $order = -1;
+        } else {
+            $order = 1;
+        }
+
+        $this->order[$column] = $order;
+
+        return $this;
+    }
 
     /**
      * Limit and Offset part when finding a document
@@ -327,12 +350,11 @@ class Mongodb extends \Mongo
      * @param string $limit, $offset
      * @return object
      */
-    public function limit( $limit, $offset = null )
+    public function limit($limit, $offset = null)
     {
-	$this->limit = $limit;
-	$this->offset = $offset;
-	
-	return $this;
+        $this->limit = $limit;
+        $this->offset = $offset;
+
+        return $this;
     }
-    
 }
