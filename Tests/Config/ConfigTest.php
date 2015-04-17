@@ -7,34 +7,34 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     {
         new \Tests\Bootstrap;
     }
-    
+
     public function testConfigMainArray()
     {
-        $this->assertTrue( is_array(\Resources\Config::main()) );
+        $this->assertTrue(is_array(\Resources\Config::main()));
     }
-    
+
     public function testConfigCacheArray()
     {
-        $this->assertTrue( is_array(\Resources\Config::cache()) );
+        $this->assertTrue(is_array(\Resources\Config::cache()));
     }
-    
+
     public function testConfigDatabaseArray()
     {
-        $this->assertTrue( is_array(\Resources\Config::database()) );
+        $this->assertTrue(is_array(\Resources\Config::database()));
     }
-    
+
     public function testConfigSecurityArray()
     {
-        $this->assertTrue( is_array(\Resources\Config::security()) );
+        $this->assertTrue(is_array(\Resources\Config::security()));
     }
-    
+
     public function testConfigSessionArray()
     {
-        $this->assertTrue( is_array(\Resources\Config::session()) );
+        $this->assertTrue(is_array(\Resources\Config::session()));
     }
-    
+
     public function testConfigCostumeArray()
     {
-        $this->assertTrue( is_array(\Resources\Config::myowncfg()) );
+        $this->assertTrue(is_array(\Resources\Config::myowncfg()));
     }
 }

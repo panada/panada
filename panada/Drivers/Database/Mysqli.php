@@ -2,28 +2,29 @@
 /**
  * Panada MySQLi Database Driver.
  *
- * @package	Driver
- * @subpackage	Database
- * @author	Iskandar Soesman.
- * @since	Version 1.0
+ * @package     Driver
+ * @subpackage  Database
+ * @author      Iskandar Soesman.
+ * @since       Version 1.0
  */
 namespace Drivers\Database;
+
 use Resources\RunException as RunException;
 
 class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\Database
-{    
+{
     protected $port = 3306;
-    
+
     /**
      * Define all properties needed.
      * @return void
      */
-    function __construct( $config, $connectionName )
+    public function __construct($config, $connectionName)
     {
-	$this->config = $config;
-	$this->connection = $connectionName;
+        $this->config = $config;
+        $this->connection = $connectionName;
     }
-    
+
     /**
      * Establish a new connection to mysql server
      *
@@ -31,12 +32,13 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      */
     private function establishConnection()
     {
-	if($this->config['persistent'])
-	    $this->config['host'] = 'p:'.$this->config['host'];
-	
+        if ($this->config['persistent']) {
+            $this->config['host'] = 'p:' . $this->config['host'];
+        }
+
         return mysqli_connect($this->config['host'], $this->config['user'], $this->config['password'], $this->config['database'], $this->config['port']);
     }
-    
+
     /**
      * Inital for all process
      *
@@ -44,30 +46,33 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      */
     private function init()
     {
-	if( is_null($this->link) )
-	    $this->link = $this->establishConnection();
-        
-	try{
-	    if ( ! $this->link )
-		throw new RunException('Unable connect to database in <strong>'.$this->connection.'</strong> connection.');
-	}
-	catch(RunException $e){
-	    RunException::outputError( $e->getMessage() );
-	}
-        
+        if (is_null($this->link)) {
+            $this->link = $this->establishConnection();
+        }
+
+        try {
+            if (!$this->link) {
+                throw new RunException('Unable connect to database in <strong>' . $this->connection . '</strong> connection.');
+            }
+        } catch (RunException $e) {
+            RunException::outputError($e->getMessage());
+        }
+
         $collation_query = '';
-        
-        if ( ! empty($this->config['charset']) ) {
-            $collation_query = "SET NAMES '".$this->config['charset']."'";
-	    if ( ! empty($this->config['collate']) )
-                $collation_query .= " COLLATE '".$this->config['collate']."'";
-	}
-	
-        if ( ! empty($collation_query) )
+
+        if (!empty($this->config['charset'])) {
+            $collation_query = "SET NAMES '" . $this->config['charset'] . "'";
+            if (!empty($this->config['collate'])) {
+                $collation_query .= " COLLATE '" . $this->config['collate'] . "'";
+            }
+        }
+
+        if (!empty($collation_query)) {
             $this->query($collation_query);
-        
+        }
+
     }
-    
+
     /**
      * Select the databse
      *
@@ -75,18 +80,19 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      */
     private function selectDb($dbname)
     {
-	if( is_null($this->link) )
-	    $this->init();
-        
-	try{
-	    if ( ! mysqli_select_db($this->link, $dbname) )
-		throw new RunException('Unable to select database in <strong>'.$this->connection.'</strong> connection.');
-	}
-	catch(RunException $e){
-	    RunException::outputError( $e->getMessage() );
-	}
+        if (is_null($this->link)) {
+            $this->init();
+        }
+
+        try {
+            if (!mysqli_select_db($this->link, $dbname)) {
+                throw new RunException('Unable to select database in <strong>' . $this->connection . '</strong> connection.');
+            }
+        } catch (RunException $e) {
+            RunException::outputError($e->getMessage());
+        }
     }
-    
+
     /**
      * Start transaction.
      *
@@ -94,10 +100,10 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      */
     public function begin()
     {
-	$this->query("SET AUTOCOMMIT=0");
-	$this->query("START TRANSACTION");       
+        $this->query("SET AUTOCOMMIT=0");
+        $this->query("START TRANSACTION");
     }
-    
+
     /**
      * Commit transaction.
      *
@@ -105,10 +111,10 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      */
     public function commit()
     {
-	$this->query("COMMIT");
-	$this->query("SET AUTOCOMMIT=1");
+        $this->query("COMMIT");
+        $this->query("SET AUTOCOMMIT=1");
     }
-    
+
     /**
      * Rollback transaction.
      *
@@ -116,10 +122,10 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      */
     public function rollback()
     {
-	$this->query("ROLLBACK");
-	$this->query("SET AUTOCOMMIT=1");
+        $this->query("ROLLBACK");
+        $this->query("SET AUTOCOMMIT=1");
     }
-    
+
     /**
      * Escape all unescaped string
      *
@@ -127,13 +133,14 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      * @return void
      */
     public function escape($string)
-    {    
-	if( is_null($this->link) )
-	    $this->init();
-	
+    {
+        if (is_null($this->link)) {
+            $this->init();
+        }
+
         return mysqli_real_escape_string($this->link, $string);
     }
-    
+
     /**
      * Main function for querying to database
      *
@@ -142,26 +149,25 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      */
     public function query($sql)
     {
-	if( is_null($this->link) )
-	    $this->init();
-        
+        if (is_null($this->link)) {
+            $this->init();
+        }
+
         $query = mysqli_query($this->link, $sql);
         $this->lastQuery = $sql;
-        
-        if ( $this->lastError = mysqli_error($this->link) ) {
-            
-	    if( $this->throwError ) {
-		throw new \Exception($this->lastError);
-	    }
-	    else {
-		$this->printError();
-		return false;
-	    }
+
+        if ($this->lastError = mysqli_error($this->link)) {
+            if ($this->throwError) {
+                throw new \Exception($this->lastError);
+            } else {
+                $this->printError();
+                return false;
+            }
         }
-        
+
         return $query;
     }
-    
+
     /**
      * Get multiple records
      *
@@ -170,42 +176,45 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      */
     public function results($query, $returnType = false)
     {
-	$return = false;
-	
-	if($returnType)
-	    $this->returnType = $returnType;
-	
-	if( is_null($query) )
-	    $query = $this->command();
-	
+        $return = false;
+
+        if ($returnType) {
+            $this->returnType = $returnType;
+        }
+
+        if (is_null($query)) {
+            $query = $this->command();
+        }
+
         $result = $this->query($query);
-	
-	if($this->returnType == 'object') {
-	    
-	    while ($row = mysqli_fetch_object($result, $this->instantiateClass))
-		$return[] = $row;
-	    
-	    mysqli_free_result($result);
-	    
-	    return $return;
-	}
-	
-	if($this->returnType == 'iterator')
-	    return $result;
-	
-	if($this->returnType == 'array') {
-	    
-	    while ($row = mysqli_fetch_assoc($result))
-		$return[] = $row;
-	    
-	    mysqli_free_result($result);
-	    
-	    return $return;
-	}
-	
+
+        if ($this->returnType == 'object') {
+            while ($row = mysqli_fetch_object($result, $this->instantiateClass)) {
+                $return[] = $row;
+            }
+
+            mysqli_free_result($result);
+
+            return $return;
+        }
+
+        if ($this->returnType == 'iterator') {
+            return $result;
+        }
+
+        if ($this->returnType == 'array') {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $return[] = $row;
+            }
+
+            mysqli_free_result($result);
+
+            return $return;
+        }
+
         return $return;
     }
-    
+
     /**
      * Get single record
      *
@@ -214,24 +223,28 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      */
     public function row($query, $returnType = false)
     {
-	if($returnType)
-	    $this->returnType = $returnType;
-	
-	if( is_null($query) )
-	    $query = $this->command();
-	
-	if( is_null($this->link) )
-	    $this->init();
-        
+        if ($returnType) {
+            $this->returnType = $returnType;
+        }
+
+        if (is_null($query)) {
+            $query = $this->command();
+        }
+
+        if (is_null($this->link)) {
+            $this->init();
+        }
+
         $result = $this->query($query);
         $return = mysqli_fetch_object($result, $this->instantiateClass);
-        
-        if($this->returnType == 'object')
+
+        if ($this->returnType == 'object') {
             return $return;
-	
-	return (array) $return;
+        }
+
+        return (array) $return;
     }
-    
+
     /**
      * Get the id form last insert
      *
@@ -239,9 +252,9 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      */
     public function insertId()
     {
-	return mysqli_insert_id($this->link);
+        return mysqli_insert_id($this->link);
     }
-    
+
     /**
      * Get this db version
      *
@@ -249,9 +262,9 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      */
     public function version()
     {
-	return $this->getVar("SELECT version() AS version");
+        return $this->getVar("SELECT version() AS version");
     }
-    
+
     /**
      * Close db connection
      *
@@ -259,7 +272,6 @@ class Mysqli extends \Drivers\Abstraction\Sql implements \Resources\Interfaces\D
      */
     public function close()
     {
-	mysqli_close($this->link);
+        mysqli_close($this->link);
     }
-    
 }
