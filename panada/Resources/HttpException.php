@@ -2,11 +2,11 @@
 /**
  * Hendle every http errors.
  *
- * @author	Iskandar Soesman <k4ndar@yahoo.com>
- * @link	http://panadaframework.com/
- * @license	http://www.opensource.org/licenses/bsd-license.php
- * @since	version 1.0.0
- * @package	Resources
+ * @package  Resources
+ * @link     http://panadaframework.com/
+ * @license  http://www.opensource.org/licenses/bsd-license.php
+ * @author   Iskandar Soesman <k4ndar@yahoo.com>
+ * @since    Version 0.1
  */
 namespace Resources;
 
@@ -14,7 +14,7 @@ class HttpException extends \Exception
 {
     public function __construct($message = null, $code = 0, Exception $previous = null)
     {
-        set_exception_handler( array($this, 'main') );
+        set_exception_handler(array($this, 'main'));
         parent::__construct($message, $code, $previous);
     }
 
@@ -33,21 +33,21 @@ class HttpException extends \Exception
 
         if (PHP_SAPI == 'cli') {
             echo $exception->getMessage()
-                ."\nFile: ".$exception->getFile()
-                    ." on line ".$exception->getLine()
-                ."\n\n".$exception->getTraceAsString()
-                ."\n";
+            . "\nFile: " . $exception->getFile()
+            . " on line " . $exception->getLine()
+            . "\n\n" . $exception->getTraceAsString()
+            . "\n";
             // exit with an error code
             exit(1);
         }
 
         // Write the error to log file
-        @error_log('Error 404 Page Not Found: '.$_SERVER['REQUEST_URI']);
+        @error_log('Error 404 Page Not Found: ' . $_SERVER['REQUEST_URI']);
 
         header('HTTP/1.1 404 Not Found', true, 500);
         \Resources\Controller::outputError(
-              'errors/404'
-            , array('message' => $exception->getMessage())
-            );
+            'errors/404',
+            array('message' => $exception->getMessage())
+        );
     }
 }

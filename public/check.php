@@ -4,8 +4,8 @@
  *
  * Checking all minimum requirements
  *
- * @since	Version 0.4.1
- * @author	Mulia Arifandy Nasution <https://github.com/mul14>
+ * @since   Version 0.4.1
+ * @author  Mulia Arifandy Nasution <https://github.com/mul14>
  */
 
 define('INDEX_FILE', basename(__FILE__));
