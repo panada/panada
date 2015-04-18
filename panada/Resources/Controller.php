@@ -70,13 +70,18 @@ class Controller
         $controller->output($file, $data, $isReturnValue);
     }
     
-    public function output( $panadaViewfile, $data = array(), $isReturnValue = false )
+    public function output( $panadaViewfile, $data = array(), $isReturnValue = false, $default_view = false)
     {    
         $panadaFilePath = APP.'views/'.$panadaViewfile;
         
         if( $this->childClass['namespaceArray'][0] == 'Modules' ){
-            $panadaFilePath = $this->configMain['module']['path'].$this->childClass['namespaceArray'][0].'/'.$this->childClass['namespaceArray'][1].'/views/'.$panadaViewfile;
-        }
+			$panadaFilePath = $this->configMain['module']['path'].$this->childClass['namespaceArray'][0].'/'.$this->childClass['namespaceArray'][1].'/views/'.$panadaViewfile;
+			
+			// Set view file from default view, not from inside the modules folder.
+			if ($default_view){
+				$panadaFilePath = APP.'views/'.$panadaViewfile;
+			}
+		}
         
         try{
             if( ! file_exists($this->viewFile = $panadaFilePath.'.php') )
