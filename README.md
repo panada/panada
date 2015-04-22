@@ -1,3 +1,5 @@
+[![Build Status](https://semaphoreci.com/api/v1/projects/cd86bb70-8b9f-4dd3-969b-eaab5365ffe4/405199/badge.svg)](https://semaphoreci.com/ikandars/panada)
+
 README
 ======
 
