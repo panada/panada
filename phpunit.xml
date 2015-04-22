@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit colors="true">
+<phpunit colors="true" bootstrap="Tests/Bootstrap.php">
     <testsuites>
-        <testsuite name="Application Test Suite">
+        <testsuite name="Panada Core Test Suite">
             <directory>./Tests/</directory>
         </testsuite>
     </testsuites>

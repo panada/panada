@@ -3,11 +3,6 @@ namespace Tests\Config;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        new \Tests\Bootstrap;
-    }
-
     public function testConfigMainArray()
     {
         $this->assertTrue(is_array(\Resources\Config::main()));

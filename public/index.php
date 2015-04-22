@@ -23,4 +23,4 @@ require_once GEAR.'Gear.php';
 // new Gear(0);
 
 // By default all errors will displayed - development use.
-new Gear;
+echo new Gear;

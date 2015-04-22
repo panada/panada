@@ -1,10 +1,10 @@
 <?php
+namespace Tests;
+
 /**
  * Bootstraping all requirement configuration
  *
  */
-namespace Tests;
-
 class Bootstrap
 {
     public function __construct()
@@ -16,3 +16,5 @@ class Bootstrap
 
     }
 }
+
+new Bootstrap;
