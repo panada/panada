@@ -1,4 +1,6 @@
 <?php
+namespace Resources;
+
 /**
  * Hendle every http errors.
  *
@@ -8,8 +10,6 @@
  * @author   Iskandar Soesman <k4ndar@yahoo.com>
  * @since    Version 0.1
  */
-namespace Resources;
-
 class HttpException extends \Exception
 {
     public function __construct($message = null, $code = 0, Exception $previous = null)

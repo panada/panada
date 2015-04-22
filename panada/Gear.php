@@ -298,6 +298,16 @@ final class Gear
      */
     private function run($instance, $method, $request)
     {
-        call_user_func_array(array($instance, $method), $request);
+        $this->output = call_user_func_array(array($instance, $method), $request);
+    }
+    
+    /**
+     * Returns the Response as an HTTP string.
+     *
+     * @return string The Response as an HTTP string
+     */
+    public function __toString()
+    {
+        return $this->output;
     }
 }

@@ -1,4 +1,6 @@
 <?php
+namespace Resources;
+
 /**
  * Hendle every runtime code execution errors.
  *
@@ -8,8 +10,6 @@
  * @author   Iskandar Soesman <k4ndar@yahoo.com>
  * @since    Version 1.0.0
  */
-namespace Resources;
-
 class RunException extends \Exception
 {
     public function __construct($message = null, $code = 0, Exception $previous = null)

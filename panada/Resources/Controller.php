@@ -1,4 +1,6 @@
 <?php
+namespace Resources;
+
 /**
  * Handler for controller process.
  *
@@ -8,8 +10,6 @@
  * @since   version 1.0.0
  * @package Resources
  */
-namespace Resources;
-
 class Controller
 {    
     private
@@ -65,9 +65,9 @@ class Controller
     }
     
     public static function outputError($file, $data = array(), $isReturnValue = false)
-    {    
+    { 
         $controller = new Controller;
-        $controller->output($file, $data, $isReturnValue);
+        echo $controller->output($file, $data, $isReturnValue);
     }
     
     public function output( $panadaViewfile, $data = array(), $isReturnValue = false, $default_view = false)
@@ -105,15 +105,9 @@ class Controller
         if( ! empty($this->viewCache) && $this->viewCache['prefix'] == $this->childClass['namespaceString'] )
             extract( $this->viewCache['data'], EXTR_SKIP );
         
-        if($isReturnValue){
-            ob_start();
-            include $this->viewFile;
-            $return = ob_get_contents();
-            ob_end_clean();
-            return $return;
-        }
-        
-        include $this->viewFile;
+		ob_start();
+		include $this->viewFile;
+		return ob_get_clean();
     }
     
     public function outputJSON($data, $headerCode = 200, $isReturnValue = false)
