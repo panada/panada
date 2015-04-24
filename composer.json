@@ -24,10 +24,10 @@
         "phpunit/phpunit": "4.*"
     },
     "config": {
-        "vendor-dir": "panada/vendors"
+        "vendor-dir": "vendor"
     },
     "autoload": {
-        "classmap": ["panada/", "Tests/"]
+        "classmap": ["vendor/panada/", "Tests/"]
     },
     "minimum-stability": "dev"
 }

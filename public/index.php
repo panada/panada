@@ -5,15 +5,15 @@ date_default_timezone_set('Asia/Jakarta');
 // You can adjust this following constants if necessary.
 
 // The APP constant is where your application folder located.
-define('APP', dirname(__FILE__) . '/../app/');
+define('APP', dirname(__DIR__) . '/app/');
 
 // The INDEX_FILE constant is this default file name.
 define('INDEX_FILE', basename(__FILE__));
 
 // And the GEAR constant is where panada folder located.
-define('GEAR', dirname(__DIR__).'/panada/');
+define('GEAR', dirname(__DIR__).'/vendor/panada/src/');
 
-require_once GEAR.'Gear.php';
+require GEAR.'Gear.php';
 
 // To sets which PHP errors are reported just like documented in this page
 // http://php.net/manual/en/function.error-reporting.php

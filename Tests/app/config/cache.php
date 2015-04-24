@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'default' => array(
         'driver' => 'dummy',
@@ -43,4 +43,4 @@ return array(
             ),
         ),
     ),
-);
+];
