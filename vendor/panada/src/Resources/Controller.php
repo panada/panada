@@ -12,23 +12,21 @@ namespace Resources;
  */
 class Controller
 {    
-    private
-        $childNamespace,
-        $viewCache,
-        $viewFile,
-        $configMain;
+    private $childNamespace;
+	private $viewCache;
+    private $viewFile;
+    private $configMain;
     
-    public
-        $config = array();
+    public $config = [];
     
     public function __construct()
     {    
         $child = get_class($this);
         
-        $this->childClass = array(
-                            'namespaceArray' => explode( '\\', $child),
-                            'namespaceString' => $child
-                        );
+        $this->childClass = [
+			'namespaceArray' => explode( '\\', $child),
+			'namespaceString' => $child
+		];
         
         $this->configMain   = Config::main();
         $this->uri          = new Uri;
@@ -93,10 +91,10 @@ class Controller
         }
         
         if( ! empty($data) ){
-            $this->viewCache = array(
+            $this->viewCache = [
                 'data' => $data,
                 'prefix' => $this->childClass['namespaceString'],
-            );
+            ];
         }
         
         // We don't need this variables anymore.
@@ -112,35 +110,22 @@ class Controller
     
     public function outputJSON($data, $headerCode = 200, $isReturnValue = false)
     {    
-        $output = $this->outputTransporter($data, 'json');
-        
-        if( $isReturnValue )
-            return $output;
-        
-        Tools::setStatusHeader($headerCode);
-        echo $output;
+        return $this->outputTransporter($data, 'json');
     }
     
     public function outputXML($data, $headerCode = 200, $isReturnValue = false)
     {    
-        $output = $this->outputTransporter($data, 'xml');
-        
-        if( $isReturnValue )
-            return $output;
-        
-        Tools::setStatusHeader($headerCode);
-        echo $output;
+        return $this->outputTransporter($data, 'xml');
     }
     
     private function outputTransporter($data, $type)
     {    
-        $rest = new Rest;
-        return $rest->wrapResponseOutput($data, $type);
+        return (new Rest)->wrapResponseOutput($data, $type);
     }
     
     public function location($location = '')
     {
-	return $this->uri->baseUri . $this->configMain['indexFile'] . $location;
+		return $this->uri->baseUri . $this->configMain['indexFile'] . $location;
     }
     
     public function redirect($location = '', $status = 302)
