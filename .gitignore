@@ -1,7 +1,7 @@
 *.sw*
-.gitignore
 featuresTestter/*
-panada/vendors/*
+vendor/*
+!vendor/panada/
 documentation/*
 .DS_Store
 composer.phar
