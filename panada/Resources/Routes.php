@@ -68,7 +68,7 @@ class Routes
 
     public function parse($method, $request_uri)
     {
-        if (!array_key_exists($method, $this->urlStaticMap)) {
+        if (!array_key_exists($method, $this->urlStaticMap) || $method === 'HEAD') {
             $method = 'GET';
         }
 
@@ -89,7 +89,7 @@ class Routes
     public function addMap($urlPattern, $options = [], $subrouter = null)
     {
         preg_match_all(self::PARAMRGX, $urlPattern, $params);
-        if ( count($params) && count($params[0]) ) {
+        if (count($params) && count($params[0])) {
             $matcher = $urlPattern;
             foreach ($params[0] as $param) {
                 $matcher = '|\A'.str_replace("$param", "([^\/]+)", $matcher).'\z|';
