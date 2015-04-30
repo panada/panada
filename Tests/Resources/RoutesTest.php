@@ -22,5 +22,6 @@ class RoutesTest extends \PHPUnit_Framework_TestCase
 
         $route = Routes::get_instance()->parse('GET', '/test1/234');
         $this->assertEquals($route['controller'], 'TestController1');
+        $this->assertEquals($route['args'], ['id' => '234']);
     }
 }

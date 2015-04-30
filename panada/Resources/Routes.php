@@ -29,6 +29,10 @@ class Routes
     // /books/:id/:title
     const PARAMRGX = "/\:([^\s\/]+)/";
 
+    private function __construct()
+    {
+    }
+
     public static function get_instance()
     {
         if (!isset(self::$instance)) {
@@ -92,7 +96,7 @@ class Routes
         if (count($params) && count($params[0])) {
             $matcher = $urlPattern;
             foreach ($params[0] as $param) {
-                $matcher = '|\A'.str_replace("$param", "([^\/]+)", $matcher).'\z|';
+                $matcher = '|\A'.str_replace("$param", "([^/]+)", $matcher).'\z|';
             }
             $options['matcher'] = $matcher;
             $options['params'] = $params[1];
@@ -102,6 +106,7 @@ class Routes
             return;
         }
         foreach ($options['methods'] as $method) {
+            $options['args'] = [];
             $this->urlStaticMap[$method][$urlPattern] = $options;
         }
     }

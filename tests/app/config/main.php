@@ -25,4 +25,8 @@ return array(
         */
         'method' => 'alias'
     ),
+
+// Routings
+//    'URIDispatcher' => 'RouteDispatcher',
+//    'PathPrefix' => '/Panada',
 );

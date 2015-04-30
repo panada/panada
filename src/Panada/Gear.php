@@ -18,6 +18,11 @@ class Gear
     private $config;
     private $firstUriPath;
 
+    private $dispatchers = array(
+        'URIClassMapDispatcher' => '\Resources\Uri',
+        'RouteDispatcher' =>      '\Resources\RouteDispatcher',
+    );
+
     /**
      * Preparation step before anything else.
      *
@@ -31,12 +36,28 @@ class Gear
         set_error_handler('Panada\Resources\RunException::errorHandlerCallback', error_reporting());
 
         $this->disableMagicQuotes();
-
         $this->config['main'] = Resources\Config::main();
-        $this->uriObj = new Resources\Uri;
+
+        $dispatcher = 'URIClassMapDispatcher';
+        if (array_key_exists('URIDispatcher', $this->config['main']) &&
+            array_key_exists($this->config['main']['URIDispatcher'], $this->dispatchers)) {
+            $dispatcher = $this->config['main']['URIDispatcher'];
+        }
+        $this->dispatch($dispatcher);
+    }
+
+    /**
+     *
+     */
+    private function dispatch($dp)
+    {
+        $this->uriObj = new $this->dispatchers[$dp];
+        if (method_exists($this->uriObj, 'controllerHandler')) {
+            $this->uriObj->controllerHandler();
+            return;
+        }
         $this->uriObj->setDefaultController($this->config['main']['defaultController']);
         $this->firstUriPath = ucwords($this->uriObj->getClass());
-
         $this->controllerHandler();
     }
 
