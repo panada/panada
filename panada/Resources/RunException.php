@@ -1,6 +1,6 @@
 <?php
 /**
- * Hendle every runtime code execution errors.
+ * Handle every runtime code execution errors.
  *
  * @author	Iskandar Soesman <k4ndar@yahoo.com>
  * @link	http://panadaframework.com/
@@ -75,8 +75,8 @@ class RunException extends \Exception
         $startIterate   = $line - 5;
         $endIterate     = $line + 5;
         
-        if($startIterate < 0)
-            $startIterate  = 0;
+        if($startIterate <= 0)
+            $startIterate = 1;
         
         if($endIterate > $totalLine)
             $endIterate = $totalLine;
