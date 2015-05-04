@@ -24,4 +24,10 @@ class RoutesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($route['controller'], 'TestController1');
         $this->assertEquals($route['args'], ['id' => '234']);
     }
+
+    public function testUndefinedRoute()
+    {
+        $route = Routes::get_instance()->parse('PUT', '/test1');
+        $this->assertEquals($route, null);
+    }
 }

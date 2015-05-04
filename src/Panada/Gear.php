@@ -20,7 +20,7 @@ class Gear
 
     private $dispatchers = array(
         'URIClassMapDispatcher' => '\Resources\Uri',
-        'RouteDispatcher' =>      '\Resources\RouteDispatcher',
+        'RouteDispatcher' =>       '\Resources\RouteDispatcher',
     );
 
     /**

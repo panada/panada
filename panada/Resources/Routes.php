@@ -4,7 +4,7 @@ namespace Resources;
 
 /**
  * Routes enable more flexible URL since user may define their 
- * own URL -> `Controller::action` mapping.
+ * own URL to `Controller::action` mapping.
  */
 class Routes
 {
