@@ -46,38 +46,30 @@ final class Gear
     private function loader($file)
     {
         $prefix = explode('\\', $file);
+        
+        $maps = [
+            'Controllers' => APP,
+            'Resources' => GEAR,
+            'Models' => APP,
+            'Libraries' => APP,
+            'Models' => APP,
+            'Drivers' => GEAR,
+            'Modules' => $this->config['main']['module']['path'],
+        ];
+        
+        if( isset($maps[$prefix[0]]) ) {
+            $folder = $maps[$prefix[0]];
+        }
+        else {
+            if (!isset($this->config['main']['namespace'])) {
+                throw new Resources\RunException('Resource ' . $file . ' not available!');
+            }
 
-        switch ($prefix[0]) {
-            case 'Models':
-                $folder = APP;
-                break;
-            case 'Libraries':
-                $folder = APP;
-                break;
-            case 'Controllers':
-                $folder = APP;
-                break;
-            case 'Resources':
-                $folder = GEAR;
-                break;
-            case 'Drivers':
-                $folder = GEAR;
-                break;
-            case 'Modules':
-                $folder = $this->config['main']['module']['path'];
-                break;
-            default:
-                if (!isset($this->config['main']['namespace'])) {
-                    throw new Resources\RunException('Resource ' . $file . ' not available!');
-                }
+            if (!isset($this->config['main']['namespace'][$prefix[0]])) {
+                throw new Resources\RunException('Resource ' . $file . ' not available!');
+            }
 
-                if (!isset($this->config['main']['namespace'][$prefix[0]])) {
-                    throw new Resources\RunException('Resource ' . $file . ' not available!');
-                }
-
-                $folder = $this->config['main']['namespace'][$prefix[0]];
-
-                break;
+            $folder = $this->config['main']['namespace'][$prefix[0]];
         }
 
         if (!file_exists($file = $folder . str_ireplace('\\', '/', $file) . '.php')) {
