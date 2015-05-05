@@ -33,7 +33,7 @@ class Routes
     {
     }
 
-    public static function get_instance()
+    public static function getInstance()
     {
         if (!isset(self::$instance)) {
             self::$instance = new self;
@@ -43,31 +43,31 @@ class Routes
 
     public static function map($urlPattern, $options = [], $subrouter = null)
     {
-        self::get_instance()->addMap($urlPattern, $options, $subrouter);
+        self::getInstance()->addMap($urlPattern, $options, $subrouter);
     }
 
     public static function get($urlPattern, $options = [], $subrouter = null)
     {
         $options['methods'] = ['GET'];
-        self::get_instance()->addMap($urlPattern, $options, $subrouter);
+        self::getInstance()->addMap($urlPattern, $options, $subrouter);
     }
 
     public static function post($urlPattern, $options = [], $subrouter = null)
     {
         $options['methods'] = ['POST'];
-        self::get_instance()->addMap($urlPattern, $options, $subrouter);
+        self::getInstance()->addMap($urlPattern, $options, $subrouter);
     }
 
     public static function put($urlPattern, $options = [], $subrouter = null)
     {
         $options['methods'] = ['PUT'];
-        self::get_instance()->addMap($urlPattern, $options, $subrouter);
+        self::getInstance()->addMap($urlPattern, $options, $subrouter);
     }
 
     public static function patch($urlPattern, $options = [], $subrouter = null)
     {
         $options['methods'] = ['PATCH'];
-        self::get_instance()->addMap($urlPattern, $options, $subrouter);
+        self::getInstance()->addMap($urlPattern, $options, $subrouter);
     }
 
     public function parse($method, $request_uri)

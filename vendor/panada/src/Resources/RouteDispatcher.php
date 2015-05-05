@@ -14,7 +14,7 @@ class RouteDispatcher
         $this->mainConfig = Config::main();
         $this->readRoutes(APP . 'config/routes.php');
         $this->uri = $this->trimIgnoredPrefix($_SERVER['REQUEST_URI']);
-        $this->route = Routes::get_instance()->parse($_SERVER['REQUEST_METHOD'], $this->uri);
+        $this->route = Routes::getInstance()->parse($_SERVER['REQUEST_METHOD'], $this->uri);
     }
 
     public function controllerHandler()
