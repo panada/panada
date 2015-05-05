@@ -72,11 +72,8 @@ final class Gear
             $folder = $this->config['main']['namespace'][$prefix[0]];
         }
 
-        if (!file_exists($file = $folder . str_ireplace('\\', '/', $file) . '.php')) {
+        if (! @include $folder . str_ireplace('\\', '/', $file) . '.php')
             throw new Resources\RunException('Resource ' . $file . ' not available!');
-        }
-
-        include $file;
     }
 
     /**
