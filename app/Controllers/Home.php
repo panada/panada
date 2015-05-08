@@ -1,7 +1,7 @@
 <?php
 namespace Controllers;
 
-use Resources;
+use Panada\Resources;
 
 class Home extends Resources\Controller
 {
