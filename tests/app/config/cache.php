@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     'default' => array(
         'driver' => 'dummy',
@@ -18,7 +18,7 @@ return array(
                 'port' => 11211,
                 'persistent' => false,
             ),
-        )
+        ),
     ),
 
     'memcache' => array(
@@ -29,7 +29,7 @@ return array(
                 'port' => 11211,
                 'persistent' => false,
             ),
-        )
+        ),
     ),
 
     'redis' => array(
@@ -39,8 +39,8 @@ return array(
                 'host' => 'localhost',
                 'port' => 6379,
                 'persistent' => false,
-                'timeout' => 2.5
+                'timeout' => 2.5,
             ),
-        )
+        ),
     ),
-);
+];

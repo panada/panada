@@ -1,8 +1,6 @@
 *.sw*
 featuresTestter/*
 vendor/*
-!vendor/panada/
-documentation/*
 .DS_Store
 composer.phar
 composer.lock

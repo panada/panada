@@ -4,7 +4,7 @@ return array(
 
     'default' => array(
         'driver' => 'mysqli',
-        'host' => 'localhost',
+        'host' => '127.0.0.1',
         'port' => 3306,
         'user' => 'root',
         'password' => '',
@@ -15,19 +15,20 @@ return array(
         'persistent' => false,
     ),
 
-    /*
-    'postgre' => array(
+    'pqsql' => array(
         'driver' => 'pgsql',
         'host' => 'localhost',
         'port' => 5432,
-        'user' => 'postgres',
-        'password' => '',
-        'database' => '',
+        'user' => 'kandar',
+        'password' => 'kandar',
+        'database' => 'panada',
         'tablePrefix' => '',
         'charset' => 'utf8',
         'collate' => 'utf8_general_ci',
         'persistent' => false,
     ),
+    
+    /*
 
     'sqlite' => array(
         'driver' => 'sqlite',

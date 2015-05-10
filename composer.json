@@ -27,7 +27,7 @@
         "vendor-dir": "vendor"
     },
     "autoload": {
-        "classmap": ["vendor/panada/", "Tests/"]
+        "classmap": ["src/", "tests/"]
     },
     "minimum-stability": "dev"
 }
