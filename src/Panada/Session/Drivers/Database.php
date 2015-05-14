@@ -1,7 +1,7 @@
 <?php
-namespace Panada\Drivers\Session;
+namespace Panada\Session\Drivers;
 
-use Panada\Drivers\Session\Native;
+use Panada\Session\Drivers\Native;
 use Panada\Resources;
 
 /**
@@ -15,8 +15,7 @@ use Panada\Resources;
 class Database extends Native
 {
     /**
-     * @var string    Session table name.
-     *            ID: Nama table session.
+     * @var string Session table name.
      */
     private $sessionDbName = 'sessions';
     private $sessionDbConn;

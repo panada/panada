@@ -1,5 +1,5 @@
 <?php
-namespace Panada\Drivers\Session;
+namespace Panada\Session\Drivers;
 
 use Panada\Resources;
 

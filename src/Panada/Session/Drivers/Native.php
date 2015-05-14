@@ -1,7 +1,5 @@
 <?php
-namespace Panada\Drivers\Session;
-
-use Panada\Resources\Interfaces as Interfaces;
+namespace Panada\Session\Drivers;
 
 /**
  * Panada PHP native session handler.
@@ -11,7 +9,7 @@ use Panada\Resources\Interfaces as Interfaces;
  * @author      Iskandar Soesman
  * @since       Version 0.1
  */
-class Native implements Panada\Interfaces\Session
+class Native implements \Panada\Session\Interfaces
 {
     /**
      * @var integer    This variable set the maximum life in seconds of a session file on the server since last activity.

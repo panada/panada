@@ -1,7 +1,7 @@
 <?php
-namespace Panada\Drivers\Session;
+namespace Panada\Session\Drivers;
 
-use Panada\Drivers\Session\Native;
+use Panada\Session\Drivers\Native;
 use Panada\Resources;
 
 /**

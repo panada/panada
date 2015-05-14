@@ -1,10 +1,10 @@
 <?php
-namespace Panada\Resources\Interfaces;
+namespace Panada\Session\Interfaces;
 
 /**
  * Interface for Session Drivers
  *
- * @package  Core System
+ * @package  Session
  * @author   Iskandar Soesman <k4ndar@yahoo.com>
  * @link     http://panadaframework.com/
  * @license  http://www.opensource.org/licenses/bsd-license.php

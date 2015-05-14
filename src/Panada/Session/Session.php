@@ -1,5 +1,7 @@
 <?php
-namespace Panada\Resources;
+namespace Panada\Session;
+
+use Panada\Resources;
 
 /**
  * Panada session Handler.
@@ -17,7 +19,7 @@ class Session
 
     public function __construct($connection = 'default')
     {
-        $this->config = Config::session();
+        $this->config = Resources\Config::session();
         $this->config = $this->config[$connection];
         $this->init();
     }
@@ -78,7 +80,7 @@ class Session
      */
     private function init()
     {
-        $driverNamespace = 'Drivers\Session\\' . ucwords($this->config['driver']);
+        $driverNamespace = 'Panada\Session\Drivers\\' . ucwords($this->config['driver']);
         $this->driver = new $driverNamespace($this->config);
     }
 }
