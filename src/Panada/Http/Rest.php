@@ -1,5 +1,5 @@
 <?php
-namespace Panada\Resources;
+namespace Panada\Http;
 
 /**
  * Panada Restful class.
@@ -27,7 +27,7 @@ class Rest
          * Makesure Curl extension is enabled
          */
         if (!extension_loaded('curl')) {
-            throw new RunException('Curl extension that required by Rest Resource is not available.');
+            throw new \Panada\Resources\RunException('Curl extension that required by Rest Resource is not available.');
         }
 
         // Get the client request method
@@ -219,9 +219,9 @@ class Rest
      * @param string $ContentType
      * @return string
      */
-    public function wrapResponseOutput($data, $format = 'json', $ContentType = 'application')
+    public function wrapResponseOutput($data, $format = 'json', $ContentType = 'application', $code = 200)
     {
-        header('Content-type: ' . $ContentType . '/' . $format);
+        header('Content-type: ' . $ContentType . '/' . $format, true, $code);
 
         if ($format == 'xml') {
             return Tools::xmlEncode($data);

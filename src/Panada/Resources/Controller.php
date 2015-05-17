@@ -108,19 +108,19 @@ class Controller
 		return ob_get_clean();
     }
     
-    public function outputJSON($data, $headerCode = 200, $isReturnValue = false)
+    public function outputJSON($data, $headerCode = 200)
     {    
-        return $this->outputTransporter($data, 'json');
+        return $this->outputTransporter($data, 'json', $headerCode);
     }
     
-    public function outputXML($data, $headerCode = 200, $isReturnValue = false)
+    public function outputXML($data, $headerCode = 200)
     {    
-        return $this->outputTransporter($data, 'xml');
+        return $this->outputTransporter($data, 'xml', $headerCode);
     }
     
-    private function outputTransporter($data, $type)
+    private function outputTransporter($data, $type, $headerCode)
     {    
-        return (new Rest)->wrapResponseOutput($data, $type);
+        return (new \Http\Rest)->wrapResponseOutput($data, $type, $headerCode);
     }
     
     public function location($location = '')
@@ -128,14 +128,14 @@ class Controller
 		return $this->uri->baseUri . $this->configMain['indexFile'] . $location;
     }
     
-    public function redirect($location = '', $status = 302)
+    public function redirect($location = '', $headerCode = 302)
     {    
         $location = ( empty($location) ) ? $this->location() : $location;
         
         if ( substr($location,0,4) != 'http' )
             $location = $this->location() . $location;
         
-        header('Location:' . $location, true, $status);
+        header('Location:' . $location, true, $headerCode);
         exit;
     }
 }
