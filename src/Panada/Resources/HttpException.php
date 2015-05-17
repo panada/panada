@@ -45,7 +45,7 @@ class HttpException extends \Exception
         @error_log('Error 404 Page Not Found: ' . $_SERVER['REQUEST_URI']);
 
         header('HTTP/1.1 404 Not Found', true, 500);
-        \Resources\Controller::outputError(
+        \Panada\Resources\Controller::outputError(
             'errors/404',
             array('message' => $exception->getMessage())
         );

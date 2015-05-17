@@ -109,7 +109,7 @@ class RunException extends \Exception
 
         header("HTTP/1.1 500 Internal Server Error", true, 500);
 
-        \Resources\Controller::outputError('errors/500', $data);
+        \Panada\Resources\Controller::outputError('errors/500', $data);
         exit(1);
     }
 
