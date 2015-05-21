@@ -79,11 +79,10 @@ class Routes
         if (array_key_exists($request_uri, $this->urlStaticMap[$method])) {
             return $this->urlStaticMap[$method][$request_uri];
         }
-
         foreach ($this->urlPatternsMap[$method] as $route) {
-            preg_match_all($route['matcher'], $request_uri, $args);
-            if (count($args[0]) === count($route['params'])) {
-                $route['args'] = array_combine($route['params'], $args[1]);
+            preg_match($route['matcher'], $request_uri, $args);
+            if (count($args) === count($route['params'])+1) {
+                $route['args'] = array_combine($route['params'], array_slice($args, 1));
                 return $route;
             }
         }
@@ -96,9 +95,9 @@ class Routes
         if (count($params) && count($params[0])) {
             $matcher = $urlPattern;
             foreach ($params[0] as $param) {
-                $matcher = '|\A'.str_replace("$param", "([^/]+)", $matcher).'\z|';
+                $matcher = str_replace($param, "([^/]+)", $matcher);
             }
-            $options['matcher'] = $matcher;
+            $options['matcher'] = '|\A'.$matcher.'\z|';
             $options['params'] = $params[1];
             foreach($options['methods'] as $method) {
                 $this->urlPatternsMap[$method][$urlPattern] = $options;
