@@ -27,7 +27,9 @@
         "vendor-dir": "vendor"
     },
     "autoload": {
-        "classmap": ["src/", "tests/"]
+        "psr-4": {
+            "Panada\\": "src/Panada/"
+        }
     },
     "minimum-stability": "dev"
 }
