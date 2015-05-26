@@ -42,4 +42,19 @@ class RoutesTest extends \PHPUnit_Framework_TestCase
         $route = Routes::getInstance()->parse('PUT', '/test1');
         $this->assertEquals(null, $route);
     }
+
+    public function testRouteWithModule()
+    {
+        Routes::get('/News/:news_id/Articles/:article_id', [
+            'module' =>     'Entry',
+            'controller' => 'NewsArticle',
+            'action' =>     'show'
+        ]);
+
+        $route = Routes::getInstance()->parse('GET', '/News/technology/Articles/123');
+        $this->assertEquals('Entry',       $route['module']);
+        $this->assertEquals('NewsArticle', $route['controller']);
+        $this->assertEquals('show',        $route['action']);
+        $this->assertEquals(['news_id' => 'technology', 'article_id' => '123'], $route['args']);
+    }
 }

@@ -19,9 +19,16 @@ class RouteDispatcher
 
     public function controllerHandler()
     {
-       $controller = 'Controllers\\' . $this->route['controller'];
-       $instance = new $controller;
-       call_user_func_array(array($instance, $this->route['action']), $this->route['args']);
+        $controller = 'Controllers\\' . $this->route['controller'];
+        if (isset($this->route['module']) && (strlen($this->route['module']) > 0)) {
+            $controller = 'Module\\' . this->route['module'] . '\\' . $controller;
+        }
+        try {
+            $instance = new $controller;
+            call_user_func_array(array($instance, $this->route['action']), $this->route['args']);
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
     }
 
     private function readRoutes($routeFile)
