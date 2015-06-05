@@ -2,7 +2,7 @@
 
 namespace Tests\Resources;
 
-use Resources\Routes;
+use Panada\Resources\Routes;
 
 class RoutesTest extends \PHPUnit_Framework_TestCase
 {

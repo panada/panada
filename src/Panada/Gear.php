@@ -19,8 +19,8 @@ class Gear
     private $firstUriPath;
 
     private $dispatchers = array(
-        'URIClassMapDispatcher' => '\Resources\Uri',
-        'RouteDispatcher' =>       '\Resources\RouteDispatcher',
+        'URIClassMapDispatcher' => 'Panada\Resources\Uri',
+        'RouteDispatcher' =>       'Panada\Resources\RouteDispatcher',
     );
 
     /**
@@ -53,7 +53,7 @@ class Gear
     {
         $this->uriObj = new $this->dispatchers[$dp];
         if (method_exists($this->uriObj, 'controllerHandler')) {
-            $this->uriObj->controllerHandler();
+            $this->output = $this->uriObj->controllerHandler();
             return;
         }
         $this->uriObj->setDefaultController($this->config['main']['defaultController']);

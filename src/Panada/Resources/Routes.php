@@ -1,6 +1,6 @@
 <?php
 
-namespace Resources;
+namespace Panada\Resources;
 
 /**
  * Routes enable more flexible URL since user may define their 
