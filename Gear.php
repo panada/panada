@@ -26,8 +26,8 @@ class Gear
     {
         error_reporting($errorReporting);
         spl_autoload_register(array($this, 'loader'));
-        set_exception_handler('RunException::main');
-        set_error_handler('RunException::errorHandlerCallback', error_reporting());
+        set_exception_handler('Panada\Resources\RunException::main');
+        set_error_handler('Panada\Resources\RunException::errorHandlerCallback', error_reporting());
 
         $this->disableMagicQuotes();
 
@@ -73,7 +73,7 @@ class Gear
             $folder = $this->config['main']['namespace'][$prefix[0]];
         }
 
-        if (! @include $folder . str_ireplace('\\', '/', $file) . '.php')
+        if (! @include $folder . str_ireplace(['\\', 'Panada/'], ['/', ''], $file) . '.php')
             throw new RunException('Resource ' . $file . ' not available!');
     }
 
