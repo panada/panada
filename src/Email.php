@@ -1,4 +1,5 @@
 <?php
+
 namespace Panada\Resources;
 /**
  * Panada email API.

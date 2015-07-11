@@ -1,8 +1,9 @@
 <?php
+
 namespace Panada\Resources;
 
 /**
- * Panada Database API.
+ * Panada cache API.
  *
  * @package  Resources
  * @link     http://panadaframework.com/
@@ -10,24 +11,23 @@ namespace Panada\Resources;
  * @author   Iskandar Soesman <k4ndar@yahoo.com>
  * @since    Version 0.3
  */
-class Database
+class Cache
 {
-    private $driver, $config;
+    private $driver;
+    private $config;
 
-    public function __construct($connection = 'default')
+    public function __construct($connection = 'default', $specifiedDriver = false)
     {
-        $config = Config::database();
-        $this->config = $config[$connection];
+        $this->config = Config::cache();
+        $this->config = $this->config[$connection];
 
-        $driverNamespace = 'Panada\Drivers\Database\\' . ucwords($this->config['driver']);
-
-        if (isset($this->config['pdo'])) {
-            if ($this->config['pdo']) {
-                $driverNamespace = 'Panada\Drivers\Database\PanadaPDO';
-            }
+        if ($specifiedDriver) {
+            $this->config['driver'] = $specifiedDriver;
         }
 
-        $this->driver = new $driverNamespace($this->config, $connection);
+        $driverNamespace = 'Drivers\Cache\\' . ucwords($this->config['driver']);
+
+        $this->driver = new $driverNamespace($this->config);
     }
 
     /**
@@ -36,7 +36,6 @@ class Database
      *
      * @param string @name
      * @param array @arguments
-     * @return mix
      */
     public function __call($name, $arguments)
     {
@@ -44,7 +43,9 @@ class Database
     }
 
     /**
-     * @param string @name
+     * PHP Magic method for calling a class property dinamicly
+     *
+     * @param string $name
      * @return mix
      */
     public function __get($name)
@@ -53,13 +54,14 @@ class Database
     }
 
     /**
+     * PHP Magic method for set a class property dinamicly
      *
-     * @param string @name
-     * @param mix @$value
+     * @param string $name
+     * @param mix $value
      * @return void
      */
     public function __set($name, $value)
     {
         $this->driver->$name = $value;
     }
-}
+}// End Library_cache

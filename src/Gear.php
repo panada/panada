@@ -1,7 +1,6 @@
 <?php
-namespace Panada;
 
-use Panada\Resources;
+namespace Panada\Resources;
 
 /**
  * This is the heart of the whole Panada system.

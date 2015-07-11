@@ -28,7 +28,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Panada\\": "src/Panada/"
+            "Panada\\Resources\\": "src/"
         }
     },
     "minimum-stability": "dev"

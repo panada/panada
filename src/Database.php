@@ -1,8 +1,9 @@
 <?php
+
 namespace Panada\Resources;
 
 /**
- * Panada cache API.
+ * Panada Database API.
  *
  * @package  Resources
  * @link     http://panadaframework.com/
@@ -10,23 +11,24 @@ namespace Panada\Resources;
  * @author   Iskandar Soesman <k4ndar@yahoo.com>
  * @since    Version 0.3
  */
-class Cache
+class Database
 {
-    private $driver;
-    private $config;
+    private $driver, $config;
 
-    public function __construct($connection = 'default', $specifiedDriver = false)
+    public function __construct($connection = 'default')
     {
-        $this->config = Config::cache();
-        $this->config = $this->config[$connection];
+        $config = Config::database();
+        $this->config = $config[$connection];
 
-        if ($specifiedDriver) {
-            $this->config['driver'] = $specifiedDriver;
+        $driverNamespace = 'Panada\Drivers\Database\\' . ucwords($this->config['driver']);
+
+        if (isset($this->config['pdo'])) {
+            if ($this->config['pdo']) {
+                $driverNamespace = 'Panada\Drivers\Database\PanadaPDO';
+            }
         }
 
-        $driverNamespace = 'Drivers\Cache\\' . ucwords($this->config['driver']);
-
-        $this->driver = new $driverNamespace($this->config);
+        $this->driver = new $driverNamespace($this->config, $connection);
     }
 
     /**
@@ -35,6 +37,7 @@ class Cache
      *
      * @param string @name
      * @param array @arguments
+     * @return mix
      */
     public function __call($name, $arguments)
     {
@@ -42,9 +45,7 @@ class Cache
     }
 
     /**
-     * PHP Magic method for calling a class property dinamicly
-     *
-     * @param string $name
+     * @param string @name
      * @return mix
      */
     public function __get($name)
@@ -53,14 +54,13 @@ class Cache
     }
 
     /**
-     * PHP Magic method for set a class property dinamicly
      *
-     * @param string $name
-     * @param mix $value
+     * @param string @name
+     * @param mix @$value
      * @return void
      */
     public function __set($name, $value)
     {
         $this->driver->$name = $value;
     }
-}// End Library_cache
+}
