@@ -5,7 +5,7 @@ date_default_timezone_set('Asia/Jakarta');
 // You can adjust this following constants if necessary.
 
 // The APP constant is where your application folder located.
-define('APP', dirname(__FILE__) . '/');
+define('APP', dirname(__FILE__) . '/../app/');
 
 // The INDEX_FILE constant is this default file name.
 define('INDEX_FILE', basename(__FILE__));

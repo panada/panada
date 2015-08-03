@@ -1,6 +1,24 @@
-Version 1.1.0 work in progress
+Version 1.1.0-beta
+-----------------------------------
+- Enh 42db3c6: Enhance Uri class
+- Bug 7ab433c: Bug fix for empty controller name
+- Enh 8aa4222: Update error page become more responsive
+- Enh a5748d5: Change default MySQL driver to Mysqli
+- Bug de4216c: Fix read error flag type
+- Bug 0b15dad: Bugfix for pg db driver
+- Enh 3c5c45d: Move getLastQuery Method to abstract class
+- Bug f48de0e: Bugfix: no data returned in DB results method
+- Enh dbfc219: Optimize db query and add iterator option support
+- New 94aa9fe: Add fetchAs type support. The options is: array, object or iterator
+- Enh 62c6227: Centralized repeated method and store it in abstract class
+- Enh aa29c25: Add new abstraction for all sql db driver
+
+Version 1.1.0-alfa Feb 14, 2014
 -------------------------------
-- New 34983a0; Add defined namespace config to load external libs
+- Bug 14ba1a3: Bug fix for URI routing in numbers cPanel base apache
+- Bug 66f50b6: Bug fix for query builder for "OR" operator in criteria string
+- Enh 30d04af: exit with an error code in cli mode and re-format error message
+- New 34983a0: Add defined namespace config to load external libs
 - Bug 3af46ac: Fix error message in CLI mode
 - Enh f251e39: Enhance save method to except array data as an argument
 - Enh 600ce35: Enhance session cookie only work in http protocol only

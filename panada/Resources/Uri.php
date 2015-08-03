@@ -12,13 +12,10 @@ namespace Resources;
 
 final class Uri
 {    
-    private
-	$pathUri = array();
-    public
-	$baseUri,
-	$defaultController;
-    public static
-	$staticDefaultController = 'Home';
+    private $pathUri = array();
+    public $baseUri;
+    public $defaultController;
+    public static $staticDefaultController = 'Home';
     
     /**
      * Class constructor
@@ -34,12 +31,13 @@ final class Uri
 	    return;
 	}
 	
-	$selfArray      		= explode('/', rtrim($_SERVER['PHP_SELF'], '/'));
-	$selfKey        		= array_search(INDEX_FILE, $selfArray);
-	$this->pathUri  		= array_slice($selfArray, ($selfKey + 1));
-	$this->baseUri  		= $this->isHttps() ? 'https://':'http://';
-	$this->baseUri			.= $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';
-	$this->defaultController	= self::$staticDefaultController;
+	$pathInfo		= isset($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO']:'';
+	$selfArray      	= explode('/', rtrim($_SERVER['PHP_SELF'].$pathInfo, '/'));
+	$selfKey        	= array_search(INDEX_FILE, $selfArray);
+	$this->pathUri  	= array_slice($selfArray, ($selfKey + 1));
+	$this->baseUri  	= $this->isHttps() ? 'https://':'http://';
+	$this->baseUri		.= $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';
+	$this->defaultController= self::$staticDefaultController;
     }
 
     /**
@@ -89,8 +87,8 @@ final class Uri
     {
 	if( $segment !== false )
 	    return ( isset( $this->pathUri[$segment] ) && $this->pathUri[$segment] != INDEX_FILE ) ? $this->pathUri[$segment] : false;
-	else
-	    return $this->pathUri;
+	
+	return $this->pathUri;
     }
 
     /**
@@ -104,13 +102,12 @@ final class Uri
 	    
 	    if( $this->stripUriString($uriString) )
 		return $uriString;
-	    else
-		return false;
-	}
-	else {
 	    
-	    return $this->defaultController;
+	    throw new RunException('Invalid controller name: '.htmlentities($uriString));
 	}
+	
+	return $this->defaultController;
+	
     }
 
     /**
@@ -121,19 +118,17 @@ final class Uri
     public function getMethod($default = 'index')
     {
 	$uriString = $this->path(1);
-
+	
 	if( isset($uriString) && ! empty($uriString) ){
-
+	    
 	    if( $this->stripUriString($uriString) )
 		return $uriString;
-	    else
-		return '';
-    
-	    }
-	    else {
-    
-	    return $default;
+	    
+	    return '';
+	
 	}
+	
+	return $default;
     }
 
     /**
@@ -145,16 +140,12 @@ final class Uri
     public function getRequests($segment = 2)
     {
 	$uriString = $this->path($segment);
-    
-	if( isset($uriString) ) {
-    
-	    $requests = array_slice($this->path(), $segment);
-    
-	    return $requests;
-	}
-	else {
-	    return false;
-	}
+	
+	if( isset($uriString) )
+	    return array_slice($this->path(), $segment);
+	
+	return false;
+	
     }
 
     /**
@@ -165,8 +156,7 @@ final class Uri
      */
     public function stripUriString($uri)
     {
-	$uri = ( ! preg_match('/[^a-zA-Z0-9_.-]/', $uri) ) ? true : false;
-	return $uri;
+	return ( ! preg_match('/[^a-zA-Z0-9_.-]/', $uri) ) ? true : false;
     }
     
     /**
@@ -177,8 +167,7 @@ final class Uri
      */
     public function setDefaultController($defaultController)
     {
-	self::$staticDefaultController = $defaultController;
-	$this->defaultController = $defaultController;
+	$this->defaultController = self::$staticDefaultController = $defaultController;
     }
     
     /**

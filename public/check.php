@@ -9,11 +9,11 @@
  */
 
 define('INDEX_FILE', basename(__FILE__));
-define('APP', dirname(__FILE__) . '/');
-define('GEAR', '../panada/');
+define('APP', dirname(__FILE__) . '/../app/');
+define('GEAR', dirname(__DIR__).'/panada/');
 define('DS', DIRECTORY_SEPARATOR);
 define('THISPATH', dirname(__FILE__));
-require_once THISPATH . DS . 'config/main.php';
+require_once APP . DS . 'config/main.php';
 //require_once THISPATH . DS . '../panada' . DS . 'variable' . DS . 'version.php';
 ?>
 <!DOCTYPE html>
@@ -117,8 +117,8 @@ require_once THISPATH . DS . 'config/main.php';
             <td>
                 Application Directory
             </td>
-            <?php if (is_dir(THISPATH . DS) AND is_file(THISPATH . DS . 'config' . DS . 'main.php')): ?>
-                <td><span class="monospace"><?php echo THISPATH . DS ?></td>
+            <?php if (is_dir(APP) AND is_file(APP . 'config' . DS . 'main.php')): ?>
+                <td><span class="monospace"><?php echo APP ?></td>
                 <td><span class="pass">PASS</span></td>
             <?php else: $failed = TRUE ?>
                 <td>&nbsp;</td>
