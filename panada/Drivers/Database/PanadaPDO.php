@@ -220,4 +220,18 @@ class PanadaPDO extends \Drivers\Abstraction\Sql implements \Resources\Interface
     {	
 	$this->link = null;
     }
+
+    /**
+     * Prepares a statement for execution and returns a statement object
+     *
+     * @return PDOStatement
+     */
+    public function prepare($query)
+    {
+        if( is_null($this->link) ) {
+            $this->init();
+        }
+        return $this->link->prepare($query);
+    }
+
 }
