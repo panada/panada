@@ -26,18 +26,20 @@ final class Uri
      */
     public function __construct()
     {
-	if(PHP_SAPI == 'cli'){
-	    $this->pathUri = array_slice($_SERVER['argv'], 1);
-	    return;
-	}
+		if(PHP_SAPI == 'cli'){
+			$this->pathUri = array_slice($_SERVER['argv'], 1);
+			return;
+		}
 	
-	$pathInfo		= isset($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO']:'';
-	$selfArray      	= explode('/', rtrim($_SERVER['PHP_SELF'].$pathInfo, '/'));
-	$selfKey        	= array_search(INDEX_FILE, $selfArray);
-	$this->pathUri  	= array_slice($selfArray, ($selfKey + 1));
-	$this->baseUri  	= $this->isHttps() ? 'https://':'http://';
-	$this->baseUri		.= $_SERVER['HTTP_HOST'].implode('/', array_slice($selfArray, 0, $selfKey)) .'/';
-	$this->defaultController= self::$staticDefaultController;
+		$scriptPath             = explode('/', $_SERVER['SCRIPT_NAME']);
+        $this->frontController  = end($scriptPath);
+        $this->basePath         = $this->config['assetPath'] = str_replace($this->frontController, '', $_SERVER['SCRIPT_NAME']);
+        $scriptName             = str_replace($this->frontController, '', $_SERVER['SCRIPT_NAME']);
+        $requestURI             = str_replace($this->frontController, '', $_SERVER['REQUEST_URI']);
+        $this->pathInfo         = trim(strtok(str_replace($scriptName, '', $requestURI), '?'), '/');
+        $this->pathUri      	= explode('/', $this->pathInfo);
+        $this->baseUri      	= str_replace($this->pathInfo, '', rtrim($_SERVER['REQUEST_URI'], '/'));
+		$this->defaultController= self::$staticDefaultController;
     }
 
     /**
