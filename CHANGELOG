@@ -1,3 +1,9 @@
+Version 1.1.0
+-------------
+- Bug 6283a2c: Fix error URI parse in when run Apache as php-cgi
+- New d9553ef: add prepare function PDO
+- Enh fd35d2b: Add altMessage for sending HTML email
+
 Version 1.1.0-beta
 -----------------------------------
 - Enh 42db3c6: Enhance Uri class
