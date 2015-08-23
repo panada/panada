@@ -1,3 +1,7 @@
+Version 1.1.1
+-------------
+- Bug 97b3952: Bug fix for uri parse
+
 Version 1.1.0
 -------------
 - Bug 6283a2c: Fix error URI parse in when run Apache as php-cgi
