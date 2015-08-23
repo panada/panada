@@ -32,8 +32,8 @@ final class Uri
 		}
 	
 		$scriptPath             = explode('/', $_SERVER['SCRIPT_NAME']);
-        $this->frontController  = end($scriptPath);
-        $this->basePath         = $this->config['assetPath'] = str_replace($this->frontController, '', $_SERVER['SCRIPT_NAME']);
+        $this->frontController  = '/'.end($scriptPath);
+        $this->basePath         = $this->config['assetPath'] = str_replace($this->frontController, '', $_SERVER['SCRIPT_NAME']).'/';
         $scriptName             = str_replace($this->frontController, '', $_SERVER['SCRIPT_NAME']);
         $requestURI             = str_replace($this->frontController, '', $_SERVER['REQUEST_URI']);
         $this->pathInfo         = trim(strtok(str_replace($scriptName, '', $requestURI), '?'), '/');
