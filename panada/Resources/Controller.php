@@ -141,7 +141,7 @@ class Controller
     
     public function location($location = '')
     {
-	return $this->uri->baseUri . $this->configMain['indexFile'] . $location;
+	return $this->uri->baseUri .'/'. $this->configMain['indexFile'] . $location;
     }
     
     public function redirect($location = '', $status = 302)
