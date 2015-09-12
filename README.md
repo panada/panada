@@ -1,4 +1,4 @@
-> This repo is contain of Panada version 1 which is still going to maintain for bug and security issue until the end of 2015. To get to know more about Panada 2 go to this project (https://github.com/panada/app)[https://github.com/panada/app]
+> This repo is contain of Panada version 1 which is still going to maintain for bug and security issue until the end of 2015. To get to know more about Panada 2 go to this project [https://github.com/panada/app](https://github.com/panada/app)
 
 About Panada
 ------------
