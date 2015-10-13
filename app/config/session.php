@@ -1,8 +1,8 @@
 <?php
 
-return array(
+return [
 
-    'default' => array(
+    'default' => [
         'expiration' => 7200,
         'name' => 'PAN_SID',
         'cookieExpire' => 0,
@@ -14,5 +14,5 @@ return array(
         'storageName' => 'sessions',
         'isEncrypt' => false,
         'secretKey' => '123'
-    ),
-);
+    ],
+];

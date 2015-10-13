@@ -1,46 +1,46 @@
 <?php
 
-return array(
+return [
 
-    'default' => array(
+    'default' => [
         'driver' => 'dummy',
-    ),
+    ],
 
-    'apc' => array(
+    'apc' => [
         'driver' => 'apc',
-    ),
+    ],
 
-    'memcached' => array(
-        'driver' => 'memcached',
-        'server' => array(
-            array(
-                'host' => 'localhost',
-                'port' => 11211,
-                'persistent' => false,
-            ),
-        )
-    ),
-
-    'memcache' => array(
+    'memcached' => [
         'driver' => 'memcache',
-        'server' => array(
-            array(
+        'server' => [
+            [
                 'host' => 'localhost',
                 'port' => 11211,
                 'persistent' => false,
-            ),
-        )
-    ),
+            ],
+       ]
+    ],
 
-    'redis' => array(
+    'memcache' => [
+        'driver' => 'memcache',
+        'server' => [
+            [
+                'host' => 'localhost',
+                'port' => 11211,
+                'persistent' => false,
+            ],
+       ]
+    ],
+
+    'redis' => [
         'driver' => 'redis',
-        'server' => array(
-            array(
+        'server' => [
+            [
                 'host' => 'localhost',
                 'port' => 6379,
                 'persistent' => false,
                 'timeout' => 2.5
-            ),
-        )
-    ),
-);
+            ],
+       ]
+    ],
+];

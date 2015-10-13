@@ -1,22 +1,22 @@
 <?php
 
-return array(
+return [
 
     'defaultController' => 'Home',
 
     // Just put null value if you has enable .htaccess file
     'indexFile' => INDEX_FILE . '/',
 
-    'module' => array(
+    'module' => [
         'path' => APP,
-        'domainMapping' => array(),
-    ),
+        'domainMapping' => [],
+    ],
 
-    'vendor' => array(
+    'vendor' => [
         'path' => GEAR.'vendors/'
-    ),
+    ],
 
-    'alias' => array(
+    'alias' => [
         /*
         'controller' => array(
             'class' => 'Alias',
@@ -24,5 +24,5 @@ return array(
         ),
         */
         'method' => 'alias'
-    ),
-);
+    ],
+];
