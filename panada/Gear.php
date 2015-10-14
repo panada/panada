@@ -13,15 +13,17 @@
  */
 final class Gear
 {
-    private $uriObj, $config, $firstUriPath;
+    private $uriObj;
+    private $config;
+    private $firstUriPath;
 
     /**
      * Preparation step before anything else.
      */
-    public function __construct($errorReporting = E_ALL)
+    public function __construct($errorReporting)
     {
         error_reporting($errorReporting);
-        spl_autoload_register(array($this, 'loader'));
+        spl_autoload_register([$this, 'loader']);
         set_exception_handler('Resources\RunException::main');
         set_error_handler('Resources\RunException::errorHandlerCallback', error_reporting());
 
@@ -260,7 +262,7 @@ final class Gear
             throw new Resources\RunException('Class '.$controllerNamespace.'  not found in '.$classFile);
         }
 
-        $instance   = new $controllerNamespace();
+        $instance = new $controllerNamespace();
 
         if (!method_exists($instance, $method)) {
             $request = array_slice($this->uriObj->path(), 2);
@@ -273,6 +275,11 @@ final class Gear
 
         $this->run($instance, $method, $request);
     }
+    
+    public function __toString()
+    {
+        echo (new Resources\Response)->send();
+    }
 
     /**
      * Call the controller's method.
@@ -283,6 +290,22 @@ final class Gear
      */
     private function run($instance, $method, $request)
     {
-        call_user_func_array(array($instance, $method), $request);
+        Resources\Response::$body = call_user_func_array([$instance, $method], $request);
+    }
+    
+    public static function send($errorReporting = E_ALL)
+    {
+        try{
+            echo new self($errorReporting);
+        }
+        catch(Resources\HttpException $e){
+            echo Resources\HttpException::outputError($e)->send();
+        }
+        catch(Resources\RunException $e){
+            echo Resources\RunException::main($e)->send();
+        }
+        catch(Exception $e){
+            echo Resources\RunException::main($e)->send();
+        }
     }
 }

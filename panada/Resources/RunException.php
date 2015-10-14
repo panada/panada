@@ -13,11 +13,11 @@
  */
 namespace Resources;
 
-class RunException extends \Exception
+class RunException extends \ErrorException
 {
-    public function __construct($message = null, $code = 0, Exception $previous = null)
+    public function __construct($message = null, $code = 0, $severity = 1, $filename = __FILE__, $lineno = __LINE__, Exception $previous = null)
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code, $severity, $filename, $lineno, $previous);
     }
 
     public function __toString()
@@ -42,16 +42,12 @@ class RunException extends \Exception
             }
         }
 
-        self::outputError($message, $file, $line, $traceAsString);
+        return self::outputError($message, $file, $line, $traceAsString);
     }
 
     public static function errorHandlerCallback($errno, $message, $file, $line)
     {
-        if (!(error_reporting() & $errno)) {
-            return;
-        }
-
-        self::outputError($message, $file, $line);
+        throw new self($message, 0, 1, $file, $line);
     }
 
     public static function outputError($message = null, $file = false, $line = false, $trace = false)
@@ -60,14 +56,14 @@ class RunException extends \Exception
         $errorMessage = 'Error '.$message.' in '.$file.' line: '.$line;
 
         // Write the error to log file
-    @error_log($errorMessage);
+        @error_log($errorMessage);
 
         // Just output the error if the error source for view file or if in cli mode.
-        if ((array_search('views', explode('/', $file)) !== false) || (PHP_SAPI == 'cli')) {
+        if (PHP_SAPI == 'cli') {
             exit($errorMessage);
         }
 
-        $code = array();
+        $code = [];
 
         if (!$file) {
             goto constructViewData;
@@ -80,8 +76,8 @@ class RunException extends \Exception
         $startIterate   = $line - 5;
         $endIterate     = $line + 5;
 
-        if ($startIterate < 0) {
-            $startIterate  = 0;
+        if ($startIterate < 1) {
+            $startIterate  = 1;
         }
 
         if ($endIterate > $totalLine) {
@@ -92,9 +88,9 @@ class RunException extends \Exception
             $html = '<span style="margin-right:10px;background:#CFCFCF;">'.$i.'</span>';
 
             if ($line == $i) {
-                $html .= '<span style="color:#DD0000">'.$getLine[$i]."</span>\n";
+                $html .= '<span style="color:#DD0000">'.htmlentities($getLine[$i])."</span>\n";
             } else {
-                $html .= $getLine[$i]."\n";
+                $html .= htmlentities($getLine[$i])."\n";
             }
 
             $code[] = $html;
@@ -102,18 +98,19 @@ class RunException extends \Exception
 
         constructViewData:
 
-        $data = array(
+        $data = [
             'message' => $message,
             'file' => $file,
             'line' => $line,
             'code' => $code,
             'trace' => $trace,
-        );
+        ];
 
-        header('HTTP/1.1 500 Internal Server Error', true, 500);
-
-        \Resources\Controller::outputError('errors/500', $data);
-        exit(1);
+        $response = new Response;
+        $response->setStatusCode(500);
+        $response->setBody(Controller::outputError('errors/500', $data));
+        
+        return $response;
     }
 
     /**

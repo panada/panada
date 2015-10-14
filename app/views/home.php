@@ -1,4 +1,4 @@
-<?php $this->output('header');?>
+<?=$this->output('header');?>
 <body>
 <h1 class="logo"><img alt="Logo" src="<?php echo $this->uri->baseUri;?>assets/img/logo.png" /></h1>
 <div id="konten">

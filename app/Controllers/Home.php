@@ -10,6 +10,6 @@ class Home extends Resources\Controller
     {
         $data['title'] = 'Hello world!';
 
-        $this->output('home', $data);
+        return $this->output('home', $data);
     }
 }

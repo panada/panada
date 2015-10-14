@@ -20,16 +20,16 @@ class Controller
         $viewFile,
         $configMain;
 
-    public $config = array();
+    public $config = [];
 
     public function __construct()
     {
         $child = get_class($this);
 
-        $this->childClass = array(
+        $this->childClass = [
                             'namespaceArray' => explode('\\', $child),
                             'namespaceString' => $child,
-                        );
+                        ];
 
         $this->configMain   = Config::main();
         $this->uri          = new Uri();
@@ -37,7 +37,7 @@ class Controller
 
     public function __get($class)
     {
-        $classNamespace = array(
+        $classNamespace = [
             'model' => 'Models',
             'Model' => 'Models',
             'models' => 'Models',
@@ -50,7 +50,7 @@ class Controller
             'resources' => 'Resources',
             'Resource' => 'Resources',
             'resource' => 'Resources',
-        );
+        ];
 
         try {
             if (!isset($classNamespace[$class])) {
@@ -64,13 +64,12 @@ class Controller
         return new PropertiesLoader($this->childClass['namespaceArray'], $classNamespace[$class]);
     }
 
-    public static function outputError($file, $data = array(), $isReturnValue = false)
+    public static function outputError($file, $data = [])
     {
-        $controller = new self();
-        $controller->output($file, $data, $isReturnValue);
+        return (new self)->output($file, $data);
     }
 
-    public function output($panadaViewfile, $data = array(), $isReturnValue = false)
+    public function output($panadaViewfile, $data = [])
     {
         $panadaFilePath = APP.'views/'.$panadaViewfile;
 
@@ -101,47 +100,27 @@ class Controller
             extract($this->viewCache['data'], EXTR_SKIP);
         }
 
-        if ($isReturnValue) {
-            ob_start();
-            include $this->viewFile;
-            $return = ob_get_contents();
-            ob_end_clean();
-
-            return $return;
-        }
-
+        ob_start();
         include $this->viewFile;
+        $return = ob_get_contents();
+        ob_end_clean();
+
+        return $return;
     }
 
-    public function outputJSON($data, $headerCode = 200, $isReturnValue = false)
+    public function outputJSON($data)
     {
-        $output = $this->outputTransporter($data, 'json');
-
-        if ($isReturnValue) {
-            return $output;
-        }
-
-        Tools::setStatusHeader($headerCode);
-        echo $output;
+        return $this->outputTransporter($data, 'json');
     }
 
-    public function outputXML($data, $headerCode = 200, $isReturnValue = false)
+    public function outputXML($data)
     {
-        $output = $this->outputTransporter($data, 'xml');
-
-        if ($isReturnValue) {
-            return $output;
-        }
-
-        Tools::setStatusHeader($headerCode);
-        echo $output;
+        return $this->outputTransporter($data, 'xml');
     }
 
     private function outputTransporter($data, $type)
     {
-        $rest = new Rest();
-
-        return $rest->wrapResponseOutput($data, $type);
+        return (new Rest)->wrapResponseOutput($data, $type);
     }
 
     public function location($location = '')

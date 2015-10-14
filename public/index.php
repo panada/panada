@@ -20,7 +20,7 @@ require_once GEAR.'Gear.php';
 // You can pass a parameter into the Gear class.
 
 // Turn off all errors reporting - production use.
-// new Gear(0);
+// Gear::send(0);
 
 // By default all errors will displayed - development use.
-new Gear;
+Gear::send();
