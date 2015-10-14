@@ -40,7 +40,7 @@ final class Uri
         $requestURI             = str_replace($this->frontController, '', $_SERVER['REQUEST_URI']);
         $this->pathInfo         = trim(strtok(str_replace($scriptName, '', $requestURI), '?'), '/');
         $this->pathUri          = explode('/', $this->pathInfo);
-        $this->baseUri          = str_replace($this->pathInfo, '', rtrim($_SERVER['REQUEST_URI'], '/'));
+        $this->baseUri          = str_replace($this->pathInfo, '', $_SERVER['REQUEST_URI']);
         $this->defaultController = self::$staticDefaultController;
     }
 
