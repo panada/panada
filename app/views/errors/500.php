@@ -1,4 +1,3 @@
-<?php if ( ! error_reporting() ) exit(1); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,6 +34,7 @@ pre {
 <div id="konten">
 <h1>Runtime Error!</h1>
 <p><strong>Error message</strong>: <?php echo $message; ?></p>
+<?php if ( ! error_reporting() ):?>
 <?php if( $file ): ?>
 <p><strong>Error in file</strong>:</p>
 <pre><?php echo $file; ?> Line: <?php echo $line; ?></pre>
@@ -52,6 +52,7 @@ pre {
 </pre>
 <?php endif; ?>
 </div>
+<?php endif; ?>
 <div id="foot">&nbsp;</div>
 </body>
 </html>
