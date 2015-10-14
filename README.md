@@ -3,13 +3,13 @@
 About Panada
 ------------
 
-Panada is a high performance PHP 5.4 base development framework, yet simple.
+Panada is a high performance PHP 5.5 base development framework, yet simple.
 Not only in contexts about how to use it, but also how the core system run it.
 
 Requirements
 ------------
 
-Panada is only supported on PHP 5.4 and up.
+Panada is only supported on PHP 5.5 and up.
 
 
 Installation
