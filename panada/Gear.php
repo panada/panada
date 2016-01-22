@@ -257,7 +257,7 @@ final class Gear
 
         createNamespace:
         $controllerNamespace = 'Modules\\'.$this->firstUriPath.'\Controllers\\'.$controllerClass;
-
+        
         if (!class_exists($controllerNamespace)) {
             throw new Resources\RunException('Class '.$controllerNamespace.'  not found in '.$classFile);
         }
@@ -278,7 +278,7 @@ final class Gear
     
     public function __toString()
     {
-        echo (new Resources\Response)->send();
+        return (new Resources\Response)->send();
     }
 
     /**
