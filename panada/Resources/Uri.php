@@ -33,15 +33,14 @@ final class Uri
             return;
         }
 
-        $scriptPath             = explode('/', $_SERVER['SCRIPT_NAME']);
-        $this->frontController  = '/'.end($scriptPath);
-        $this->basePath         = $this->config['assetPath'] = str_replace($this->frontController, '', $_SERVER['SCRIPT_NAME']).'/';
-        $scriptName             = str_replace($this->frontController, '', $_SERVER['SCRIPT_NAME']);
-        $requestURI             = str_replace($this->frontController, '', $_SERVER['REQUEST_URI']);
-        $this->pathInfo         = trim(strtok(str_replace($scriptName, '', $requestURI), '?'), '/');
+        $scriptPath             = explode('/', $_SERVER['SCRIPT_FILENAME']);
+        $frontController        = '/'.end($scriptPath);
+        $this->basePath         = '/';
+        $requestURI             = str_replace($frontController, '', $_SERVER['REQUEST_URI']);
+        $this->pathInfo         = trim(strtok($requestURI, '?'), '/');
         $this->pathUri          = explode('/', $this->pathInfo);
         $this->baseUri          = str_replace($this->pathInfo, '', $_SERVER['REQUEST_URI']);
-        $this->defaultController = self::$staticDefaultController;
+        $this->defaultController= self::$staticDefaultController;
     }
 
     /**
