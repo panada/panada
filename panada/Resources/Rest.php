@@ -223,7 +223,7 @@ class Rest
      */
     public function wrapResponseOutput($data, $format = 'json', $ContentType = 'application')
     {
-        header('Content-type: '.$ContentType.'/'.$format);
+        Response::setHeader('Content-type', $ContentType.'/'.$format);
 
         if ($format == 'xml') {
             return Tools::xmlEncode($data);
