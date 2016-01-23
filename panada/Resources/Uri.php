@@ -32,14 +32,22 @@ final class Uri
 
             return;
         }
-
-        $scriptPath             = explode('/', $_SERVER['SCRIPT_FILENAME']);
-        $frontController        = '/'.end($scriptPath);
-        $this->basePath         = '/';
-        $requestURI             = str_replace($frontController, '', $_SERVER['REQUEST_URI']);
+        
+        $this->basePath = str_replace(
+            $_SERVER['DOCUMENT_ROOT'], '', $_SERVER['SCRIPT_FILENAME']
+        );
+        
+        $scriptPath         = explode('/', $_SERVER['SCRIPT_FILENAME']);
+        $frontController    = end($scriptPath);
+        
+        $this->basePath = str_replace(
+            $frontController, '', $this->basePath
+        );
+        
+        $this->baseUri          = $this->basePath;
+        $requestURI             = str_replace($this->basePath.$frontController, '', $_SERVER['REQUEST_URI']);
         $this->pathInfo         = trim(strtok($requestURI, '?'), '/');
         $this->pathUri          = explode('/', $this->pathInfo);
-        $this->baseUri          = str_replace($this->pathInfo, '', $_SERVER['REQUEST_URI']);
         $this->defaultController= self::$staticDefaultController;
     }
 
