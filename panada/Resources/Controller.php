@@ -130,13 +130,12 @@ class Controller
 
     public function redirect($location = '', $status = 302)
     {
-        $location = (empty($location)) ? $this->location() : $location;
-
         if (substr($location, 0, 4) != 'http') {
             $location = $this->location().$location;
         }
 
-        header('Location:'.$location, true, $status);
-        exit;
+        Response::setHeader('Location', $location, $status);
+        
+        return '<html><head><meta http-equiv="refresh" content="0; url='.$location.'" /></head></html>';
     }
 }

@@ -40,8 +40,9 @@ class Response
         self::$body = $body;
     }
     
-    public static function setHeader($key, $value)
+    public static function setHeader($key, $value, $statusCode = 200)
     {
+        self::$statusCode = $statusCode;
         self::$headers[$key] = $value;
     }
     
