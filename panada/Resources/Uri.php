@@ -19,6 +19,7 @@ final class Uri
     public $baseUri;
     public $defaultController;
     public $requestScheme;
+    public $frontController;
     public static $staticDefaultController = 'Home';
 
     /**
@@ -40,15 +41,15 @@ final class Uri
             $_SERVER['DOCUMENT_ROOT'], '', $_SERVER['SCRIPT_FILENAME']
         );
         
-        $scriptPath         = explode('/', $_SERVER['SCRIPT_FILENAME']);
-        $frontController    = end($scriptPath);
+        $scriptPath             = explode('/', $_SERVER['SCRIPT_FILENAME']);
+        $this->frontController  = end($scriptPath);
         
         $this->basePath = str_replace(
-            $frontController, '', $this->basePath
+            $this->frontController, '', $this->basePath
         );
         
         $this->baseUri          = $this->requestScheme.$_SERVER['HTTP_HOST'].$this->basePath;
-        $requestURI             = str_replace($this->basePath.$frontController, '', $_SERVER['REQUEST_URI']);
+        $requestURI             = str_replace($this->basePath.$this->frontController, '', $_SERVER['REQUEST_URI']);
         $this->pathInfo         = trim(strtok($requestURI, '?'), '/');
         $this->pathUri          = explode('/', $this->pathInfo);
         $this->defaultController= self::$staticDefaultController;
@@ -102,7 +103,7 @@ final class Uri
     public function path($segment = false)
     {
         if ($segment !== false) {
-            return (isset($this->pathUri[$segment]) && $this->pathUri[$segment] != INDEX_FILE) ? $this->pathUri[$segment] : false;
+            return (isset($this->pathUri[$segment]) && $this->pathUri[$segment] != $this->frontController) ? $this->pathUri[$segment] : false;
         }
 
         return $this->pathUri;
