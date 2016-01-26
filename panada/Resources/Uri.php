@@ -18,6 +18,7 @@ final class Uri
     private $pathUri = array();
     public $baseUri;
     public $defaultController;
+    public $requestScheme;
     public static $staticDefaultController = 'Home';
 
     /**
@@ -33,6 +34,8 @@ final class Uri
             return;
         }
         
+        $this->requestScheme= ($this->isHttps()) ? 'https://':'http://';
+        
         $this->basePath = str_replace(
             $_SERVER['DOCUMENT_ROOT'], '', $_SERVER['SCRIPT_FILENAME']
         );
@@ -44,7 +47,7 @@ final class Uri
             $frontController, '', $this->basePath
         );
         
-        $this->baseUri          = $this->basePath;
+        $this->baseUri          = $this->requestScheme.$_SERVER['HTTP_HOST'].$this->basePath;
         $requestURI             = str_replace($this->basePath.$frontController, '', $_SERVER['REQUEST_URI']);
         $this->pathInfo         = trim(strtok($requestURI, '?'), '/');
         $this->pathUri          = explode('/', $this->pathInfo);
