@@ -1,20 +1,20 @@
 <?php
 namespace Tests\Database;
 
-class PgsqlTest extends Write
+class MysqlTest extends Write
 {
-    public $connection = 'pqsql';
-    
+    public $connection = 'default';
+
     public function __construct()
     {
         new \Tests\Bootstrap;
-        
-        $this->db = new \Resources\Database($this->connection);
-        
-        $this->db->query('DROP TABLE users'); 
-        
+
+        $this->db = new \Resources\Database();
+
+        $this->db->query('DROP TABLE users');
+
         $this->db->query('CREATE TABLE users (
-            id SERIAL NOT NULL,
+            id INTEGER NOT NULL AUTO_INCREMENT,
             name varchar(50) NOT NULL,
             email varchar(50) NOT NULL,
             password varchar(32) NOT NULL,
