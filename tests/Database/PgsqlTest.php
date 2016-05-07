@@ -11,7 +11,7 @@ class PgsqlTest extends Write
 
         $this->db = new \Resources\Database($this->connection);
 
-        $this->db->query('DROP TABLE users');
+        $this->db->query('DROP TABLE IF EXISTS users');
 
         $this->db->query('CREATE TABLE users (
             id SERIAL NOT NULL,
