@@ -23,11 +23,11 @@
     "require-dev": {
         "phpunit/phpunit": "4.*"
     },
-    "config": {
-        "vendor-dir": "panada/vendors"
-    },
     "autoload": {
-        "classmap": ["panada/", "tests/"]
+        "classmap": [
+            "panada/",
+            "tests/"
+        ]
     },
     "minimum-stability": "dev"
 }
