@@ -5,7 +5,7 @@ namespace Resources;
 /**
  * Panada Encyption class.
  *
- * @link	http://panadaframework.com/, http://heiswayi.github.io/php-encryption-decryption-and-password-hashing.html
+ * @link	http://panadaframework.com/
  *
  * @license     http://www.opensource.org/licenses/bsd-license.php
  * @author	Iskandar Soesman <k4ndar@yahoo.com>
@@ -52,7 +52,7 @@ class Encryption
         $string = base64_decode($string);
 
         $return = '';
-        
+
         for ($i = 0; $i < strlen($string); $i++) {
             $str     = substr($string, $i, 1);
             $return .= chr(ord($str) - ord(substr($this->key, ($i % strlen($this->key)) - 1, 1)));
