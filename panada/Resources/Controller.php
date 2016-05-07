@@ -32,7 +32,7 @@ class Controller
                         ];
 
         $this->configMain   = Config::main();
-        $this->uri          = new Uri();
+        $this->uri          = \Gear::$uri;
     }
 
     public function __get($class)
@@ -135,7 +135,7 @@ class Controller
         }
 
         Response::setHeader('Location', $location, $status);
-        
+
         return '<html><head><meta http-equiv="refresh" content="0; url='.$location.'" /></head></html>';
     }
 }

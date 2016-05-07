@@ -16,6 +16,7 @@ final class Gear
     private $uriObj;
     private $config;
     private $firstUriPath;
+    public static $uri;
 
     /**
      * Preparation step before anything else.
@@ -29,10 +30,11 @@ final class Gear
 
         $this->disableMagicQuotes();
 
-        $this->config['main']               = Resources\Config::main();
-        $this->uriObj                       = new Resources\Uri();
+        $this->config['main'] = Resources\Config::main();
+        $this->uriObj = new Resources\Uri();
         $this->uriObj->setDefaultController($this->config['main']['defaultController']);
-        $this->firstUriPath                 = ucwords($this->uriObj->getClass());
+        self::$uri = $this->uriObj;
+        $this->firstUriPath = ucwords($this->uriObj->getClass());
 
         $this->controllerHandler();
     }
@@ -257,7 +259,7 @@ final class Gear
 
         createNamespace:
         $controllerNamespace = 'Modules\\'.$this->firstUriPath.'\Controllers\\'.$controllerClass;
-        
+
         if (!class_exists($controllerNamespace)) {
             throw new Resources\RunException('Class '.$controllerNamespace.'  not found in '.$classFile);
         }
@@ -275,7 +277,7 @@ final class Gear
 
         $this->run($instance, $method, $request);
     }
-    
+
     public function __toString()
     {
         return (new Resources\Response)->send();
@@ -292,7 +294,7 @@ final class Gear
     {
         Resources\Response::$body = call_user_func_array([$instance, $method], $request);
     }
-    
+
     public static function send($errorReporting = E_ALL)
     {
         try{
