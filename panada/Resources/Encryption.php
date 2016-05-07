@@ -29,16 +29,16 @@ class Encryption
      * @var string
      * @return string
      */
-    public function encrypt($data)
+    public function encrypt($string)
     {
-        $salt = substr(md5(mt_rand(), true), 8);
+        $return = '';
 
-        $key = md5($this->key . $salt, true);
-        $iv  = md5($key . $this->key . $salt, true);
+        for ($i = 0; $i < strlen($string); $i++) {
+            $str     = substr($string, $i, 1);
+            $return .= chr(ord($str) + ord(substr($this->key, ($i % strlen($this->key)) - 1, 1)));
+        }
 
-        $ct = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);
-
-        return base64_encode('Salted__' . $salt . $ct);
+        return base64_encode($return);
     }
 
     /**
@@ -47,17 +47,17 @@ class Encryption
      * @var string
      * @return string
      */
-    public function decrypt($data)
+    public function decrypt($string)
     {
-        $data = base64_decode($data);
-        $salt = substr($data, 8, 8);
-        $ct   = substr($data, 16);
+        $string = base64_decode($string);
 
-        $key = md5($this->key . $salt, true);
-        $iv  = md5($key . $this->key . $salt, true);
+        $return = '';
+        
+        for ($i = 0; $i < strlen($string); $i++) {
+            $str     = substr($string, $i, 1);
+            $return .= chr(ord($str) - ord(substr($this->key, ($i % strlen($this->key)) - 1, 1)));
+        }
 
-        $pt = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $ct, MCRYPT_MODE_CBC, $iv);
-
-        return $pt;
+        return $return;
     }
 }
