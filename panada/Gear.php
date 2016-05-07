@@ -28,8 +28,6 @@ final class Gear
         set_exception_handler('Resources\RunException::main');
         set_error_handler('Resources\RunException::errorHandlerCallback', error_reporting());
 
-        $this->disableMagicQuotes();
-
         $this->config['main'] = Resources\Config::main();
         $this->uriObj = new Resources\Uri();
         $this->uriObj->setDefaultController($this->config['main']['defaultController']);
@@ -86,29 +84,6 @@ final class Gear
         }
 
         include $file;
-    }
-
-    /**
-     * We don't need Magic Quotes, let's kill it.
-     */
-    private function disableMagicQuotes()
-    {
-        if (get_magic_quotes_gpc()) {
-            array_walk_recursive($_GET,  array($this, 'stripslashesGpc'));
-            array_walk_recursive($_POST, array($this, 'stripslashesGpc'));
-            array_walk_recursive($_COOKIE, array($this, 'stripslashesGpc'));
-            array_walk_recursive($_REQUEST, array($this, 'stripslashesGpc'));
-        }
-    }
-
-    /**
-     * Strip the slash mark.
-     *
-     * @param string $value
-     */
-    private function stripslashesGpc(&$value)
-    {
-        $value = stripslashes($value);
     }
 
     /**
