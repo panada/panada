@@ -34,25 +34,22 @@ final class Uri
 
             return;
         }
-        
-        $this->requestScheme= ($this->isHttps()) ? 'https://':'http://';
-        
-        $this->basePath = str_replace(
-            $_SERVER['DOCUMENT_ROOT'], '', $_SERVER['SCRIPT_FILENAME']
-        );
-        
-        $scriptPath             = explode('/', $_SERVER['SCRIPT_FILENAME']);
-        $this->frontController  = end($scriptPath);
-        
-        $this->basePath = str_replace(
-            $this->frontController, '', $this->basePath
-        );
-        
-        $this->baseUri          = $this->requestScheme.$_SERVER['HTTP_HOST'].$this->basePath;
-        $requestURI             = str_replace($this->basePath.$this->frontController, '', $_SERVER['REQUEST_URI']);
-        $this->pathInfo         = trim(strtok($requestURI, '?'), '/');
-        $this->pathUri          = explode('/', $this->pathInfo);
-        $this->defaultController= self::$staticDefaultController;
+
+        $this->requestScheme = ($this->isHttps()) ? 'https://':'http://';
+
+        $scriptPath = explode('/', $_SERVER['SCRIPT_FILENAME']);
+        $this->frontController = end($scriptPath);
+
+        $docRoot = str_replace('/'.$this->frontController, '', $_SERVER['DOCUMENT_ROOT']);
+        $scriptFile =  str_replace('/'.$this->frontController, '', $_SERVER['SCRIPT_FILENAME']);
+        $requestURI = str_replace('/'.$this->frontController, '', $_SERVER['REQUEST_URI']);
+        $this->basePath = str_replace($docRoot, '', $scriptFile);
+
+        $this->baseUri = $this->requestScheme.$_SERVER['HTTP_HOST'].$this->basePath.'/';
+        $requestURI = str_replace($this->basePath, '', $requestURI);
+        $this->pathInfo = trim(strtok($requestURI, '?'), '/');
+        $this->pathUri = explode('/', $this->pathInfo);
+        $this->defaultController = self::$staticDefaultController;
     }
 
     /**
