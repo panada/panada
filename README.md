@@ -1,5 +1,7 @@
 > This repo is contain of Panada version 1 which is still going to maintain for bug and security issue until the end of 2016. To get to know more about Panada 2 go to this project [https://github.com/panada/app](https://github.com/panada/app)
 
+[![Build Status](https://semaphoreci.com/api/v1/ikandars/panada/branches/master/shields_badge.svg)](https://semaphoreci.com/ikandars/panada)
+
 About Panada
 ------------
 
