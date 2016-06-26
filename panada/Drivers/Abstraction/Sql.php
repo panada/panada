@@ -333,6 +333,8 @@ abstract class Sql
             $this->limit = null;
         }
 
+	$this->returnType = 'object';
+
         return $query;
     }
 
