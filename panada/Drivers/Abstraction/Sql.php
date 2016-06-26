@@ -366,7 +366,10 @@ abstract class Sql
     public function getAll($table = false, $where = array(), $fields = array(), $returnType = false)
     {
         if (!$table) {
-            return $this->results($this->command());
+	    $result = $this->results($this->command());
+            $this->returnType = 'object';
+            
+            return $result;
         }
 
         if ($returnType) {
@@ -404,7 +407,10 @@ abstract class Sql
     public function getOne($table = false, $where = array(), $fields = array(), $returnType = false)
     {
         if (!$table) {
-            return $this->row($this->command());
+	    $row = $this->row($this->command());
+            $this->returnType = 'object';
+
+            return $row;
         }
 
         if ($returnType) {
