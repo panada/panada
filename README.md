@@ -19,8 +19,10 @@ Panada is only supported on PHP 5.5 and up.
 Installation
 ------------
 
-* composer create-project panada/panada --prefer-dist --stability="1.1.1" --no-install myapp 1.1.1
-* or Just [download](https://github.com/panada/Panada/archive/1.1.1.tar.gz) the latest stable release.
+```
+composer create-project panada/panada myapp "1.1.1" --prefer-dist
+```
+or Just [download](https://github.com/panada/Panada/archive/1.1.1.tar.gz) the latest stable release.
 
 Documentation
 -------------
